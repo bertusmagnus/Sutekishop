@@ -1,33 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
+using MvcContrib.Castle;
+using MvcContrib.ControllerFactories;
+using Suteki.Shop.Routes;
 
 namespace Suteki.Shop
 {
-    public class GlobalApplication : System.Web.HttpApplication
+    public class GlobalApplication : System.Web.HttpApplication, IContainerAccessor
     {
-        public static void RegisterRoutes(RouteCollection routes)
+        private static WindsorContainer container;
+
+        public static IWindsorContainer Container
         {
-            // Note: Change the URL to "{controller}.mvc/{action}/{id}" to enable
-            //       automatic support on IIS6 and IIS7 classic mode
+            get { return container; }
+        }
 
-            routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
-            });
-
-            routes.Add(new Route("Default.aspx", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
-            });
+        IWindsorContainer IContainerAccessor.Container
+        {
+            get { return Container; }
         }
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            RegisterRoutes(RouteTable.Routes);
+            RouteManager.RegisterRoutes(RouteTable.Routes);
+            InitializeWindsor();
+        }
+
+        /// <summary>
+        /// This web application uses the Castle Project's IoC container, Windsor see:
+        /// http://www.castleproject.org/container/index.html
+        /// </summary>
+        protected virtual void InitializeWindsor()
+        {
+            if (container == null)
+            {
+                // create a new Windsor Container
+                container = new WindsorContainer(new XmlInterpreter("Configuration\\Windsor.config"));
+
+                // automatically register controllers
+                container.RegisterControllers(Assembly.GetExecutingAssembly());
+
+                // set the controller factory to the Windsor controller factory (in MVC Contrib)
+                ControllerBuilder.Current.SetControllerFactory(typeof(WindsorControllerFactory));
+            }
         }
     }
 }

@@ -4,15 +4,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>My Sample MVC Application</title>
+    <title>Suteki Shop</title>
     <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="page">
 
-        <div id="header">
-            <p id="logo">
-                <a href="">My Sample MVC Application</a></p>
+        <div class="header">
+            <h1>
+                Suteki Shop
+            </h1>
             <ul id="mainMenu">
                 <li>
                     <%= Html.ActionLink("Home","Index")%>
@@ -28,8 +29,7 @@
             <div class="columnsContainer">
 
                 <div class="leftColumn">
-                    <h2>
-                        MVC Help Topics</h2>
+                    <h2>Categories</h2>
                     <ul>
                         <li><a href="http://msdn2.microsoft.com/en-us/asp.net/default.aspx">ASP.NET Dev Center</a></li>
                         <li><a href="http://www.asp.net/">ASP.NET Official Site</a></li>
@@ -49,7 +49,7 @@
 
             </div><!--/columnsContainer-->
 
-            <div id="footer">
+            <div class="footer">
                 <p>
                     My Sample MVC Application &copy; Copyright 2008
                 </p>
