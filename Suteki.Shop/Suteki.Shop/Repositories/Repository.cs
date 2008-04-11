@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Suteki.Shop.Extensions;
+using System.Data.Linq;
 
 namespace Suteki.Shop.Repositories
 {
@@ -31,6 +32,31 @@ namespace Suteki.Shop.Repositories
                 );
 
             return dataContext.GetTable<T>().Where(whereExpression).Single();
+        }
+
+        public IQueryable<T> GetAll()
+        {
+            return dataContext.GetTable<T>();
+        }
+
+        public void InsertOnSubmit(T entity)
+        {
+            this.GetTable().InsertOnSubmit(entity);
+        }
+
+        public void DeleteOnSubmit(T entity)
+        {
+            this.GetTable().DeleteOnSubmit(entity);
+        }
+
+        public void SubmitChanges()
+        {
+            dataContext.SubmitChanges();
+        }
+
+        public virtual ITable GetTable()
+        {
+            return dataContext.GetTable<T>();
         }
     }
 }

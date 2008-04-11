@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Linq;
 using Suteki.Shop.Repositories;
 using NUnit.Framework;
 using Moq;
+using System.Collections.Generic;
+using System.Data.Linq;
 
 namespace Suteki.Shop.Tests.Repositories
 {
     [TestFixture]
     public class RepositoryTests
     {
+        Mock<Repository<User>> userRepositoryMock;
         IRepository<User> userRepository;
 
         Mock<ShopDataContext> dataContextMock;
@@ -18,7 +22,8 @@ namespace Suteki.Shop.Tests.Repositories
         {
             dataContextMock = new Mock<ShopDataContext>();
             dataContext = dataContextMock.Object;
-            userRepository = new Repository<User>(dataContext);
+            userRepositoryMock = new Mock<Repository<User>>(dataContext);
+            userRepository = userRepositoryMock.Object;
         }
 
         [Test]
@@ -41,5 +46,51 @@ namespace Suteki.Shop.Tests.Repositories
 
             Assert.AreEqual(roleId, role.RoleId);
         }
+
+        [Test]
+        public void CanMockGetAll()
+        {
+            Mock<IRepository<User>> userRepositoryMock = new Mock<IRepository<User>>();
+
+            List<User> users = new List<User>()
+            {
+                new User { UserId = 1 },
+                new User { UserId = 2 },
+                new User { UserId = 3 }
+            };
+
+            userRepositoryMock.Expect(ur => ur.GetAll()).Returns(() => users.AsQueryable());
+
+            User user2 = userRepositoryMock.Object.GetAll().Where(u => u.UserId == 2).Single();
+
+            Assert.AreEqual(2, user2.UserId);
+        }
+
+        [Test]
+        public void InsertOnSubmitShouldCallSameOnTable()
+        {
+            User user = new User();
+
+            Mock<ITable> userTableMock = new Mock<ITable>();
+
+            userRepositoryMock.Expect(ur => ur.GetTable()).Returns(userTableMock.Object);
+            userTableMock.Expect(ut => ut.InsertOnSubmit(user));
+            
+            userRepository.InsertOnSubmit(user);
+        }
+
+        [Test]
+        public void DeleteOnSubmitShouldCallSameOnTable()
+        {
+            User user = new User();
+
+            Mock<ITable> userTableMock = new Mock<ITable>();
+
+            userRepositoryMock.Expect(ur => ur.GetTable()).Returns(userTableMock.Object);
+            userTableMock.Expect(ut => ut.DeleteOnSubmit(user));
+
+            userRepository.DeleteOnSubmit(user);
+        }
+
     }
 }
