@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Suteki.Shop.Controllers
 {
-    public class HomeController : Controller
+    public class LoginStatusController : ComponentController
     {
         public void Index()
         {

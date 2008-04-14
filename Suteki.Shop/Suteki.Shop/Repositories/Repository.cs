@@ -31,10 +31,10 @@ namespace Suteki.Shop.Repositories
                     new ParameterExpression[] { itemParameter }
                 );
 
-            return dataContext.GetTable<T>().Where(whereExpression).Single();
+            return GetAll().Where(whereExpression).Single();
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
             return dataContext.GetTable<T>();
         }

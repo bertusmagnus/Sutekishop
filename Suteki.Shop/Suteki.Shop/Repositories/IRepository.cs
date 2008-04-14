@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Data.Linq;
 
 namespace Suteki.Shop.Repositories
 {
@@ -7,8 +8,9 @@ namespace Suteki.Shop.Repositories
     {
         T GetById(int id);
         IQueryable<T> GetAll();
-        void InsertOnSubmit(T item);
+        void InsertOnSubmit(T entity);
         void DeleteOnSubmit(T entity);
         void SubmitChanges();
+        ITable GetTable();
     }
 }

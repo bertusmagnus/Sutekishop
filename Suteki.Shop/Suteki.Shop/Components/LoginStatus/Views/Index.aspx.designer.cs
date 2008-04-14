@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Suteki.Shop.Views.Home
+namespace Suteki.Shop.Views.LoginStatus
 {
 
 
-    public partial class About
+    public partial class Index
     {
     }
 }

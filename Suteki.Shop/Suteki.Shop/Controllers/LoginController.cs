@@ -6,11 +6,11 @@ using System.Web.Mvc;
 
 namespace Suteki.Shop.Controllers
 {
-    public class HomeController : Controller
+    public class LoginController : Controller
     {
         public void Index()
         {
-            RenderView("Index");
+            // Add action logic here
         }
     }
 }

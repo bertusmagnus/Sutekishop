@@ -231,7 +231,7 @@ namespace Suteki.Shop
 		
 		private int _UserId;
 		
-		private string _Username;
+		private string _Email;
 		
 		private int _RoleId;
 		
@@ -245,8 +245,8 @@ namespace Suteki.Shop
     partial void OnCreated();
     partial void OnUserIdChanging(int value);
     partial void OnUserIdChanged();
-    partial void OnUsernameChanging(string value);
-    partial void OnUsernameChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
     partial void OnRoleIdChanging(int value);
     partial void OnRoleIdChanged();
     partial void OnTimestampChanging(System.Data.Linq.Binary value);
@@ -279,22 +279,22 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Column(Storage="_Username", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string Username
+		[Column(Storage="_Email", DbType="NVarChar(500) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Email
 		{
 			get
 			{
-				return this._Username;
+				return this._Email;
 			}
 			set
 			{
-				if ((this._Username != value))
+				if ((this._Email != value))
 				{
-					this.OnUsernameChanging(value);
+					this.OnEmailChanging(value);
 					this.SendPropertyChanging();
-					this._Username = value;
-					this.SendPropertyChanged("Username");
-					this.OnUsernameChanged();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
 				}
 			}
 		}

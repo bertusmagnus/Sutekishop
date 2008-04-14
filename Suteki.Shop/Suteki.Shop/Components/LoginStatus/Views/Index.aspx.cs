@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Suteki.Shop.Views.Home
+namespace Suteki.Shop.Views.LoginStatus
 {
-    public partial class About : ViewPage
+    public partial class Index : ViewPage
     {
     }
 }
