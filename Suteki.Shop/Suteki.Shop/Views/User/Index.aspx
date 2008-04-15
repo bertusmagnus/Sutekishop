@@ -7,6 +7,7 @@
         <tr>
             <th>Email</th>
             <th>Role</th>
+            <th>User can log in</th>
         </tr>
         
         <% foreach (var user in ViewData.Users)
@@ -15,6 +16,7 @@
             <tr>
                 <td><%= Html.ActionLink<UserController>(c => c.Edit(user.UserId), user.Email) %></td>
                 <td><%= user.Role.Name %></td>
+                <td><%= Html.Tick(user.IsEnabled) %></td>
             </tr>
             
         <% } %>

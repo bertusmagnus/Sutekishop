@@ -13,11 +13,14 @@
         <label for="email">Email</label>
         <%= Html.TextBox("email", ViewData.User.Email) %>
         
-        <label for="password">Password</label>
+        <label for="password">Password (leave blank if you don't want to change)</label>
         <%= Html.Password("password") %>
 
         <label for="roleid">Role</label>
         <%= Html.Select("roleid", ViewData.Roles, "Name", "RoleId", ViewData.User.RoleId)%>
+        
+        <label for="isenabled">User can log on</label>
+        <%= Html.CheckBox("isenabled", "", "True", ViewData.User.IsEnabled) %>
 
         <%= Html.SubmitButton() %>
 

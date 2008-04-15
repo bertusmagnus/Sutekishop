@@ -8,6 +8,8 @@ using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.Repositories;
 using System.Web;
 using System.Collections.Specialized;
+using System.Threading;
+using System.Security.Principal;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -23,12 +25,19 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
+            // you have to be an administrator to access the user controller
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+
             userRepositoryMock = MockRepositoryBuilder.CreateUserRepository();
             Mock<Repository<Role>> roleRepositoryMock = MockRepositoryBuilder.CreateRoleRepository();
 
             userControllerMock = new Mock<UserController>(userRepositoryMock.Object, roleRepositoryMock.Object);
             userController = userControllerMock.Object;
             testContext = new ControllerTestContext(userController);
+
+            // don't worry about encrypting passwords here, just stub out this call so that it has no effect
+            // on the user
+            userControllerMock.Expect(c => c.EncryptPassword(It.IsAny<User>()));
         }
 
         [Test]
@@ -100,6 +109,7 @@ namespace Suteki.Shop.Tests.Controllers
             string email = "blogs@blogs.com";
             string password = "bl0gs";
             int roleId = 3;
+            bool isEnabled = false;
 
             // set up the request form
             NameValueCollection form = new NameValueCollection();
@@ -107,6 +117,8 @@ namespace Suteki.Shop.Tests.Controllers
             form.Add("email", email);
             form.Add("password", password);
             form.Add("roleid", roleId.ToString());
+            form.Add("isenabled", isEnabled.ToString());
+
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
             // setup expectations on the userRepository
@@ -127,6 +139,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(email, user.Email);
             Assert.AreEqual(password, user.Password);
             Assert.AreEqual(roleId, user.RoleId);
+            Assert.AreEqual(isEnabled, user.IsEnabled);
 
             AssertUserEditViewDataIsCorrect();
 
@@ -140,6 +153,7 @@ namespace Suteki.Shop.Tests.Controllers
             string email = "blogs@blogs.com";
             string password = "bl0gs";
             int roleId = 3;
+            bool isEnabled = false;
 
             // set up the request form
             NameValueCollection form = new NameValueCollection();
@@ -147,6 +161,8 @@ namespace Suteki.Shop.Tests.Controllers
             form.Add("email", email);
             form.Add("password", password);
             form.Add("roleid", roleId.ToString());
+            form.Add("isenabled", isEnabled.ToString());
+
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
             // setup expectations on the userRepository
@@ -155,7 +171,8 @@ namespace Suteki.Shop.Tests.Controllers
                 UserId = userId,
                 Email = "old@old.com",
                 Password = "oldpassword",
-                RoleId = 1
+                RoleId = 1,
+                IsEnabled = true
             };
 
             userRepositoryMock.Expect(ur => ur.GetById(userId))
@@ -173,6 +190,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(email, user.Email);
             Assert.AreEqual(password, user.Password);
             Assert.AreEqual(roleId, user.RoleId);
+            Assert.AreEqual(isEnabled, user.IsEnabled);
 
             AssertUserEditViewDataIsCorrect();
 

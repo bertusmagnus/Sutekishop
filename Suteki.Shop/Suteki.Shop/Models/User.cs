@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Principal;
+using Suteki.Shop.Validation;
 
 namespace Suteki.Shop
 {
@@ -25,6 +26,17 @@ namespace Suteki.Shop
         public bool IsInRole(string role)
         {
             return this.Role.Name == role;
+        }
+
+        public void Validate()
+        {
+            Validator validator = new Validator
+            {
+                () => Email.Label("Email").IsRequired(),
+                () => Password.Label("Password").IsRequired(),
+            };
+
+            validator.Validate();
         }
     }
 

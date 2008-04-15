@@ -32,7 +32,7 @@ namespace Suteki.Shop.Tests.Repositories
         public void ContainsUser_ShouldReturnTrueForExistingUser()
         {
             string email = "Henry@suteki.co.uk";
-            string password = "henry1";
+            string password = "6C80B78681161C8349552872CFA0739CF823E87B";
 
             Assert.IsTrue(userRepository.GetAll().ContainsUser(email, password));
         }

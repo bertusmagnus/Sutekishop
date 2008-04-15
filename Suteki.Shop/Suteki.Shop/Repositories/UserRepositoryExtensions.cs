@@ -12,7 +12,12 @@ namespace Suteki.Shop.Repositories
 
         public static bool ContainsUser(this IQueryable<User> users, string email, string password)
         {
-            return users.Any(user => user.Email == email && user.Password == password);
+            return users.Any(
+                user => 
+                    user.Email == email && 
+                    user.Password == password &&
+                    user.IsEnabled
+                );
         }
     }
 }

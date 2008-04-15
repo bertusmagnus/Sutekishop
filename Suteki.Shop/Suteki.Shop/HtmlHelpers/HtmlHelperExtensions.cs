@@ -74,5 +74,23 @@ namespace Suteki.Shop.HtmlHelpers
             writer.RenderEndTag();
             return writer.InnerWriter.ToString();
         }
+
+        public static string Tick(this HtmlHelper htmlHelper, bool ticked)
+        {
+            HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
+
+            if (ticked)
+            {
+                writer.AddAttribute("class", "tick");
+            }
+            else
+            {
+                writer.AddAttribute("class", "cross");
+            }
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.Write("&nbsp;");
+            writer.RenderEndTag();
+            return writer.InnerWriter.ToString();
+        }
     }
 }

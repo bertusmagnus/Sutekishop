@@ -84,5 +84,13 @@ namespace Suteki.Shop.Tests.Controllers
 
             loginControllerMock.Verify();
         }
+
+        [Test, Explicit]
+        public void EncryptPasswordSpike()
+        {
+            Console.WriteLine(loginController.EncryptPassword("henry1"));   // 6C80B78681161C8349552872CFA0739CF823E87B
+            Console.WriteLine(loginController.EncryptPassword("george1"));  // DC25F9DC0DF2BE9E6A83E6F0B26F4B41F57ADF6D
+            Console.WriteLine(loginController.EncryptPassword("sky1"));     // 980BC222DA7FDD0D37BE816D60084894124509A1
+        }
     }
 }

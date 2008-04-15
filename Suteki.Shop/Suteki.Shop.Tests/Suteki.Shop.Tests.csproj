@@ -75,6 +75,7 @@
     <Compile Include="TestHelpers\ControllerTestContext.cs" />
     <Compile Include="TestHelpers\HttpContextTestContext.cs" />
     <Compile Include="TestHelpers\MockViewEngine.cs" />
+    <Compile Include="Validation\ValidationExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Suteki.Shop\Suteki.Shop.csproj">

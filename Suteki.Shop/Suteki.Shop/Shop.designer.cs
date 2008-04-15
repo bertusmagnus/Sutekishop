@@ -237,6 +237,8 @@ namespace Suteki.Shop
 		
 		private int _RoleId;
 		
+		private bool _IsEnabled;
+		
 		private System.Data.Linq.Binary _Timestamp;
 		
 		private EntityRef<Role> _Role;
@@ -253,6 +255,8 @@ namespace Suteki.Shop
     partial void OnPasswordChanged();
     partial void OnRoleIdChanging(int value);
     partial void OnRoleIdChanged();
+    partial void OnIsEnabledChanging(bool value);
+    partial void OnIsEnabledChanged();
     partial void OnTimestampChanging(System.Data.Linq.Binary value);
     partial void OnTimestampChanged();
     #endregion
@@ -343,6 +347,26 @@ namespace Suteki.Shop
 					this._RoleId = value;
 					this.SendPropertyChanged("RoleId");
 					this.OnRoleIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsEnabled", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public bool IsEnabled
+		{
+			get
+			{
+				return this._IsEnabled;
+			}
+			set
+			{
+				if ((this._IsEnabled != value))
+				{
+					this.OnIsEnabledChanging(value);
+					this.SendPropertyChanging();
+					this._IsEnabled = value;
+					this.SendPropertyChanged("IsEnabled");
+					this.OnIsEnabledChanged();
 				}
 			}
 		}

@@ -25,7 +25,7 @@ namespace Suteki.Shop.Controllers
 
         public void Authenticate(string email, string password)
         {
-            if (userRepository.GetAll().ContainsUser(email, password))
+            if (userRepository.GetAll().ContainsUser(email, EncryptPassword(password)))
             {
                 SetAuthenticationCookie(email);
                 RedirectToAction2("Index", "Home");
@@ -52,6 +52,12 @@ namespace Suteki.Shop.Controllers
         public virtual void RemoveAuthenticationCookie()
         {
             FormsAuthentication.SignOut();
+        }
+
+        [NonAction]
+        public virtual string EncryptPassword(string password)
+        {
+            return FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
         }
     }
 }

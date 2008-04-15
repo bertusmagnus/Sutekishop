@@ -45,11 +45,11 @@
                 <div class="leftColumn">
                     <h2>Categories</h2>
                     <ul>
-                        <li><a href="http://msdn2.microsoft.com/en-us/asp.net/default.aspx">ASP.NET Dev Center</a></li>
-                        <li><a href="http://www.asp.net/">ASP.NET Official Site</a></li>
-                        <li><a href="http://asp.net/downloads/">MVC Framework Download</a></li>
-                        <li><a href="http://forums.asp.net/1146.aspx">MVC Framework Forums</a></li>
-                        <li><a href="http://quickstarts.asp.net/3-5-extensions/mvc/default.aspx">MVC Framework Documentation</a></li>
+                        <li>Category 1</li>
+                        <li>Category 2</li>
+                        <li>Category 3</li>
+                        <li>Category 4</li>
+                        <li>Category 5</li>
                     </ul>
                 </div><!--/leftColumn-->
 
@@ -65,7 +65,7 @@
 
             <div class="footer">
                 <p>
-                    My Sample MVC Application &copy; Copyright 2008
+                    Suteki Limited &copy; Copyright 2008
                 </p>
             </div><!--/footer-->
 

@@ -123,4 +123,29 @@ textarea
 	font-size: 10pt;
 }
 
+/*----------------------------------- cross and tick -------------------------------------*/
+
+.cross
+{
+	background-image: url(Images/cross.png);
+	background-repeat: no-repeat;
+	width: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+.tick
+{
+	background-image: url(Images/tick.png);
+	background-repeat: no-repeat;
+	widows: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+
+/*-------------------------------------- table -------------------------------------------*/
+
+td
+{
+	padding: 0px 20px 0px 0px;
+}
 
