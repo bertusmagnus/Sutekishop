@@ -38,3 +38,7 @@
 * CMS
 	- Menu management
 	- Create / Edit page
+	
+* Mailing list
+	- User can add themselves
+	- Management

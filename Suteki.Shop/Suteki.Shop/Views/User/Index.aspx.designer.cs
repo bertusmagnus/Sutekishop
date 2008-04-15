@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Suteki.Shop.Views.LoginStatus
+namespace Suteki.Shop.Views.User
 {
 
 

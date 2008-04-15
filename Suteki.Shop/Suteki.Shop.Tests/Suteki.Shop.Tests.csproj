@@ -63,8 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\LoginStatusComponentControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
+    <Compile Include="Controllers\LoginControllerTests.cs" />
+    <Compile Include="Controllers\UserControllerTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\MockUserRepositoryBuilder.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="TestHelpers\ControllerTestContext.cs" />
     <Compile Include="TestHelpers\HttpContextTestContext.cs" />
     <Compile Include="TestHelpers\MockViewEngine.cs" />
-    <Compile Include="TestHelpers\MoqComponentControllerTestContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Suteki.Shop\Suteki.Shop.csproj">

@@ -17,7 +17,7 @@ namespace Suteki.Shop.Tests.Repositories
         [SetUp]
         public void SetUp()
         {
-            userRepositoryMock = MockUserRepositoryBuilder.Create();
+            userRepositoryMock = MockRepositoryBuilder.CreateUserRepository();
             userRepository = userRepositoryMock.Object;
         }
 

@@ -6,6 +6,12 @@
 	font-size:9pt;
 }
 
+#loginStatus
+{
+	border-style: solid;
+	border-width: 1px;	
+}
+
 .page
 {
 	margin:0 auto;
@@ -45,10 +51,76 @@
 	border-width: 1px;
 }
 
+.error
+{
+	color: Red;
+	font-weight: bold;	
+}
+
+.message
+{
+	color: Green;
+	font-weight: bold;
+}
+
 .clear
 {
 	clear: both;	
 }
 
+/* ------------------------- form ------------------------------ */
+
+label
+{
+	display: block;
+	font-weight: bold;
+	margin: 10px 10px 0px 0px;
+}
+
+input
+{
+	display:block;
+	margin: 10px 0px 0px 0px;
+	width: 300px;
+	overflow: visible;
+}
+
+input[type=submit]
+{
+	width: 150px;
+	margin: 10px 10px 10px 0px;
+}
+
+input[type=checkbox]
+{
+	display: inline;
+	width: auto;
+}
+
+input[type=radio]
+{
+	display: inline;
+	width: auto;
+}
+
+input[type=button]
+{
+	display: inline;
+	width: 75px;
+}
+
+select
+{
+	margin: 10px 0px 0px 0px;
+}
+
+textarea
+{
+	margin: 10px 10px 0px 0px;
+	width: 450px;
+	overflow: visible;
+	font-family: arial;
+	font-size: 10pt;
+}
 
 

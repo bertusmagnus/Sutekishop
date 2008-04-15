@@ -9,5 +9,10 @@ namespace Suteki.Shop.Repositories
         {
             return users.Where(user => user.Email == email).SingleOrDefault();
         }
+
+        public static bool ContainsUser(this IQueryable<User> users, string email, string password)
+        {
+            return users.Any(user => user.Email == email && user.Password == password);
+        }
     }
 }

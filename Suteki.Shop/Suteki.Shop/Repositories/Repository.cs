@@ -15,7 +15,7 @@ namespace Suteki.Shop.Repositories
             this.dataContext = dataContext;
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             var itemParameter = Expression.Parameter(typeof(T), "item");
 
@@ -39,17 +39,17 @@ namespace Suteki.Shop.Repositories
             return dataContext.GetTable<T>();
         }
 
-        public void InsertOnSubmit(T entity)
+        public virtual void InsertOnSubmit(T entity)
         {
             this.GetTable().InsertOnSubmit(entity);
         }
 
-        public void DeleteOnSubmit(T entity)
+        public virtual void DeleteOnSubmit(T entity)
         {
             this.GetTable().DeleteOnSubmit(entity);
         }
 
-        public void SubmitChanges()
+        public virtual void SubmitChanges()
         {
             dataContext.SubmitChanges();
         }

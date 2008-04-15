@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Suteki.Shop.ViewData;
 
-namespace Suteki.Shop.Views.LoginStatus
+namespace Suteki.Shop.Views.User
 {
-    public partial class Index : ViewPage
+    public partial class Index : ViewPage<UserViewData>
     {
     }
 }

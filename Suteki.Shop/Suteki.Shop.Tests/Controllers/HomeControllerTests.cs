@@ -7,13 +7,13 @@ namespace Suteki.Shop.Tests.Controllers
     public class HomeControllerTests
     {
         HomeController homeController;
-        MoqControllerTestContext testContext;
+        ControllerTestContext testContext;
 
         [SetUp]
         public void SetUp()
         {
             homeController = new HomeController();
-            testContext = new MoqControllerTestContext(homeController);
+            testContext = new ControllerTestContext(homeController);
         }
 
         [Test]

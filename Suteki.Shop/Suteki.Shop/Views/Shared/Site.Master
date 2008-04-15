@@ -13,15 +13,29 @@
             <h1>
                 Suteki Shop
             </h1>
-            <%= Html.RenderComponent2<LoginStatusController>(c => c.Index()) %>
+            
+            <%= Html.LoginStatus() %>
+            
             <ul id="mainMenu">
                 <li>
                     <%= Html.ActionLink<HomeController>(c => c.Index(), "Home")%>
                 </li>
                 <li>
-                    <%= Html.ActionLink<LoginController>(c => c.Index(),"About")%>
+                    <%= Html.LoginLink() %>
                 </li>
             </ul>
+            
+            <!-- Admin menu should only show when the user is an administrator -->
+            <% if (Context.User.IsInRole("Administrator"))
+               { %>
+            
+                <ul id="adminMenu">
+                    <li>
+                        <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
+                    </li>
+                </ul>
+            
+            <% } %>
         </div>
 
         <div id="mainContent">

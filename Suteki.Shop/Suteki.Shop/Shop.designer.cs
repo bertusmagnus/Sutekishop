@@ -233,6 +233,8 @@ namespace Suteki.Shop
 		
 		private string _Email;
 		
+		private string _Password;
+		
 		private int _RoleId;
 		
 		private System.Data.Linq.Binary _Timestamp;
@@ -247,6 +249,8 @@ namespace Suteki.Shop
     partial void OnUserIdChanged();
     partial void OnEmailChanging(string value);
     partial void OnEmailChanged();
+    partial void OnPasswordChanging(string value);
+    partial void OnPasswordChanged();
     partial void OnRoleIdChanging(int value);
     partial void OnRoleIdChanged();
     partial void OnTimestampChanging(System.Data.Linq.Binary value);
@@ -295,6 +299,26 @@ namespace Suteki.Shop
 					this._Email = value;
 					this.SendPropertyChanged("Email");
 					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Password", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Password
+		{
+			get
+			{
+				return this._Password;
+			}
+			set
+			{
+				if ((this._Password != value))
+				{
+					this.OnPasswordChanging(value);
+					this.SendPropertyChanging();
+					this._Password = value;
+					this.SendPropertyChanged("Password");
+					this.OnPasswordChanged();
 				}
 			}
 		}

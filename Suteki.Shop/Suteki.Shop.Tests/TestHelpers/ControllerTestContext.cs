@@ -5,12 +5,12 @@ using Moq;
 
 namespace Suteki.Shop.Tests
 {
-    public class MoqControllerTestContext
+    public class ControllerTestContext
     {
         public MockViewEngine ViewEngine { get; private set; }
         public HttpContextTestContext TestContext { get; private set; }
 
-        public MoqControllerTestContext(Controller controller)
+        public ControllerTestContext(Controller controller)
         {
             ViewEngine = new MockViewEngine();
             controller.ViewEngine = ViewEngine;
