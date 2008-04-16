@@ -38,6 +38,9 @@ namespace Suteki.Shop
 
             validator.Validate();
         }
+
+        public bool IsAdministrator { get { return UserId == Role.AdministratorId; } }
+        public bool IsOrderProcessor { get { return UserId == Role.OrderProcessorId; } }
     }
 
     /// <summary>

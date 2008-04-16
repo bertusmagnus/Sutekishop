@@ -92,5 +92,11 @@ namespace Suteki.Shop.HtmlHelpers
             writer.RenderEndTag();
             return writer.InnerWriter.ToString();
         }
+
+        public static string WriteCategories(this HtmlHelper htmlHelper, Category rootCategory)
+        {
+            CategoryWriter categoryWriter = new CategoryWriter(rootCategory, htmlHelper);
+            return categoryWriter.Write();
+        }
     }
 }
