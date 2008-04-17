@@ -57,13 +57,18 @@ namespace Suteki.Shop.HtmlHelpers
             if (user.IsAdministrator)
             {
                 return string.Format("{0} {1}",
-                    category.Name,
+                    WriteCategoryLink(category),
                     htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"));
             }
             else
             {
-                return category.Name;
+                return WriteCategoryLink(category);
             }
+        }
+
+        private string WriteCategoryLink(Category category)
+        {
+            return htmlHelper.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name);
         }
     }
 }

@@ -68,6 +68,21 @@
 	clear: both;	
 }
 
+/* -------------------------- product ---------------------------*/
+
+.product
+{
+	display: block;
+	float: left;
+	width: 150px;
+	height: 150px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: Black;
+	margin: 0px 10px 10px 0px;	
+	padding: 5px 5px 5px 5px;
+}
+
 /* ------------------------- form ------------------------------ */
 
 label

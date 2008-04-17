@@ -3,7 +3,7 @@
 
 <% if (ViewContext.HttpContext.User.IsInRole("Administrator"))
    { %>
-    <%= Html.ActionLink<CategoryController>(c => c.New(), "New Category")%>
+    <p><%= Html.ActionLink<CategoryController>(c => c.New(), "New Category")%></p>
 <% } %>
 
 <%= Html.WriteCategories(ViewData.Category) %>

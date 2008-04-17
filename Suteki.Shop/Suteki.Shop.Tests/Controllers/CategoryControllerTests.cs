@@ -7,6 +7,8 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.Repositories;
 using System.Collections.Specialized;
+using System.Threading;
+using System.Security.Principal;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -22,6 +24,9 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
+            // you have to be an administrator to access the category controller
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+
             categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
 
             categoryControllerMock = new Mock<CategoryController>(categoryRepositoryMock.Object);

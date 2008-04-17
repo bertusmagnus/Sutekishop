@@ -7,6 +7,7 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
 using System.Security.Permissions;
+using MvcContrib.Filters;
 
 namespace Suteki.Shop.Controllers
 {
@@ -49,6 +50,7 @@ namespace Suteki.Shop.Controllers
             });
         }
 
+        [PostOnly]
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public void Update(int categoryId)
         {

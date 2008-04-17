@@ -52,16 +52,6 @@ namespace Suteki.Shop
 
                 // set the controller factory to the Windsor controller factory (in MVC Contrib)
                 ControllerBuilder.Current.SetControllerFactory(typeof(WindsorControllerFactory));
-
-                // automatically register component controllers
-                container.Register(AllTypes
-                    .Of<ComponentController>()
-                    .FromAssembly(Assembly.GetExecutingAssembly())
-                    .Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
-
-                // set the component controller factory to the windsor container
-                ComponentControllerBuilder.Current.SetComponentControllerFactory(
-                    new IoCComponentControllerFactory(new WindsorDependencyResolver(container)));
             }
         }
 

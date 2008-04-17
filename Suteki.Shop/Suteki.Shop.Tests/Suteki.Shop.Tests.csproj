@@ -67,12 +67,14 @@
     <Compile Include="Controllers\CategoryControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\LoginControllerTests.cs" />
+    <Compile Include="Controllers\ProductControllerTests.cs" />
     <Compile Include="Controllers\UserControllerTests.cs" />
     <Compile Include="Extensions\CategoryWriterTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CategoryRepositoryTests.cs" />
     <Compile Include="Repositories\MockRepositoryBuilder.cs" />
+    <Compile Include="Repositories\ProductRepositoryExtensionsTests.cs" />
     <Compile Include="Repositories\RepositoryTests.cs" />
     <Compile Include="Repositories\UserRepositoryExtensionsTests.cs" />
     <Compile Include="Routes\RouteTests.cs" />

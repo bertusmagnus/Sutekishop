@@ -79,7 +79,7 @@ namespace Suteki.Shop.Tests.Repositories
             };
 
             categoryRepositoryMock.Expect(c => c.GetById(1)).Returns(() => root);
-            categoryRepositoryMock.Expect(c => c.GetAll()).Returns(() => categories.AsQueryable<Category>());
+            categoryRepositoryMock.Expect(c => c.GetAll()).Returns(() => categories.AsQueryable());
 
             return categoryRepositoryMock;
         }
@@ -103,6 +103,26 @@ namespace Suteki.Shop.Tests.Repositories
 
             Assert.IsNotNull(root.Categories[0].Categories[1].Categories[1], "second great grandchild category is null");
             Assert.AreEqual("oneTwoTwo", root.Categories[0].Categories[1].Categories[1].Name);
+        }
+
+        public static Mock<Repository<Product>> CreateProductRepository()
+        {
+            Mock<ShopDataContext> dataContextMock = new Mock<ShopDataContext>();
+            Mock<Repository<Product>> productRepositoryMock = new Mock<Repository<Product>>(dataContextMock.Object);
+
+            List<Product> products = new List<Product>
+            {
+                new Product { ProductId = 1, CategoryId = 2, Name = "Product 1", Description = "Description 1" },
+                new Product { ProductId = 2, CategoryId = 2, Name = "Product 2", Description = "Description 2" },
+                new Product { ProductId = 3, CategoryId = 4, Name = "Product 3", Description = "Description 3" },
+                new Product { ProductId = 4, CategoryId = 4, Name = "Product 4", Description = "Description 4" },
+                new Product { ProductId = 5, CategoryId = 6, Name = "Product 5", Description = "Description 5" },
+                new Product { ProductId = 6, CategoryId = 6, Name = "Product 6", Description = "Description 6" },
+            };
+
+            productRepositoryMock.Expect(pr => pr.GetAll()).Returns(() => products.AsQueryable());
+
+            return productRepositoryMock;
         }
     }
 }

@@ -8,6 +8,7 @@ using Suteki.Shop.Repositories;
 using System.Web.Security;
 using System.Security.Permissions;
 using Suteki.Shop.Validation;
+using MvcContrib.Filters;
 
 namespace Suteki.Shop.Controllers
 {
@@ -35,6 +36,7 @@ namespace Suteki.Shop.Controllers
             RenderView("Edit", new UserEditViewData { User = defaultUser, Roles = roleRepository.GetAll() });
         }
 
+        [PostOnly]
         public void Update(int userid)
         {
             User user = null;
