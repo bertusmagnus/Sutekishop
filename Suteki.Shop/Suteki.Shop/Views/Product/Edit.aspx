@@ -10,20 +10,35 @@
     <%= Html.ErrorBox(ViewData) %>
     <%= Html.MessageBox(ViewData) %>
 
-    <% using(Html.Form("Product", "Update")) { %>
+    <% using (Html.Form("Product", "Update", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } } ))
+       { %>
 
-        <%= Html.Hidden("productId", ViewData.Product.ProductId) %>
+        <%= Html.Hidden("productId", ViewData.Product.ProductId)%>
 
         <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Product.Name) %>
+        <%= Html.TextBox("name", ViewData.Product.Name)%>
         
         <label for="categoryid">Category</label>
         <%= Html.Select("categoryid", ViewData.Categories, "Name", "CategoryId", ViewData.Product.CategoryId)%>
         
         <label for="description">Description</label>
-        <%= Html.TextArea("description", ViewData.Product.Description) %>
+        <%= Html.TextArea("description", ViewData.Product.Description)%>
         
-        <%= Html.SubmitButton() %>
+        <div class="imageList">
+        <% foreach(var productImage in ViewData.Product.ProductImages) { %>
+
+            <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName) %>
+
+        <% } %>
+        </div>
+        
+        <h3>Upload Photos</h3>
+        
+        <% for (int i = 0; i < 5; i++)
+           { %>
+            <input type="file" id="image_<%= i.ToString() %>" name="image_<%= i.ToString() %>" />
+        <% } %>
+        <%= Html.SubmitButton()%>
 
     <% } %>
 

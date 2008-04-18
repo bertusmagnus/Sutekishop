@@ -36,7 +36,9 @@
 	height: 600px;
 	float: left;
 	padding: 10px 10px 10px 10px;
-	background-color: #C0C0C0;
+	border-right-style:solid;
+	border-right-color:#C0C0C0;
+	border-right-width:1px;
 }
 
 .rightColumn
@@ -49,6 +51,7 @@
 {
 	border-style: dotted;
 	border-width: 1px;
+	padding: 0px 0px 0px 10px;
 }
 
 .error
@@ -81,6 +84,17 @@
 	border-color: Black;
 	margin: 0px 10px 10px 0px;	
 	padding: 5px 5px 5px 5px;
+}
+
+.mainImage
+{
+	float: left;
+	margin: 0px 20px 10px 0px;	
+}
+
+.imageList
+{
+	margin: 5px 0px 5px 0px;	
 }
 
 /* ------------------------- form ------------------------------ */

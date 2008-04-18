@@ -12,6 +12,9 @@
 
     <a href="<%= Url.Action("Item", "Product", new { Id = product.ProductId.ToString() }) %>">
     <div class="product">
+        <% if(product.HasMainImage) { %>
+            <%= Html.Image("~/ProductPhotos/" + product.MainImage.ThumbFileName) %>
+        <% } %>
         <%= product.Name %>
     </div>
     </a>

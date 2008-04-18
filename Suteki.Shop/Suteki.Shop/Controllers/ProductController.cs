@@ -8,6 +8,7 @@ using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
 using System.Security.Permissions;
 using MvcContrib.Filters;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Controllers
 {
@@ -15,13 +16,19 @@ namespace Suteki.Shop.Controllers
     {
         IRepository<Product> productRepository;
         IRepository<Category> categoryRepository;
+        IHttpFileService httpFileService;
+        IImageFileService imageFileService;
 
         public ProductController(
             IRepository<Product> productRepository,
-            IRepository<Category> categoryRepository)
+            IRepository<Category> categoryRepository,
+            IHttpFileService httpFileService,
+            IImageFileService imageFileService)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
+            this.httpFileService = httpFileService;
+            this.imageFileService = imageFileService;
         }
 
         public void Index(int id)
@@ -32,7 +39,8 @@ namespace Suteki.Shop.Controllers
             RenderView("Index", new ProductListViewData 
             { 
                 Products = products,
-                Category = category
+                Category = category,
+                ImageFile = this.imageFileService
             });
         }
 
@@ -40,7 +48,11 @@ namespace Suteki.Shop.Controllers
         {
             Product product = productRepository.GetById(id);
 
-            RenderView("Item", new ProductItemViewData { Product = product });
+            RenderView("Item", new ProductItemViewData 
+            { 
+                Product = product,
+                ImageFile = this.imageFileService
+            });
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -55,7 +67,8 @@ namespace Suteki.Shop.Controllers
             RenderView("Edit", new ProductItemViewData 
             { 
                 Product = defaultProduct,
-                Categories = categoryRepository.GetAll().Alphabetical()
+                Categories = categoryRepository.GetAll().Alphabetical(),
+                ImageFile = this.imageFileService
             });
         }
 
@@ -76,6 +89,7 @@ namespace Suteki.Shop.Controllers
             try
             {
                 ValidatingBinder.UpdateFrom(product, Request.Form);
+                UpdateImages(product, Request);
             }
             catch (ValidationException validationException)
             {
@@ -83,7 +97,8 @@ namespace Suteki.Shop.Controllers
                 {
                     ErrorMessage = validationException.Message,
                     Product = product,
-                    Categories = categoryRepository.GetAll().Alphabetical()
+                    Categories = categoryRepository.GetAll().Alphabetical(),
+                    ImageFile = this.imageFileService
                 });
                 return;
             }
@@ -99,8 +114,21 @@ namespace Suteki.Shop.Controllers
                 {
                     Message = "This product has been saved",
                     Product = product,
-                    Categories = categoryRepository.GetAll().Alphabetical()
+                    Categories = categoryRepository.GetAll().Alphabetical(),
+                    ImageFile = this.imageFileService
                 });
+        }
+
+        private void UpdateImages(Product product, HttpRequestBase request)
+        {
+            IEnumerable<Image> images = httpFileService.GetUploadedImages(request);
+            foreach (Image image in images)
+            {
+                product.ProductImages.Add(new ProductImage 
+                {
+                    Image = image
+                });
+            }
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -111,7 +139,8 @@ namespace Suteki.Shop.Controllers
             RenderView("Edit", new ProductItemViewData
             {
                 Product = product,
-                Categories = categoryRepository.GetAll().Alphabetical()
+                Categories = categoryRepository.GetAll().Alphabetical(),
+                ImageFile = this.imageFileService
             });
         }
     }

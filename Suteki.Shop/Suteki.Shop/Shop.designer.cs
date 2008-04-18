@@ -39,9 +39,15 @@ namespace Suteki.Shop
     partial void InsertCategory(Category instance);
     partial void UpdateCategory(Category instance);
     partial void DeleteCategory(Category instance);
+    partial void InsertImage(Image instance);
+    partial void UpdateImage(Image instance);
+    partial void DeleteImage(Image instance);
     partial void InsertProduct(Product instance);
     partial void UpdateProduct(Product instance);
     partial void DeleteProduct(Product instance);
+    partial void InsertProductImage(ProductImage instance);
+    partial void UpdateProductImage(ProductImage instance);
+    partial void DeleteProductImage(ProductImage instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -98,11 +104,27 @@ namespace Suteki.Shop
 			}
 		}
 		
+		public System.Data.Linq.Table<Image> Images
+		{
+			get
+			{
+				return this.GetTable<Image>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Product> Products
 		{
 			get
 			{
 				return this.GetTable<Product>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ProductImage> ProductImages
+		{
+			get
+			{
+				return this.GetTable<ProductImage>();
 			}
 		}
 	}
@@ -675,6 +697,144 @@ namespace Suteki.Shop
 		}
 	}
 	
+	[Table(Name="dbo.Image")]
+	public partial class Image : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ImageId;
+		
+		private System.Guid _FileName;
+		
+		private string _Description;
+		
+		private EntitySet<ProductImage> _ProductImages;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnImageIdChanging(int value);
+    partial void OnImageIdChanged();
+    partial void OnFileNameChanging(System.Guid value);
+    partial void OnFileNameChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    #endregion
+		
+		public Image()
+		{
+			this._ProductImages = new EntitySet<ProductImage>(new Action<ProductImage>(this.attach_ProductImages), new Action<ProductImage>(this.detach_ProductImages));
+			OnCreated();
+		}
+		
+		[Column(Storage="_ImageId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ImageId
+		{
+			get
+			{
+				return this._ImageId;
+			}
+			set
+			{
+				if ((this._ImageId != value))
+				{
+					this.OnImageIdChanging(value);
+					this.SendPropertyChanging();
+					this._ImageId = value;
+					this.SendPropertyChanged("ImageId");
+					this.OnImageIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_FileName", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid FileName
+		{
+			get
+			{
+				return this._FileName;
+			}
+			set
+			{
+				if ((this._FileName != value))
+				{
+					this.OnFileNameChanging(value);
+					this.SendPropertyChanging();
+					this._FileName = value;
+					this.SendPropertyChanged("FileName");
+					this.OnFileNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Description", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Image_ProductImage", Storage="_ProductImages", OtherKey="ImageId")]
+		public EntitySet<ProductImage> ProductImages
+		{
+			get
+			{
+				return this._ProductImages;
+			}
+			set
+			{
+				this._ProductImages.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Image = this;
+		}
+		
+		private void detach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Image = null;
+		}
+	}
+	
 	[Table(Name="dbo.Product")]
 	public partial class Product : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -688,6 +848,8 @@ namespace Suteki.Shop
 		private string _Name;
 		
 		private string _Description;
+		
+		private EntitySet<ProductImage> _ProductImages;
 		
 		private EntityRef<Category> _Category;
 		
@@ -707,6 +869,7 @@ namespace Suteki.Shop
 		
 		public Product()
 		{
+			this._ProductImages = new EntitySet<ProductImage>(new Action<ProductImage>(this.attach_ProductImages), new Action<ProductImage>(this.detach_ProductImages));
 			this._Category = default(EntityRef<Category>);
 			OnCreated();
 		}
@@ -755,7 +918,7 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Column(Storage="_Name", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_Name", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
 		public string Name
 		{
 			get
@@ -795,6 +958,19 @@ namespace Suteki.Shop
 			}
 		}
 		
+		[Association(Name="Product_ProductImage", Storage="_ProductImages", OtherKey="ProductId")]
+		public EntitySet<ProductImage> ProductImages
+		{
+			get
+			{
+				return this._ProductImages;
+			}
+			set
+			{
+				this._ProductImages.Assign(value);
+			}
+		}
+		
 		[Association(Name="Category_Product", Storage="_Category", ThisKey="CategoryId", IsForeignKey=true)]
 		public Category Category
 		{
@@ -825,6 +1001,210 @@ namespace Suteki.Shop
 						this._CategoryId = default(int);
 					}
 					this.SendPropertyChanged("Category");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = this;
+		}
+		
+		private void detach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = null;
+		}
+	}
+	
+	[Table(Name="dbo.ProductImage")]
+	public partial class ProductImage : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ProductImageId;
+		
+		private int _ProductId;
+		
+		private int _ImageId;
+		
+		private EntityRef<Image> _Image;
+		
+		private EntityRef<Product> _Product;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnProductImageIdChanging(int value);
+    partial void OnProductImageIdChanged();
+    partial void OnProductIdChanging(int value);
+    partial void OnProductIdChanged();
+    partial void OnImageIdChanging(int value);
+    partial void OnImageIdChanged();
+    #endregion
+		
+		public ProductImage()
+		{
+			this._Image = default(EntityRef<Image>);
+			this._Product = default(EntityRef<Product>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ProductImageId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ProductImageId
+		{
+			get
+			{
+				return this._ProductImageId;
+			}
+			set
+			{
+				if ((this._ProductImageId != value))
+				{
+					this.OnProductImageIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductImageId = value;
+					this.SendPropertyChanged("ProductImageId");
+					this.OnProductImageIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ProductId", DbType="Int NOT NULL")]
+		public int ProductId
+		{
+			get
+			{
+				return this._ProductId;
+			}
+			set
+			{
+				if ((this._ProductId != value))
+				{
+					if (this._Product.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProductIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductId = value;
+					this.SendPropertyChanged("ProductId");
+					this.OnProductIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ImageId", DbType="Int NOT NULL")]
+		public int ImageId
+		{
+			get
+			{
+				return this._ImageId;
+			}
+			set
+			{
+				if ((this._ImageId != value))
+				{
+					if (this._Image.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnImageIdChanging(value);
+					this.SendPropertyChanging();
+					this._ImageId = value;
+					this.SendPropertyChanged("ImageId");
+					this.OnImageIdChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Image_ProductImage", Storage="_Image", ThisKey="ImageId", IsForeignKey=true)]
+		public Image Image
+		{
+			get
+			{
+				return this._Image.Entity;
+			}
+			set
+			{
+				Image previousValue = this._Image.Entity;
+				if (((previousValue != value) 
+							|| (this._Image.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Image.Entity = null;
+						previousValue.ProductImages.Remove(this);
+					}
+					this._Image.Entity = value;
+					if ((value != null))
+					{
+						value.ProductImages.Add(this);
+						this._ImageId = value.ImageId;
+					}
+					else
+					{
+						this._ImageId = default(int);
+					}
+					this.SendPropertyChanged("Image");
+				}
+			}
+		}
+		
+		[Association(Name="Product_ProductImage", Storage="_Product", ThisKey="ProductId", IsForeignKey=true)]
+		public Product Product
+		{
+			get
+			{
+				return this._Product.Entity;
+			}
+			set
+			{
+				Product previousValue = this._Product.Entity;
+				if (((previousValue != value) 
+							|| (this._Product.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Product.Entity = null;
+						previousValue.ProductImages.Remove(this);
+					}
+					this._Product.Entity = value;
+					if ((value != null))
+					{
+						value.ProductImages.Add(this);
+						this._ProductId = value.ProductId;
+					}
+					else
+					{
+						this._ProductId = default(int);
+					}
+					this.SendPropertyChanged("Product");
 				}
 			}
 		}

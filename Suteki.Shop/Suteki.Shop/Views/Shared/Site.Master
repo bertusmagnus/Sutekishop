@@ -45,6 +45,10 @@
 
             <div class="columnsContainer">
 
+                <div class="leftColumn">
+                    <%= LeftMenuContents %>
+                </div>
+
                 <div class="rightColumn">
                     <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
                     </asp:ContentPlaceHolder>

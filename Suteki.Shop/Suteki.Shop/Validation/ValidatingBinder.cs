@@ -54,7 +54,6 @@ namespace Suteki.Shop.Validation
                     {
                         if (exception.InnerException is FormatException)
                         {
-                            //string errorMessage = property.Name + " is not a valid " + property.PropertyType.Name + "; " + formatException.Message;
                             exceptionMessage.AppendFormat("'{0}' is not a valid value for {1}<br />", stringValue, property.Name);
                         }
                         else if (exception.InnerException is ValidationException)

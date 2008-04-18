@@ -9,6 +9,8 @@ using Suteki.Shop.Repositories;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
+using Suteki.Shop.Services;
+using System.Web;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -25,6 +27,8 @@ namespace Suteki.Shop.Tests.Controllers
         Repository<Category> categoryRepository;
         Mock<Repository<Category>> categoryRepositoryMock;
 
+        IHttpFileService httpFileService;
+
         [SetUp]
         public void SetUp()
         {
@@ -37,7 +41,12 @@ namespace Suteki.Shop.Tests.Controllers
             productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
             productRepository = productRepositoryMock.Object;
 
-            productControllerMock = new Mock<ProductController>(productRepository, categoryRepository);
+            httpFileService = new Mock<IHttpFileService>().Object;
+
+            productControllerMock = new Mock<ProductController>(
+                productRepository, 
+                categoryRepository,
+                httpFileService);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
@@ -130,12 +139,23 @@ namespace Suteki.Shop.Tests.Controllers
             form.Add("description", description);
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
+            // add expectations for product repository insertion
             Product product = null;
 
             productRepositoryMock.Expect(r => r.InsertOnSubmit(It.IsAny<Product>()))
                 .Callback<Product>(p => { product = p; })
                 .Verifiable();
             productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
+
+            // add expectations for image upload
+            List<Image> images = new List<Image>
+            {
+                new Image(),
+                new Image()
+            };
+
+            HttpRequestBase httpRequest = testContext.TestContext.Request;
+            Mock.Get(httpFileService).Expect(h => h.GetUploadedImages(httpRequest)).Returns(images).Verifiable();
 
             // excercise the method
             productController.Update(productId);
@@ -147,7 +167,12 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(name, product.Name, "product.Name is incorrect");
             Assert.AreEqual(description, product.Description, "product.Description is incorrect");
 
+            // assert the images were added to the product
+            Assert.AreSame(images[0], product.ProductImages[0].Image, "First product image was not added");
+            Assert.AreSame(images[1], product.ProductImages[1].Image, "Second product image was not added");
+
             productRepositoryMock.Verify();
+            Mock.Get(httpFileService).Verify();
         }
 
         [Test]

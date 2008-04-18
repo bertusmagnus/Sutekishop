@@ -30,13 +30,31 @@
       <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" Type="Category" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Image" Member="Images">
+    <Type Name="Image">
+      <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FileName" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Association Name="Image_ProductImage" Member="ProductImages" OtherKey="ImageId" Type="ProductImage" />
+    </Type>
+  </Table>
   <Table Name="dbo.Product" Member="Products">
     <Type Name="Product">
       <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="CategoryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
       <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ProductImage" Member="ProductImages">
+    <Type Name="ProductImage">
+      <Column Name="ProductImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
+      <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

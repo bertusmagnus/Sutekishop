@@ -14,5 +14,22 @@ namespace Suteki.Shop
         {
             value.Label("Description").IsRequired();
         }
+
+        public bool HasMainImage
+        {
+            get
+            {
+                return this.ProductImages.Count > 0;
+            }
+        }
+
+        public Image MainImage
+        {
+            get
+            {
+                if (HasMainImage) return this.ProductImages[0].Image;
+                return null;
+            }
+        }
     }
 }
