@@ -63,8 +63,8 @@ namespace Suteki.Shop.Tests.Controllers
             productController.Index(categoryId);
 
             Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
-            ProductListViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ProductListViewData;
-            Assert.IsNotNull(viewData, "viewData is not ProductListViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Products, "viewData.Products should not be null");
             Assert.IsNotNull(viewData.Category, "viewData.Category should not be null");
             Assert.AreEqual(categoryId, viewData.Category.CategoryId);
@@ -84,8 +84,8 @@ namespace Suteki.Shop.Tests.Controllers
             productController.Item(productId);
 
             Assert.AreEqual("Item", testContext.ViewEngine.ViewContext.ViewName);
-            ProductItemViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ProductItemViewData;
-            Assert.IsNotNull(viewData, "viewData is not ProductItemViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Product, "viewData.Product should not be null");
             Assert.AreSame(product, viewData.Product, "viewData.Product is not the same as the test product");
         }
@@ -103,8 +103,8 @@ namespace Suteki.Shop.Tests.Controllers
         private void AssertEditViewIsCorrectlyCalled()
         {
             Assert.AreEqual("Edit", testContext.ViewEngine.ViewContext.ViewName);
-            ProductItemViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ProductItemViewData;
-            Assert.IsNotNull(viewData, "viewData is not ProductItemViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Product, "viewData.Product should not be null");
             Assert.IsNotNull(viewData.Categories, "viewData.Categories should not be null");
         }

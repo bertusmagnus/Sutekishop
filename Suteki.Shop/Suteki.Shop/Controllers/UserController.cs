@@ -27,13 +27,19 @@ namespace Suteki.Shop.Controllers
         public void Index()
         {
             var users = userRepository.GetAll();
-            RenderView("Index", new UserViewData { Users = users });
+            RenderView("Index", View.Data.WithUsers(users));
         }
 
         public void New()
         {
             User defaultUser = new User { Email = "", Password = "", RoleId = 1, IsEnabled = true };
-            RenderView("Edit", new UserEditViewData { User = defaultUser, Roles = roleRepository.GetAll() });
+            RenderView("Edit", EditViewData.WithUser(defaultUser));
+        }
+
+        public void Edit(int id)
+        {
+            User user = userRepository.GetById(id);
+            RenderView("Edit", EditViewData.WithUser(user));
         }
 
         [PostOnly]
@@ -58,12 +64,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                RenderView("Edit", new UserEditViewData
-                {
-                    User = user,
-                    Roles = roleRepository.GetAll(),
-                    ErrorMessage = validationException.Message
-                });
+                RenderView("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
                 return;
             }
 
@@ -74,14 +75,13 @@ namespace Suteki.Shop.Controllers
 
             userRepository.SubmitChanges();
 
-            RenderView("Edit", new UserEditViewData 
-            { 
-                User = user, 
-                Roles = roleRepository.GetAll(),
-                Message = "Changes have been saved"
-            });
+            RenderView("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
         }
 
+        /// <summary>
+        /// Have to provide custom update functionality because of the quirks of having a password
+        /// </summary>
+        /// <param name="user"></param>
         private void UpdateFromForm(User user)
         {
             user.Email = this.ReadFromRequest("email");
@@ -103,11 +103,12 @@ namespace Suteki.Shop.Controllers
             user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "SHA1");
         }
 
-        public void Edit(int id)
+        public ShopViewData EditViewData
         {
-            User user = userRepository.GetById(id);
-
-            RenderView("Edit", new UserEditViewData { User = user, Roles = roleRepository.GetAll() });
+            get
+            {
+                return View.Data.WithRoles(roleRepository.GetAll());
+            }
         }
     }
 }

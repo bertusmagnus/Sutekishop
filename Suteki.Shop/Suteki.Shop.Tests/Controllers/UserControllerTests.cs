@@ -49,8 +49,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
 
             // ViewData should be UserViewData
-            UserViewData viewData = testContext.ViewEngine.ViewContext.ViewData as UserViewData;
-            Assert.IsNotNull(viewData, "ViewData is not UserViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some users
             Assert.IsNotNull(viewData.Users, "ViewData.Users is null");
@@ -93,8 +93,8 @@ namespace Suteki.Shop.Tests.Controllers
 
         private void AssertUserEditViewDataIsCorrect()
         {
-            UserEditViewData viewData = testContext.ViewEngine.ViewContext.ViewData as UserEditViewData;
-            Assert.IsNotNull(viewData, "ViewData is not UserEditViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some roles
             Assert.IsNotNull(viewData.Roles, "viewData.Roles is null");

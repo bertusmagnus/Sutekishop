@@ -42,8 +42,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName, "ViewName is incorrect");
 
-            CategoryViewData viewData = testContext.ViewEngine.ViewContext.ViewData as CategoryViewData;
-            Assert.IsNotNull(viewData, "viewData is not CategoryViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
         }
@@ -60,8 +60,8 @@ namespace Suteki.Shop.Tests.Controllers
         {
             Assert.AreEqual("Edit", testContext.ViewEngine.ViewContext.ViewName, "ViewName is incorrect");
 
-            CategoryViewData viewData = testContext.ViewEngine.ViewContext.ViewData as CategoryViewData;
-            Assert.IsNotNull(viewData, "viewData is not CategoryViewData");
+            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.IsNotNull(viewData.Category, "Category is null");
             Assert.IsNotNull(viewData.Categories, "Categories is null");

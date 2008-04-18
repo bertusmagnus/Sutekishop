@@ -23,31 +23,21 @@ namespace Suteki.Shop.Controllers
         public void Index()
         {
             Category root = categoryRepository.GetRootCategory();
-            RenderView("Index", new CategoryViewData { Category = root });
+            RenderView("Index", View.Data.WithCategory(root));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public void New()
         {
             Category defaultCategory = new Category { ParentId = 1 };
-
-            RenderView("Edit", new CategoryViewData 
-            { 
-                Category = defaultCategory,
-                Categories = categoryRepository.GetAll().Alphabetical()
-            });
+            RenderView("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public void Edit(int id)
         {
             Category category = categoryRepository.GetById(id);
-
-            RenderView("Edit", new CategoryViewData
-            {
-                Category = category,
-                Categories = categoryRepository.GetAll().Alphabetical()
-            });
+            RenderView("Edit", EditViewData.WithCategory(category));
         }
 
         [PostOnly]
@@ -70,12 +60,8 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                RenderView("Edit", new CategoryViewData
-                {
-                    ErrorMessage = validationException.Message,
-                    Category = category,
-                    Categories = categoryRepository.GetAll().Alphabetical()
-                });
+                RenderView("Edit", EditViewData.WithCategory(category)
+                    .WithErrorMessage(validationException.Message));
                 return;
             }
 
@@ -86,12 +72,15 @@ namespace Suteki.Shop.Controllers
 
             categoryRepository.SubmitChanges();
 
-            RenderView("Edit", new CategoryViewData
+            RenderView("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved"));
+        }
+
+        private ShopViewData EditViewData
+        {
+            get
             {
-                Message = "The category has been saved",
-                Category = category,
-                Categories = categoryRepository.GetAll().Alphabetical()
-            });
+                return View.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
+            }
         }
     }
 }

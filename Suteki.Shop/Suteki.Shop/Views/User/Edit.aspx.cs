@@ -7,7 +7,7 @@ using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Views.User
 {
-    public partial class Edit : ViewPage<UserEditViewData>
+    public partial class Edit : ViewPage<ShopViewData>
     {
     }
 }

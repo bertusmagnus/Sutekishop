@@ -20,7 +20,7 @@ namespace Suteki.Shop.Controllers
 
         public void Index()
         {
-            RenderView("Index", new CommonViewData());
+            RenderView("Index", View.Data);
         }
 
         public void Authenticate(string email, string password)
@@ -32,13 +32,12 @@ namespace Suteki.Shop.Controllers
                 return;
             }
 
-            RenderView("Index", new CommonViewData { ErrorMessage = "Unknown email or password" });
+            RenderView("Index", View.Data.WithErrorMessage("Unknown email or password"));
         }
 
         public void Logout()
         {
             RemoveAuthenticationCookie();
-
             RedirectToAction2("Index", "Home");
         }
 

@@ -17,18 +17,15 @@ namespace Suteki.Shop.Controllers
         IRepository<Product> productRepository;
         IRepository<Category> categoryRepository;
         IHttpFileService httpFileService;
-        IImageFileService imageFileService;
 
         public ProductController(
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
-            IHttpFileService httpFileService,
-            IImageFileService imageFileService)
+            IHttpFileService httpFileService)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
             this.httpFileService = httpFileService;
-            this.imageFileService = imageFileService;
         }
 
         public void Index(int id)
@@ -36,23 +33,14 @@ namespace Suteki.Shop.Controllers
             Category category = categoryRepository.GetById(id);
             var products = productRepository.GetAll().WhereCategoryIdIs(id);
 
-            RenderView("Index", new ProductListViewData 
-            { 
-                Products = products,
-                Category = category,
-                ImageFile = this.imageFileService
-            });
+            RenderView("Index", View.Data.WithProducts(products).WithCategory(category)); 
         }
 
         public void Item(int id)
         {
             Product product = productRepository.GetById(id);
 
-            RenderView("Item", new ProductItemViewData 
-            { 
-                Product = product,
-                ImageFile = this.imageFileService
-            });
+            RenderView("Item", View.Data.WithProduct(product)); 
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -64,12 +52,7 @@ namespace Suteki.Shop.Controllers
                 CategoryId = id,
             };
 
-            RenderView("Edit", new ProductItemViewData 
-            { 
-                Product = defaultProduct,
-                Categories = categoryRepository.GetAll().Alphabetical(),
-                ImageFile = this.imageFileService
-            });
+            RenderView("Edit", EditViewData.WithProduct(defaultProduct)); 
         }
 
         [PostOnly]
@@ -93,13 +76,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                RenderView("Edit", new ProductItemViewData
-                {
-                    ErrorMessage = validationException.Message,
-                    Product = product,
-                    Categories = categoryRepository.GetAll().Alphabetical(),
-                    ImageFile = this.imageFileService
-                });
+                RenderView("Edit", EditViewData.WithProduct(product).WithErrorMessage(validationException.Message));
                 return;
             }
 
@@ -110,13 +87,7 @@ namespace Suteki.Shop.Controllers
             
             productRepository.SubmitChanges();
 
-            RenderView("Edit", new ProductItemViewData
-                {
-                    Message = "This product has been saved",
-                    Product = product,
-                    Categories = categoryRepository.GetAll().Alphabetical(),
-                    ImageFile = this.imageFileService
-                });
+            RenderView("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
         }
 
         private void UpdateImages(Product product, HttpRequestBase request)
@@ -135,13 +106,15 @@ namespace Suteki.Shop.Controllers
         public void Edit(int id)
         {
             Product product = productRepository.GetById(id);
+            RenderView("Edit", EditViewData.WithProduct(product));
+        }
 
-            RenderView("Edit", new ProductItemViewData
+        public ShopViewData EditViewData
+        {
+            get
             {
-                Product = product,
-                Categories = categoryRepository.GetAll().Alphabetical(),
-                ImageFile = this.imageFileService
-            });
+                return View.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
+            }
         }
     }
 }

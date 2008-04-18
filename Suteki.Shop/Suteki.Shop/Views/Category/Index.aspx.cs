@@ -7,7 +7,7 @@ using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Views.Category
 {
-    public partial class Index : ViewPage<CategoryViewData>
+    public partial class Index : ViewPage<ShopViewData>
     {
     }
 }

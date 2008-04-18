@@ -11,7 +11,7 @@ namespace Suteki.Shop.Controllers
     {
         public void Index()
         {
-            RenderView("Index", new CommonViewData());
+            RenderView("Index", new ShopViewData());
         }
     }
 }

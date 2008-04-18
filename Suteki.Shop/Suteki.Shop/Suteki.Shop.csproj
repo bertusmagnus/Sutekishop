@@ -123,14 +123,9 @@
     <Compile Include="Validation\ValidationException.cs" />
     <Compile Include="Validation\ValidationExtensions.cs" />
     <Compile Include="Validation\Validator.cs" />
-    <Compile Include="ViewData\CategoryViewData.cs" />
-    <Compile Include="ViewData\CommonViewData.cs" />
     <Compile Include="ViewData\IMessageViewData.cs" />
-    <Compile Include="ViewData\ProductItemViewData.cs" />
-    <Compile Include="ViewData\ProductListViewData.cs" />
-    <Compile Include="ViewData\UserEditViewData.cs" />
+    <Compile Include="ViewData\ShopViewData.cs" />
     <Compile Include="ViewData\IErrorViewData.cs" />
-    <Compile Include="ViewData\UserViewData.cs" />
     <Compile Include="Views\Category\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
