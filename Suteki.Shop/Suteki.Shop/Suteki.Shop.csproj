@@ -97,6 +97,8 @@
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />

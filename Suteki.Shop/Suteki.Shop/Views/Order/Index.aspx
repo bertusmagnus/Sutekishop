@@ -3,24 +3,36 @@
 
 <table>
     <tr>
-        <th>Product</th>
-        <th>Size</th>
-        <th>Quantity</th>
-        <th>Unit Price</th>
-        <th>Total Price</th>
+        <th class="wide">Product</th>
+        <th class="thin">Size</th>
+        <th class="thin number">Quantity</th>
+        <th class="thin number">Unit Price</th>
+        <th class="thin number">Total Price</th>
+        <th class="thin number">Delete</th>
     </tr>
     
     <% foreach(var orderItem in ViewData.Order.OrderItems) { %>
     
     <tr>
-        <td><%= orderItem.Size.Product.Name %></td>
+        <td><%= Html.ActionLink<ProductController>(c => c.Item(orderItem.Size.ProductId), orderItem.Size.Product.Name) %></td>
         <td><%= orderItem.Size.Name %></td>
-        <td><%= orderItem.Quantity %></td>
-        <td><%= 0.ToString("£0.00") %></td>
-        <td><%= 0.ToString("£0.00")%></td>
+        <td class="number"><%= orderItem.Quantity %></td>
+        <td class="number"><%= orderItem.Size.Product.Price.ToString("£0.00") %></td>
+        <td class="number"><%= orderItem.Total.ToString("£0.00")%></td>
+        <td class="number"><%= Html.ActionLink<OrderController>(c => c.Remove(orderItem.OrderItemId), "X") %></td>
     </tr>
     
     <% } %>
+    
+    <tr class="total">
+        <td>Total</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="number"><%= ViewData.Order.Total.ToString("£0.00") %></td>
+        <td>&nbsp;</td>
+    </tr>
+    
 </table>
 
 </asp:Content>

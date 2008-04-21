@@ -13,13 +13,19 @@ namespace Suteki.Shop.Tests.Controllers
     {
         OrderController orderController;
         ControllerTestContext testContext;
+        
         IRepository<Order> orderRepository;
+        IRepository<OrderItem> orderItemRepository;
+        IRepository<User> userRepository;
 
         [SetUp]
         public void SetUp()
         {
             orderRepository = new Mock<IRepository<Order>>().Object;
-            orderController = new Mock<OrderController>(orderRepository).Object;
+            orderItemRepository = new Mock<IRepository<OrderItem>>().Object;
+            userRepository = new Mock<IRepository<User>>().Object;
+
+            orderController = new Mock<OrderController>(orderRepository, orderItemRepository, userRepository).Object;
             testContext = new ControllerTestContext(orderController);
         }
 
@@ -38,10 +44,11 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreSame(user.Orders[0], viewData.Order, "The user's order has not been shown");
         }
 
-        private static User CreateUserWithOrder()
+        private User CreateUserWithOrder()
         {
             User user = new User
             {
+                RoleId = Role.GuestId,
                 Orders =
                 {
                     new Order()
@@ -63,6 +70,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             // expect 
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
+            Mock.Get(orderController).Expect(oc => oc.PromoteGuestToNewCustomer()).Returns(user).Verifiable();
 
             orderController.Update();
 
@@ -73,6 +81,27 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(2, user.Orders[0].OrderItems[0].Quantity);
             
             Mock.Get(orderRepository).Verify();
+            Mock.Get(orderController).Verify();
+        }
+
+        [Test]
+        public void Remove_ShouldRemoveItemFromOrder()
+        {
+            int orderItemIdToRemove = 3;
+
+            User user = CreateUserWithOrder();
+            OrderItem orderItem = new OrderItem { OrderItemId = orderItemIdToRemove };
+            user.Orders[0].OrderItems.Add(orderItem);
+            testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
+
+            // expect 
+            Mock.Get(orderItemRepository).Expect(ir => ir.DeleteOnSubmit(orderItem)).Verifiable();
+            Mock.Get(orderItemRepository).Expect(ir => ir.SubmitChanges());
+
+            orderController.Remove(orderItemIdToRemove);
+
+            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
+            Mock.Get(orderItemRepository).Verify();
         }
     }
 }

@@ -17,15 +17,7 @@ namespace Suteki.Shop.HtmlHelpers
             writer.AddAttribute("id", "loginStatus");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
-            IPrincipal user = htmlHelper.ViewContext.HttpContext.User;
-            if (user.Identity.IsAuthenticated)
-            {
-                writer.Write(user.Identity.Name);
-            }
-            else
-            {
-                writer.Write("Guest");
-            }
+            writer.Write(htmlHelper.CurrentUser().PublicIdentity);
             
             writer.RenderEndTag();
             
@@ -34,7 +26,7 @@ namespace Suteki.Shop.HtmlHelpers
 
         public static string LoginLink(this HtmlHelper htmlHelper)
         {
-            if (htmlHelper.ViewContext.HttpContext.User.Identity.IsAuthenticated)
+            if (htmlHelper.CurrentUser().CanLogin)
             {
                 return htmlHelper.ActionLink<LoginController>(c => c.Logout(), "Logout");
             }
@@ -42,6 +34,13 @@ namespace Suteki.Shop.HtmlHelpers
             {
                 return htmlHelper.ActionLink<LoginController>(c => c.Index(), "Login");
             }
+        }
+
+        public static User CurrentUser(this HtmlHelper htmlHelper)
+        {
+            User user = htmlHelper.ViewContext.HttpContext.User as User;
+            if (user == null) throw new ApplicationException("Current context user cannot be cast to Suteki.Shop.User");
+            return user;
         }
 
         /// <summary>

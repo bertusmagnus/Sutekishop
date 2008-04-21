@@ -48,7 +48,7 @@ function onThumbnailClick(img)
     <%= Html.Select("sizeid", ViewData.Product.Sizes, "Name", "SizeId")%>
 
     <label for="quantity">Quantity</label>
-    <%= Html.TextBox("quantity")%>
+    <%= Html.Select("quantity", 1.To(10).Select(i => new { Value = i }), "Value", "Value") %>
 
     <%= Html.SubmitButton("addToBasket", "Add to basket")%>
     

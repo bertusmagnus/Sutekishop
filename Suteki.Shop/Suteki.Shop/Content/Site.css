@@ -189,8 +189,42 @@ textarea
 
 /*-------------------------------------- table -------------------------------------------*/
 
+table
+{
+}
+
+tr.total
+{
+	font-weight: bold;
+}
+
+th
+{
+	margin: 0px 20px 0px 0px;
+}
+
+th.wide
+{
+	width: 200px;
+}
+
+th.thin
+{
+	width: 80px;
+}
+
+th.number
+{
+	text-align: right;
+}
+
 td
 {
-	padding: 0px 20px 0px 0px;
+	margin: 0px 20px 0px 0px;
+}
+
+td.number
+{
+	text-align: right;
 }
 

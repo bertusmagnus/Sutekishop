@@ -15,6 +15,17 @@ namespace Suteki.Shop
             }
         }
 
+        public string PublicIdentity
+        {
+            get
+            {
+                if (CanLogin) return Email;
+                return "Guest";
+            }
+        }
+
+        public bool CanLogin { get { return IsAdministrator || IsOrderProcessor; } }
+
         public Order CurrentOrder
         {
             get
