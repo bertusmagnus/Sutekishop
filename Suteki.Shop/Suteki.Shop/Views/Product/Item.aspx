@@ -19,6 +19,7 @@ function onThumbnailClick(img)
     <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Product.ProductId), "Edit") %></p>
 <% } %>
 
+<div class="productDescription">
 <div class="mainImage">
 <% if(ViewData.Product.HasMainImage) { %>
     <%= Html.Image("~/ProductPhotos/" + ViewData.Product.MainImage.MainFileName, new { id = "mainImage" })%>
@@ -32,6 +33,25 @@ function onThumbnailClick(img)
 
     <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName, new { onclick = "onThumbnailClick(this)" })%>
 
+<% } %>
+</div>
+</div>
+
+
+<div>
+<% using (Html.Form("Order", "Update"))
+   { %>
+
+    <%= Html.ErrorBox(ViewData)%>
+
+    <label for="sizeid">Size</label>
+    <%= Html.Select("sizeid", ViewData.Product.Sizes, "Name", "SizeId")%>
+
+    <label for="quantity">Quantity</label>
+    <%= Html.TextBox("quantity")%>
+
+    <%= Html.SubmitButton("addToBasket", "Add to basket")%>
+    
 <% } %>
 </div>
 

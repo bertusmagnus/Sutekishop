@@ -28,6 +28,7 @@ namespace Suteki.Shop.Tests.Controllers
         Mock<Repository<Category>> categoryRepositoryMock;
 
         IHttpFileService httpFileService;
+        ISizeService sizeService;
 
         [SetUp]
         public void SetUp()
@@ -42,11 +43,13 @@ namespace Suteki.Shop.Tests.Controllers
             productRepository = productRepositoryMock.Object;
 
             httpFileService = new Mock<IHttpFileService>().Object;
+            sizeService = new Mock<ISizeService>().Object;
 
             productControllerMock = new Mock<ProductController>(
                 productRepository, 
                 categoryRepository,
-                httpFileService);
+                httpFileService,
+                sizeService);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
@@ -157,6 +160,10 @@ namespace Suteki.Shop.Tests.Controllers
             HttpRequestBase httpRequest = testContext.TestContext.Request;
             Mock.Get(httpFileService).Expect(h => h.GetUploadedImages(httpRequest)).Returns(images).Verifiable();
 
+            // expect the size service to be called
+            Mock.Get(sizeService).Expect(s => s.WithVaues(form)).Returns(sizeService).Verifiable();
+            Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
+
             // excercise the method
             productController.Update(productId);
 
@@ -173,6 +180,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             productRepositoryMock.Verify();
             Mock.Get(httpFileService).Verify();
+            Mock.Get(sizeService).Verify();
         }
 
         [Test]
@@ -201,6 +209,10 @@ namespace Suteki.Shop.Tests.Controllers
 
             productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product).Verifiable();
             productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
+
+            // expect the size service to be called
+            Mock.Get(sizeService).Expect(s => s.WithVaues(form)).Returns(sizeService).Verifiable();
+            Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
             productController.Update(productId);

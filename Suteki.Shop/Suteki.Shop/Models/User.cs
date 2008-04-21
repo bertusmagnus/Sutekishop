@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using Suteki.Shop.Validation;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop
 {
@@ -11,6 +12,22 @@ namespace Suteki.Shop
             get
             {
                 return new User() { Email = "Guest@guest.com", Role = Role.Guest };
+            }
+        }
+
+        public Order CurrentOrder
+        {
+            get
+            {
+                if (Orders.Count == 0)
+                {
+                    return new Order
+                    {
+                        User = this,
+                        OrderDate = DateTime.Now
+                    };
+                }
+                return Orders.CurrentOrder();
             }
         }
 

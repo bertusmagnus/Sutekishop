@@ -82,6 +82,7 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
@@ -114,6 +116,8 @@
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageFileService.cs" />
     <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\ISizeService.cs" />
+    <Compile Include="Services\SizeService.cs" />
     <Compile Include="Shop.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -152,6 +156,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Login\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Order\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Order\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Product\Edit.aspx.cs">
@@ -214,6 +225,7 @@
     <Content Include="Views\Category\Edit.aspx" />
     <Content Include="Views\Category\Index.aspx" />
     <Content Include="Views\Login\Index.aspx" />
+    <Content Include="Views\Order\Index.aspx" />
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />
     <Content Include="Views\Product\Item.aspx" />

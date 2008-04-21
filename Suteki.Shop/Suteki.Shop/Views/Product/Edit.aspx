@@ -24,6 +24,21 @@
         <label for="description">Description</label>
         <%= Html.TextArea("description", ViewData.Product.Description)%>
         
+        <h3>Sizes</h3>
+        
+        <p>
+        <% foreach(var size in ViewData.Product.Sizes) { %>
+            <%= size.Name %>&nbsp;
+        <% } %>
+        </p>
+        <div class="sizeInput">
+        <% for(int i=0; i<10; i++) { %>
+            <%= Html.TextBox("size_" + i.ToString(), null, 10, 10, new { _class = "inline" })%>
+        <% } %>
+        </div>
+        
+        <h3>Photos</h3>
+        
         <div class="imageList">
         <% foreach(var productImage in ViewData.Product.ProductImages) { %>
 
@@ -31,8 +46,6 @@
 
         <% } %>
         </div>
-        
-        <h3>Upload Photos</h3>
         
         <% for (int i = 0; i < 5; i++)
            { %>

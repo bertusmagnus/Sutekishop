@@ -48,6 +48,15 @@ namespace Suteki.Shop
     partial void InsertProductImage(ProductImage instance);
     partial void UpdateProductImage(ProductImage instance);
     partial void DeleteProductImage(ProductImage instance);
+    partial void InsertSize(Size instance);
+    partial void UpdateSize(Size instance);
+    partial void DeleteSize(Size instance);
+    partial void InsertOrder(Order instance);
+    partial void UpdateOrder(Order instance);
+    partial void DeleteOrder(Order instance);
+    partial void InsertOrderItem(OrderItem instance);
+    partial void UpdateOrderItem(OrderItem instance);
+    partial void DeleteOrderItem(OrderItem instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -125,6 +134,30 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<ProductImage>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Size> Sizes
+		{
+			get
+			{
+				return this.GetTable<Size>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Order> Orders
+		{
+			get
+			{
+				return this.GetTable<Order>();
+			}
+		}
+		
+		public System.Data.Linq.Table<OrderItem> OrderItems
+		{
+			get
+			{
+				return this.GetTable<OrderItem>();
 			}
 		}
 	}
@@ -285,6 +318,8 @@ namespace Suteki.Shop
 		
 		private System.Data.Linq.Binary _Timestamp;
 		
+		private EntitySet<Order> _Orders;
+		
 		private EntityRef<Role> _Role;
 		
     #region Extensibility Method Definitions
@@ -307,6 +342,7 @@ namespace Suteki.Shop
 		
 		public User()
 		{
+			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
 			this._Role = default(EntityRef<Role>);
 			OnCreated();
 		}
@@ -435,6 +471,19 @@ namespace Suteki.Shop
 			}
 		}
 		
+		[Association(Name="User_Order", Storage="_Orders", OtherKey="UserId")]
+		public EntitySet<Order> Orders
+		{
+			get
+			{
+				return this._Orders;
+			}
+			set
+			{
+				this._Orders.Assign(value);
+			}
+		}
+		
 		[Association(Name="Role_User", Storage="_Role", ThisKey="RoleId", IsForeignKey=true)]
 		public Role Role
 		{
@@ -487,6 +536,18 @@ namespace Suteki.Shop
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
 		}
 	}
 	
@@ -851,6 +912,8 @@ namespace Suteki.Shop
 		
 		private EntitySet<ProductImage> _ProductImages;
 		
+		private EntitySet<Size> _Sizes;
+		
 		private EntityRef<Category> _Category;
 		
     #region Extensibility Method Definitions
@@ -870,6 +933,7 @@ namespace Suteki.Shop
 		public Product()
 		{
 			this._ProductImages = new EntitySet<ProductImage>(new Action<ProductImage>(this.attach_ProductImages), new Action<ProductImage>(this.detach_ProductImages));
+			this._Sizes = new EntitySet<Size>(new Action<Size>(this.attach_Sizes), new Action<Size>(this.detach_Sizes));
 			this._Category = default(EntityRef<Category>);
 			OnCreated();
 		}
@@ -971,6 +1035,19 @@ namespace Suteki.Shop
 			}
 		}
 		
+		[Association(Name="Product_Size", Storage="_Sizes", OtherKey="ProductId")]
+		public EntitySet<Size> Sizes
+		{
+			get
+			{
+				return this._Sizes;
+			}
+			set
+			{
+				this._Sizes.Assign(value);
+			}
+		}
+		
 		[Association(Name="Category_Product", Storage="_Category", ThisKey="CategoryId", IsForeignKey=true)]
 		public Category Category
 		{
@@ -1032,6 +1109,18 @@ namespace Suteki.Shop
 		}
 		
 		private void detach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = null;
+		}
+		
+		private void attach_Sizes(Size entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = this;
+		}
+		
+		private void detach_Sizes(Size entity)
 		{
 			this.SendPropertyChanging();
 			entity.Product = null;
@@ -1205,6 +1294,604 @@ namespace Suteki.Shop
 						this._ProductId = default(int);
 					}
 					this.SendPropertyChanged("Product");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.Size")]
+	public partial class Size : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _SizeId;
+		
+		private int _ProductId;
+		
+		private string _Name;
+		
+		private bool _IsInStock;
+		
+		private EntitySet<OrderItem> _OrderItems;
+		
+		private EntityRef<Product> _Product;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnSizeIdChanging(int value);
+    partial void OnSizeIdChanged();
+    partial void OnProductIdChanging(int value);
+    partial void OnProductIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnIsInStockChanging(bool value);
+    partial void OnIsInStockChanged();
+    #endregion
+		
+		public Size()
+		{
+			this._OrderItems = new EntitySet<OrderItem>(new Action<OrderItem>(this.attach_OrderItems), new Action<OrderItem>(this.detach_OrderItems));
+			this._Product = default(EntityRef<Product>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_SizeId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int SizeId
+		{
+			get
+			{
+				return this._SizeId;
+			}
+			set
+			{
+				if ((this._SizeId != value))
+				{
+					this.OnSizeIdChanging(value);
+					this.SendPropertyChanging();
+					this._SizeId = value;
+					this.SendPropertyChanged("SizeId");
+					this.OnSizeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ProductId", DbType="Int NOT NULL")]
+		public int ProductId
+		{
+			get
+			{
+				return this._ProductId;
+			}
+			set
+			{
+				if ((this._ProductId != value))
+				{
+					if (this._Product.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProductIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductId = value;
+					this.SendPropertyChanged("ProductId");
+					this.OnProductIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsInStock", DbType="Bit NOT NULL")]
+		public bool IsInStock
+		{
+			get
+			{
+				return this._IsInStock;
+			}
+			set
+			{
+				if ((this._IsInStock != value))
+				{
+					this.OnIsInStockChanging(value);
+					this.SendPropertyChanging();
+					this._IsInStock = value;
+					this.SendPropertyChanged("IsInStock");
+					this.OnIsInStockChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Size_OrderItem", Storage="_OrderItems", OtherKey="SizeId")]
+		public EntitySet<OrderItem> OrderItems
+		{
+			get
+			{
+				return this._OrderItems;
+			}
+			set
+			{
+				this._OrderItems.Assign(value);
+			}
+		}
+		
+		[Association(Name="Product_Size", Storage="_Product", ThisKey="ProductId", IsForeignKey=true)]
+		public Product Product
+		{
+			get
+			{
+				return this._Product.Entity;
+			}
+			set
+			{
+				Product previousValue = this._Product.Entity;
+				if (((previousValue != value) 
+							|| (this._Product.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Product.Entity = null;
+						previousValue.Sizes.Remove(this);
+					}
+					this._Product.Entity = value;
+					if ((value != null))
+					{
+						value.Sizes.Add(this);
+						this._ProductId = value.ProductId;
+					}
+					else
+					{
+						this._ProductId = default(int);
+					}
+					this.SendPropertyChanged("Product");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_OrderItems(OrderItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Size = this;
+		}
+		
+		private void detach_OrderItems(OrderItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Size = null;
+		}
+	}
+	
+	[Table(Name="dbo.[Order]")]
+	public partial class Order : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _OrderId;
+		
+		private int _UserId;
+		
+		private System.DateTime _OrderDate;
+		
+		private EntitySet<OrderItem> _OrderItems;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrderIdChanging(int value);
+    partial void OnOrderIdChanged();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    partial void OnOrderDateChanging(System.DateTime value);
+    partial void OnOrderDateChanged();
+    #endregion
+		
+		public Order()
+		{
+			this._OrderItems = new EntitySet<OrderItem>(new Action<OrderItem>(this.attach_OrderItems), new Action<OrderItem>(this.detach_OrderItems));
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_OrderId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int OrderId
+		{
+			get
+			{
+				return this._OrderId;
+			}
+			set
+			{
+				if ((this._OrderId != value))
+				{
+					this.OnOrderIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderId = value;
+					this.SendPropertyChanged("OrderId");
+					this.OnOrderIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UserId", DbType="Int NOT NULL")]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_OrderDate", DbType="DateTime NOT NULL")]
+		public System.DateTime OrderDate
+		{
+			get
+			{
+				return this._OrderDate;
+			}
+			set
+			{
+				if ((this._OrderDate != value))
+				{
+					this.OnOrderDateChanging(value);
+					this.SendPropertyChanging();
+					this._OrderDate = value;
+					this.SendPropertyChanged("OrderDate");
+					this.OnOrderDateChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Order_OrderItem", Storage="_OrderItems", OtherKey="OrderId")]
+		public EntitySet<OrderItem> OrderItems
+		{
+			get
+			{
+				return this._OrderItems;
+			}
+			set
+			{
+				this._OrderItems.Assign(value);
+			}
+		}
+		
+		[Association(Name="User_Order", Storage="_User", ThisKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(int);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_OrderItems(OrderItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Order = this;
+		}
+		
+		private void detach_OrderItems(OrderItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Order = null;
+		}
+	}
+	
+	[Table(Name="dbo.OrderItem")]
+	public partial class OrderItem : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _OrderItemId;
+		
+		private int _OrderId;
+		
+		private int _SizeId;
+		
+		private int _Quantity;
+		
+		private EntityRef<Order> _Order;
+		
+		private EntityRef<Size> _Size;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrderItemIdChanging(int value);
+    partial void OnOrderItemIdChanged();
+    partial void OnOrderIdChanging(int value);
+    partial void OnOrderIdChanged();
+    partial void OnSizeIdChanging(int value);
+    partial void OnSizeIdChanged();
+    partial void OnQuantityChanging(int value);
+    partial void OnQuantityChanged();
+    #endregion
+		
+		public OrderItem()
+		{
+			this._Order = default(EntityRef<Order>);
+			this._Size = default(EntityRef<Size>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_OrderItemId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int OrderItemId
+		{
+			get
+			{
+				return this._OrderItemId;
+			}
+			set
+			{
+				if ((this._OrderItemId != value))
+				{
+					this.OnOrderItemIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderItemId = value;
+					this.SendPropertyChanged("OrderItemId");
+					this.OnOrderItemIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_OrderId", DbType="Int NOT NULL")]
+		public int OrderId
+		{
+			get
+			{
+				return this._OrderId;
+			}
+			set
+			{
+				if ((this._OrderId != value))
+				{
+					if (this._Order.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnOrderIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderId = value;
+					this.SendPropertyChanged("OrderId");
+					this.OnOrderIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SizeId", DbType="Int NOT NULL")]
+		public int SizeId
+		{
+			get
+			{
+				return this._SizeId;
+			}
+			set
+			{
+				if ((this._SizeId != value))
+				{
+					if (this._Size.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSizeIdChanging(value);
+					this.SendPropertyChanging();
+					this._SizeId = value;
+					this.SendPropertyChanged("SizeId");
+					this.OnSizeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Quantity", DbType="Int NOT NULL")]
+		public int Quantity
+		{
+			get
+			{
+				return this._Quantity;
+			}
+			set
+			{
+				if ((this._Quantity != value))
+				{
+					this.OnQuantityChanging(value);
+					this.SendPropertyChanging();
+					this._Quantity = value;
+					this.SendPropertyChanged("Quantity");
+					this.OnQuantityChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Order_OrderItem", Storage="_Order", ThisKey="OrderId", IsForeignKey=true)]
+		public Order Order
+		{
+			get
+			{
+				return this._Order.Entity;
+			}
+			set
+			{
+				Order previousValue = this._Order.Entity;
+				if (((previousValue != value) 
+							|| (this._Order.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Order.Entity = null;
+						previousValue.OrderItems.Remove(this);
+					}
+					this._Order.Entity = value;
+					if ((value != null))
+					{
+						value.OrderItems.Add(this);
+						this._OrderId = value.OrderId;
+					}
+					else
+					{
+						this._OrderId = default(int);
+					}
+					this.SendPropertyChanged("Order");
+				}
+			}
+		}
+		
+		[Association(Name="Size_OrderItem", Storage="_Size", ThisKey="SizeId", IsForeignKey=true)]
+		public Size Size
+		{
+			get
+			{
+				return this._Size.Entity;
+			}
+			set
+			{
+				Size previousValue = this._Size.Entity;
+				if (((previousValue != value) 
+							|| (this._Size.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Size.Entity = null;
+						previousValue.OrderItems.Remove(this);
+					}
+					this._Size.Entity = value;
+					if ((value != null))
+					{
+						value.OrderItems.Add(this);
+						this._SizeId = value.SizeId;
+					}
+					else
+					{
+						this._SizeId = default(int);
+					}
+					this.SendPropertyChanged("Size");
 				}
 			}
 		}

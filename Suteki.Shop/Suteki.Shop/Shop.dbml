@@ -17,6 +17,7 @@
       <Column Name="RoleId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="User_Order" Member="Orders" OtherKey="UserId" Type="Order" />
       <Association Name="Role_User" Member="Role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
     </Type>
   </Table>
@@ -45,6 +46,7 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
+      <Association Name="Product_Size" Member="Sizes" OtherKey="ProductId" Type="Size" />
       <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
     </Type>
   </Table>
@@ -55,6 +57,35 @@
       <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
       <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Size" Member="Sizes">
+    <Type Name="Size">
+      <Column Name="SizeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="IsInStock" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Size_OrderItem" Member="OrderItems" OtherKey="SizeId" Type="OrderItem" />
+      <Association Name="Product_Size" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Order]" Member="Orders">
+    <Type Name="Order">
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Order_OrderItem" Member="OrderItems" OtherKey="OrderId" Type="OrderItem" />
+      <Association Name="User_Order" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderItem" Member="OrderItems">
+    <Type Name="OrderItem">
+      <Column Name="OrderItemId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Order_OrderItem" Member="Order" ThisKey="OrderId" Type="Order" IsForeignKey="true" />
+      <Association Name="Size_OrderItem" Member="Size" ThisKey="SizeId" Type="Size" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

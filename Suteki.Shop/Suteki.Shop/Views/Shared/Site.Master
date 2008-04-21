@@ -24,6 +24,9 @@
                     <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
                 </li>
                 <li>
+                    <%= Html.ActionLink<OrderController>(c => c.Index(), "Basket") %>
+                </li>
+                <li>
                     <%= Html.LoginLink() %>
                 </li>
             </ul>

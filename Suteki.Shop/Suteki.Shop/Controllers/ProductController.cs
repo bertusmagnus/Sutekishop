@@ -17,15 +17,18 @@ namespace Suteki.Shop.Controllers
         IRepository<Product> productRepository;
         IRepository<Category> categoryRepository;
         IHttpFileService httpFileService;
+        ISizeService sizeService;
 
         public ProductController(
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
-            IHttpFileService httpFileService)
+            IHttpFileService httpFileService,
+            ISizeService sizeService)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
             this.httpFileService = httpFileService;
+            this.sizeService = sizeService;
         }
 
         public void Index(int id)
@@ -73,6 +76,7 @@ namespace Suteki.Shop.Controllers
             {
                 ValidatingBinder.UpdateFrom(product, Request.Form);
                 UpdateImages(product, Request);
+                sizeService.WithVaues(Request.Form).Update(product);
             }
             catch (ValidationException validationException)
             {

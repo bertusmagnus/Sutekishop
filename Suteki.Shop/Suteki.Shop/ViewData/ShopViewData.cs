@@ -19,7 +19,10 @@ namespace Suteki.Shop.ViewData
         public User User { get; set; }
         public IEnumerable<User> Users { get; set; }
 
-        // attempt at a fluent interfact
+        public Order Order { get; set; }
+
+        // attempt at a fluent interface
+
         public ShopViewData WithErrorMessage(string errorMessage)
         {
             this.ErrorMessage = errorMessage;
@@ -71,6 +74,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithUsers(IEnumerable<User> users)
         {
             this.Users = users;
+            return this;
+        }
+
+        public ShopViewData WithOrder(Order order)
+        {
+            this.Order = order;
             return this;
         }
     }
