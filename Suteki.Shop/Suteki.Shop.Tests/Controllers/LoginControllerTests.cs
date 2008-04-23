@@ -5,6 +5,7 @@ using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.ViewData;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -32,9 +33,9 @@ namespace Suteki.Shop.Tests.Controllers
         {
             string view = "Index";
 
-            loginController.Index();
+            RenderViewResult result = loginController.Index() as RenderViewResult;
 
-            Assert.AreEqual(view, testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual(view, result.ViewName);
         }
 
         [Test]
@@ -46,10 +47,10 @@ namespace Suteki.Shop.Tests.Controllers
             // should set cookie
             loginControllerMock.Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
 
-            // should redirect to home->index
-            loginControllerMock.Expect(c => c.RedirectToAction2("Index", "Home")).Verifiable();
+            ActionRedirectResult result = loginController.Authenticate(email, password) as ActionRedirectResult;
 
-            loginController.Authenticate(email, password);
+            Assert.AreEqual("Index", result.Values["action"]);
+            Assert.AreEqual("Home", result.Values["controller"]);
 
             loginControllerMock.Verify();
         }
@@ -64,23 +65,25 @@ namespace Suteki.Shop.Tests.Controllers
             loginControllerMock.Expect(c => c.SetAuthenticationCookie(email))
                 .Throws(new Exception("SetAuthenticationToken shouldn't be called"));
 
-            loginController.Authenticate(email, password);
+            RenderViewResult result = loginController.Authenticate(email, password) as RenderViewResult;
 
             // should show view Index
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual("Index", result.ViewName);
 
             // Should show error message
-            Assert.AreEqual("Unknown email or password", 
-                ((IErrorViewData)testContext.ViewEngine.ViewContext.ViewData).ErrorMessage);
+            Assert.AreEqual("Unknown email or password",
+                ((IErrorViewData)result.ViewData).ErrorMessage);
         }
 
         [Test]
         public void Logout_ShouldLogUserOut()
         {
             loginControllerMock.Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
-            loginControllerMock.Expect(c => c.RedirectToAction2("Index", "Home")).Verifiable();
 
-            loginController.Logout();
+            ActionRedirectResult result = loginController.Logout() as ActionRedirectResult;
+
+            Assert.AreEqual("Index", result.Values["action"]);
+            Assert.AreEqual("Home", result.Values["controller"]);
 
             loginControllerMock.Verify();
         }

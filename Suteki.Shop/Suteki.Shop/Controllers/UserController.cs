@@ -24,26 +24,25 @@ namespace Suteki.Shop.Controllers
             this.roleRepository = roleRepository;
         }
 
-        public void Index()
+        public ActionResult Index()
         {
             var users = userRepository.GetAll();
-            RenderView("Index", View.Data.WithUsers(users));
+            return RenderView("Index", View.Data.WithUsers(users));
         }
 
-        public void New()
+        public ActionResult New()
         {
             User defaultUser = new User { Email = "", Password = "", RoleId = 1, IsEnabled = true };
-            RenderView("Edit", EditViewData.WithUser(defaultUser));
+            return RenderView("Edit", EditViewData.WithUser(defaultUser));
         }
 
-        public void Edit(int id)
+        public ActionResult Edit(int id)
         {
             User user = userRepository.GetById(id);
-            RenderView("Edit", EditViewData.WithUser(user));
+            return RenderView("Edit", EditViewData.WithUser(user));
         }
 
-        [PostOnly]
-        public void Update(int userid)
+        public ActionResult Update(int userid)
         {
             User user = null;
 
@@ -64,8 +63,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                RenderView("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
-                return;
+                return RenderView("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
             }
 
             if (userid == 0)
@@ -75,7 +73,7 @@ namespace Suteki.Shop.Controllers
 
             userRepository.SubmitChanges();
 
-            RenderView("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
+            return RenderView("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
         }
 
         /// <summary>

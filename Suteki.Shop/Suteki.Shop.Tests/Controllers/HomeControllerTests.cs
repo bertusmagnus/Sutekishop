@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Suteki.Shop.Controllers;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -7,13 +8,11 @@ namespace Suteki.Shop.Tests.Controllers
     public class HomeControllerTests
     {
         HomeController homeController;
-        ControllerTestContext testContext;
 
         [SetUp]
         public void SetUp()
         {
             homeController = new HomeController();
-            testContext = new ControllerTestContext(homeController);
         }
 
         [Test]
@@ -21,9 +20,9 @@ namespace Suteki.Shop.Tests.Controllers
         {
             string view = "Index";
 
-            homeController.Index();
+            RenderViewResult result = homeController.Index() as RenderViewResult;
 
-            Assert.AreEqual(view, testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual(view, result.ViewName);
         }
     }
 }

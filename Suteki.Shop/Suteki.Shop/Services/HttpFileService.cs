@@ -23,7 +23,7 @@ namespace Suteki.Shop.Services
 
             foreach (string inputTagName in request.Files)
             {
-                HttpPostedFile file = request.Files[inputTagName];
+                HttpPostedFileBase file = request.Files[inputTagName];
                 if (file.ContentLength > 0)
                 {
                     // upload the image to filesystem
@@ -52,7 +52,7 @@ namespace Suteki.Shop.Services
             return images;
         }
 
-        private bool IsNotImage(HttpPostedFile file)
+        private bool IsNotImage(HttpPostedFileBase file)
         {
             string extension = Path.GetExtension(file.FileName).ToLower();
             return (extension != ".jpg");

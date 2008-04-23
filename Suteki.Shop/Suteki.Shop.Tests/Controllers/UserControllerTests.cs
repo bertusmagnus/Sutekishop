@@ -10,6 +10,7 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -43,13 +44,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldShowAListOfUsers()
         {
-            userController.Index();
+            RenderViewResult result = userController.Index() as RenderViewResult;
 
             // should show view Index
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual("Index", result.ViewName);
 
             // ViewData should be UserViewData
-            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some users
@@ -62,12 +63,12 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayUserEditView()
         {
-            userController.New();
+            RenderViewResult result = userController.New() as RenderViewResult;
 
             // should show Edit view
-            Assert.AreEqual("Edit", testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual("Edit", result.ViewName);
 
-            AssertUserEditViewDataIsCorrect();
+            AssertUserEditViewDataIsCorrect(result);
         }
 
         [Test]
@@ -85,15 +86,15 @@ namespace Suteki.Shop.Tests.Controllers
 
             userRepositoryMock.Expect(ur => ur.GetById(userId)).Returns(user).Verifiable();
 
-            userController.Edit(userId);
+            RenderViewResult result = userController.Edit(userId) as RenderViewResult;
 
-            AssertUserEditViewDataIsCorrect();
+            AssertUserEditViewDataIsCorrect(result);
             userRepositoryMock.Verify();
         }
 
-        private void AssertUserEditViewDataIsCorrect()
+        private void AssertUserEditViewDataIsCorrect(RenderViewResult result)
         {
-            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some roles
@@ -132,7 +133,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
 
             // call Update
-            userController.Update(0);
+            RenderViewResult result = userController.Update(0) as RenderViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
@@ -141,7 +142,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(roleId, user.RoleId);
             Assert.AreEqual(isEnabled, user.IsEnabled);
 
-            AssertUserEditViewDataIsCorrect();
+            AssertUserEditViewDataIsCorrect(result);
 
             userRepositoryMock.Verify();
         }
@@ -183,7 +184,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
 
             // call Update
-            userController.Update(userId);
+            RenderViewResult result = userController.Update(userId) as RenderViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
@@ -192,7 +193,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(roleId, user.RoleId);
             Assert.AreEqual(isEnabled, user.IsEnabled);
 
-            AssertUserEditViewDataIsCorrect();
+            AssertUserEditViewDataIsCorrect(result);
 
             userRepositoryMock.Verify();
 

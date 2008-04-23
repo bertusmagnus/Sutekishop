@@ -26,15 +26,15 @@ namespace Suteki.Shop.Controllers
             this.userRepository = userRepository;
         }
 
-        public void Index()
+        public ActionResult Index()
         {
             User user = this.ControllerContext.HttpContext.User as User;
             if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
 
-            RenderView("Index", View.Data.WithOrder(user.CurrentOrder));
+            return RenderView("Index", View.Data.WithOrder(user.CurrentOrder));
         }
 
-        public void Update()
+        public ActionResult Update()
         {
             User user = GetCurrentUser();
             if (user.RoleId == Role.GuestId) user = PromoteGuestToNewCustomer();
@@ -47,7 +47,7 @@ namespace Suteki.Shop.Controllers
                 ValidatingBinder.UpdateFrom(orderItem, Request.Form);
                 order.OrderItems.Add(orderItem);
                 orderRepository.SubmitChanges();
-                RenderView("Index", View.Data.WithOrder(order));
+                return RenderView("Index", View.Data.WithOrder(order));
             }
             catch(ValidationException)
             {
@@ -63,7 +63,7 @@ namespace Suteki.Shop.Controllers
             return user;
         }
 
-        public void Remove(int id)
+        public ActionResult Remove(int id)
         {
             User user = GetCurrentUser();
             Order order = user.CurrentOrder;
@@ -75,9 +75,10 @@ namespace Suteki.Shop.Controllers
                 orderItemRepository.SubmitChanges();
             }
 
-            RenderView("Index", View.Data.WithOrder(order));
+            return RenderView("Index", View.Data.WithOrder(order));
         }
 
+        [NonAction]
         public virtual User PromoteGuestToNewCustomer()
         {
             User user = new User

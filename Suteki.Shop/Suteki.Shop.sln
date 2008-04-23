@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 		Dependencies\Castle.DynamicProxy.dll = Dependencies\Castle.DynamicProxy.dll
 		Dependencies\Castle.MicroKernel.dll = Dependencies\Castle.MicroKernel.dll
 		Dependencies\Castle.Windsor.dll = Dependencies\Castle.Windsor.dll
-		Dependencies\Moq.dll = Dependencies\Moq.dll
 		Dependencies\MvcContrib.Castle.dll = Dependencies\MvcContrib.Castle.dll
 		Dependencies\MvcContrib.dll = Dependencies\MvcContrib.dll
 		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll

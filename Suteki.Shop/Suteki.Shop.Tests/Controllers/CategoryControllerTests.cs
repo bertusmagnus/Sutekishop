@@ -9,6 +9,7 @@ using Suteki.Shop.Repositories;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -38,11 +39,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfCategories()
         {
-            categoryController.Index();
+            RenderViewResult result = categoryController.Index() as RenderViewResult;
 
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName, "ViewName is incorrect");
+            Assert.IsNotNull(result, "expected a RenderViewResult");
 
-            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.AreEqual("Index", result.ViewName, "ViewName is incorrect");
+
+            ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
@@ -51,16 +54,16 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayCategoryEditView()
         {
-            categoryController.New();
+            RenderViewResult result = categoryController.New() as RenderViewResult;
 
-            AssertEditViewIsCorrectlyShown();
+            AssertEditViewIsCorrectlyShown(result);
         }
 
-        private void AssertEditViewIsCorrectlyShown()
+        private void AssertEditViewIsCorrectlyShown(RenderViewResult result)
         {
-            Assert.AreEqual("Edit", testContext.ViewEngine.ViewContext.ViewName, "ViewName is incorrect");
+            Assert.AreEqual("Edit", result.ViewName, "ViewName is incorrect");
 
-            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.IsNotNull(viewData.Category, "Category is null");
@@ -82,9 +85,9 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category);
 
-            categoryController.Edit(categoryId);
+            RenderViewResult result = categoryController.Edit(categoryId) as RenderViewResult;
 
-            AssertEditViewIsCorrectlyShown();
+            AssertEditViewIsCorrectlyShown(result);
             categoryRepositoryMock.Verify();
         }
 
@@ -110,14 +113,14 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            categoryController.Update(categoryId);
+            RenderViewResult result = categoryController.Update(categoryId) as RenderViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");
             Assert.AreEqual(name, category.Name);
             Assert.AreEqual(parentid, category.ParentId);
 
-            AssertEditViewIsCorrectlyShown();
+            AssertEditViewIsCorrectlyShown(result);
 
             categoryControllerMock.Verify();
         }
@@ -146,14 +149,14 @@ namespace Suteki.Shop.Tests.Controllers
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category).Verifiable();
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            categoryController.Update(categoryId);
+            RenderViewResult result = categoryController.Update(categoryId) as RenderViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");
             Assert.AreEqual(name, category.Name);
             Assert.AreEqual(parentid, category.ParentId);
 
-            AssertEditViewIsCorrectlyShown();
+            AssertEditViewIsCorrectlyShown(result);
 
             categoryControllerMock.Verify();
         }

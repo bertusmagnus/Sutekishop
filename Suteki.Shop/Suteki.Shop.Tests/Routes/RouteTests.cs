@@ -25,6 +25,12 @@ namespace Suteki.Shop.Tests.Routes
         }
 
         [Test]
+        public void DomainOnlyShouldRouteToHomeIndex()
+        {
+            AssertRoutes(Routes, "~/", new { Controller = "Home", Action = "Index" });
+        }
+
+        [Test]
         public void AnyControllerActionPairShouldRouteToCorrectControllerAction()
         {
             AssertRoutes(Routes, "~/MyController/MyAction", new { Controller = "MyController", Action = "MyAction" });

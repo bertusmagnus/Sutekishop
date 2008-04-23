@@ -11,15 +11,15 @@ namespace Suteki.Shop.Routes
             // Note: Change the URL to "{controller}.mvc/{action}/{id}" to enable
             //       automatic support on IIS6 and IIS7 classic mode
 
-            routes.Add(new Route("{controller}/{action}/{id}", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { action = "Index", id = "" }),
-            });
+            routes.MapRoute("Default",
+                "{controller}/{action}/{id}",
+                new { controller = "Home", action = "Index", id = "" },
+                new { controller = @"[^\.]*" });
 
-            routes.Add(new Route("Default.aspx", new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(new { controller = "Home", action = "Index", id = "" }),
-            });
+            routes.MapRoute("DefaultAspx",
+                "Default.aspx",
+                new { controller = "Home", action = "Index", id = "" });
+
         }
     }
 }

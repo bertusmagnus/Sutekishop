@@ -5,6 +5,7 @@ using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using Suteki.Shop.Repositories;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -35,10 +36,10 @@ namespace Suteki.Shop.Tests.Controllers
             User user = CreateUserWithOrder();
             testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
 
-            orderController.Index();
+            RenderViewResult result = orderController.Index() as RenderViewResult;
 
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
-            ShopViewData viewData = testContext.ViewEngine.ViewContext.ViewData as ShopViewData;
+            Assert.AreEqual("Index", result.ViewName);
+            ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.AreSame(user.Orders[0], viewData.Order, "The user's order has not been shown");
@@ -72,9 +73,9 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
             Mock.Get(orderController).Expect(oc => oc.PromoteGuestToNewCustomer()).Returns(user).Verifiable();
 
-            orderController.Update();
+            RenderViewResult result = orderController.Update() as RenderViewResult;
 
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual("Index", result.ViewName);
 
             Assert.AreEqual(1, user.Orders[0].OrderItems.Count, "expected OrderItem is missing");
             Assert.AreEqual(5, user.Orders[0].OrderItems[0].SizeId);
@@ -98,9 +99,9 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderItemRepository).Expect(ir => ir.DeleteOnSubmit(orderItem)).Verifiable();
             Mock.Get(orderItemRepository).Expect(ir => ir.SubmitChanges());
 
-            orderController.Remove(orderItemIdToRemove);
+            RenderViewResult result = orderController.Remove(orderItemIdToRemove) as RenderViewResult;
 
-            Assert.AreEqual("Index", testContext.ViewEngine.ViewContext.ViewName);
+            Assert.AreEqual("Index", result.ViewName);
             Mock.Get(orderItemRepository).Verify();
         }
     }

@@ -24,7 +24,7 @@
 .header
 {
 	width: 880px;
-	height: 130px;
+	/* height: 130px; */
 	padding: 10px 10px 10px 10px;
 	/* background-image:url('Logo.png'); */
 	background-color: #C0C0C0;

@@ -9,9 +9,9 @@ namespace Suteki.Shop.Controllers
 {
     public class HomeController : ControllerBase
     {
-        public void Index()
+        public ActionResult Index()
         {
-            RenderView("Index", new ShopViewData());
+            return RenderView("Index", View.Data);
         }
     }
 }

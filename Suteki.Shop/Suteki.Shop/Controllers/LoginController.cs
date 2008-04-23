@@ -18,27 +18,26 @@ namespace Suteki.Shop.Controllers
             this.userRepository = userRepository;
         }
 
-        public void Index()
+        public ActionResult Index()
         {
-            RenderView("Index", View.Data);
+            return RenderView("Index", View.Data);
         }
 
-        public void Authenticate(string email, string password)
+        public ActionResult Authenticate(string email, string password)
         {
             if (userRepository.GetAll().ContainsUser(email, EncryptPassword(password)))
             {
                 SetAuthenticationCookie(email);
-                RedirectToAction2("Index", "Home");
-                return;
+                return RedirectToAction("Index", "Home");
             }
 
-            RenderView("Index", View.Data.WithErrorMessage("Unknown email or password"));
+            return RenderView("Index", View.Data.WithErrorMessage("Unknown email or password"));
         }
 
-        public void Logout()
+        public ActionResult Logout()
         {
             RemoveAuthenticationCookie();
-            RedirectToAction2("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
         [NonAction]
