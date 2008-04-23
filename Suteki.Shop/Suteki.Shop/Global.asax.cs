@@ -10,6 +10,7 @@ using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
 using Castle.MicroKernel.Registration;
 using MvcContrib.ExtendedComponentController;
+using System.Web.Security;
 
 namespace Suteki.Shop
 {
@@ -76,14 +77,13 @@ namespace Suteki.Shop
 
                     if (user == null)
                     {
-                        throw new ApplicationException(string.Format(
-                            "Context.User.Identity.Name: {0} is not a recognised user.",
-                            Context.User.Identity.Name));
+                        FormsAuthentication.SignOut();
                     }
-
-                    System.Threading.Thread.CurrentPrincipal = Context.User = user;
-
-                    return;
+                    else
+                    {
+                        System.Threading.Thread.CurrentPrincipal = Context.User = user;
+                        return;
+                    }
                 }
             }
 
