@@ -6,6 +6,7 @@ using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using Suteki.Shop.Repositories;
 using System.Web.Mvc;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -18,6 +19,7 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<Order> orderRepository;
         IRepository<OrderItem> orderItemRepository;
         IRepository<User> userRepository;
+        IUserService userService;
 
         [SetUp]
         public void SetUp()
@@ -25,8 +27,13 @@ namespace Suteki.Shop.Tests.Controllers
             orderRepository = new Mock<IRepository<Order>>().Object;
             orderItemRepository = new Mock<IRepository<OrderItem>>().Object;
             userRepository = new Mock<IRepository<User>>().Object;
+            userService = new Mock<IUserService>().Object;
 
-            orderController = new Mock<OrderController>(orderRepository, orderItemRepository, userRepository).Object;
+            orderController = new Mock<OrderController>(
+                orderRepository, 
+                orderItemRepository, 
+                userRepository,
+                userService).Object;
             testContext = new ControllerTestContext(orderController);
         }
 
@@ -71,7 +78,9 @@ namespace Suteki.Shop.Tests.Controllers
 
             // expect 
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
-            Mock.Get(orderController).Expect(oc => oc.PromoteGuestToNewCustomer()).Returns(user).Verifiable();
+            Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user).Verifiable();
+            Mock.Get(orderController).Expect(oc => oc.SetAuthenticationCookie(user.Email)).Verifiable();
+            Mock.Get(orderController).Expect(oc => oc.SetContextUserTo(user)).Verifiable();
 
             RenderViewResult result = orderController.Update() as RenderViewResult;
 
@@ -83,6 +92,7 @@ namespace Suteki.Shop.Tests.Controllers
             
             Mock.Get(orderRepository).Verify();
             Mock.Get(orderController).Verify();
+            Mock.Get(userService).Verify();
         }
 
         [Test]
@@ -103,6 +113,26 @@ namespace Suteki.Shop.Tests.Controllers
 
             Assert.AreEqual("Index", result.ViewName);
             Mock.Get(orderItemRepository).Verify();
+        }
+
+        [Test]
+        public void Checkout_ShouldDisplayCheckoutForm()
+        {
+            int orderId = 444;
+
+            Order order = new Order();
+
+            // expectations
+            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+
+            // exercist method
+            RenderViewResult result = orderController.Checkout(orderId) as RenderViewResult;
+
+            // assertions
+            Assert.AreEqual("Checkout", result.ViewName, "ViewName is incorrect");
+            ShopViewData viewData = result.ViewData as ShopViewData;
+            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
+            Assert.AreSame(order, viewData.Order, "order has not been passed to view");
         }
     }
 }

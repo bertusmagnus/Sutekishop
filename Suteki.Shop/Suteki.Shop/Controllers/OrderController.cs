@@ -7,6 +7,7 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
 using System.Web.Security;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Controllers
 {
@@ -15,15 +16,18 @@ namespace Suteki.Shop.Controllers
         IRepository<Order> orderRepository;
         IRepository<OrderItem> orderItemRepository;
         IRepository<User> userRepository;
+        IUserService userService;
 
         public OrderController(
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
-            IRepository<User> userRepository)
+            IRepository<User> userRepository,
+            IUserService userService)
         {
             this.orderRepository = orderRepository;
             this.orderItemRepository = orderItemRepository;
             this.userRepository = userRepository;
+            this.userService = userService;
         }
 
         public ActionResult Index()
@@ -36,8 +40,15 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Update()
         {
-            User user = GetCurrentUser();
-            if (user.RoleId == Role.GuestId) user = PromoteGuestToNewCustomer();
+            User user = CurrentUser;
+
+            // if the current user is a guest, promote them to a new customer
+            if (user.RoleId == Role.GuestId)
+            {
+                user = userService.CreateNewCustomer();
+                this.SetAuthenticationCookie(user.Email);
+                this.SetContextUserTo(user);
+            }
 
             Order order = user.CurrentOrder;
 
@@ -51,22 +62,14 @@ namespace Suteki.Shop.Controllers
             }
             catch(ValidationException)
             {
-                // think about what to do here?
+                // we shouldn't get a validation exception here, so this is a genuine system error
                 throw;
             }
         }
 
-        private User GetCurrentUser()
-        {
-            User user = this.ControllerContext.HttpContext.User as User;
-            if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
-            return user;
-        }
-
         public ActionResult Remove(int id)
         {
-            User user = GetCurrentUser();
-            Order order = user.CurrentOrder;
+            Order order = CurrentUser.CurrentOrder;
             OrderItem orderItem = order.OrderItems.Where(item => item.OrderItemId == id).SingleOrDefault();
 
             if (orderItem != null)
@@ -78,23 +81,10 @@ namespace Suteki.Shop.Controllers
             return RenderView("Index", View.Data.WithOrder(order));
         }
 
-        [NonAction]
-        public virtual User PromoteGuestToNewCustomer()
+        public RenderViewResult Checkout(int id)
         {
-            User user = new User
-            {
-                Email = Guid.NewGuid().ToString(),
-                Password = "",
-                RoleId = Role.CustomerId
-            };
-
-            userRepository.InsertOnSubmit(user);
-            userRepository.SubmitChanges();
-
-            FormsAuthentication.SetAuthCookie(user.Email, true);
-            System.Threading.Thread.CurrentPrincipal = this.ControllerContext.HttpContext.User = user;
-
-            return user;
+            Order order = orderRepository.GetById(id);
+            return RenderView("Checkout", View.Data.WithOrder(order));
         }
     }
 }

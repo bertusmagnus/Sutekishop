@@ -19,6 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 		Dependencies\System.Web.Routing.dll = Dependencies\System.Web.Routing.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Moq", "Moq", "{C6461FED-8970-4B70-9F81-988F694478C8}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\Moq\Castle.Core.dll = Dependencies\Moq\Castle.Core.dll
+		Dependencies\Moq\Castle.DynamicProxy.dll = Dependencies\Moq\Castle.DynamicProxy.dll
+		Dependencies\Moq\Moq.dll = Dependencies\Moq\Moq.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +43,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C6461FED-8970-4B70-9F81-988F694478C8} = {34A080EA-6A03-4F1A-9558-89148F6C4DDF}
 	EndGlobalSection
 EndGlobal

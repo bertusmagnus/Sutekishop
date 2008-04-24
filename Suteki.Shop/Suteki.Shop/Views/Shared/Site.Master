@@ -39,6 +39,9 @@
                     <li>
                         <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
                     </li>
+                    <li>
+                        <%= Html.ActionLink<CountryController>(c => c.Index(), "Countries") %>
+                    </li>
                 </ul>
             
             <% } %>

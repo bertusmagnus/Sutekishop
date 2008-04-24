@@ -41,18 +41,6 @@ namespace Suteki.Shop.Controllers
         }
 
         [NonAction]
-        public virtual void SetAuthenticationCookie(string email)
-        {
-            FormsAuthentication.SetAuthCookie(email, true);
-        }
-
-        [NonAction]
-        public virtual void RemoveAuthenticationCookie()
-        {
-            FormsAuthentication.SignOut();
-        }
-
-        [NonAction]
         public virtual string EncryptPassword(string password)
         {
             return FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");

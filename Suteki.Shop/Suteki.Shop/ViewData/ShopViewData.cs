@@ -21,6 +21,9 @@ namespace Suteki.Shop.ViewData
 
         public Order Order { get; set; }
 
+        public IEnumerable<Country> Countries { get; set; }
+        public Country Country { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithErrorMessage(string errorMessage)
@@ -80,6 +83,18 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithOrder(Order order)
         {
             this.Order = order;
+            return this;
+        }
+
+        public ShopViewData WithCountries(IEnumerable<Country> countries)
+        {
+            this.Countries = countries;
+            return this;
+        }
+
+        public ShopViewData WithCountry(Country country)
+        {
+            this.Country = country;
             return this;
         }
     }

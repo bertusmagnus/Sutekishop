@@ -14,6 +14,7 @@
        { %>
 
         <%= Html.Hidden("productId", ViewData.Product.ProductId)%>
+        <%= Html.Hidden("position", ViewData.Product.Position)%>
 
         <label for="name">Name</label>
         <%= Html.TextBox("name", ViewData.Product.Name)%>

@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -100,7 +101,9 @@
     <Compile Include="HtmlHelpers\CategoryWriter.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
+    <Compile Include="Repositories\IOrderableExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
@@ -122,8 +126,13 @@
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageFileService.cs" />
     <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\ISizeService.cs" />
+    <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\Move.cs" />
+    <Compile Include="Services\OrderableService.cs" />
     <Compile Include="Services\SizeService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Shop.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -150,6 +159,20 @@
     <Compile Include="Views\Category\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Country\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Country\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Country\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Country\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Home\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -163,6 +186,13 @@
     </Compile>
     <Compile Include="Views\Login\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Order\Checkout.aspx.cs">
+      <DependentUpon>Checkout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Order\Checkout.aspx.designer.cs">
+      <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Order\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -226,11 +256,16 @@
   <ItemGroup>
     <Content Include="Configuration\Windsor.config" />
     <Content Include="Content\Images\cross.png" />
+    <Content Include="Content\Images\down.png" />
     <Content Include="Content\Images\tick.png" />
+    <Content Include="Content\Images\up.png" />
     <Content Include="TODO.txt" />
     <Content Include="Views\Category\Edit.aspx" />
     <Content Include="Views\Category\Index.aspx" />
+    <Content Include="Views\Country\Edit.aspx" />
+    <Content Include="Views\Country\Index.aspx" />
     <Content Include="Views\Login\Index.aspx" />
+    <Content Include="Views\Order\Checkout.aspx" />
     <Content Include="Views\Order\Index.aspx" />
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />

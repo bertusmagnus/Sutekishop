@@ -26,5 +26,13 @@ namespace Suteki.Shop.Extensions
             if (text.Length <= length) return text;
             return text.Substring(0, length) + "...";
         }
+
+        /// <summary>
+        /// replacement for String.Format
+        /// </summary>
+        public static string With(this string format, params object[] args)
+        {
+            return string.Format(format, args);
+        }
     }
 }

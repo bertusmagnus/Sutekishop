@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using Suteki.Shop.Validation;
 using Suteki.Shop.Repositories;
+using System.Web.Security;
 
 namespace Suteki.Shop
 {
@@ -67,8 +68,9 @@ namespace Suteki.Shop
             validator.Validate();
         }
 
-        public bool IsAdministrator { get { return UserId == Role.AdministratorId; } }
-        public bool IsOrderProcessor { get { return UserId == Role.OrderProcessorId; } }
+        public bool IsAdministrator { get { return RoleId == Role.AdministratorId; } }
+        public bool IsOrderProcessor { get { return RoleId == Role.OrderProcessorId; } }
+        public bool IsCustomer { get { return RoleId == Role.CustomerId; } }
     }
 
     /// <summary>

@@ -16,6 +16,11 @@
             <%= Html.Image("~/ProductPhotos/" + product.MainImage.ThumbFileName) %>
         <% } %>
         <%= product.Name %>
+        
+        <% if(Context.User.IsInRole("Administrator")) { %>
+            <%= Html.UpArrowLink<ProductController>(c => c.MoveUp(ViewData.Category.CategoryId, product.Position)) %>
+            <%= Html.DownArrowLink<ProductController>(c => c.MoveDown(ViewData.Category.CategoryId, product.Position)) %>
+        <% } %>
     </div>
     </a>
 

@@ -18,23 +18,31 @@ namespace Suteki.Shop.Controllers
         IRepository<Category> categoryRepository;
         IHttpFileService httpFileService;
         ISizeService sizeService;
+        IOrderableService<Product> productOrderableService;
 
         public ProductController(
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
             IHttpFileService httpFileService,
-            ISizeService sizeService)
+            ISizeService sizeService,
+            IOrderableService<Product> productOrderableService)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
             this.httpFileService = httpFileService;
             this.sizeService = sizeService;
+            this.productOrderableService = productOrderableService;
         }
 
         public ActionResult Index(int id)
         {
+            return RenderIndexView(id);
+        }
+
+        private ActionResult RenderIndexView(int id)
+        {
             Category category = categoryRepository.GetById(id);
-            return RenderView("Index", View.Data.WithProducts(category.Products).WithCategory(category)); 
+            return RenderView("Index", View.Data.WithProducts(category.Products.InOrder()).WithCategory(category));
         }
 
         public ActionResult Item(int id)
@@ -50,6 +58,7 @@ namespace Suteki.Shop.Controllers
             {
                 ProductId = 0,
                 CategoryId = id,
+                Position = productOrderableService.NextPosition
             };
 
             return RenderView("Edit", EditViewData.WithProduct(defaultProduct)); 
@@ -106,6 +115,20 @@ namespace Suteki.Shop.Controllers
         {
             Product product = productRepository.GetById(id);
             return RenderView("Edit", EditViewData.WithProduct(product));
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult MoveUp(int id, int position)
+        {
+            productOrderableService.MoveItemAtPosition(position).UpOne();
+            return RenderIndexView(id);
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult MoveDown(int id, int position)
+        {
+            productOrderableService.MoveItemAtPosition(position).DownOne();
+            return RenderIndexView(id);
         }
 
         public ShopViewData EditViewData

@@ -6,6 +6,8 @@
 	font-size:9pt;
 }
 
+a img {border: none; }
+
 #loginStatus
 {
 	border-style: solid;

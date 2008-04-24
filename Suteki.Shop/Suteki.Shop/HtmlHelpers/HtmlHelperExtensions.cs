@@ -4,7 +4,9 @@ using System.Web.UI;
 using System.IO;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Extensions;
 using System.Security.Principal;
+using System.Linq.Expressions;
 
 namespace Suteki.Shop.HtmlHelpers
 {
@@ -96,6 +98,20 @@ namespace Suteki.Shop.HtmlHelpers
         {
             CategoryWriter categoryWriter = new CategoryWriter(rootCategory, htmlHelper);
             return categoryWriter.Write();
+        }
+
+        public static string UpArrowLink<T>(this HtmlHelper htmlHelper, Expression<Action<T>> action) where T : Controller
+        {
+            return "<a href=\"{0}\" class=\"arrowlink\">{1}</a>".With(
+                htmlHelper.BuildUrlFromExpression<T>(action), 
+                htmlHelper.Image("~/Content/Images/Up.png"));
+        }
+
+        public static string DownArrowLink<T>(this HtmlHelper htmlHelper, Expression<Action<T>> action) where T : Controller
+        {
+            return "<a href=\"{0}\" class=\"arrowlink\">{1}</a>".With(
+                htmlHelper.BuildUrlFromExpression<T>(action),
+                htmlHelper.Image("~/Content/Images/Down.png"));
         }
     }
 }
