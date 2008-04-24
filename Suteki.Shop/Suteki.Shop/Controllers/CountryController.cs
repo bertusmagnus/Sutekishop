@@ -7,9 +7,11 @@ using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Validation;
 using Suteki.Shop.Services;
+using System.Security.Permissions;
 
 namespace Suteki.Shop.Controllers
 {
+    [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
     public class CountryController : ControllerBase
     {
         IRepository<Country> countryRepository;

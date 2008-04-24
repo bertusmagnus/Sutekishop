@@ -10,6 +10,8 @@ using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using Suteki.Shop.Services;
+using System.Threading;
+using System.Security.Principal;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -26,6 +28,9 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
+            // you have to be an administrator to access the country controller
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+
             countryRepository = new Mock<IRepository<Country>>().Object;
             countryOrderableService = new Mock<IOrderableService<Country>>().Object;
 
@@ -102,6 +107,7 @@ namespace Suteki.Shop.Tests.Controllers
             NameValueCollection form = new NameValueCollection();
             form.Add("name", "Bulgaria");
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(() => new NameValueCollection());
 
             // expectations
             Mock.Get(countryRepository).Expect(cr => cr.InsertOnSubmit(It.IsAny<Country>()))
@@ -131,6 +137,7 @@ namespace Suteki.Shop.Tests.Controllers
             NameValueCollection form = new NameValueCollection();
             form.Add("name", "Bulgaria");
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(() => new NameValueCollection());
 
             // expectations
             Mock.Get(countryRepository).Expect(cr => cr.GetById(countryId))

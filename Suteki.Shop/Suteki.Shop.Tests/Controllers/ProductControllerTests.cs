@@ -30,6 +30,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         IHttpFileService httpFileService;
         ISizeService sizeService;
+        IOrderableService<Product> productOrderableService;
 
         [SetUp]
         public void SetUp()
@@ -46,11 +47,14 @@ namespace Suteki.Shop.Tests.Controllers
             httpFileService = new Mock<IHttpFileService>().Object;
             sizeService = new Mock<ISizeService>().Object;
 
+            productOrderableService = new Mock<IOrderableService<Product>>().Object;
+
             productControllerMock = new Mock<ProductController>(
                 productRepository, 
                 categoryRepository,
                 httpFileService,
-                sizeService);
+                sizeService,
+                productOrderableService);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
