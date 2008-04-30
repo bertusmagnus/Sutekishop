@@ -39,7 +39,11 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult New()
         {
-            Category defaultCategory = new Category { ParentId = 1 };
+            Category defaultCategory = new Category 
+            { 
+                ParentId = 1,
+                Position = orderableService.NextPosition
+            };
             return RenderView("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
 

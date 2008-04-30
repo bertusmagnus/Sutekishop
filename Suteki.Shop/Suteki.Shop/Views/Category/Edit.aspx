@@ -9,6 +9,7 @@
     <% using(Html.Form("Category", "Update")) { %>
 
         <%= Html.Hidden("categoryId", ViewData.Category.CategoryId) %>
+        <%= Html.Hidden("position", ViewData.Category.Position) %>
 
         <label for="name">Name</label>
         <%= Html.TextBox("name", ViewData.Category.Name) %>
