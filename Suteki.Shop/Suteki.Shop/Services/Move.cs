@@ -7,37 +7,40 @@ using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Services
 {
-    public class Move : IMoveItems, IMoveDirection
+    public class Move<T> : IMoveItems<T>, IMoveDirection where T : IOrderable
     {
-        private IQueryable<IOrderable> items;
-        private int position;
+        private IQueryable<T> items;
+        readonly private int position;
 
-        public static IMoveItems ItemAt(int position)
+        public static IMoveItems<T> ItemAt(int position)
         {
-            Move move = new Move { position = position };
+            Move<T> move = new Move<T>(position);
             return move;
         }
 
-        public IMoveDirection In(IQueryable<IOrderable> items)
+        public Move(int position)
         {
-            this.items = items;
-            return this;
+            this.position = position;
         }
 
-        public void UpOne()
+        IMoveDirection IMoveItems<T>.In(IQueryable<T> items)
         {
-            MoveInDirection(-1);
+            Move<T> move = new Move<T>(this.position) { items = items };
+            return move;
         }
 
-        public void DownOne()
+        void IMoveDirection.UpOne()
         {
-            MoveInDirection(1);
+            SwapPositionWith(items.GetItemBefore(position));
         }
 
-        private void MoveInDirection(int direction)
+        void IMoveDirection.DownOne()
         {
-            IOrderable swapItem = items.AtPosition(position + direction);
-            
+            SwapPositionWith(items.GetItemAfter(position));
+        }
+
+        private void SwapPositionWith(IOrderable swapItem)
+        {
             if (swapItem == null) return;
 
             IOrderable item = items.AtPosition(position);
@@ -51,9 +54,9 @@ namespace Suteki.Shop.Services
         }
     }
 
-    public interface IMoveItems
+    public interface IMoveItems<T>
     {
-        IMoveDirection In(IQueryable<IOrderable> items);
+        IMoveDirection In(IQueryable<T> items);
     }
 
     public interface IMoveDirection

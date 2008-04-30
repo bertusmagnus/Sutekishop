@@ -2,14 +2,19 @@
 using System.Linq;
 using System.Data.Linq;
 using Suteki.Shop.Repositories;
+using System.Linq.Expressions;
 
 namespace Suteki.Shop.Services
 {
-    public class OrderableService<T> : IOrderServiceWithPosition<T>, IOrderableService<T> 
+    public class OrderableService<T> : 
+        IOrderServiceWithPosition<T>, 
+        IOrderServiceWithConstrainedPosition<T>, 
+        IOrderableService<T> 
         where T : class, IOrderable
     {
         IRepository<T> repository;
         int postion;
+        Expression<Func<T, bool>> predicate;
 
         public OrderableService(IRepository<T> repository)
         {
@@ -25,22 +30,14 @@ namespace Suteki.Shop.Services
 
         void IOrderServiceWithPosition<T>.UpOne()
         {
-            Move.ItemAt(postion).In(OrderableItems).UpOne();
+            Move<T>.ItemAt(postion).In(repository.GetAll()).UpOne();
             repository.SubmitChanges();
         }
 
         void IOrderServiceWithPosition<T>.DownOne()
         {
-            Move.ItemAt(postion).In(OrderableItems).DownOne();
+            Move<T>.ItemAt(postion).In(repository.GetAll()).DownOne();
             repository.SubmitChanges();
-        }
-
-        private IQueryable<IOrderable> OrderableItems
-        {
-            get
-            {
-                return repository.GetAll().Select(i => (IOrderable)i);
-            }
         }
 
         public int NextPosition
@@ -50,9 +47,37 @@ namespace Suteki.Shop.Services
                 return repository.GetAll().GetNextPosition();
             }
         }
+
+        IOrderServiceWithConstrainedPosition<T> IOrderServiceWithPosition<T>.ConstrainedBy(
+            Expression<Func<T, bool>> predicate)
+        {
+            OrderableService<T> orderService = new OrderableService<T>(repository);
+            orderService.postion = postion;
+            orderService.predicate = predicate;
+            return orderService;
+        }
+
+        void IOrderServiceWithConstrainedPosition<T>.UpOne()
+        {
+            Move<T>.ItemAt(postion).In(repository.GetAll().Where(predicate)).UpOne();
+            repository.SubmitChanges();
+        }
+
+        void IOrderServiceWithConstrainedPosition<T>.DownOne()
+        {
+            Move<T>.ItemAt(postion).In(repository.GetAll().Where(predicate)).DownOne();
+            repository.SubmitChanges();
+        }
     }
 
     public interface IOrderServiceWithPosition<T>
+    {
+        void UpOne();
+        void DownOne();
+        IOrderServiceWithConstrainedPosition<T> ConstrainedBy(Expression<Func<T, bool>> predicate);
+    }
+
+    public interface IOrderServiceWithConstrainedPosition<T>
     {
         void UpOne();
         void DownOne();

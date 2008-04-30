@@ -21,16 +21,6 @@
       <Association Name="Role_User" Member="Role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Category" Member="Categories">
-    <Type Name="Category">
-      <Column Name="CategoryId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="ParentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Category_Category" Member="Categories" OtherKey="ParentId" Type="Category" />
-      <Association Name="Category_Product" Member="Products" OtherKey="CategoryId" Type="Product" />
-      <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" Type="Category" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Image" Member="Images">
     <Type Name="Image">
       <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -96,6 +86,17 @@
       <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
       <Association Name="Product_Size" Member="Sizes" OtherKey="ProductId" Type="Size" />
       <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Category" Member="Categories">
+    <Type Name="Category">
+      <Column Name="CategoryId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ParentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Category_Product" Member="Products" OtherKey="CategoryId" Type="Product" />
+      <Association Name="Category_Category" Member="Categories" OtherKey="ParentId" Type="Category" />
+      <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" Type="Category" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

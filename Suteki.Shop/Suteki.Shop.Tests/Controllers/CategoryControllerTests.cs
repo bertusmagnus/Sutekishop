@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
 using System.Web.Mvc;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -21,6 +22,7 @@ namespace Suteki.Shop.Tests.Controllers
         ControllerTestContext testContext;
 
         Mock<Repository<Category>> categoryRepositoryMock;
+        IOrderableService<Category> orderableService;
 
         [SetUp]
         public void SetUp()
@@ -29,8 +31,9 @@ namespace Suteki.Shop.Tests.Controllers
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
 
             categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
+            orderableService = new Mock<IOrderableService<Category>>().Object;
 
-            categoryControllerMock = new Mock<CategoryController>(categoryRepositoryMock.Object);
+            categoryControllerMock = new Mock<CategoryController>(categoryRepositoryMock.Object, orderableService);
             categoryController = categoryControllerMock.Object;
 
             testContext = new ControllerTestContext(categoryController);

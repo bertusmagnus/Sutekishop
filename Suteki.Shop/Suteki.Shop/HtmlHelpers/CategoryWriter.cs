@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Web.Mvc;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Repositories;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.HtmlHelpers
 {
@@ -25,7 +27,7 @@ namespace Suteki.Shop.HtmlHelpers
         {
             HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
 
-            WriteCategories(writer, rootCategory.Categories);
+            WriteCategories(writer, rootCategory.Categories.InOrder());
 
             return writer.InnerWriter.ToString();
         }
@@ -45,7 +47,7 @@ namespace Suteki.Shop.HtmlHelpers
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 writer.Write(WriteCategory(category));
-                WriteCategories(writer, category.Categories);
+                WriteCategories(writer, category.Categories.InOrder());
                 writer.RenderEndTag();
             }
 
@@ -56,9 +58,12 @@ namespace Suteki.Shop.HtmlHelpers
         {
             if (user.IsAdministrator)
             {
-                return string.Format("{0} {1}",
+                return "{0} {1}{2}{3}".With(
                     WriteCategoryLink(category),
-                    htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"));
+                    htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"),
+                    htmlHelper.UpArrowLink<CategoryController>(c => c.MoveUp(category.CategoryId)),
+                    htmlHelper.DownArrowLink<CategoryController>(c => c.MoveDown(category.CategoryId))
+                    );
             }
             else
             {

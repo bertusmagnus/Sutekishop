@@ -52,5 +52,33 @@ namespace Suteki.Shop.Tests.Services
             Assert.AreEqual("three", things.Single(t => t.Position == 4).Name);
             Mock.Get(thingRepository).Verify();
         }
+
+        [Test]
+        public void MoveUpShouldNotMoveElementUpWhenConstrainedByFooId()
+        {
+            IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
+
+            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
+            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+
+            orderService.MoveItemAtPosition(2).ConstrainedBy(thing => thing.FooId == 1).UpOne();
+
+            Assert.AreEqual("two", things.Single(t => t.Position == 2).Name);
+            Mock.Get(thingRepository).Verify();
+        }
+
+        [Test]
+        public void MoveDownShouldNotMoveWhenConstrainedByFooId()
+        {
+            IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
+
+            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
+            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+
+            orderService.MoveItemAtPosition(3).ConstrainedBy(thing => thing.FooId == 1).DownOne();
+
+            Assert.AreEqual("three", things.Single(t => t.Position == 3).Name);
+            Mock.Get(thingRepository).Verify();
+        }
     }
 }

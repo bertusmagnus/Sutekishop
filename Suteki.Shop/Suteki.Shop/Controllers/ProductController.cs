@@ -120,14 +120,22 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult MoveUp(int id, int position)
         {
-            productOrderableService.MoveItemAtPosition(position).UpOne();
+            productOrderableService
+                .MoveItemAtPosition(position)
+                .ConstrainedBy(product => product.CategoryId == id)
+                .UpOne();
+
             return RenderIndexView(id);
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult MoveDown(int id, int position)
         {
-            productOrderableService.MoveItemAtPosition(position).DownOne();
+            productOrderableService
+                .MoveItemAtPosition(position)
+                .ConstrainedBy(product => product.CategoryId == id)
+                .DownOne();
+
             return RenderIndexView(id);
         }
 
