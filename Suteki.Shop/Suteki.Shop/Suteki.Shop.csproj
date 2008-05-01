@@ -90,6 +90,10 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\NameValue.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />

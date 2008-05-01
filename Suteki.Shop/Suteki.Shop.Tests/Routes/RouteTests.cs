@@ -31,6 +31,12 @@ namespace Suteki.Shop.Tests.Routes
         }
 
         [Test]
+        public void ControllerOnlyShouldDefaultToIndex()
+        {
+            AssertRoutes(Routes, "~/MyController", new { Controller = "MyController", Action = "Index" });
+        }
+
+        [Test]
         public void AnyControllerActionPairShouldRouteToCorrectControllerAction()
         {
             AssertRoutes(Routes, "~/MyController/MyAction", new { Controller = "MyController", Action = "MyAction" });
