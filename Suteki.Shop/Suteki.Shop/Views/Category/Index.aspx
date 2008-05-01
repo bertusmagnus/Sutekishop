@@ -6,6 +6,6 @@
     <p><%= Html.ActionLink<CategoryController>(c => c.New(), "New Category")%></p>
 <% } %>
 
-<%= Html.WriteCategories(ViewData.Category) %>
+<%= Html.WriteCategories(ViewData.Category, CategoryDisplay.Edit) %>
 
 </asp:Content>

@@ -261,8 +261,11 @@
     <Content Include="Configuration\Windsor.config" />
     <Content Include="Content\Images\cross.png" />
     <Content Include="Content\Images\down.png" />
+    <Content Include="Content\Images\menu_item.png" />
+    <Content Include="Content\Images\menu_item_hover.png" />
     <Content Include="Content\Images\tick.png" />
     <Content Include="Content\Images\up.png" />
+    <Content Include="Content\Images\wallpaper.jpg" />
     <Content Include="TODO.txt" />
     <Content Include="Views\Category\Edit.aspx" />
     <Content Include="Views\Category\Index.aspx" />

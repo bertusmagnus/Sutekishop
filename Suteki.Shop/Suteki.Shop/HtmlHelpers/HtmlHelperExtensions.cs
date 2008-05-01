@@ -14,16 +14,7 @@ namespace Suteki.Shop.HtmlHelpers
     {
         public static string LoginStatus(this HtmlHelper htmlHelper)
         {
-            HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
-
-            writer.AddAttribute("id", "loginStatus");
-            writer.RenderBeginTag(HtmlTextWriterTag.Div);
-
-            writer.Write(htmlHelper.CurrentUser().PublicIdentity);
-            
-            writer.RenderEndTag();
-            
-            return writer.InnerWriter.ToString();
+            return htmlHelper.CurrentUser().PublicIdentity;
         }
 
         public static string LoginLink(this HtmlHelper htmlHelper)
@@ -94,9 +85,9 @@ namespace Suteki.Shop.HtmlHelpers
             return writer.InnerWriter.ToString();
         }
 
-        public static string WriteCategories(this HtmlHelper htmlHelper, Category rootCategory)
+        public static string WriteCategories(this HtmlHelper htmlHelper, Category rootCategory, CategoryDisplay display)
         {
-            CategoryWriter categoryWriter = new CategoryWriter(rootCategory, htmlHelper);
+            CategoryWriter categoryWriter = new CategoryWriter(rootCategory, htmlHelper, display);
             return categoryWriter.Write();
         }
 

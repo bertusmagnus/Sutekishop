@@ -24,7 +24,7 @@ namespace Suteki.Shop.Views.Shared
                     IRepository<Suteki.Shop.Category> categoryRepository =
                         controller.BaseControllerService.CategoryRepository;
 
-                    return Html.WriteCategories(categoryRepository.GetRootCategory());
+                    return Html.WriteCategories(categoryRepository.GetRootCategory(), CategoryDisplay.View);
                 }
 
                 return "";

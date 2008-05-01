@@ -10,24 +10,39 @@ using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.HtmlHelpers
 {
+    public enum CategoryDisplay
+    {
+        Edit,
+        View
+    }
+
     public class CategoryWriter
     {
         Category rootCategory;
         HtmlHelper htmlHelper;
-        User user;
+        CategoryDisplay display;
 
-        public CategoryWriter(Category rootCategory, HtmlHelper htmlHelper)
+        public CategoryWriter(Category rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
         {
             this.rootCategory = rootCategory;
             this.htmlHelper = htmlHelper;
-            this.user = htmlHelper.ViewContext.HttpContext.User as User;
+            this.display = display;
         }
 
         public string Write()
         {
             HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
 
+            if (display == CategoryDisplay.View)
+            {
+                writer.AddAttribute("class", "category");
+            }
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+
             WriteCategories(writer, rootCategory.Categories.InOrder());
+
+            writer.RenderEndTag();
 
             return writer.InnerWriter.ToString();
         }
@@ -56,9 +71,9 @@ namespace Suteki.Shop.HtmlHelpers
 
         private string WriteCategory(Category category)
         {
-            if (user.IsAdministrator)
+            if (display == CategoryDisplay.Edit)
             {
-                return "{0} {1}{2}{3}".With(
+                return "{0} {1} {2} {3}".With(
                     WriteCategoryLink(category),
                     htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"),
                     htmlHelper.UpArrowLink<CategoryController>(c => c.MoveUp(category.CategoryId)),

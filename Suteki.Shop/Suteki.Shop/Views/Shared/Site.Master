@@ -10,41 +10,52 @@
     <div class="page">
 
         <div class="header">
-            <h1>
-                Suteki Shop
-            </h1>
-            
-            <%= Html.LoginStatus() %>
-            
-            <ul id="mainMenu">
-                <li>
-                    <%= Html.ActionLink<HomeController>(c => c.Index(), "Home")%>
-                </li>
-                <li>
-                    <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
-                </li>
-                <li>
-                    <%= Html.ActionLink<OrderController>(c => c.Index(), "Basket") %>
-                </li>
-                <li>
+        
+            <div class="logo">
+                <div id="loginStatus">
                     <%= Html.LoginLink() %>
-                </li>
-            </ul>
+                    <%= Html.LoginStatus() %>
+                </div>
+                
+                <h1>
+                    Suteki Shop
+                </h1>
+            </div>
+            
+            <div>
+                <ul class="mainMenu">
+                    <li>
+                        <%= Html.ActionLink<HomeController>(c => c.Index(), "Home")%>
+                    </li>
+                    <li>
+                        <%= Html.ActionLink<OrderController>(c => c.Index(), "Basket") %>
+                    </li>
+                </ul>
+            </div>
             
             <!-- Admin menu should only show when the user is an administrator -->
             <% if (Context.User.IsInRole("Administrator"))
                { %>
             
-                <ul id="adminMenu">
+            <div>
+                <ul class="mainMenu">
                     <li>
                         <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
+                    </li>
+                    <li>
+                        <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
                     </li>
                     <li>
                         <%= Html.ActionLink<CountryController>(c => c.Index(), "Countries") %>
                     </li>
                 </ul>
+            </div>
             
             <% } %>
+            
+            <div class="clear">
+            </div>
+            
         </div>
 
         <div id="mainContent">
