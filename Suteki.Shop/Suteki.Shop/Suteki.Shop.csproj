@@ -87,6 +87,7 @@
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -104,12 +105,15 @@
     </Compile>
     <Compile Include="HtmlHelpers\CategoryWriter.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Models\Card.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\IOrderable.cs" />
+    <Compile Include="Models\Basket.cs" />
+    <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />
@@ -117,7 +121,7 @@
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
+    <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
@@ -191,6 +195,13 @@
     <Compile Include="Views\Login\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Basket\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Basket\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Order\Checkout.aspx.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -198,12 +209,12 @@
     <Compile Include="Views\Order\Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Order\Index.aspx.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
+    <Compile Include="Views\Order\Item.aspx.cs">
+      <DependentUpon>Item.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\Order\Index.aspx.designer.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
+    <Compile Include="Views\Order\Item.aspx.designer.cs">
+      <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Product\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
@@ -261,6 +272,7 @@
     <Content Include="Configuration\Windsor.config" />
     <Content Include="Content\Images\cross.png" />
     <Content Include="Content\Images\down.png" />
+    <Content Include="Content\Images\Logo_background.png" />
     <Content Include="Content\Images\menu_item.png" />
     <Content Include="Content\Images\menu_item_hover.png" />
     <Content Include="Content\Images\tick.png" />
@@ -272,8 +284,9 @@
     <Content Include="Views\Country\Edit.aspx" />
     <Content Include="Views\Country\Index.aspx" />
     <Content Include="Views\Login\Index.aspx" />
+    <Content Include="Views\Basket\Index.aspx" />
     <Content Include="Views\Order\Checkout.aspx" />
-    <Content Include="Views\Order\Index.aspx" />
+    <Content Include="Views\Order\Item.aspx" />
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />
     <Content Include="Views\Product\Item.aspx" />

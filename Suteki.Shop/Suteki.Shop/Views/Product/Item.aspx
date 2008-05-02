@@ -39,7 +39,7 @@ function onThumbnailClick(img)
 
 
 <div>
-<% using (Html.Form("Order", "Update"))
+<% using (Html.Form("Basket", "Update"))
    { %>
 
     <%= Html.ErrorBox(ViewData)%>

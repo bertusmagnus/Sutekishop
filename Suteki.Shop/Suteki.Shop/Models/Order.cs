@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Linq;
+using Suteki.Shop.Validation;
 
 namespace Suteki.Shop
 {
     public partial class Order
     {
-        public decimal Total
+        partial void OnEmailChanging(string value)
         {
-            get
-            {
-                return OrderItems.Sum(item => item.Total);
-            }
+            value.Label("Email").IsRequired();
         }
     }
 }

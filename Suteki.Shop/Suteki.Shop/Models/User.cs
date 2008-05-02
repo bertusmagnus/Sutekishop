@@ -27,19 +27,19 @@ namespace Suteki.Shop
 
         public bool CanLogin { get { return IsAdministrator || IsOrderProcessor; } }
 
-        public Order CurrentOrder
+        public Basket CurrentBasket
         {
             get
             {
-                if (Orders.Count == 0)
+                if (Baskets.Count == 0)
                 {
-                    return new Order
+                    return new Basket
                     {
                         User = this,
                         OrderDate = DateTime.Now
                     };
                 }
-                return Orders.CurrentOrder();
+                return Baskets.CurrentBasket();
             }
         }
 

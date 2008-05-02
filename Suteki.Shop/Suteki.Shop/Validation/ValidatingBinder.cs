@@ -27,7 +27,7 @@ namespace Suteki.Shop.Validation
                 string propertyName = property.Name;
                 if (!string.IsNullOrEmpty(objectPrefix))
                 {
-                    propertyName = objectPrefix + property.Name;
+                    propertyName = objectPrefix + "." + property.Name;
                 }
                 if (values[propertyName] == null)
                 {

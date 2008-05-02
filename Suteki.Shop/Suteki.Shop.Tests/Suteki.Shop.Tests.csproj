@@ -76,6 +76,7 @@
     <Compile Include="Controllers\CountryControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\LoginControllerTests.cs" />
+    <Compile Include="Controllers\BasketControllerTests.cs" />
     <Compile Include="Controllers\OrderControllerTests.cs" />
     <Compile Include="Controllers\ProductControllerTests.cs" />
     <Compile Include="Controllers\UserControllerTests.cs" />

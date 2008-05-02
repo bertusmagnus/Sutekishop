@@ -12,7 +12,7 @@ namespace Suteki.Shop.Views.Order
 {
 
 
-    public partial class Index
+    public partial class Item
     {
     }
 }

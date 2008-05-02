@@ -2,7 +2,7 @@
 
 namespace Suteki.Shop
 {
-    public partial class OrderItem
+    public partial class BasketItem
     {
         public decimal Total
         {

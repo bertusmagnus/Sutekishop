@@ -115,6 +115,94 @@ h1
 	clear: both;	
 }
 
+/* --------------------------- columns ------------------------ */
+
+.columnContainer
+{
+	margin: 0 0 20px 0;
+	padding: 20px 0 0 0;
+	overflow: auto;
+	border-top: solid 2px #CBC9CE;
+}
+
+.columnContainer label
+{
+	display: block;
+	float: left;
+	margin: 0 0 0 0;
+	padding: 20 0 20 0;
+	width: 150px;
+}
+
+.columnContainer input[type=text]
+{
+	display: block;
+	margin: 5px 0 0 150px;
+	width: 150px;
+}
+
+.columnContainer input[type=checkbox]
+{
+	display: block;
+	margin: 5px 0 0 150px;
+	width: 15px;
+}
+
+.columnContainer select
+{
+	display: block;
+	margin: 5px 0 0 150px;
+	width: 154px;
+}
+
+.columnContainer textarea
+{
+	display: block;
+	margin: 5px 0 0 150px;
+	width: 150px;
+	height: 50px;
+}
+
+.contentLeftColumn
+{
+	width: 300px;
+	float: left;
+}
+
+.contentRightColumn
+{
+	width: 300px;
+	margin: 0 0 0 320px;
+}
+
+.cardDate
+{
+	overflow: auto;
+}
+
+.cardDate select
+{
+	width: 70px;
+	display: block;
+}
+
+dt
+{
+	display: block;
+	float: left;
+	margin: 0 0 0 0;
+	padding: 20 0 20 0;
+	width: 100px;
+	font-weight: bold;	
+}
+
+dd
+{
+	display: block;
+	margin: 0 0 0 150px;
+	width: 190px;
+}
+
 /* --------------------------- main menu ------------------------ */
 
 .mainMenu
@@ -297,6 +385,30 @@ input[type=button]
 {
 	display: inline;
 	width: 75px;
+}
+
+input[type=submit]
+{
+	display: inline;
+	width: auto;
+	color: #514E5C;
+	background: #CBC9CE;
+	border: outset 2px #A5A0B0;
+}
+
+.linkButton
+{
+	text-decoration: none;
+	display: inline;
+	padding: 2px 5px 2px 5px;
+	width: auto;
+	color: #514E5C;
+	background: #CBC9CE;
+	border: outset 2px #A5A0B0;
+}
+.lineButton:hover
+{
+	color: #514E5C;
 }
 
 select

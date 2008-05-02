@@ -7,7 +7,7 @@ using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Views.Order
 {
-    public partial class Index : ViewPage<ShopViewData>
+    public partial class Item : ViewPage<ShopViewData>
     {
     }
 }

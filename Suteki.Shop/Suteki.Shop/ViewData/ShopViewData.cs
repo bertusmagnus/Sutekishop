@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.ViewData
 {
@@ -19,10 +20,14 @@ namespace Suteki.Shop.ViewData
         public User User { get; set; }
         public IEnumerable<User> Users { get; set; }
 
+        public Basket Basket { get; set; }
+
         public Order Order { get; set; }
 
         public IEnumerable<Country> Countries { get; set; }
         public Country Country { get; set; }
+
+        public IEnumerable<CardType> CardTypes { get; set; }
 
         // attempt at a fluent interface
 
@@ -80,6 +85,12 @@ namespace Suteki.Shop.ViewData
             return this;
         }
 
+        public ShopViewData WithBasket(Basket basket)
+        {
+            this.Basket = basket;
+            return this;
+        }
+
         public ShopViewData WithOrder(Order order)
         {
             this.Order = order;
@@ -95,6 +106,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithCountry(Country country)
         {
             this.Country = country;
+            return this;
+        }
+
+        public ShopViewData WithCardTypes(IEnumerable<CardType> cardTypes)
+        {
+            this.CardTypes = cardTypes;
             return this;
         }
     }
