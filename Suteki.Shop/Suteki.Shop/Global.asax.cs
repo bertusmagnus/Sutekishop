@@ -52,8 +52,7 @@ namespace Suteki.Shop
                     .Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
 
                 // set the controller factory to the Windsor controller factory (in MVC Contrib)
-                System.Web.Mvc.ControllerBuilder.Current.SetControllerFactory(typeof(WindsorControllerFactory));
-                //ControllerBuilder.Current.SetControllerFactory(typeof(WindsorControllerFactory));
+                System.Web.Mvc.ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
             }
         }
 
