@@ -60,15 +60,15 @@ namespace Suteki.Shop
     partial void InsertBasketItem(BasketItem instance);
     partial void UpdateBasketItem(BasketItem instance);
     partial void DeleteBasketItem(BasketItem instance);
-    partial void InsertCard(Card instance);
-    partial void UpdateCard(Card instance);
-    partial void DeleteCard(Card instance);
     partial void InsertCardType(CardType instance);
     partial void UpdateCardType(CardType instance);
     partial void DeleteCardType(CardType instance);
     partial void InsertContact(Contact instance);
     partial void UpdateContact(Contact instance);
     partial void DeleteContact(Contact instance);
+    partial void InsertCard(Card instance);
+    partial void UpdateCard(Card instance);
+    partial void DeleteCard(Card instance);
     partial void InsertOrder(Order instance);
     partial void UpdateOrder(Order instance);
     partial void DeleteOrder(Order instance);
@@ -184,14 +184,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		public System.Data.Linq.Table<Card> Cards
-		{
-			get
-			{
-				return this.GetTable<Card>();
-			}
-		}
-		
 		public System.Data.Linq.Table<CardType> CardTypes
 		{
 			get
@@ -205,6 +197,14 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Contact>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Card> Cards
+		{
+			get
+			{
+				return this.GetTable<Card>();
 			}
 		}
 		
@@ -2234,353 +2234,6 @@ namespace Suteki.Shop
 		}
 	}
 	
-	[Table(Name="dbo.Card")]
-	public partial class Card : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _CardId;
-		
-		private int _CardTypeId;
-		
-		private string _Holder;
-		
-		private string _Number;
-		
-		private int _ExpiryMonth;
-		
-		private int _ExpiryYear;
-		
-		private int _StartMonth;
-		
-		private int _StartYear;
-		
-		private int _IssueNumber;
-		
-		private string _SecurityCode;
-		
-		private EntitySet<Order> _Orders;
-		
-		private EntityRef<CardType> _CardType;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnCardIdChanging(int value);
-    partial void OnCardIdChanged();
-    partial void OnCardTypeIdChanging(int value);
-    partial void OnCardTypeIdChanged();
-    partial void OnHolderChanging(string value);
-    partial void OnHolderChanged();
-    partial void OnNumberChanging(string value);
-    partial void OnNumberChanged();
-    partial void OnExpiryMonthChanging(int value);
-    partial void OnExpiryMonthChanged();
-    partial void OnExpiryYearChanging(int value);
-    partial void OnExpiryYearChanged();
-    partial void OnStartMonthChanging(int value);
-    partial void OnStartMonthChanged();
-    partial void OnStartYearChanging(int value);
-    partial void OnStartYearChanged();
-    partial void OnIssueNumberChanging(int value);
-    partial void OnIssueNumberChanged();
-    partial void OnSecurityCodeChanging(string value);
-    partial void OnSecurityCodeChanged();
-    #endregion
-		
-		public Card()
-		{
-			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
-			this._CardType = default(EntityRef<CardType>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_CardId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int CardId
-		{
-			get
-			{
-				return this._CardId;
-			}
-			set
-			{
-				if ((this._CardId != value))
-				{
-					this.OnCardIdChanging(value);
-					this.SendPropertyChanging();
-					this._CardId = value;
-					this.SendPropertyChanged("CardId");
-					this.OnCardIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_CardTypeId", DbType="Int NOT NULL")]
-		public int CardTypeId
-		{
-			get
-			{
-				return this._CardTypeId;
-			}
-			set
-			{
-				if ((this._CardTypeId != value))
-				{
-					if (this._CardType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCardTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._CardTypeId = value;
-					this.SendPropertyChanged("CardTypeId");
-					this.OnCardTypeIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Holder", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Holder
-		{
-			get
-			{
-				return this._Holder;
-			}
-			set
-			{
-				if ((this._Holder != value))
-				{
-					this.OnHolderChanging(value);
-					this.SendPropertyChanging();
-					this._Holder = value;
-					this.SendPropertyChanged("Holder");
-					this.OnHolderChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Number", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Number
-		{
-			get
-			{
-				return this._Number;
-			}
-			set
-			{
-				if ((this._Number != value))
-				{
-					this.OnNumberChanging(value);
-					this.SendPropertyChanging();
-					this._Number = value;
-					this.SendPropertyChanged("Number");
-					this.OnNumberChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ExpiryMonth", DbType="Int NOT NULL")]
-		public int ExpiryMonth
-		{
-			get
-			{
-				return this._ExpiryMonth;
-			}
-			set
-			{
-				if ((this._ExpiryMonth != value))
-				{
-					this.OnExpiryMonthChanging(value);
-					this.SendPropertyChanging();
-					this._ExpiryMonth = value;
-					this.SendPropertyChanged("ExpiryMonth");
-					this.OnExpiryMonthChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ExpiryYear", DbType="Int NOT NULL")]
-		public int ExpiryYear
-		{
-			get
-			{
-				return this._ExpiryYear;
-			}
-			set
-			{
-				if ((this._ExpiryYear != value))
-				{
-					this.OnExpiryYearChanging(value);
-					this.SendPropertyChanging();
-					this._ExpiryYear = value;
-					this.SendPropertyChanged("ExpiryYear");
-					this.OnExpiryYearChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_StartMonth", DbType="Int NOT NULL")]
-		public int StartMonth
-		{
-			get
-			{
-				return this._StartMonth;
-			}
-			set
-			{
-				if ((this._StartMonth != value))
-				{
-					this.OnStartMonthChanging(value);
-					this.SendPropertyChanging();
-					this._StartMonth = value;
-					this.SendPropertyChanged("StartMonth");
-					this.OnStartMonthChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_StartYear", DbType="Int NOT NULL")]
-		public int StartYear
-		{
-			get
-			{
-				return this._StartYear;
-			}
-			set
-			{
-				if ((this._StartYear != value))
-				{
-					this.OnStartYearChanging(value);
-					this.SendPropertyChanging();
-					this._StartYear = value;
-					this.SendPropertyChanged("StartYear");
-					this.OnStartYearChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_IssueNumber", DbType="Int NOT NULL")]
-		public int IssueNumber
-		{
-			get
-			{
-				return this._IssueNumber;
-			}
-			set
-			{
-				if ((this._IssueNumber != value))
-				{
-					this.OnIssueNumberChanging(value);
-					this.SendPropertyChanging();
-					this._IssueNumber = value;
-					this.SendPropertyChanged("IssueNumber");
-					this.OnIssueNumberChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_SecurityCode", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string SecurityCode
-		{
-			get
-			{
-				return this._SecurityCode;
-			}
-			set
-			{
-				if ((this._SecurityCode != value))
-				{
-					this.OnSecurityCodeChanging(value);
-					this.SendPropertyChanging();
-					this._SecurityCode = value;
-					this.SendPropertyChanged("SecurityCode");
-					this.OnSecurityCodeChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Card_Order", Storage="_Orders", OtherKey="CardId")]
-		public EntitySet<Order> Orders
-		{
-			get
-			{
-				return this._Orders;
-			}
-			set
-			{
-				this._Orders.Assign(value);
-			}
-		}
-		
-		[Association(Name="CardType_Card", Storage="_CardType", ThisKey="CardTypeId", IsForeignKey=true)]
-		public CardType CardType
-		{
-			get
-			{
-				return this._CardType.Entity;
-			}
-			set
-			{
-				CardType previousValue = this._CardType.Entity;
-				if (((previousValue != value) 
-							|| (this._CardType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CardType.Entity = null;
-						previousValue.Cards.Remove(this);
-					}
-					this._CardType.Entity = value;
-					if ((value != null))
-					{
-						value.Cards.Add(this);
-						this._CardTypeId = value.CardTypeId;
-					}
-					else
-					{
-						this._CardTypeId = default(int);
-					}
-					this.SendPropertyChanged("CardType");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Orders(Order entity)
-		{
-			this.SendPropertyChanging();
-			entity.Card = this;
-		}
-		
-		private void detach_Orders(Order entity)
-		{
-			this.SendPropertyChanging();
-			entity.Card = null;
-		}
-	}
-	
 	[Table(Name="dbo.CardType")]
 	public partial class CardType : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -3118,6 +2771,353 @@ namespace Suteki.Shop
 		}
 	}
 	
+	[Table(Name="dbo.Card")]
+	public partial class Card : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _CardId;
+		
+		private int _CardTypeId;
+		
+		private string _Holder;
+		
+		private string _Number;
+		
+		private int _ExpiryMonth;
+		
+		private int _ExpiryYear;
+		
+		private int _StartMonth;
+		
+		private int _StartYear;
+		
+		private string _IssueNumber;
+		
+		private string _SecurityCode;
+		
+		private EntitySet<Order> _Orders;
+		
+		private EntityRef<CardType> _CardType;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCardIdChanging(int value);
+    partial void OnCardIdChanged();
+    partial void OnCardTypeIdChanging(int value);
+    partial void OnCardTypeIdChanged();
+    partial void OnHolderChanging(string value);
+    partial void OnHolderChanged();
+    partial void OnNumberChanging(string value);
+    partial void OnNumberChanged();
+    partial void OnExpiryMonthChanging(int value);
+    partial void OnExpiryMonthChanged();
+    partial void OnExpiryYearChanging(int value);
+    partial void OnExpiryYearChanged();
+    partial void OnStartMonthChanging(int value);
+    partial void OnStartMonthChanged();
+    partial void OnStartYearChanging(int value);
+    partial void OnStartYearChanged();
+    partial void OnIssueNumberChanging(string value);
+    partial void OnIssueNumberChanged();
+    partial void OnSecurityCodeChanging(string value);
+    partial void OnSecurityCodeChanged();
+    #endregion
+		
+		public Card()
+		{
+			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
+			this._CardType = default(EntityRef<CardType>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_CardId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int CardId
+		{
+			get
+			{
+				return this._CardId;
+			}
+			set
+			{
+				if ((this._CardId != value))
+				{
+					this.OnCardIdChanging(value);
+					this.SendPropertyChanging();
+					this._CardId = value;
+					this.SendPropertyChanged("CardId");
+					this.OnCardIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CardTypeId", DbType="Int NOT NULL")]
+		public int CardTypeId
+		{
+			get
+			{
+				return this._CardTypeId;
+			}
+			set
+			{
+				if ((this._CardTypeId != value))
+				{
+					if (this._CardType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCardTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._CardTypeId = value;
+					this.SendPropertyChanged("CardTypeId");
+					this.OnCardTypeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Holder", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Holder
+		{
+			get
+			{
+				return this._Holder;
+			}
+			set
+			{
+				if ((this._Holder != value))
+				{
+					this.OnHolderChanging(value);
+					this.SendPropertyChanging();
+					this._Holder = value;
+					this.SendPropertyChanged("Holder");
+					this.OnHolderChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Number", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Number
+		{
+			get
+			{
+				return this._Number;
+			}
+			set
+			{
+				if ((this._Number != value))
+				{
+					this.OnNumberChanging(value);
+					this.SendPropertyChanging();
+					this._Number = value;
+					this.SendPropertyChanged("Number");
+					this.OnNumberChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ExpiryMonth", DbType="Int NOT NULL")]
+		public int ExpiryMonth
+		{
+			get
+			{
+				return this._ExpiryMonth;
+			}
+			set
+			{
+				if ((this._ExpiryMonth != value))
+				{
+					this.OnExpiryMonthChanging(value);
+					this.SendPropertyChanging();
+					this._ExpiryMonth = value;
+					this.SendPropertyChanged("ExpiryMonth");
+					this.OnExpiryMonthChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ExpiryYear", DbType="Int NOT NULL")]
+		public int ExpiryYear
+		{
+			get
+			{
+				return this._ExpiryYear;
+			}
+			set
+			{
+				if ((this._ExpiryYear != value))
+				{
+					this.OnExpiryYearChanging(value);
+					this.SendPropertyChanging();
+					this._ExpiryYear = value;
+					this.SendPropertyChanged("ExpiryYear");
+					this.OnExpiryYearChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_StartMonth", DbType="Int NOT NULL")]
+		public int StartMonth
+		{
+			get
+			{
+				return this._StartMonth;
+			}
+			set
+			{
+				if ((this._StartMonth != value))
+				{
+					this.OnStartMonthChanging(value);
+					this.SendPropertyChanging();
+					this._StartMonth = value;
+					this.SendPropertyChanged("StartMonth");
+					this.OnStartMonthChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_StartYear", DbType="Int NOT NULL")]
+		public int StartYear
+		{
+			get
+			{
+				return this._StartYear;
+			}
+			set
+			{
+				if ((this._StartYear != value))
+				{
+					this.OnStartYearChanging(value);
+					this.SendPropertyChanging();
+					this._StartYear = value;
+					this.SendPropertyChanged("StartYear");
+					this.OnStartYearChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IssueNumber", DbType="NVarChar(5) NOT NULL", CanBeNull=false)]
+		public string IssueNumber
+		{
+			get
+			{
+				return this._IssueNumber;
+			}
+			set
+			{
+				if ((this._IssueNumber != value))
+				{
+					this.OnIssueNumberChanging(value);
+					this.SendPropertyChanging();
+					this._IssueNumber = value;
+					this.SendPropertyChanged("IssueNumber");
+					this.OnIssueNumberChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SecurityCode", DbType="NVarChar(10) NOT NULL", CanBeNull=false)]
+		public string SecurityCode
+		{
+			get
+			{
+				return this._SecurityCode;
+			}
+			set
+			{
+				if ((this._SecurityCode != value))
+				{
+					this.OnSecurityCodeChanging(value);
+					this.SendPropertyChanging();
+					this._SecurityCode = value;
+					this.SendPropertyChanged("SecurityCode");
+					this.OnSecurityCodeChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Card_Order", Storage="_Orders", OtherKey="CardId")]
+		public EntitySet<Order> Orders
+		{
+			get
+			{
+				return this._Orders;
+			}
+			set
+			{
+				this._Orders.Assign(value);
+			}
+		}
+		
+		[Association(Name="CardType_Card", Storage="_CardType", ThisKey="CardTypeId", IsForeignKey=true)]
+		public CardType CardType
+		{
+			get
+			{
+				return this._CardType.Entity;
+			}
+			set
+			{
+				CardType previousValue = this._CardType.Entity;
+				if (((previousValue != value) 
+							|| (this._CardType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CardType.Entity = null;
+						previousValue.Cards.Remove(this);
+					}
+					this._CardType.Entity = value;
+					if ((value != null))
+					{
+						value.Cards.Add(this);
+						this._CardTypeId = value.CardTypeId;
+					}
+					else
+					{
+						this._CardTypeId = default(int);
+					}
+					this.SendPropertyChanged("CardType");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.Card = this;
+		}
+		
+		private void detach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.Card = null;
+		}
+	}
+	
 	[Table(Name="dbo.[Order]")]
 	public partial class Order : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -3128,11 +3128,11 @@ namespace Suteki.Shop
 		
 		private int _BasketId;
 		
-		private int _CardId;
+		private System.Nullable<int> _CardId;
 		
 		private int _CardContactId;
 		
-		private int _DeliveryContactId;
+		private System.Nullable<int> _DeliveryContactId;
 		
 		private string _Email;
 		
@@ -3158,11 +3158,11 @@ namespace Suteki.Shop
     partial void OnOrderIdChanged();
     partial void OnBasketIdChanging(int value);
     partial void OnBasketIdChanged();
-    partial void OnCardIdChanging(int value);
+    partial void OnCardIdChanging(System.Nullable<int> value);
     partial void OnCardIdChanged();
     partial void OnCardContactIdChanging(int value);
     partial void OnCardContactIdChanged();
-    partial void OnDeliveryContactIdChanging(int value);
+    partial void OnDeliveryContactIdChanging(System.Nullable<int> value);
     partial void OnDeliveryContactIdChanged();
     partial void OnEmailChanging(string value);
     partial void OnEmailChanged();
@@ -3227,8 +3227,8 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Column(Storage="_CardId", DbType="Int NOT NULL")]
-		public int CardId
+		[Column(Storage="_CardId", DbType="Int")]
+		public System.Nullable<int> CardId
 		{
 			get
 			{
@@ -3275,8 +3275,8 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Column(Storage="_DeliveryContactId", DbType="Int NOT NULL")]
-		public int DeliveryContactId
+		[Column(Storage="_DeliveryContactId", DbType="Int")]
+		public System.Nullable<int> DeliveryContactId
 		{
 			get
 			{
@@ -3440,7 +3440,7 @@ namespace Suteki.Shop
 					}
 					else
 					{
-						this._CardId = default(int);
+						this._CardId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Card");
 				}
@@ -3508,7 +3508,7 @@ namespace Suteki.Shop
 					}
 					else
 					{
-						this._DeliveryContactId = default(int);
+						this._DeliveryContactId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Contact1");
 				}

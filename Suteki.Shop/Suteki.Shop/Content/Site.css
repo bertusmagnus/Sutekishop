@@ -365,8 +365,12 @@ input.inline
 
 input[type=submit]
 {
+	display: block;
 	width: 150px;
 	margin: 10px 10px 10px 0px;
+	border: outset 2px #A5A0B0;
+	color: #514E5C;
+	background: #CBC9CE;
 }
 
 input[type=checkbox]
@@ -385,15 +389,6 @@ input[type=button]
 {
 	display: inline;
 	width: 75px;
-}
-
-input[type=submit]
-{
-	display: inline;
-	width: auto;
-	color: #514E5C;
-	background: #CBC9CE;
-	border: outset 2px #A5A0B0;
 }
 
 .linkButton

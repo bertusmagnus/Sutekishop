@@ -101,22 +101,6 @@
       <Association Name="Size_BasketItem" Member="Size" ThisKey="SizeId" Type="Size" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Card" Member="Cards">
-    <Type Name="Card">
-      <Column Name="CardId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CardTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Holder" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Number" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="ExpiryMonth" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ExpiryYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="StartMonth" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="StartYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="IssueNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="SecurityCode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Card_Order" Member="Orders" OtherKey="CardId" Type="Order" />
-      <Association Name="CardType_Card" Member="CardType" ThisKey="CardTypeId" Type="CardType" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.CardType" Member="CardTypes">
     <Type Name="CardType">
       <Column Name="CardTypeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -143,13 +127,29 @@
       <Association Name="Country_Contact" Member="Country" ThisKey="CountryId" Type="Country" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Card" Member="Cards">
+    <Type Name="Card">
+      <Column Name="CardId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CardTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Holder" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Number" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ExpiryMonth" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ExpiryYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="StartMonth" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="StartYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IssueNumber" Type="System.String" DbType="NVarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="SecurityCode" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="Card_Order" Member="Orders" OtherKey="CardId" Type="Order" />
+      <Association Name="CardType_Card" Member="CardType" ThisKey="CardTypeId" Type="CardType" IsForeignKey="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.[Order]" Member="Orders">
     <Type Name="Order">
       <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CardId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CardId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="CardContactId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="DeliveryContactId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DeliveryContactId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Email" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="AdditionalInformation" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UseCardHolderContact" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />

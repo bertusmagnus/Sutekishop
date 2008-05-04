@@ -52,7 +52,8 @@ namespace Suteki.Shop.Validation
                     }
                     catch (Exception exception)
                     {
-                        if (exception.InnerException is FormatException)
+                        if (exception.InnerException is FormatException || 
+                            exception.InnerException is IndexOutOfRangeException)
                         {
                             exceptionMessage.AppendFormat("'{0}' is not a valid value for {1}<br />", stringValue, property.Name);
                         }

@@ -40,12 +40,17 @@ namespace Suteki.Shop
 
         partial void OnNumberChanging(string value)
         {
-            value.Label("Card Number").IsRequired();
+            value.Label("Card Number").IsRequired().IsCreditCard();
+        }
+
+        partial void OnIssueNumberChanging(string value)
+        {
+            value.Label("Issue Number").IsRequired().IsNumeric().WithMaxLength(1);
         }
 
         partial void OnSecurityCodeChanging(string value)
         {
-            value.Label("Security Code").IsRequired();
+            value.Label("Security Code").IsRequired().IsNumeric().WithMaxLength(3);
         }
     }
 }

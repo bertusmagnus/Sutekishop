@@ -62,21 +62,15 @@ namespace Suteki.Shop.Controllers
         public ActionResult PlaceOrder()
         {
             Order order = new Order();
-            Contact cardContact = new Contact();
-            Contact deliveryContact = new Contact();
-            Card card = new Card();
 
             Validator validator = new Validator
             {
                 () => ValidatingBinder.UpdateFrom(order, Request.Form, "order"),
-                () => ValidatingBinder.UpdateFrom(cardContact, Request.Form, "cardcontact"),
-                () => ValidatingBinder.UpdateFrom(deliveryContact, Request.Form, "deliverycontact"),
-                () => ValidatingBinder.UpdateFrom(card, Request.Form, "card")
+                () => UpdateCardContact(order),
+                () => UpdateDeliveryContact(order),
+                () => UpdateCard(order),
+                () => CheckConfirmEmail(order)
             };
-
-            order.Contact = cardContact;
-            order.Contact1 = deliveryContact;
-            order.Card = card;
 
             try
             {
@@ -87,10 +81,45 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
+                order.Basket = basketRepository.GetById(order.BasketId);
                 return RenderView("Checkout", CheckoutViewData
                     .WithOrder(order)
                     .WithErrorMessage(validationException.Message)
                     );
+            }
+        }
+
+        private void UpdateCardContact(Order order)
+        {
+            Contact cardContact = new Contact();
+            order.Contact = cardContact;
+            ValidatingBinder.UpdateFrom(cardContact, Request.Form, "cardcontact");
+        }
+
+        private void UpdateDeliveryContact(Order order)
+        {
+            if (order.UseCardHolderContact) return;
+
+            Contact deliveryContact = new Contact();
+            order.Contact1 = deliveryContact;
+            ValidatingBinder.UpdateFrom(deliveryContact, Request.Form, "deliverycontact");
+        }
+
+        private void UpdateCard(Order order)
+        {
+            if (order.PayByTelephone) return;
+
+            Card card = new Card();
+            order.Card = card;
+            ValidatingBinder.UpdateFrom(card, Request.Form, "card");
+        }
+
+        private void CheckConfirmEmail(Order order)
+        {
+            string confirmEmail = this.ReadFromRequest("emailconfirm");
+            if (order.Email != confirmEmail)
+            {
+                throw new ValidationException("Email and Confirm Email do not match");
             }
         }
     }

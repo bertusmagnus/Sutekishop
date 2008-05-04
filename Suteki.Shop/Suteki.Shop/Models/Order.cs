@@ -7,7 +7,7 @@ namespace Suteki.Shop
     {
         partial void OnEmailChanging(string value)
         {
-            value.Label("Email").IsRequired();
+            value.Label("Email").IsRequired().IsEmail();
         }
     }
 }

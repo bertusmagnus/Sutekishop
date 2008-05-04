@@ -30,5 +30,21 @@ namespace Suteki.Shop.Tests.Validation
 
             validator.Validate();
         }
+
+        [Test]
+        public void IsCreditCard_ShouldSuccessfullyValidateACreditCard()
+        {
+            string validCardNumber = "1111111111111117";
+
+            validCardNumber.Label("Card Number").IsCreditCard();
+        }
+
+        [Test, ExpectedException(typeof(ValidationException))]
+        public void IsCreditCard_ShouldNotValidateAnInvalidCreditCard()
+        {
+            string validCardNumber = "1111111111211117";
+
+            validCardNumber.Label("Card Number").IsCreditCard();
+        }
     }
 }

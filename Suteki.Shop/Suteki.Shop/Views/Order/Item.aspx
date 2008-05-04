@@ -68,6 +68,12 @@
         
         <h3>Delivery Address</h3>
         
+        <% if(ViewData.Order.UseCardHolderContact) { %>
+        
+        <p>Use Card Holder Contact</p>
+        
+        <% } else { %>
+        
         <dl>
             <dt>First Name</dt><dd><%= ViewData.Order.Contact1.Firstname %>&nbsp;</dd>
             <dt>Last Name</dt><dd><%= ViewData.Order.Contact1.Lastname %>&nbsp;</dd>
@@ -82,6 +88,8 @@
             <dt>Additional Information</dt><dd><%= ViewData.Order.AdditionalInformation %>&nbsp;</dd>
         </dl>
         
+        <% } %>
+        
     </div>      
 </div>        
          
@@ -90,11 +98,19 @@
 <div class="columnContainer">
     <div class="contentLeftColumn">
 
+        <% if(ViewData.Order.PayByTelephone) { %>
+        
+        <p>Pay By Telephone</p>
+        
+        <% } else { %>
+
         <dl>
             <dt>Card Type</dt><dd><%= ViewData.Order.Card.CardType.Name %>&nbsp;</dd>
             <dt>Card Holder</dt><dd><%= ViewData.Order.Card.Holder %>&nbsp;</dd>
             <dt>Card Number</dt><dd>xxxx-xxxx-xxxx-xxxx</dd>
         </dl>
+        
+        <% } %>
         
     </div>
     <div class="contentRightColumn">

@@ -34,5 +34,36 @@ namespace Suteki.Shop.Extensions
                 yield return i;
             }
         }
+
+        public static void ToConsole<T>(this IEnumerable<T> list)
+        {
+            list.ForEach(n => Console.Write("{0} ".With(n)));
+        }
+
+        public static IEnumerable<T> AtOddPositions<T>(this IEnumerable<T> list)
+        {
+            bool odd = false; // 0th position is even
+            foreach (T item in list)
+            {
+                odd = !odd;
+                if (odd)
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> AtEvenPositions<T>(this IEnumerable<T> list)
+        {
+            bool even = true; // 0th position is even
+            foreach (T item in list)
+            {
+                even = !even;
+                if (even)
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 }
