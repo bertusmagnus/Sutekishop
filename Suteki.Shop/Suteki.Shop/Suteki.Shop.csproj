@@ -91,6 +91,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ScaffoldController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -154,6 +155,7 @@
     <Compile Include="Validation\ValidationExtensions.cs" />
     <Compile Include="Validation\Validator.cs" />
     <Compile Include="ViewData\IMessageViewData.cs" />
+    <Compile Include="ViewData\ScaffoldViewData.cs" />
     <Compile Include="ViewData\ShopViewData.cs" />
     <Compile Include="ViewData\IErrorViewData.cs" />
     <Compile Include="Views\Category\Edit.aspx.cs">

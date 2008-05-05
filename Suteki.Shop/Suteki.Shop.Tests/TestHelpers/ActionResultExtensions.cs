@@ -20,6 +20,8 @@ namespace Suteki.Shop.Tests
             return result;
         }
 
+        // shop view data
+
         public static RenderViewResult AssertNotNull<T>(this RenderViewResult result, Func<ShopViewData, T> property)
         {
             Assert.IsNotNull(property(result.GetShopViewData()));
@@ -54,6 +56,45 @@ namespace Suteki.Shop.Tests
         {
             ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
+            return viewData;
+        }
+
+        // scaffold view data
+
+        public static RenderViewResult SAssertNotNull<T, TProperty>(this RenderViewResult result, Func<ScaffoldViewData<T>, TProperty> property)
+        {
+            Assert.IsNotNull(property(result.GetScaffoldViewData<T>()));
+            return result;
+        }
+
+        public static RenderViewResult SAssertNull<T, TProperty>(this RenderViewResult result, Func<ScaffoldViewData<T>, TProperty> property)
+        {
+            Assert.IsNull(property(result.GetScaffoldViewData<T>()));
+            return result;
+        }
+
+        public static RenderViewResult SAssertAreSame<T, TProperty>(
+            this RenderViewResult result,
+            TProperty expected,
+            Func<ScaffoldViewData<T>, TProperty> property)
+        {
+            Assert.AreSame(expected, property(result.GetScaffoldViewData<T>()));
+            return result;
+        }
+
+        public static RenderViewResult SAssertAreEqual<T, TProperty>(
+            this RenderViewResult result,
+            TProperty expected,
+            Func<ScaffoldViewData<T>, TProperty> property)
+        {
+            Assert.AreEqual(expected, property(result.GetScaffoldViewData<T>()));
+            return result;
+        }
+
+        public static ScaffoldViewData<T> GetScaffoldViewData<T>(this RenderViewResult result)
+        {
+            ScaffoldViewData<T> viewData = result.ViewData as ScaffoldViewData<T>;
+            Assert.IsNotNull(viewData, "viewData is not ScaffoldViewData");
             return viewData;
         }
     }

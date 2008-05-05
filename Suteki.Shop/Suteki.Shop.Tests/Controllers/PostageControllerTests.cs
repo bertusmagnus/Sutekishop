@@ -27,7 +27,11 @@ namespace Suteki.Shop.Tests.Controllers
             postageRepository = new Mock<IRepository<Postage>>().Object;
             orderableService = new Mock<IOrderableService<Postage>>().Object;
 
-            postageController = new PostageController(postageRepository, orderableService);
+            //postageController = new PostageController(postageRepository, orderableService);
+            postageController = new PostageController();
+            postageController.Repository = postageRepository;
+            postageController.OrderableService = orderableService;
+
             testContext = new ControllerTestContext(postageController);
         }
 
@@ -40,7 +44,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertNotNull(vd => vd.Postages);
+                .SAssertNotNull<Postage, IEnumerable<Postage>>(vd => vd.Items);
         }
 
         [Test]
@@ -49,7 +53,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.New()
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .AssertNotNull(vd => vd.Postage);
+                .SAssertNotNull<Postage, Postage>(vd => vd.Item);
         }
 
         [Test]
@@ -63,13 +67,14 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.Edit(postageId)
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .AssertAreSame(postage, vd => vd.Postage);
+                .SAssertAreSame<Postage, Postage>(postage, vd => vd.Item);
         }
 
         [Test]
         public void Update_ShouldAddNewPostage()
         {
             NameValueCollection form = BuildMockPostageForm();
+            form.Add("postageid", "0");
 
             Postage postage = null;
 
@@ -78,7 +83,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
             Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
 
-            postageController.Update(0)
+            postageController.Update()
                 .ReturnsRenderViewResult()
                 .ForView("Index");
 
@@ -117,7 +122,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage).Verifiable();
             Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
 
-            postageController.Update(postageId)
+            postageController.Update()
                 .ReturnsRenderViewResult()
                 .ForView("Index");
 

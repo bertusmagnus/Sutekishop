@@ -7,7 +7,7 @@ using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Views.Postage
 {
-    public partial class Index : ViewPage<ShopViewData>
+    public partial class Index : ViewPage<ScaffoldViewData<Suteki.Shop.Postage>>
     {
     }
 }

@@ -9,20 +9,20 @@
     <% using (Html.Form("Postage", "Update"))
        { %>
 
-        <%= Html.Hidden("postageid", ViewData.Postage.PostageId)%>
-        <%= Html.Hidden("position", ViewData.Postage.Position)%>
+        <%= Html.Hidden("postageid", ViewData.Item.PostageId)%>
+        <%= Html.Hidden("position", ViewData.Item.Position)%>
 
         <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Postage.Name)%>
+        <%= Html.TextBox("name", ViewData.Item.Name)%>
         
         <label for="maxweight">Max Weight (grams)</label>
-        <%= Html.TextBox("maxweight", ViewData.Postage.MaxWeight)%>
+        <%= Html.TextBox("maxweight", ViewData.Item.MaxWeight.ToString())%>
         
         <label for="price">Price</label>
-        <%= Html.TextBox("price", ViewData.Postage.Price)%>
+        <%= Html.TextBox("price", ViewData.Item.Price)%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "true", ViewData.Postage.IsActive)%>
+        <%= Html.CheckBox("isactive", "", "true", ViewData.Item.IsActive)%>
         
         <%= Html.SubmitButton()%>
         

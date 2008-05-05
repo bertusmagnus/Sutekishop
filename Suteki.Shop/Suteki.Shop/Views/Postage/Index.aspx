@@ -14,7 +14,7 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
-<% foreach(var postage in ViewData.Postages) { %>
+<% foreach(var postage in ViewData.Items) { %>
     <tr>
         <td><%= Html.ActionLink<PostageController>(c => c.Edit(postage.PostageId), postage.Name)%></td>
         <td class="number"><%= postage.MaxWeight.ToString() %></td>
