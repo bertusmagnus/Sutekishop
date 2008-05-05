@@ -1,0 +1,150 @@
+﻿using System;
+using System.Linq;
+using NUnit.Framework;
+using Moq;
+using Suteki.Shop.Controllers;
+using Suteki.Shop.Repositories;
+using Suteki.Shop.Services;
+using System.Web.Mvc;
+using Suteki.Shop.ViewData;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+
+namespace Suteki.Shop.Tests.Controllers
+{
+    [TestFixture]
+    public class PostageControllerTests
+    {
+        PostageController postageController;
+
+        IRepository<Postage> postageRepository;
+        IOrderableService<Postage> orderableService;
+        ControllerTestContext testContext;
+
+        [SetUp]
+        public void SetUp()
+        {
+            postageRepository = new Mock<IRepository<Postage>>().Object;
+            orderableService = new Mock<IOrderableService<Postage>>().Object;
+
+            postageController = new PostageController(postageRepository, orderableService);
+            testContext = new ControllerTestContext(postageController);
+        }
+
+        [Test]
+        public void Index_ShouldShowListOfPostages()
+        {
+            List<Postage> postages = new List<Postage>();
+            Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages.AsQueryable());
+
+            postageController.Index()
+                .ReturnsRenderViewResult()
+                .ForView("Index")
+                .AssertNotNull(vd => vd.Postages);
+        }
+
+        [Test]
+        public void New_ShouldShowEditViewWithNewPostage()
+        {
+            postageController.New()
+                .ReturnsRenderViewResult()
+                .ForView("Edit")
+                .AssertNotNull(vd => vd.Postage);
+        }
+
+        [Test]
+        public void Edit_ShouldShowEditViewWithExistingPostage()
+        {
+            int postageId = 3;
+            Postage postage = new Postage { PostageId = postageId };
+
+            Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage);
+
+            postageController.Edit(postageId)
+                .ReturnsRenderViewResult()
+                .ForView("Edit")
+                .AssertAreSame(postage, vd => vd.Postage);
+        }
+
+        [Test]
+        public void Update_ShouldAddNewPostage()
+        {
+            NameValueCollection form = BuildMockPostageForm();
+
+            Postage postage = null;
+
+            Mock.Get(postageRepository).Expect(pr => pr.InsertOnSubmit(It.IsAny<Postage>()))
+                .Callback<Postage>(p => { postage = p; })
+                .Verifiable();
+            Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
+
+            postageController.Update(0)
+                .ReturnsRenderViewResult()
+                .ForView("Index");
+
+            Assert.AreEqual(form["name"], postage.Name);
+            Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
+            Assert.AreEqual(form["price"], postage.Price.ToString());
+
+            Mock.Get(postageRepository).Verify();
+        }
+
+        private NameValueCollection BuildMockPostageForm()
+        {
+            NameValueCollection form = new NameValueCollection();
+            form.Add("name", "A");
+            form.Add("maxWeight", "250");
+            form.Add("price", "5.25");
+            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            return form;
+        }
+
+        [Test]
+        public void Update_ShouldUpdateExistingPostage()
+        {
+            int postageId = 4;
+            NameValueCollection form = BuildMockPostageForm();
+            form.Add("postageid", postageId.ToString());
+
+            Postage postage = new Postage 
+            {
+                PostageId = postageId,
+                Name = "old name",
+                MaxWeight = 100,
+                Price = 2.23M
+            };
+
+            Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage).Verifiable();
+            Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
+
+            postageController.Update(postageId)
+                .ReturnsRenderViewResult()
+                .ForView("Index");
+
+            Assert.AreEqual(form["name"], postage.Name);
+            Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
+            Assert.AreEqual(form["price"], postage.Price.ToString());
+
+            Mock.Get(postageRepository).Verify();
+        }
+
+        [Test]
+        public void MoveUp_ShouldMoveItemUp()
+        {
+            int position = 4;
+
+            IOrderServiceWithPosition<Postage> orderResult = new Mock<IOrderServiceWithPosition<Postage>>().Object;
+
+            Mock.Get(orderableService).Expect(os => os.MoveItemAtPosition(position))
+                .Returns(orderResult).Verifiable();
+            Mock.Get(orderResult).Expect(or => or.UpOne()).Verifiable();
+
+            List<Postage> postages = new List<Postage>();
+            Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages.AsQueryable());
+
+            postageController.MoveUp(position);
+
+            Mock.Get(orderableService).Verify();
+        }
+    }
+}

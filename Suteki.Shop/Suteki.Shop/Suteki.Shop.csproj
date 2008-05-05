@@ -89,6 +89,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Default.aspx.cs">
@@ -114,6 +115,8 @@
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\Postage.cs" />
+    <Compile Include="Models\PostZone.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />
@@ -216,6 +219,20 @@
     <Compile Include="Views\Order\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Postage\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Postage\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Postage\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Postage\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Product\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -287,6 +304,8 @@
     <Content Include="Views\Basket\Index.aspx" />
     <Content Include="Views\Order\Checkout.aspx" />
     <Content Include="Views\Order\Item.aspx" />
+    <Content Include="Views\Postage\Edit.aspx" />
+    <Content Include="Views\Postage\Index.aspx" />
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />
     <Content Include="Views\Product\Item.aspx" />

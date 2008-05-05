@@ -29,6 +29,9 @@ namespace Suteki.Shop.ViewData
 
         public IEnumerable<CardType> CardTypes { get; set; }
 
+        public Postage Postage { get; set; }
+        public IEnumerable<Postage> Postages { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithErrorMessage(string errorMessage)
@@ -112,6 +115,18 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithCardTypes(IEnumerable<CardType> cardTypes)
         {
             this.CardTypes = cardTypes;
+            return this;
+        }
+
+        public ShopViewData WithPostage(Postage postage)
+        {
+            this.Postage = postage;
+            return this;
+        }
+
+        public ShopViewData WithPostages(IEnumerable<Postage> postages)
+        {
+            this.Postages = postages;
             return this;
         }
     }

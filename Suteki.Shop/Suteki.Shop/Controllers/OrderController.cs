@@ -35,18 +35,19 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Checkout(int id)
         {
-            Basket basket = basketRepository.GetById(id);
-
             // create a default order
-            Order order = new Order
-            {
-                Basket = basket,
-                Contact = new Contact(),
-                Contact1 = new Contact(),
-                Card = new Card()
-            };
+            Order order = new Order();
+            PopulateOrderForView(order, id);
             
             return RenderView("Checkout", CheckoutViewData.WithOrder(order));
+        }
+
+        private void PopulateOrderForView(Order order, int basketId)
+        {
+            if (order.Basket == null) order.Basket = basketRepository.GetById(basketId);
+            if (order.Contact == null) order.Contact = new Contact();
+            if (order.Contact1 == null) order.Contact1 = new Contact();
+            if (order.Card == null) order.Card = new Card();
         }
 
         private ShopViewData CheckoutViewData
@@ -65,11 +66,10 @@ namespace Suteki.Shop.Controllers
 
             Validator validator = new Validator
             {
-                () => ValidatingBinder.UpdateFrom(order, Request.Form, "order"),
+                () => UpdateOrder(order),
                 () => UpdateCardContact(order),
                 () => UpdateDeliveryContact(order),
-                () => UpdateCard(order),
-                () => CheckConfirmEmail(order)
+                () => UpdateCard(order)
             };
 
             try
@@ -81,7 +81,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                order.Basket = basketRepository.GetById(order.BasketId);
+                PopulateOrderForView(order, order.BasketId);
                 return RenderView("Checkout", CheckoutViewData
                     .WithOrder(order)
                     .WithErrorMessage(validationException.Message)
@@ -114,8 +114,9 @@ namespace Suteki.Shop.Controllers
             ValidatingBinder.UpdateFrom(card, Request.Form, "card");
         }
 
-        private void CheckConfirmEmail(Order order)
+        private void UpdateOrder(Order order)
         {
+            ValidatingBinder.UpdateFrom(order, Request.Form, "order");
             string confirmEmail = this.ReadFromRequest("emailconfirm");
             if (order.Email != confirmEmail)
             {

@@ -1,6 +1,36 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" CodeBehind="Checkout.aspx.cs" Inherits="Suteki.Shop.Views.Order.Checkout" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
+<script language="javascript">
+
+function toggleCardHolderDetails()
+{
+    var useCardholderContactCheck = document.getElementsByName("order.usecardholdercontact")[0];
+    var deliveryAddress = document.getElementById("deliveryAddress");
+    toggleVisibilityWithCheckbox(useCardholderContactCheck, deliveryAddress);
+}
+
+function toggleCard()
+{
+    var paybytelephone = document.getElementsByName("order.paybytelephone")[0];
+    var cardDetails = document.getElementById("cardDetails");
+    toggleVisibilityWithCheckbox(paybytelephone, cardDetails);
+}
+
+function toggleVisibilityWithCheckbox(checkbox, div)
+{
+    if(checkbox.checked)
+    {
+        div.style.visibility = "hidden";
+    }
+    else
+    {
+        div.style.visibility = "visible";
+    }
+}
+
+</script>
+
     <h1>Checkout</h1>
     
     <p>Welcome to the Suteki Shop secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
@@ -110,38 +140,43 @@
         <h3>Delivery Address</h3>
         
         <label for="order.usecardholdercontact">Use Cardholder Details</label>
-        <%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Order.UseCardHolderContact)%>
+        <%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Order.UseCardHolderContact,
+                        new { onclick = "javascript:toggleCardHolderDetails();" })%>
         
-        <label for="deliverycontact.firstname">First Name</label>
-        <%= Html.TextBox("deliverycontact.firstname", ViewData.Order.Contact1.Firstname)%>
+        <div id="deliveryAddress">
         
-        <label for="deliverycontact.lastname">Last Name</label>
-        <%= Html.TextBox("deliverycontact.lastname", ViewData.Order.Contact1.Lastname)%>
-        
-        <label for="deliverycontact.address1">Address</label>
-        <%= Html.TextBox("deliverycontact.address1", ViewData.Order.Contact1.Address1)%>
-        
-        <label for="deliverycontact.address2">&nbsp;</label>
-        <%= Html.TextBox("deliverycontact.address2", ViewData.Order.Contact1.Address2)%>
-        
-        <label for="deliverycontact.address3">&nbsp;</label>
-        <%= Html.TextBox("deliverycontact.address3", ViewData.Order.Contact1.Address3)%>
-        
-        <label for="deliverycontact.town">Town / City</label>
-        <%= Html.TextBox("deliverycontact.town", ViewData.Order.Contact1.Town)%>
+            <label for="deliverycontact.firstname">First Name</label>
+            <%= Html.TextBox("deliverycontact.firstname", ViewData.Order.Contact1.Firstname)%>
+            
+            <label for="deliverycontact.lastname">Last Name</label>
+            <%= Html.TextBox("deliverycontact.lastname", ViewData.Order.Contact1.Lastname)%>
+            
+            <label for="deliverycontact.address1">Address</label>
+            <%= Html.TextBox("deliverycontact.address1", ViewData.Order.Contact1.Address1)%>
+            
+            <label for="deliverycontact.address2">&nbsp;</label>
+            <%= Html.TextBox("deliverycontact.address2", ViewData.Order.Contact1.Address2)%>
+            
+            <label for="deliverycontact.address3">&nbsp;</label>
+            <%= Html.TextBox("deliverycontact.address3", ViewData.Order.Contact1.Address3)%>
+            
+            <label for="deliverycontact.town">Town / City</label>
+            <%= Html.TextBox("deliverycontact.town", ViewData.Order.Contact1.Town)%>
 
-        <label for="deliverycontact.county">County</label>
-        <%= Html.TextBox("deliverycontact.county", ViewData.Order.Contact1.County)%>
- 
-        <label for="deliverycontact.postcode">Postcode</label>
-        <%= Html.TextBox("deliverycontact.postcode", ViewData.Order.Contact1.Postcode)%>
- 
-        <label for="deliverycontact.countryid">Country</label>
-        <%= Html.Select("deliverycontact.countryid", ViewData.Countries, "Name", "CountryId", ViewData.Order.Contact1.CountryId)%>
-        
-        <label for="deliverycontact.telephone">Telephone</label>
-        <%= Html.TextBox("deliverycontact.telephone", ViewData.Order.Contact1.Telephone)%>
+            <label for="deliverycontact.county">County</label>
+            <%= Html.TextBox("deliverycontact.county", ViewData.Order.Contact1.County)%>
+     
+            <label for="deliverycontact.postcode">Postcode</label>
+            <%= Html.TextBox("deliverycontact.postcode", ViewData.Order.Contact1.Postcode)%>
+     
+            <label for="deliverycontact.countryid">Country</label>
+            <%= Html.Select("deliverycontact.countryid", ViewData.Countries, "Name", "CountryId", ViewData.Order.Contact1.CountryId)%>
+            
+            <label for="deliverycontact.telephone">Telephone</label>
+            <%= Html.TextBox("deliverycontact.telephone", ViewData.Order.Contact1.Telephone)%>
 
+        </div>
+        
         <!-- additional information -->  
         
         <label for="order.additionalinformation">Additional Information</label>
@@ -155,39 +190,42 @@
 <div class="columnContainer">
     <div class="contentLeftColumn">
         
+        <div id="cardDetails">
         
-        <label for="card.cardtypeid">Country</label>
-        <%= Html.Select("card.cardtypeid", ViewData.CardTypes, "Name", "CardTypeId", ViewData.Order.Card.CardTypeId)%>
-        
-        <label for="card.holder">Card Holder</label>
-        <%= Html.TextBox("card.holder", ViewData.Order.Card.Holder)%>
- 
-        <label for="card.number">Card Number</label>
-        <%= Html.TextBox("card.number", ViewData.Order.Card.Number)%>
- 
-        <div class="cardDate">
-            <label for="card.expirymonth">Expire Date</label>
-            <%= Html.Select("card.expirymonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryMonth)%>
-            <%= Html.Select("card.expiryyear", Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryYear)%>
-        </div>
- 
-        <div class="cardDate">
-            <label for="card.startmonth">Start Data</label>
-            <%= Html.Select("card.startmonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartMonth)%>
-            <%= Html.Select("card.startyear", Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartYear)%>
-        </div>
- 
-        <label for="card.issuenumber">Issue Number</label>
-        <%= Html.TextBox("card.issuenumber", ViewData.Order.Card.IssueNumber)%>
- 
-        <label for="card.securitycode">Security Code</label>
-        <%= Html.TextBox("card.securitycode", ViewData.Order.Card.SecurityCode)%>
+            <label for="card.cardtypeid">Country</label>
+            <%= Html.Select("card.cardtypeid", ViewData.CardTypes, "Name", "CardTypeId", ViewData.Order.Card.CardTypeId)%>
+            
+            <label for="card.holder">Card Holder</label>
+            <%= Html.TextBox("card.holder", ViewData.Order.Card.Holder)%>
+     
+            <label for="card.number">Card Number</label>
+            <%= Html.TextBox("card.number", ViewData.Order.Card.Number)%>
+     
+            <div class="cardDate">
+                <label for="card.expirymonth">Expire Date</label>
+                <%= Html.Select("card.expirymonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryMonth)%>
+                <%= Html.Select("card.expiryyear", Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryYear)%>
+            </div>
+     
+            <div class="cardDate">
+                <label for="card.startmonth">Start Data</label>
+                <%= Html.Select("card.startmonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartMonth)%>
+                <%= Html.Select("card.startyear", Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartYear)%>
+            </div>
+     
+            <label for="card.issuenumber">Issue Number</label>
+            <%= Html.TextBox("card.issuenumber", ViewData.Order.Card.IssueNumber)%>
+     
+            <label for="card.securitycode">Security Code</label>
+            <%= Html.TextBox("card.securitycode", ViewData.Order.Card.SecurityCode)%>
 
+        </div>
     </div>
     <div class="contentRightColumn">
     
         <label for="order.paybytelephone"><strong>I prefer to pay by cheque or telephone</strong></label>
-        <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Order.PayByTelephone)%>
+        <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Order.PayByTelephone,
+                        new { onclick = "javascript:toggleCard();" })%>
     
         <p>If you tick this option you will receive an order number.</p>
         <p>You should quote this number when you contact us with your payment. We accept most major credit and debit cards including Amex.</p>
@@ -201,5 +239,13 @@
         <%= Html.SubmitButton("submit", "Place Order")%>
 
     <% } %>
+
+
+<script>
+
+toggleCardHolderDetails();
+toggleCard();
+
+</script>
 
 </asp:Content>

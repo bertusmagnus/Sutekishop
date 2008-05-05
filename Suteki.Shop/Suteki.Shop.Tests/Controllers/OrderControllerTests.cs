@@ -64,25 +64,15 @@ namespace Suteki.Shop.Tests.Controllers
 
 
             // exercise Checkout action
-            RenderViewResult result = orderController.Checkout(basketId) as RenderViewResult;
-
-            // Assertions
-            Assert.IsNotNull(result, "result is not a RenderViewResult");
-            Assert.AreEqual("Checkout", result.ViewName, "View name is not 'Checkout'");
-
-            ShopViewData viewData = result.ViewData as ShopViewData;
-            Assert.IsNotNull(viewData, "view data is not ShopViewData");
-
-            Order order = viewData.Order;
-            Assert.IsNotNull(order, "order is null");
-
-            Assert.IsNotNull(order.Contact, "order card contact is null");
-            Assert.IsNotNull(order.Contact1, "order delivery contact is null");
-            Assert.IsNotNull(order.Card, "order card is null");
-
-            Assert.AreSame(basket, order.Basket);
-            Assert.AreSame(countries, viewData.Countries);
-            Assert.AreSame(cardTypes, viewData.CardTypes);
+            orderController.Checkout(basketId)
+                .ReturnsRenderViewResult()
+                .AssertNotNull(vd => vd.Order)
+                .AssertNotNull(vd => vd.Order.Contact)
+                .AssertNotNull(vd => vd.Order.Contact1)
+                .AssertNotNull(vd => vd.Order.Card)
+                .AssertAreSame(basket, vd => vd.Order.Basket)
+                .AssertNotNull(vd => vd.Countries)
+                .AssertAreSame(cardTypes, vd => vd.CardTypes);
 
             Mock.Get(basketRepository).Verify();
             Mock.Get(countryRepository).Verify();
@@ -105,6 +95,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             // Assertions
             Assert.IsNotNull(result, "result is not a RenderViewResult");
+
+            Assert.AreNotEqual("Checkout", result.ViewName, ((ShopViewData)result.ViewData).ErrorMessage);
             Assert.AreEqual("Item", result.ViewName, "View name is not 'Item'");
 
             ShopViewData viewData = result.ViewData as ShopViewData;
@@ -163,6 +155,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             NameValueCollection form = new NameValueCollection();
             form.Add("order.orderid", "10");
+            form.Add("order.basketid", "22");
 
             form.Add("cardcontact.firstname", "Mike");
             form.Add("cardcontact.lastname", "Hadlow");
@@ -195,7 +188,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             form.Add("card.cardtypeid", "1");
             form.Add("card.holder", "MR M HADLOW");
-            form.Add("card.number", "1234123412341234");
+            form.Add("card.number", "1111111111111117");
             form.Add("card.expirymonth", "3");
             form.Add("card.expiryyear", "2009");
             form.Add("card.startmonth", "2");

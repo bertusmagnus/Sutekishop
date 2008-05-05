@@ -9,11 +9,13 @@ namespace Suteki.Shop.Repositories
     {
         public static IQueryable<T> InOrder<T>(this IQueryable<T> items) where T : IOrderable
         {
+            if (items == null) return null;
             return items.OrderBy(i => i.Position);
         }
 
         public static IEnumerable<T> InOrder<T>(this IEnumerable<T> items) where T : IOrderable
         {
+            if (items == null) return null;
             return InOrder(items.AsQueryable());
         }
 

@@ -48,6 +48,9 @@
                     <li>
                         <%= Html.ActionLink<CountryController>(c => c.Index(), "Countries") %>
                     </li>
+                    <li>
+                        <%= Html.ActionLink<PostageController>(c => c.Index(), "Postage Bands") %>
+                    </li>
                 </ul>
             </div>
             

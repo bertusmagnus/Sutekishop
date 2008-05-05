@@ -72,6 +72,12 @@ namespace Suteki.Shop
     partial void InsertOrder(Order instance);
     partial void UpdateOrder(Order instance);
     partial void DeleteOrder(Order instance);
+    partial void InsertPostage(Postage instance);
+    partial void UpdatePostage(Postage instance);
+    partial void DeletePostage(Postage instance);
+    partial void InsertPostZone(PostZone instance);
+    partial void UpdatePostZone(PostZone instance);
+    partial void DeletePostZone(PostZone instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -213,6 +219,22 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Order>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Postage> Postages
+		{
+			get
+			{
+				return this.GetTable<Postage>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PostZone> PostZones
+		{
+			get
+			{
+				return this.GetTable<PostZone>();
 			}
 		}
 	}
@@ -3511,6 +3533,370 @@ namespace Suteki.Shop
 						this._DeliveryContactId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Contact1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.Postage")]
+	public partial class Postage : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _PostageId;
+		
+		private string _Name;
+		
+		private int _MaxWeight;
+		
+		private decimal _Price;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostageIdChanging(int value);
+    partial void OnPostageIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnMaxWeightChanging(int value);
+    partial void OnMaxWeightChanged();
+    partial void OnPriceChanging(decimal value);
+    partial void OnPriceChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Postage()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_PostageId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int PostageId
+		{
+			get
+			{
+				return this._PostageId;
+			}
+			set
+			{
+				if ((this._PostageId != value))
+				{
+					this.OnPostageIdChanging(value);
+					this.SendPropertyChanging();
+					this._PostageId = value;
+					this.SendPropertyChanged("PostageId");
+					this.OnPostageIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_MaxWeight", DbType="Int NOT NULL")]
+		public int MaxWeight
+		{
+			get
+			{
+				return this._MaxWeight;
+			}
+			set
+			{
+				if ((this._MaxWeight != value))
+				{
+					this.OnMaxWeightChanging(value);
+					this.SendPropertyChanging();
+					this._MaxWeight = value;
+					this.SendPropertyChanged("MaxWeight");
+					this.OnMaxWeightChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Price", DbType="Money NOT NULL")]
+		public decimal Price
+		{
+			get
+			{
+				return this._Price;
+			}
+			set
+			{
+				if ((this._Price != value))
+				{
+					this.OnPriceChanging(value);
+					this.SendPropertyChanging();
+					this._Price = value;
+					this.SendPropertyChanged("Price");
+					this.OnPriceChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.PostZone")]
+	public partial class PostZone : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _PostZoneId;
+		
+		private string _Name;
+		
+		private decimal _Multiplier;
+		
+		private bool _AskIfMaxWeight;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostZoneIdChanging(int value);
+    partial void OnPostZoneIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnMultiplierChanging(decimal value);
+    partial void OnMultiplierChanged();
+    partial void OnAskIfMaxWeightChanging(bool value);
+    partial void OnAskIfMaxWeightChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public PostZone()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_PostZoneId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int PostZoneId
+		{
+			get
+			{
+				return this._PostZoneId;
+			}
+			set
+			{
+				if ((this._PostZoneId != value))
+				{
+					this.OnPostZoneIdChanging(value);
+					this.SendPropertyChanging();
+					this._PostZoneId = value;
+					this.SendPropertyChanged("PostZoneId");
+					this.OnPostZoneIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Multiplier", DbType="Decimal(18,4) NOT NULL")]
+		public decimal Multiplier
+		{
+			get
+			{
+				return this._Multiplier;
+			}
+			set
+			{
+				if ((this._Multiplier != value))
+				{
+					this.OnMultiplierChanging(value);
+					this.SendPropertyChanging();
+					this._Multiplier = value;
+					this.SendPropertyChanged("Multiplier");
+					this.OnMultiplierChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AskIfMaxWeight", DbType="Bit NOT NULL")]
+		public bool AskIfMaxWeight
+		{
+			get
+			{
+				return this._AskIfMaxWeight;
+			}
+			set
+			{
+				if ((this._AskIfMaxWeight != value))
+				{
+					this.OnAskIfMaxWeightChanging(value);
+					this.SendPropertyChanging();
+					this._AskIfMaxWeight = value;
+					this.SendPropertyChanged("AskIfMaxWeight");
+					this.OnAskIfMaxWeightChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
 				}
 			}
 		}
