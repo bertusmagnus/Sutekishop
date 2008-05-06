@@ -38,6 +38,7 @@ namespace Suteki.Shop.Repositories
 
         public static int GetNextPosition<T>(this IEnumerable<T> items) where T : IOrderable
         {
+            if (items.Count() == 0) return 1;
             return items.Max(i => i.Position) + 1;
         }
     }
