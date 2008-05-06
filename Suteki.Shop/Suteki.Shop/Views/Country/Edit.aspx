@@ -9,14 +9,14 @@
     <% using (Html.Form("Country", "Update"))
        { %>
 
-        <%= Html.Hidden("countryid", ViewData.Country.CountryId)%>
-        <%= Html.Hidden("position", ViewData.Country.Position)%>
+        <%= Html.Hidden("countryid", ViewData.Item.CountryId)%>
+        <%= Html.Hidden("position", ViewData.Item.Position)%>
 
         <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Country.Name)%>
+        <%= Html.TextBox("name", ViewData.Item.Name)%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "true", ViewData.Country.IsActive) %>
+        <%= Html.CheckBox("isactive", "", "true", ViewData.Item.IsActive)%>
         
         <%= Html.SubmitButton()%>
         
