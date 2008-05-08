@@ -90,6 +90,7 @@
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PostageController.cs" />
+    <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ScaffoldController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -235,6 +236,20 @@
     <Compile Include="Views\Postage\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\PostZone\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\PostZone\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PostZone\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\PostZone\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Product\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -308,6 +323,8 @@
     <Content Include="Views\Order\Item.aspx" />
     <Content Include="Views\Postage\Edit.aspx" />
     <Content Include="Views\Postage\Index.aspx" />
+    <Content Include="Views\PostZone\Edit.aspx" />
+    <Content Include="Views\PostZone\Index.aspx" />
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />
     <Content Include="Views\Product\Item.aspx" />

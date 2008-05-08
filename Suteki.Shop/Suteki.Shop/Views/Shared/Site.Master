@@ -51,6 +51,9 @@
                     <li>
                         <%= Html.ActionLink<PostageController>(c => c.Index(), "Postage Bands") %>
                     </li>
+                    <li>
+                        <%= Html.ActionLink<PostZoneController>(c => c.Index(), "Postage Zones") %>
+                    </li>
                 </ul>
             </div>
             
