@@ -22,6 +22,9 @@
         <label for="categoryid">Category</label>
         <%= Html.Select("categoryid", ViewData.Categories, "Name", "CategoryId", ViewData.Product.CategoryId)%>
         
+        <label for="weight">Weight</label>
+        <%= Html.TextBox("weight", ViewData.Product.Weight.ToString())%>
+        
         <label for="description">Description</label>
         <%= Html.TextArea("description", ViewData.Product.Description)%>
         

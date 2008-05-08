@@ -15,22 +15,25 @@ namespace Suteki.Shop.Controllers
         IRepository<Basket> basketRepository;
         IRepository<Country> countryRepository;
         IRepository<CardType> cardTypeRepository;
+        IRepository<Postage> postageRepository;
 
         public OrderController(
             IRepository<Order> orderRepository,
             IRepository<Basket> basketRepository,
             IRepository<Country> countryRepository,
-            IRepository<CardType> cardTypeRepository)
+            IRepository<CardType> cardTypeRepository,
+            IRepository<Postage> postageRepository)
         {
             this.orderRepository = orderRepository;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
+            this.postageRepository = postageRepository;
         }
         
         public ActionResult Index()
         {
-            return null;
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Checkout(int id)
@@ -39,7 +42,7 @@ namespace Suteki.Shop.Controllers
             Order order = new Order();
             PopulateOrderForView(order, id);
             
-            return RenderView("Checkout", CheckoutViewData.WithOrder(order));
+            return RenderView("Checkout", CheckoutViewData(order));
         }
 
         private void PopulateOrderForView(Order order, int basketId)
@@ -50,14 +53,14 @@ namespace Suteki.Shop.Controllers
             if (order.Card == null) order.Card = new Card();
         }
 
-        private ShopViewData CheckoutViewData
+        private ShopViewData CheckoutViewData(Order order)
         {
-            get
-            {
-                return View.Data
-                    .WithCountries(countryRepository.GetAll().InOrder())
-                    .WithCardTypes(cardTypeRepository.GetAll());
-            }
+            order.CalculatePostage(postageRepository.GetAll());
+
+            return View.Data
+                .WithCountries(countryRepository.GetAll().InOrder())
+                .WithCardTypes(cardTypeRepository.GetAll())
+                .WithOrder(order);
         }
 
         public ActionResult PlaceOrder()
@@ -77,13 +80,12 @@ namespace Suteki.Shop.Controllers
                 validator.Validate();
                 orderRepository.InsertOnSubmit(order);
                 orderRepository.SubmitChanges();
-                return RenderView("Item", View.Data.WithOrder(order));
+                return RenderView("Item", CheckoutViewData(order));
             }
             catch (ValidationException validationException)
             {
                 PopulateOrderForView(order, order.BasketId);
-                return RenderView("Checkout", CheckoutViewData
-                    .WithOrder(order)
+                return RenderView("Checkout", CheckoutViewData(order)
                     .WithErrorMessage(validationException.Message)
                     );
             }
@@ -93,7 +95,7 @@ namespace Suteki.Shop.Controllers
         {
             Contact cardContact = new Contact();
             order.Contact = cardContact;
-            ValidatingBinder.UpdateFrom(cardContact, Request.Form, "cardcontact");
+            UpdateContact(cardContact, "cardcontact");
         }
 
         private void UpdateDeliveryContact(Order order)
@@ -102,7 +104,22 @@ namespace Suteki.Shop.Controllers
 
             Contact deliveryContact = new Contact();
             order.Contact1 = deliveryContact;
-            ValidatingBinder.UpdateFrom(deliveryContact, Request.Form, "deliverycontact");
+            UpdateContact(deliveryContact, "deliverycontact");
+        }
+
+        private void UpdateContact(Contact contact, string prefix)
+        {
+            try
+            {
+                ValidatingBinder.UpdateFrom(contact, Request.Form, prefix);
+            }
+            finally
+            {
+                if (contact.CountryId != 0 && contact.Country == null)
+                {
+                    contact.Country = countryRepository.GetById(contact.CountryId);
+                }
+            }
         }
 
         private void UpdateCard(Order order)

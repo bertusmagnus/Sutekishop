@@ -18,6 +18,9 @@
         <label for="isactive">Active</label>
         <%= Html.CheckBox("isactive", "", "true", ViewData.Item.IsActive)%>
         
+        <label for="postzoneid">Post Zone</label>
+        <%= Html.Select("postzoneid", ViewData.GetLookUpList<PostZone>(), "Name", "PostZoneId", ViewData.Item.PostZoneId)%>
+        
         <%= Html.SubmitButton()%>
         
     <% } %>

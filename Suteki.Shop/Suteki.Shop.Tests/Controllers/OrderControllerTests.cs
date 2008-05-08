@@ -20,6 +20,7 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<Basket> basketRepository;
         IRepository<Country> countryRepository;
         IRepository<CardType> cardTypeRepository;
+        IRepository<Postage> postageRepository;
 
         ControllerTestContext testContext;
 
@@ -30,14 +31,18 @@ namespace Suteki.Shop.Tests.Controllers
             basketRepository = new Mock<IRepository<Basket>>().Object;
             countryRepository = new Mock<IRepository<Country>>().Object;
             cardTypeRepository = new Mock<IRepository<CardType>>().Object;
+            postageRepository = new Mock<IRepository<Postage>>().Object;
 
             orderController = new OrderController(
                 orderRepository,
                 basketRepository,
                 countryRepository,
-                cardTypeRepository);
+                cardTypeRepository,
+                postageRepository);
 
             testContext = new ControllerTestContext(orderController);
+
+            Mock.Get(postageRepository).Expect(p => p.GetAll()).Returns(new List<Postage>().AsQueryable());
         }
 
         [Test]
@@ -87,7 +92,12 @@ namespace Suteki.Shop.Tests.Controllers
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
             // expectations
-            Mock.Get(orderRepository).Expect(or => or.InsertOnSubmit(It.IsAny<Order>())).Verifiable();
+            Basket basket = new Basket();
+            Order order = new Order();
+
+            Mock.Get(orderRepository).Expect(or => or.InsertOnSubmit(It.IsAny<Order>()))
+                .Callback<Order>(o => { order = o; order.Basket = basket; })
+                .Verifiable();
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
 
             // exercise PlaceOrder action
@@ -102,15 +112,14 @@ namespace Suteki.Shop.Tests.Controllers
             ShopViewData viewData = result.ViewData as ShopViewData;
             Assert.IsNotNull(viewData, "view data is not ShopViewData");
 
-            Order order = viewData.Order;
-            Assert.IsNotNull(order, "The view data order is null");
+            Assert.AreSame(order, viewData.Order, "The view data order not correct");
 
             // Order
-            Assert.AreEqual(10, order.OrderId);
-            Assert.AreEqual(form["order.email"], order.Email);
-            Assert.AreEqual(form["order.additionalinformation"], order.AdditionalInformation);
-            Assert.IsFalse(order.UseCardHolderContact);
-            Assert.IsFalse(order.PayByTelephone);
+            Assert.AreEqual(10, order.OrderId, "OrderId is incorrect");
+            Assert.AreEqual(form["order.email"], order.Email, "Email is incorrect");
+            Assert.AreEqual(form["order.additionalinformation"], order.AdditionalInformation, "AdditionalInformation is incorrect");
+            Assert.IsFalse(order.UseCardHolderContact, "UseCardHolderContact is incorrect");
+            Assert.IsFalse(order.PayByTelephone, "PayByTelephone is incorrect");
 
             // Card Contact
             Contact cardContact = order.Contact;
@@ -139,16 +148,16 @@ namespace Suteki.Shop.Tests.Controllers
         private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix)
         {
             Assert.IsNotNull(contact, prefix + " is null");
-            Assert.AreEqual(form[prefix + ".firstname"], contact.Firstname);
-            Assert.AreEqual(form[prefix + ".lastname"], contact.Lastname);
-            Assert.AreEqual(form[prefix + ".address1"], contact.Address1);
-            Assert.AreEqual(form[prefix + ".address2"], contact.Address2);
-            Assert.AreEqual(form[prefix + ".address3"], contact.Address3);
-            Assert.AreEqual(form[prefix + ".town"], contact.Town);
-            Assert.AreEqual(form[prefix + ".county"], contact.County);
-            Assert.AreEqual(form[prefix + ".postcode"], contact.Postcode);
-            Assert.AreEqual(form[prefix + ".countryid"], contact.CountryId.ToString());
-            Assert.AreEqual(form[prefix + ".telephone"], contact.Telephone);
+            Assert.AreEqual(form[prefix + ".firstname"], contact.Firstname, prefix + " Firstname is incorrect");
+            Assert.AreEqual(form[prefix + ".lastname"], contact.Lastname, prefix + " Lastname is incorrect");
+            Assert.AreEqual(form[prefix + ".address1"], contact.Address1, prefix + " Address1 is incorrect");
+            Assert.AreEqual(form[prefix + ".address2"], contact.Address2, prefix + " Address2 is incorrect");
+            Assert.AreEqual(form[prefix + ".address3"], contact.Address3, prefix + " Address3 is incorrect");
+            Assert.AreEqual(form[prefix + ".town"], contact.Town, prefix + " Town is incorrect");
+            Assert.AreEqual(form[prefix + ".county"], contact.County, prefix + " County is incorrect");
+            Assert.AreEqual(form[prefix + ".postcode"], contact.Postcode, prefix + " Postcode is incorrect");
+            //Assert.AreEqual(form[prefix + ".countryid"], contact.CountryId.ToString(), prefix + " CountryId is incorrect");
+            Assert.AreEqual(form[prefix + ".telephone"], contact.Telephone, prefix + " Telephone is incorrect");
         }
 
         private static NameValueCollection BuildPlaceOrderRequest()

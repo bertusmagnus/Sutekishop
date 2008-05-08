@@ -71,6 +71,24 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Order.Basket.Total.ToString("£0.00")%></td>
     </tr>
+
+    <tr>
+        <td>Postage</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="number"><%= ViewData.Order.Basket.PostageTotal%></td>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="total">
+        <td>Total With Postage</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="number"><%= ViewData.Order.Basket.TotalWithPostage%></td>
+        <td>&nbsp;</td>
+    </tr>
     
 </table>
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Moq;
 using Suteki.Shop.Controllers;
@@ -7,6 +8,7 @@ using System.Collections.Specialized;
 using Suteki.Shop.Repositories;
 using System.Web.Mvc;
 using Suteki.Shop.Services;
+using System.Collections.Generic;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -19,6 +21,7 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<Basket> basketRepository;
         IRepository<BasketItem> basketItemRepository;
         IRepository<User> userRepository;
+        IRepository<Postage> postageRepository;
         IUserService userService;
 
         [SetUp]
@@ -27,14 +30,19 @@ namespace Suteki.Shop.Tests.Controllers
             basketRepository = new Mock<IRepository<Basket>>().Object;
             basketItemRepository = new Mock<IRepository<BasketItem>>().Object;
             userRepository = new Mock<IRepository<User>>().Object;
+            postageRepository = new Mock<IRepository<Postage>>().Object;
             userService = new Mock<IUserService>().Object;
 
             basketController = new Mock<BasketController>(
                 basketRepository, 
                 basketItemRepository, 
                 userRepository,
+                postageRepository,
                 userService).Object;
             testContext = new ControllerTestContext(basketController);
+
+
+            Mock.Get(postageRepository).Expect(p => p.GetAll()).Returns(new List<Postage>().AsQueryable());
         }
 
         [Test]

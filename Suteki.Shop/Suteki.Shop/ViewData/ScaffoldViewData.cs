@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.ViewData
 {
@@ -10,6 +11,8 @@ namespace Suteki.Shop.ViewData
 
         public IEnumerable<T> Items { get; set; }
         public T Item { get; set; }
+
+        private Dictionary<Type, object> lookupLists = new Dictionary<Type, object>();
 
         public ScaffoldViewData<T> With(T item)
         {
@@ -33,6 +36,21 @@ namespace Suteki.Shop.ViewData
         {
             this.Message = message;
             return this;
+        }
+
+        public ScaffoldViewData<T> WithLookupList(Type entityType, object items)
+        {
+            lookupLists.Add(entityType, items);
+            return this;
+        }
+
+        public IEnumerable<TLookup> GetLookUpList<TLookup>()
+        {
+            if (!lookupLists.ContainsKey(typeof(TLookup)))
+            {
+                throw new ApplicationException("List of type {0} does not exist in lookup list".With(typeof(TLookup).Name));
+            }
+            return (IEnumerable<TLookup>)lookupLists[typeof(TLookup)];
         }
     }
 

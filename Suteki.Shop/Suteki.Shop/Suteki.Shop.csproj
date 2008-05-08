@@ -112,12 +112,14 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Postage.cs" />
+    <Compile Include="Models\PostageResult.cs" />
     <Compile Include="Models\PostZone.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Role.cs" />

@@ -33,6 +33,24 @@
         <td class="number"><%= ViewData.Basket.Total.ToString("£0.00") %></td>
         <td>&nbsp;</td>
     </tr>
+
+    <tr>
+        <td>Postage</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="number"><%= ViewData.Basket.PostageTotal %></td>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="total">
+        <td>Total With Postage</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="number"><%= ViewData.Basket.TotalWithPostage %></td>
+        <td>&nbsp;</td>
+    </tr>
     
 </table>
 

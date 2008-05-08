@@ -16,17 +16,20 @@ namespace Suteki.Shop.Controllers
         IRepository<Basket> basketRepository;
         IRepository<BasketItem> basketItemRepository;
         IRepository<User> userRepository;
+        IRepository<Postage> postageRepository;
         IUserService userService;
 
         public BasketController(
             IRepository<Basket> basketRepository,
             IRepository<BasketItem> basketItemRepository,
             IRepository<User> userRepository,
+            IRepository<Postage> postageRepository,
             IUserService userService)
         {
             this.basketRepository = basketRepository;
             this.basketItemRepository = basketItemRepository;
             this.userRepository = userRepository;
+            this.postageRepository = postageRepository;
             this.userService = userService;
         }
 
@@ -35,7 +38,7 @@ namespace Suteki.Shop.Controllers
             User user = this.ControllerContext.HttpContext.User as User;
             if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
 
-            return RenderView("Index", View.Data.WithBasket(user.CurrentBasket));
+            return RenderIndexView(user.CurrentBasket);
         }
 
         public ActionResult Update()
@@ -58,13 +61,22 @@ namespace Suteki.Shop.Controllers
                 ValidatingBinder.UpdateFrom(basketItem, Request.Form);
                 basket.BasketItems.Add(basketItem);
                 basketRepository.SubmitChanges();
-                return RenderView("Index", View.Data.WithBasket(basket));
+                return RenderIndexView(basket);
             }
             catch(ValidationException)
             {
                 // we shouldn't get a validation exception here, so this is a genuine system error
                 throw;
             }
+        }
+
+        private ActionResult RenderIndexView(Basket basket)
+        {
+            var postages = postageRepository.GetAll();
+
+            return RenderView("Index", View.Data
+                .WithBasket(basket)
+                .WithTotalPostage(basket.CalculatePostage(postages)));
         }
 
         public ActionResult Remove(int id)
@@ -78,7 +90,7 @@ namespace Suteki.Shop.Controllers
                 basketItemRepository.SubmitChanges();
             }
 
-            return RenderView("Index", View.Data.WithBasket(basket));
+            return RenderIndexView(basket);
         }
     }
 }

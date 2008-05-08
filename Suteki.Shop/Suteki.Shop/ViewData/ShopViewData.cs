@@ -32,6 +32,8 @@ namespace Suteki.Shop.ViewData
         public Postage Postage { get; set; }
         public IEnumerable<Postage> Postages { get; set; }
 
+        public PostageResult PostageResult { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithErrorMessage(string errorMessage)
@@ -127,6 +129,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithPostages(IEnumerable<Postage> postages)
         {
             this.Postages = postages;
+            return this;
+        }
+
+        public ShopViewData WithTotalPostage(PostageResult postageResult)
+        {
+            this.PostageResult = postageResult;
             return this;
         }
     }
