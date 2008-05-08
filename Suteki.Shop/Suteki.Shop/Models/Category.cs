@@ -9,5 +9,13 @@ namespace Suteki.Shop
         {
             value.Label("Name").IsRequired();
         }
+
+        public bool HasProducts
+        {
+            get
+            {
+                return Products.Count > 0;
+            }
+        }
     }
 }

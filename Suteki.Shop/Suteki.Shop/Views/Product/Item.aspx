@@ -38,7 +38,7 @@ function onThumbnailClick(img)
 </div>
 
 
-<div>
+<div class="productOptions">
 <% using (Html.Form("Basket", "Update"))
    { %>
 

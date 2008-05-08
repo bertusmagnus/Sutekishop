@@ -4,20 +4,36 @@
 <h1><%= ViewData.Category.Name %></h1>
 
 <% if(Context.User.IsInRole("Administrator")) { %>
+    <p><%= Html.ActionLink<CategoryController>(c => c.New(ViewData.Category.CategoryId), "New Category")%></p>
     <p><%= Html.ActionLink<ProductController>(c => c.New(ViewData.Category.CategoryId), "New Product") %></p>
 <% } %>
 
-<% foreach (var product in ViewData.Products)
+<% foreach (var category in ViewData.Category.Categories)
    { %>
 
-    <a href="<%= Url.Action("Item", "Product", new { Id = product.ProductId.ToString() }) %>">
-    <div class="product">
+    <h2><%= Html.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name) %></h2>
+
+    <% if(category.HasProducts) { 
+           if (category.Products[0].HasMainImage)
+           { %>
+            <%= Html.Image("~/ProductPhotos/" + category.Products[0].MainImage.ThumbFileName)%>
+        <% }
+       } 
+   } %>
+
+<% foreach (var product in ViewData.Category.Products)
+   { %>
+
+    <div onclick="location.href='<%= Url.Action("Item", "Product", new { Id = product.ProductId.ToString() }) %>'" class="product">
+
+        <%= product.Name %>
+
         <% if(product.HasMainImage) { %>
             <%= Html.Image("~/ProductPhotos/" + product.MainImage.ThumbFileName) %>
         <% } %>
-        <%= product.Name %>
         
         <% if(Context.User.IsInRole("Administrator")) { %>
+            <br />
             <%= Html.UpArrowLink<ProductController>(c => c.MoveUp(ViewData.Category.CategoryId, product.Position)) %>
             <%= Html.DownArrowLink<ProductController>(c => c.MoveDown(ViewData.Category.CategoryId, product.Position)) %>
         <% } %>

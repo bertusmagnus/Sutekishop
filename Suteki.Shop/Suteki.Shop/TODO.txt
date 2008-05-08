@@ -1,40 +1,14 @@
 ﻿SutekiShop To Do list
 =====================
 
-* Implement user authorization and authentication. OK
+* Image ordering
 
-* login OK
+* Non-size products
 
-* User management OK
+* Size editing
 
-* CSS Design incorporation JtG elements
-
-* Category Mangement
-	- Category listing OK
-	- Category editing OK
-	- Category ordering
-	- Category image upload
-
-* Category Display OK
-
-* Product Management
-	- Product Schema
-	- Product listing
-	- Product Editing
-	- Product Ordering
-	- Product Image upload
-	
-* Product Display
-
-* Order Creation (Shopping Basket)
-
-* Order Checkout
-	
 * Order Management
-	- Order Listing
-	- Order Searching
-	- Order Fullfillment
-	
+
 * CMS
 	- Menu management
 	- Create / Edit page
@@ -42,3 +16,5 @@
 * Mailing list
 	- User can add themselves
 	- Management
+	
+* Reports

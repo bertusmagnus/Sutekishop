@@ -57,7 +57,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayCategoryEditView()
         {
-            RenderViewResult result = categoryController.New() as RenderViewResult;
+            RenderViewResult result = categoryController.New(1) as RenderViewResult;
 
             AssertEditViewIsCorrectlyShown(result);
         }

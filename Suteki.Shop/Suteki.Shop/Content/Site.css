@@ -72,6 +72,15 @@ h1
 	font-weight: lighter;
 	font-size: 18pt;
 }
+h2
+{
+	font-weight: lighter;
+	font-size: 14pt;
+}
+h2 a
+{
+	text-decoration: none;
+}
 
 .leftColumn
 {
@@ -87,6 +96,7 @@ h1
 
 .rightColumn
 {
+	width: 630px;
 	margin-left: 220px;
 	padding: 10px 10px 10px 10px;
 }
@@ -315,13 +325,33 @@ div.category ul ul li:hover ul
 {
 	display: block;
 	float: left;
-	width: 150px;
+	width: 120px;
 	height: 150px;
 	border-width: 1px;
 	border-style: solid;
 	border-color: Black;
+	background-color: #B5B0C0;
+	color: Black;
+	font-weight: bold;
 	margin: 0px 10px 10px 0px;	
 	padding: 5px 5px 5px 5px;
+}
+
+.product:hover
+{
+	cursor: pointer;
+	
+}
+
+.product a
+{
+	color: black;
+	text-decoration: none;
+}
+
+.product img
+{
+	margin: 5px 0 0 0;
 }
 
 .productDescription
@@ -338,6 +368,34 @@ div.category ul ul li:hover ul
 .imageList
 {
 	margin: 5px 0px 5px 0px;	
+}
+.imageList img:hover
+{
+	cursor: pointer;
+}
+
+.productOptions
+{
+	border: solid 1px #B5B0C0;
+	padding: 5px 5px;
+	text-align: right;
+	margin: 20px 0 0 0;
+}
+.productOptions label
+{
+	display: inline;
+	margin: 0px 5px;
+	vertical-align: middle;
+}
+.productOptions select
+{
+	display: inline;
+	margin: 0px 5px;
+}
+.productOptions input[type=submit]
+{
+	display: inline;
+	margin: 0px 5px;
 }
 
 /* ------------------------- form ------------------------------ */
