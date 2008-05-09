@@ -34,5 +34,30 @@ namespace Suteki.Shop
                 return Contact1;
             }
         }
+
+        public string DispatchedDateAsString
+        {
+            get
+            {
+                if (IsDispatched) return DispatchedDate.ToShortDateString();
+                return "&nbsp;";
+            }
+        }
+
+        public string UserAsString
+        {
+            get
+            {
+                if (UserId.HasValue)
+                {
+                    return User.Email;
+                }
+                return "&nbsp;";
+            }
+        }
+
+        public bool IsCreated { get { return OrderStatusId == OrderStatus.CreatedId; } }
+        public bool IsDispatched { get { return OrderStatusId == OrderStatus.DispatchedId; } }
+        public bool IsRejected { get { return OrderStatusId == OrderStatus.RejectedId; } }
     }
 }

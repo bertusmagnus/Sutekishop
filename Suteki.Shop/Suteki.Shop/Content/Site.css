@@ -131,7 +131,7 @@ h2 a
 {
 	margin: 0 0 20px 0;
 	padding: 20px 0 0 0;
-	overflow: auto;
+	overflow: hidden;
 	border-top: solid 2px #CBC9CE;
 }
 
@@ -398,6 +398,26 @@ div.category ul ul li:hover ul
 	margin: 0px 5px;
 }
 
+/* ------------------------- order ------------------------------ */
+
+.orderAction
+{
+	margin: 10px 0;
+}
+
+tr.Created
+{
+	color: #CBC9CE;	
+}
+tr.Dispatched
+{
+	color: Green;
+}
+tr.Rejected
+{
+	color: Red;
+}
+
 /* ------------------------- form ------------------------------ */
 
 label
@@ -543,3 +563,10 @@ td.number
 	text-align: right;
 }
 
+/*-------------------------------------- pager -------------------------------------------*/
+
+.pager
+{
+	width: 100%;
+	margin: 10px 0;
+}

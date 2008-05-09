@@ -10,6 +10,7 @@
       <Column Name="IsEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
       <Association Name="User_Basket" Member="Baskets" OtherKey="UserId" Type="Basket" />
+      <Association Name="User_Order" Member="Orders" OtherKey="UserId" Type="Order" />
       <Association Name="Role_User" Member="Role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
     </Type>
   </Table>
@@ -113,23 +114,6 @@
       <Association Name="CardType_Card" Member="CardType" ThisKey="CardTypeId" Type="CardType" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.[Order]" Member="Orders">
-    <Type Name="Order">
-      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CardId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CardContactId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="DeliveryContactId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Email" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
-      <Column Name="AdditionalInformation" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UseCardHolderContact" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="PayByTelephone" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
-      <Association Name="Card_Order" Member="Card" ThisKey="CardId" Type="Card" IsForeignKey="true" />
-      <Association Name="Contact_Order" Member="Contact" ThisKey="CardContactId" Type="Contact" IsForeignKey="true" />
-      <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" Type="Contact" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Postage" Member="Postages">
     <Type Name="Postage">
       <Column Name="PostageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -182,6 +166,36 @@
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="PostZone_Country" Member="Countries" OtherKey="PostZoneId" Type="Country" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderStatus" Member="OrderStatus">
+    <Type Name="OrderStatus">
+      <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="OrderStatus_Order" Member="Orders" OtherKey="OrderStatusId" Type="Order" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Order]" Member="Orders">
+    <Type Name="Order">
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CardId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CardContactId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DeliveryContactId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="AdditionalInformation" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UseCardHolderContact" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="PayByTelephone" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DispatchedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
+      <Association Name="Card_Order" Member="Card" ThisKey="CardId" Type="Card" IsForeignKey="true" />
+      <Association Name="Contact_Order" Member="Contact" ThisKey="CardContactId" Type="Contact" IsForeignKey="true" />
+      <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" Type="Contact" IsForeignKey="true" />
+      <Association Name="OrderStatus_Order" Member="OrderStatus" ThisKey="OrderStatusId" Type="OrderStatus" IsForeignKey="true" />
+      <Association Name="User_Order" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Controllers
 {
@@ -33,7 +34,27 @@ namespace Suteki.Shop.Controllers
         
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Home");
+            OrderSearchCriteria criteria = new OrderSearchCriteria();
+
+            try
+            {
+                ValidatingBinder.UpdateFrom(criteria, Request.Form);
+            }
+            catch (ValidationException) { } // ignore validation exceptions
+
+            var orders = orderRepository
+                .GetAll()
+                .ThatMatch(criteria)
+                .ByCreatedDate()
+                .ToPagedList(Request.PageNumber(), 20);
+
+            return RenderView("Index", View.Data.WithOrders(orders));
+        }
+
+        public ActionResult Item(int id)
+        {
+            Order order = orderRepository.GetById(id);
+            return RenderView("Item", CheckoutViewData(order));
         }
 
         public ActionResult Checkout(int id)
@@ -65,7 +86,11 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult PlaceOrder()
         {
-            Order order = new Order();
+            Order order = new Order
+            {
+                OrderStatusId = OrderStatus.CreatedId,
+                CreatedDate = DateTime.Now
+            };
 
             Validator validator = new Validator
             {
@@ -139,6 +164,35 @@ namespace Suteki.Shop.Controllers
             {
                 throw new ValidationException("Email and Confirm Email do not match");
             }
+        }
+
+        public ActionResult Dispatch(int id)
+        {
+            Order order = orderRepository.GetById(id);
+
+            if (order.IsCreated)
+            {
+                order.OrderStatusId = OrderStatus.DispatchedId;
+                order.DispatchedDate = DateTime.Now;
+                order.UserId = CurrentUser.UserId;
+                orderRepository.SubmitChanges();
+            }
+
+            return RenderView("Item", CheckoutViewData(order));
+        }
+
+        public ActionResult Reject(int id)
+        {
+            Order order = orderRepository.GetById(id);
+
+            if (order.IsCreated)
+            {
+                order.OrderStatusId = OrderStatus.RejectedId;
+                order.UserId = CurrentUser.UserId;
+                orderRepository.SubmitChanges();
+            }
+
+            return RenderView("Item", CheckoutViewData(order));
         }
     }
 }

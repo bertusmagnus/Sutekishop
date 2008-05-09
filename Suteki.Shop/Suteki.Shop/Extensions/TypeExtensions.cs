@@ -27,5 +27,15 @@ namespace Suteki.Shop.Extensions
             }
             throw new ApplicationException(string.Format("No primary key defined for type {0}", entityType.Name));
         }
+
+        public static bool IsLinqEntity(this Type type)
+        {
+            TableAttribute[] attributes = (TableAttribute[])type.GetCustomAttributes(typeof(TableAttribute), true);
+            if (attributes.Length == 1)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Suteki.Shop.Validation;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop
 {
@@ -38,6 +39,14 @@ namespace Suteki.Shop
         partial void OnTelephoneChanging(string value)
         {
             value.Label("Telephone").IsRequired();
+        }
+
+        public string Fullname
+        {
+            get
+            {
+                return "{0} {1}".With(Firstname, Lastname);
+            }
         }
     }
 }

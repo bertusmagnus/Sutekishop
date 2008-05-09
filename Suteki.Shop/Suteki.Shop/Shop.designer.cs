@@ -60,9 +60,6 @@ namespace Suteki.Shop
     partial void InsertCard(Card instance);
     partial void UpdateCard(Card instance);
     partial void DeleteCard(Card instance);
-    partial void InsertOrder(Order instance);
-    partial void UpdateOrder(Order instance);
-    partial void DeleteOrder(Order instance);
     partial void InsertPostage(Postage instance);
     partial void UpdatePostage(Postage instance);
     partial void DeletePostage(Postage instance);
@@ -78,6 +75,12 @@ namespace Suteki.Shop
     partial void InsertPostZone(PostZone instance);
     partial void UpdatePostZone(PostZone instance);
     partial void DeletePostZone(PostZone instance);
+    partial void InsertOrderStatus(OrderStatus instance);
+    partial void UpdateOrderStatus(OrderStatus instance);
+    partial void DeleteOrderStatus(OrderStatus instance);
+    partial void InsertOrder(Order instance);
+    partial void UpdateOrder(Order instance);
+    partial void DeleteOrder(Order instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -190,14 +193,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		public System.Data.Linq.Table<Order> Orders
-		{
-			get
-			{
-				return this.GetTable<Order>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Postage> Postages
 		{
 			get
@@ -237,6 +232,22 @@ namespace Suteki.Shop
 				return this.GetTable<PostZone>();
 			}
 		}
+		
+		public System.Data.Linq.Table<OrderStatus> OrderStatus
+		{
+			get
+			{
+				return this.GetTable<OrderStatus>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Order> Orders
+		{
+			get
+			{
+				return this.GetTable<Order>();
+			}
+		}
 	}
 	
 	[Table(Name="dbo.[User]")]
@@ -258,6 +269,8 @@ namespace Suteki.Shop
 		private System.Data.Linq.Binary _Timestamp;
 		
 		private EntitySet<Basket> _Baskets;
+		
+		private EntitySet<Order> _Orders;
 		
 		private EntityRef<Role> _Role;
 		
@@ -282,6 +295,7 @@ namespace Suteki.Shop
 		public User()
 		{
 			this._Baskets = new EntitySet<Basket>(new Action<Basket>(this.attach_Baskets), new Action<Basket>(this.detach_Baskets));
+			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
 			this._Role = default(EntityRef<Role>);
 			OnCreated();
 		}
@@ -423,6 +437,19 @@ namespace Suteki.Shop
 			}
 		}
 		
+		[Association(Name="User_Order", Storage="_Orders", OtherKey="UserId")]
+		public EntitySet<Order> Orders
+		{
+			get
+			{
+				return this._Orders;
+			}
+			set
+			{
+				this._Orders.Assign(value);
+			}
+		}
+		
 		[Association(Name="Role_User", Storage="_Role", ThisKey="RoleId", IsForeignKey=true)]
 		public Role Role
 		{
@@ -484,6 +511,18 @@ namespace Suteki.Shop
 		}
 		
 		private void detach_Baskets(Basket entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
+		private void attach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Orders(Order entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
@@ -2561,424 +2600,6 @@ namespace Suteki.Shop
 		}
 	}
 	
-	[Table(Name="dbo.[Order]")]
-	public partial class Order : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _OrderId;
-		
-		private int _BasketId;
-		
-		private System.Nullable<int> _CardId;
-		
-		private int _CardContactId;
-		
-		private System.Nullable<int> _DeliveryContactId;
-		
-		private string _Email;
-		
-		private string _AdditionalInformation;
-		
-		private bool _UseCardHolderContact;
-		
-		private bool _PayByTelephone;
-		
-		private EntityRef<Basket> _Basket;
-		
-		private EntityRef<Card> _Card;
-		
-		private EntityRef<Contact> _Contact;
-		
-		private EntityRef<Contact> _Contact1;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnOrderIdChanging(int value);
-    partial void OnOrderIdChanged();
-    partial void OnBasketIdChanging(int value);
-    partial void OnBasketIdChanged();
-    partial void OnCardIdChanging(System.Nullable<int> value);
-    partial void OnCardIdChanged();
-    partial void OnCardContactIdChanging(int value);
-    partial void OnCardContactIdChanged();
-    partial void OnDeliveryContactIdChanging(System.Nullable<int> value);
-    partial void OnDeliveryContactIdChanged();
-    partial void OnEmailChanging(string value);
-    partial void OnEmailChanged();
-    partial void OnAdditionalInformationChanging(string value);
-    partial void OnAdditionalInformationChanged();
-    partial void OnUseCardHolderContactChanging(bool value);
-    partial void OnUseCardHolderContactChanged();
-    partial void OnPayByTelephoneChanging(bool value);
-    partial void OnPayByTelephoneChanged();
-    #endregion
-		
-		public Order()
-		{
-			this._Basket = default(EntityRef<Basket>);
-			this._Card = default(EntityRef<Card>);
-			this._Contact = default(EntityRef<Contact>);
-			this._Contact1 = default(EntityRef<Contact>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_OrderId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int OrderId
-		{
-			get
-			{
-				return this._OrderId;
-			}
-			set
-			{
-				if ((this._OrderId != value))
-				{
-					this.OnOrderIdChanging(value);
-					this.SendPropertyChanging();
-					this._OrderId = value;
-					this.SendPropertyChanged("OrderId");
-					this.OnOrderIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_BasketId", DbType="Int NOT NULL")]
-		public int BasketId
-		{
-			get
-			{
-				return this._BasketId;
-			}
-			set
-			{
-				if ((this._BasketId != value))
-				{
-					if (this._Basket.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnBasketIdChanging(value);
-					this.SendPropertyChanging();
-					this._BasketId = value;
-					this.SendPropertyChanged("BasketId");
-					this.OnBasketIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_CardId", DbType="Int")]
-		public System.Nullable<int> CardId
-		{
-			get
-			{
-				return this._CardId;
-			}
-			set
-			{
-				if ((this._CardId != value))
-				{
-					if (this._Card.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCardIdChanging(value);
-					this.SendPropertyChanging();
-					this._CardId = value;
-					this.SendPropertyChanged("CardId");
-					this.OnCardIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_CardContactId", DbType="Int NOT NULL")]
-		public int CardContactId
-		{
-			get
-			{
-				return this._CardContactId;
-			}
-			set
-			{
-				if ((this._CardContactId != value))
-				{
-					if (this._Contact.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCardContactIdChanging(value);
-					this.SendPropertyChanging();
-					this._CardContactId = value;
-					this.SendPropertyChanged("CardContactId");
-					this.OnCardContactIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_DeliveryContactId", DbType="Int")]
-		public System.Nullable<int> DeliveryContactId
-		{
-			get
-			{
-				return this._DeliveryContactId;
-			}
-			set
-			{
-				if ((this._DeliveryContactId != value))
-				{
-					if (this._Contact1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnDeliveryContactIdChanging(value);
-					this.SendPropertyChanging();
-					this._DeliveryContactId = value;
-					this.SendPropertyChanged("DeliveryContactId");
-					this.OnDeliveryContactIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Email", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this.OnEmailChanging(value);
-					this.SendPropertyChanging();
-					this._Email = value;
-					this.SendPropertyChanged("Email");
-					this.OnEmailChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AdditionalInformation", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string AdditionalInformation
-		{
-			get
-			{
-				return this._AdditionalInformation;
-			}
-			set
-			{
-				if ((this._AdditionalInformation != value))
-				{
-					this.OnAdditionalInformationChanging(value);
-					this.SendPropertyChanging();
-					this._AdditionalInformation = value;
-					this.SendPropertyChanged("AdditionalInformation");
-					this.OnAdditionalInformationChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_UseCardHolderContact", DbType="Bit NOT NULL")]
-		public bool UseCardHolderContact
-		{
-			get
-			{
-				return this._UseCardHolderContact;
-			}
-			set
-			{
-				if ((this._UseCardHolderContact != value))
-				{
-					this.OnUseCardHolderContactChanging(value);
-					this.SendPropertyChanging();
-					this._UseCardHolderContact = value;
-					this.SendPropertyChanged("UseCardHolderContact");
-					this.OnUseCardHolderContactChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_PayByTelephone", DbType="Bit NOT NULL")]
-		public bool PayByTelephone
-		{
-			get
-			{
-				return this._PayByTelephone;
-			}
-			set
-			{
-				if ((this._PayByTelephone != value))
-				{
-					this.OnPayByTelephoneChanging(value);
-					this.SendPropertyChanging();
-					this._PayByTelephone = value;
-					this.SendPropertyChanged("PayByTelephone");
-					this.OnPayByTelephoneChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Basket_Order", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
-		public Basket Basket
-		{
-			get
-			{
-				return this._Basket.Entity;
-			}
-			set
-			{
-				Basket previousValue = this._Basket.Entity;
-				if (((previousValue != value) 
-							|| (this._Basket.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Basket.Entity = null;
-						previousValue.Orders.Remove(this);
-					}
-					this._Basket.Entity = value;
-					if ((value != null))
-					{
-						value.Orders.Add(this);
-						this._BasketId = value.BasketId;
-					}
-					else
-					{
-						this._BasketId = default(int);
-					}
-					this.SendPropertyChanged("Basket");
-				}
-			}
-		}
-		
-		[Association(Name="Card_Order", Storage="_Card", ThisKey="CardId", IsForeignKey=true)]
-		public Card Card
-		{
-			get
-			{
-				return this._Card.Entity;
-			}
-			set
-			{
-				Card previousValue = this._Card.Entity;
-				if (((previousValue != value) 
-							|| (this._Card.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Card.Entity = null;
-						previousValue.Orders.Remove(this);
-					}
-					this._Card.Entity = value;
-					if ((value != null))
-					{
-						value.Orders.Add(this);
-						this._CardId = value.CardId;
-					}
-					else
-					{
-						this._CardId = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Card");
-				}
-			}
-		}
-		
-		[Association(Name="Contact_Order", Storage="_Contact", ThisKey="CardContactId", IsForeignKey=true)]
-		public Contact Contact
-		{
-			get
-			{
-				return this._Contact.Entity;
-			}
-			set
-			{
-				Contact previousValue = this._Contact.Entity;
-				if (((previousValue != value) 
-							|| (this._Contact.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Contact.Entity = null;
-						previousValue.Orders.Remove(this);
-					}
-					this._Contact.Entity = value;
-					if ((value != null))
-					{
-						value.Orders.Add(this);
-						this._CardContactId = value.ContactId;
-					}
-					else
-					{
-						this._CardContactId = default(int);
-					}
-					this.SendPropertyChanged("Contact");
-				}
-			}
-		}
-		
-		[Association(Name="Contact_Order1", Storage="_Contact1", ThisKey="DeliveryContactId", IsForeignKey=true)]
-		public Contact Contact1
-		{
-			get
-			{
-				return this._Contact1.Entity;
-			}
-			set
-			{
-				Contact previousValue = this._Contact1.Entity;
-				if (((previousValue != value) 
-							|| (this._Contact1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Contact1.Entity = null;
-						previousValue.Orders1.Remove(this);
-					}
-					this._Contact1.Entity = value;
-					if ((value != null))
-					{
-						value.Orders1.Add(this);
-						this._DeliveryContactId = value.ContactId;
-					}
-					else
-					{
-						this._DeliveryContactId = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Contact1");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[Table(Name="dbo.Postage")]
 	public partial class Postage : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -4036,6 +3657,716 @@ namespace Suteki.Shop
 		{
 			this.SendPropertyChanging();
 			entity.PostZone = null;
+		}
+	}
+	
+	[Table(Name="dbo.OrderStatus")]
+	public partial class OrderStatus : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _OrderStatusId;
+		
+		private string _Name;
+		
+		private EntitySet<Order> _Orders;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrderStatusIdChanging(int value);
+    partial void OnOrderStatusIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public OrderStatus()
+		{
+			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
+			OnCreated();
+		}
+		
+		[Column(Storage="_OrderStatusId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int OrderStatusId
+		{
+			get
+			{
+				return this._OrderStatusId;
+			}
+			set
+			{
+				if ((this._OrderStatusId != value))
+				{
+					this.OnOrderStatusIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderStatusId = value;
+					this.SendPropertyChanged("OrderStatusId");
+					this.OnOrderStatusIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Association(Name="OrderStatus_Order", Storage="_Orders", OtherKey="OrderStatusId")]
+		public EntitySet<Order> Orders
+		{
+			get
+			{
+				return this._Orders;
+			}
+			set
+			{
+				this._Orders.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.OrderStatus = this;
+		}
+		
+		private void detach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.OrderStatus = null;
+		}
+	}
+	
+	[Table(Name="dbo.[Order]")]
+	public partial class Order : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _OrderId;
+		
+		private int _BasketId;
+		
+		private System.Nullable<int> _CardId;
+		
+		private int _CardContactId;
+		
+		private System.Nullable<int> _DeliveryContactId;
+		
+		private string _Email;
+		
+		private string _AdditionalInformation;
+		
+		private bool _UseCardHolderContact;
+		
+		private bool _PayByTelephone;
+		
+		private System.DateTime _CreatedDate;
+		
+		private System.DateTime _DispatchedDate;
+		
+		private int _OrderStatusId;
+		
+		private System.Nullable<int> _UserId;
+		
+		private EntityRef<Basket> _Basket;
+		
+		private EntityRef<Card> _Card;
+		
+		private EntityRef<Contact> _Contact;
+		
+		private EntityRef<Contact> _Contact1;
+		
+		private EntityRef<OrderStatus> _OrderStatus;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrderIdChanging(int value);
+    partial void OnOrderIdChanged();
+    partial void OnBasketIdChanging(int value);
+    partial void OnBasketIdChanged();
+    partial void OnCardIdChanging(System.Nullable<int> value);
+    partial void OnCardIdChanged();
+    partial void OnCardContactIdChanging(int value);
+    partial void OnCardContactIdChanged();
+    partial void OnDeliveryContactIdChanging(System.Nullable<int> value);
+    partial void OnDeliveryContactIdChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnAdditionalInformationChanging(string value);
+    partial void OnAdditionalInformationChanged();
+    partial void OnUseCardHolderContactChanging(bool value);
+    partial void OnUseCardHolderContactChanged();
+    partial void OnPayByTelephoneChanging(bool value);
+    partial void OnPayByTelephoneChanged();
+    partial void OnCreatedDateChanging(System.DateTime value);
+    partial void OnCreatedDateChanged();
+    partial void OnDispatchedDateChanging(System.DateTime value);
+    partial void OnDispatchedDateChanged();
+    partial void OnOrderStatusIdChanging(int value);
+    partial void OnOrderStatusIdChanged();
+    partial void OnUserIdChanging(System.Nullable<int> value);
+    partial void OnUserIdChanged();
+    #endregion
+		
+		public Order()
+		{
+			this._Basket = default(EntityRef<Basket>);
+			this._Card = default(EntityRef<Card>);
+			this._Contact = default(EntityRef<Contact>);
+			this._Contact1 = default(EntityRef<Contact>);
+			this._OrderStatus = default(EntityRef<OrderStatus>);
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_OrderId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int OrderId
+		{
+			get
+			{
+				return this._OrderId;
+			}
+			set
+			{
+				if ((this._OrderId != value))
+				{
+					this.OnOrderIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderId = value;
+					this.SendPropertyChanged("OrderId");
+					this.OnOrderIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_BasketId", DbType="Int NOT NULL")]
+		public int BasketId
+		{
+			get
+			{
+				return this._BasketId;
+			}
+			set
+			{
+				if ((this._BasketId != value))
+				{
+					if (this._Basket.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBasketIdChanging(value);
+					this.SendPropertyChanging();
+					this._BasketId = value;
+					this.SendPropertyChanged("BasketId");
+					this.OnBasketIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CardId", DbType="Int")]
+		public System.Nullable<int> CardId
+		{
+			get
+			{
+				return this._CardId;
+			}
+			set
+			{
+				if ((this._CardId != value))
+				{
+					if (this._Card.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCardIdChanging(value);
+					this.SendPropertyChanging();
+					this._CardId = value;
+					this.SendPropertyChanged("CardId");
+					this.OnCardIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CardContactId", DbType="Int NOT NULL")]
+		public int CardContactId
+		{
+			get
+			{
+				return this._CardContactId;
+			}
+			set
+			{
+				if ((this._CardContactId != value))
+				{
+					if (this._Contact.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCardContactIdChanging(value);
+					this.SendPropertyChanging();
+					this._CardContactId = value;
+					this.SendPropertyChanged("CardContactId");
+					this.OnCardContactIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_DeliveryContactId", DbType="Int")]
+		public System.Nullable<int> DeliveryContactId
+		{
+			get
+			{
+				return this._DeliveryContactId;
+			}
+			set
+			{
+				if ((this._DeliveryContactId != value))
+				{
+					if (this._Contact1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDeliveryContactIdChanging(value);
+					this.SendPropertyChanging();
+					this._DeliveryContactId = value;
+					this.SendPropertyChanged("DeliveryContactId");
+					this.OnDeliveryContactIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Email", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AdditionalInformation", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AdditionalInformation
+		{
+			get
+			{
+				return this._AdditionalInformation;
+			}
+			set
+			{
+				if ((this._AdditionalInformation != value))
+				{
+					this.OnAdditionalInformationChanging(value);
+					this.SendPropertyChanging();
+					this._AdditionalInformation = value;
+					this.SendPropertyChanged("AdditionalInformation");
+					this.OnAdditionalInformationChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UseCardHolderContact", DbType="Bit NOT NULL")]
+		public bool UseCardHolderContact
+		{
+			get
+			{
+				return this._UseCardHolderContact;
+			}
+			set
+			{
+				if ((this._UseCardHolderContact != value))
+				{
+					this.OnUseCardHolderContactChanging(value);
+					this.SendPropertyChanging();
+					this._UseCardHolderContact = value;
+					this.SendPropertyChanged("UseCardHolderContact");
+					this.OnUseCardHolderContactChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_PayByTelephone", DbType="Bit NOT NULL")]
+		public bool PayByTelephone
+		{
+			get
+			{
+				return this._PayByTelephone;
+			}
+			set
+			{
+				if ((this._PayByTelephone != value))
+				{
+					this.OnPayByTelephoneChanging(value);
+					this.SendPropertyChanging();
+					this._PayByTelephone = value;
+					this.SendPropertyChanged("PayByTelephone");
+					this.OnPayByTelephoneChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CreatedDate", DbType="DateTime NOT NULL")]
+		public System.DateTime CreatedDate
+		{
+			get
+			{
+				return this._CreatedDate;
+			}
+			set
+			{
+				if ((this._CreatedDate != value))
+				{
+					this.OnCreatedDateChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedDate = value;
+					this.SendPropertyChanged("CreatedDate");
+					this.OnCreatedDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_DispatchedDate", DbType="DateTime NOT NULL")]
+		public System.DateTime DispatchedDate
+		{
+			get
+			{
+				return this._DispatchedDate;
+			}
+			set
+			{
+				if ((this._DispatchedDate != value))
+				{
+					this.OnDispatchedDateChanging(value);
+					this.SendPropertyChanging();
+					this._DispatchedDate = value;
+					this.SendPropertyChanged("DispatchedDate");
+					this.OnDispatchedDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_OrderStatusId", DbType="Int NOT NULL")]
+		public int OrderStatusId
+		{
+			get
+			{
+				return this._OrderStatusId;
+			}
+			set
+			{
+				if ((this._OrderStatusId != value))
+				{
+					if (this._OrderStatus.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnOrderStatusIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderStatusId = value;
+					this.SendPropertyChanged("OrderStatusId");
+					this.OnOrderStatusIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UserId", DbType="Int")]
+		public System.Nullable<int> UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Basket_Order", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
+		public Basket Basket
+		{
+			get
+			{
+				return this._Basket.Entity;
+			}
+			set
+			{
+				Basket previousValue = this._Basket.Entity;
+				if (((previousValue != value) 
+							|| (this._Basket.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Basket.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._Basket.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._BasketId = value.BasketId;
+					}
+					else
+					{
+						this._BasketId = default(int);
+					}
+					this.SendPropertyChanged("Basket");
+				}
+			}
+		}
+		
+		[Association(Name="Card_Order", Storage="_Card", ThisKey="CardId", IsForeignKey=true)]
+		public Card Card
+		{
+			get
+			{
+				return this._Card.Entity;
+			}
+			set
+			{
+				Card previousValue = this._Card.Entity;
+				if (((previousValue != value) 
+							|| (this._Card.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Card.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._Card.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._CardId = value.CardId;
+					}
+					else
+					{
+						this._CardId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Card");
+				}
+			}
+		}
+		
+		[Association(Name="Contact_Order", Storage="_Contact", ThisKey="CardContactId", IsForeignKey=true)]
+		public Contact Contact
+		{
+			get
+			{
+				return this._Contact.Entity;
+			}
+			set
+			{
+				Contact previousValue = this._Contact.Entity;
+				if (((previousValue != value) 
+							|| (this._Contact.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Contact.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._Contact.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._CardContactId = value.ContactId;
+					}
+					else
+					{
+						this._CardContactId = default(int);
+					}
+					this.SendPropertyChanged("Contact");
+				}
+			}
+		}
+		
+		[Association(Name="Contact_Order1", Storage="_Contact1", ThisKey="DeliveryContactId", IsForeignKey=true)]
+		public Contact Contact1
+		{
+			get
+			{
+				return this._Contact1.Entity;
+			}
+			set
+			{
+				Contact previousValue = this._Contact1.Entity;
+				if (((previousValue != value) 
+							|| (this._Contact1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Contact1.Entity = null;
+						previousValue.Orders1.Remove(this);
+					}
+					this._Contact1.Entity = value;
+					if ((value != null))
+					{
+						value.Orders1.Add(this);
+						this._DeliveryContactId = value.ContactId;
+					}
+					else
+					{
+						this._DeliveryContactId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Contact1");
+				}
+			}
+		}
+		
+		[Association(Name="OrderStatus_Order", Storage="_OrderStatus", ThisKey="OrderStatusId", IsForeignKey=true)]
+		public OrderStatus OrderStatus
+		{
+			get
+			{
+				return this._OrderStatus.Entity;
+			}
+			set
+			{
+				OrderStatus previousValue = this._OrderStatus.Entity;
+				if (((previousValue != value) 
+							|| (this._OrderStatus.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._OrderStatus.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._OrderStatus.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._OrderStatusId = value.OrderStatusId;
+					}
+					else
+					{
+						this._OrderStatusId = default(int);
+					}
+					this.SendPropertyChanged("OrderStatus");
+				}
+			}
+		}
+		
+		[Association(Name="User_Order", Storage="_User", ThisKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

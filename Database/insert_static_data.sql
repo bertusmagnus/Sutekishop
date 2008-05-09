@@ -16,4 +16,8 @@ insert CardType values(2,	'Master Card / Euro Card',	0)
 insert CardType values(3,	'American Express',	0)
 insert CardType values(4,	'Switch / Solo / Maestro',	1)
 
+insert OrderStatus values(1, 'Created')
+insert OrderStatus values(2, 'Dispatched')
+insert OrderStatus values(3, 'Rejected')
+
 

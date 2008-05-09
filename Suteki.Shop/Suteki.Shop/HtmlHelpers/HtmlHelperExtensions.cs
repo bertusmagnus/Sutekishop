@@ -104,5 +104,15 @@ namespace Suteki.Shop.HtmlHelpers
                 htmlHelper.BuildUrlFromExpression<T>(action),
                 htmlHelper.Image("~/Content/Images/Down.png"));
         }
+
+        public static string Pager(
+            this HtmlHelper htmlHelper,
+            string controller,
+            string action,
+            IPagedList pagedList)
+        {
+            Pager pageListBuilder = new Pager(htmlHelper, controller, action, pagedList);
+            return pageListBuilder.WriteHtml();
+        }
     }
 }

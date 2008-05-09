@@ -105,7 +105,7 @@ namespace Suteki.Shop.Controllers
             // find any properties that implement IEntity
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
-                if (typeof(IEntity).IsAssignableFrom(property.PropertyType))
+                if (property.PropertyType.IsLinqEntity())
                 {
                     if (Kernel == null)
                     {

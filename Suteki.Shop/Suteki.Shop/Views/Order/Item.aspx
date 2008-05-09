@@ -7,7 +7,22 @@
 
 <dl>
     <dt>Order Number</dt><dd><%= ViewData.Order.OrderId.ToString() %>&nbsp;</dd>
+    <dt>Date</dt><dd><%= ViewData.Order.CreatedDate.ToShortDateString() %></dd>
+
+<% if(User.IsInRole("Administrator")) { %>
+    <dt>Status</dt><dd><%= ViewData.Order.OrderStatus.Name %></dd>
+    <dt>Dispatched</dt><dd><%= ViewData.Order.DispatchedDateAsString %></dd>
+    <dt>Updated by</dt><dd><%= ViewData.Order.UserAsString %></dd>
+<% } %>
+    
 </dl>
+
+<% if(User.IsInRole("Administrator") && ViewData.Order.IsCreated) { %>
+<div class="orderAction">
+    <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+</div>    
+<% } %>
 
 <table>
     <tr>
@@ -134,7 +149,6 @@
     <div class="contentRightColumn">
 
     </div>
-</div> 
-
+</div>
 
 </asp:Content>

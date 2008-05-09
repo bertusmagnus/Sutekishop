@@ -43,6 +43,11 @@ namespace Suteki.Shop.Tests.Controllers
             testContext = new ControllerTestContext(orderController);
 
             Mock.Get(postageRepository).Expect(p => p.GetAll()).Returns(new List<Postage>().AsQueryable());
+            
+            testContext.TestContext.ContextMock.ExpectGet(h => h.User).Returns(new User { UserId = 4 });
+            testContext.TestContext.RequestMock.ExpectGet(r => r.RequestType).Returns("GET");
+            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(new NameValueCollection());
+            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(new NameValueCollection());
         }
 
         [Test]
@@ -120,6 +125,9 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["order.additionalinformation"], order.AdditionalInformation, "AdditionalInformation is incorrect");
             Assert.IsFalse(order.UseCardHolderContact, "UseCardHolderContact is incorrect");
             Assert.IsFalse(order.PayByTelephone, "PayByTelephone is incorrect");
+
+            Assert.AreEqual(1, order.OrderStatusId, "OrderStatusId is incorrect");
+            Assert.AreEqual(DateTime.Now.ToShortDateString(), order.CreatedDate.ToShortDateString(), "CreatedDate is incorrect");
 
             // Card Contact
             Contact cardContact = order.Contact;
@@ -207,6 +215,64 @@ namespace Suteki.Shop.Tests.Controllers
 
             form.Add("order.paybytelephone", "False");
             return form;
+        }
+
+        [Test]
+        public void Index_ShouldDisplayAListOfOrders()
+        {
+            var orders = new List<Order> { new Order() }.AsQueryable();
+            Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders).Verifiable();
+
+            orderController.Index()
+                .ReturnsRenderViewResult()
+                .ForView("Index")
+                .AssertAreSame(orders.First(), vd => vd.Orders.First());
+        }
+
+        [Test]
+        public void Dispatch_ShouldChangeOrderStatusAndDispatchedDate()
+        {
+            int orderId = 44;
+            Order order = new Order 
+            { 
+                OrderId = orderId, 
+                OrderStatusId = OrderStatus.CreatedId,
+                Basket = new Basket()
+            };
+
+            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+            Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
+
+            orderController.Dispatch(orderId)
+                .ReturnsRenderViewResult()
+                .ForView("Item");
+
+            Assert.IsTrue(order.IsDispatched, "order has not been dispatched");
+            Assert.AreEqual(DateTime.Now.ToShortDateString(), order.DispatchedDateAsString, 
+                "DispatchedDateAsString is incorrect");
+            Assert.AreEqual(4, order.UserId, "UserId is incorrect"); // set SetUp
+        }
+
+        [Test]
+        public void Index_ShouldBuildCriteriaAndExecuteSearch()
+        {
+            NameValueCollection form = new NameValueCollection();
+            form.Add("orderid", "3");
+            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(form);
+
+            var orders = new List<Order>
+            {
+                new Order { OrderId = 2 },
+                new Order { OrderId = 3 }
+            }.AsQueryable();
+
+            Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders);
+
+            orderController.Index()
+                .ReturnsRenderViewResult()
+                .ForView("Index")
+                .AssertAreSame(orders.ElementAt(1), vd => vd.Orders.First());
+                
         }
     }
 }

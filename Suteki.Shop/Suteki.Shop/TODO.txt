@@ -9,6 +9,10 @@
 
 * Order Management
 
+* Credit Card Encryption
+
+* Emails
+
 * CMS
 	- Menu management
 	- Create / Edit page

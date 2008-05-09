@@ -40,6 +40,9 @@
             <div>
                 <ul class="mainMenu">
                     <li>
+                        <%= Html.ActionLink<OrderController>(c => c.Index(), "Orders") %>
+                    </li>
+                    <li>
                         <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
                     </li>
                     <li>

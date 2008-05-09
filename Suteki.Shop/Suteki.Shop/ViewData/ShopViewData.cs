@@ -23,6 +23,7 @@ namespace Suteki.Shop.ViewData
         public Basket Basket { get; set; }
 
         public Order Order { get; set; }
+        public PagedList<Order> Orders { get; set; }
 
         public IEnumerable<Country> Countries { get; set; }
         public Country Country { get; set; }
@@ -93,6 +94,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithBasket(Basket basket)
         {
             this.Basket = basket;
+            return this;
+        }
+
+        public ShopViewData WithOrders(PagedList<Order> orders)
+        {
+            this.Orders = orders;
             return this;
         }
 

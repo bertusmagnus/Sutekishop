@@ -3,7 +3,7 @@ using Suteki.Shop.Validation;
 
 namespace Suteki.Shop
 {
-    public partial class PostZone : IOrderable, IEntity
+    public partial class PostZone : IOrderable
     {
         partial void OnNameChanging(string value)
         {
