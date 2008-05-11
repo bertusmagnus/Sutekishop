@@ -373,6 +373,11 @@ div.category ul ul li:hover ul
 {
 	cursor: pointer;
 }
+.imageEdit
+{
+	float:left;
+	margin: 5px 5px;
+}
 
 .productOptions
 {

@@ -125,6 +125,7 @@
     <Compile Include="Models\PostageResult.cs" />
     <Compile Include="Models\PostZone.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductImage.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

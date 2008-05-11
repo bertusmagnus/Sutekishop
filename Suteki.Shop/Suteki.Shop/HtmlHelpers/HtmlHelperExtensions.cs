@@ -105,6 +105,13 @@ namespace Suteki.Shop.HtmlHelpers
                 htmlHelper.Image("~/Content/Images/Down.png"));
         }
 
+        public static string CrossLink<T>(this HtmlHelper htmlHelper, Expression<Action<T>> action) where T : Controller
+        {
+            return "<a href=\"{0}\">{1}</a>".With(
+                htmlHelper.BuildUrlFromExpression<T>(action),
+                htmlHelper.Image("~/Content/Images/Cross.png"));
+        }
+
         public static string Pager(
             this HtmlHelper htmlHelper,
             string controller,

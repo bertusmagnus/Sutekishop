@@ -16,22 +16,28 @@ namespace Suteki.Shop.Controllers
     {
         IRepository<Product> productRepository;
         IRepository<Category> categoryRepository;
+        IRepository<ProductImage> productImageRepository;
         IHttpFileService httpFileService;
         ISizeService sizeService;
         IOrderableService<Product> productOrderableService;
+        IOrderableService<ProductImage> productImageOrderableService;
 
         public ProductController(
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
+            IRepository<ProductImage> productImageRepository,
             IHttpFileService httpFileService,
             ISizeService sizeService,
-            IOrderableService<Product> productOrderableService)
+            IOrderableService<Product> productOrderableService,
+            IOrderableService<ProductImage> productImageOrderableService)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
+            this.productImageRepository = productImageRepository;
             this.httpFileService = httpFileService;
             this.sizeService = sizeService;
             this.productOrderableService = productOrderableService;
+            this.productImageOrderableService = productImageOrderableService;
         }
 
         public ActionResult Index(int id)
@@ -42,13 +48,20 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView(int id)
         {
             Category category = categoryRepository.GetById(id);
-            return RenderView("Index", View.Data.WithProducts(category.Products.InOrder()).WithCategory(category));
+            var products = category.Products.InOrder();
+
+            return RenderView("Index", View.Data.WithProducts(products).WithCategory(category));
         }
 
         public ActionResult Item(int id)
         {
+            return RenderItemView(id);
+        }
+
+        private ActionResult RenderItemView(int id)
+        {
             Product product = productRepository.GetById(id);
-            return RenderView("Item", View.Data.WithProduct(product)); 
+            return RenderView("Item", View.Data.WithProduct(product));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -105,13 +118,19 @@ namespace Suteki.Shop.Controllers
             {
                 product.ProductImages.Add(new ProductImage 
                 {
-                    Image = image
+                    Image = image,
+                    Position = productImageOrderableService.NextPosition
                 });
             }
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
+        {
+            return RenderEditView(id);
+        }
+
+        private ActionResult RenderEditView(int id)
         {
             Product product = productRepository.GetById(id);
             return RenderView("Edit", EditViewData.WithProduct(product));
@@ -137,6 +156,38 @@ namespace Suteki.Shop.Controllers
                 .DownOne();
 
             return RenderIndexView(id);
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult MoveImageUp(int id, int position)
+        {
+            productImageOrderableService
+                .MoveItemAtPosition(position)
+                .ConstrainedBy(productImage => productImage.ProductId == id)
+                .UpOne();
+
+            return RenderEditView(id);
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult MoveImageDown(int id, int position)
+        {
+            productImageOrderableService
+                .MoveItemAtPosition(position)
+                .ConstrainedBy(productImage => productImage.ProductId == id)
+                .DownOne();
+
+            return RenderEditView(id);
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult DeleteImage(int id, int productImageId)
+        {
+            ProductImage productImage = productImageRepository.GetById(productImageId);
+            productImageRepository.DeleteOnSubmit(productImage);
+            productImageRepository.SubmitChanges();
+
+            return RenderEditView(id);
         }
 
         public ShopViewData EditViewData

@@ -28,9 +28,12 @@ namespace Suteki.Shop.Tests.Controllers
         Repository<Category> categoryRepository;
         Mock<Repository<Category>> categoryRepositoryMock;
 
+        IRepository<ProductImage> productImageRepository;
+
         IHttpFileService httpFileService;
         ISizeService sizeService;
         IOrderableService<Product> productOrderableService;
+        IOrderableService<ProductImage> productImageOrderableService;
 
         [SetUp]
         public void SetUp()
@@ -44,17 +47,22 @@ namespace Suteki.Shop.Tests.Controllers
             productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
             productRepository = productRepositoryMock.Object;
 
+            productImageRepository = new Mock<IRepository<ProductImage>>().Object;
+
             httpFileService = new Mock<IHttpFileService>().Object;
             sizeService = new Mock<ISizeService>().Object;
 
             productOrderableService = new Mock<IOrderableService<Product>>().Object;
+            productImageOrderableService = new Mock<IOrderableService<ProductImage>>().Object;
 
             productControllerMock = new Mock<ProductController>(
                 productRepository, 
                 categoryRepository,
+                productImageRepository,
                 httpFileService,
                 sizeService,
-                productOrderableService);
+                productOrderableService,
+                productImageOrderableService);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);

@@ -19,7 +19,7 @@ namespace Suteki.Shop.Controllers
         public IRepository<T> Repository { get; set; }
         public IOrderableService<T> OrderableService { get; set; }
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return RenderIndexView();
         }
@@ -30,7 +30,7 @@ namespace Suteki.Shop.Controllers
             return RenderView("Index", Scaffold.Data<T>().With(items));
         }
 
-        public ActionResult New()
+        public virtual ActionResult New()
         {
             T item = new T
             {
@@ -39,20 +39,21 @@ namespace Suteki.Shop.Controllers
             return RenderView("Edit", BuildEditViewData().With(item));
         }
 
-        public ScaffoldViewData<T> BuildEditViewData()
+        [NonAction]
+        public virtual ScaffoldViewData<T> BuildEditViewData()
         {
             ScaffoldViewData<T> viewData = Scaffold.Data<T>();
             AppendLookupLists(viewData);
             return viewData;
         }
 
-        public ActionResult Edit(int id)
+        public virtual ActionResult Edit(int id)
         {
             T item = Repository.GetById(id);
             return RenderView("Edit", BuildEditViewData().With(item));
         }
 
-        public ActionResult Update()
+        public virtual ActionResult Update()
         {
             int id = int.Parse(this.ReadFromRequest(typeof(T).GetPrimaryKey().Name));
             T item = null;
@@ -84,13 +85,13 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        public ActionResult MoveUp(int id)
+        public virtual ActionResult MoveUp(int id)
         {
             OrderableService.MoveItemAtPosition(id).UpOne();
             return RenderIndexView();
         }
 
-        public ActionResult MoveDown(int id)
+        public virtual ActionResult MoveDown(int id)
         {
             OrderableService.MoveItemAtPosition(id).DownOne();
             return RenderIndexView();
@@ -100,7 +101,8 @@ namespace Suteki.Shop.Controllers
         /// Appends any lookup lists T might need for editing
         /// </summary>
         /// <param name="viewData"></param>
-        public void AppendLookupLists(ScaffoldViewData<T> viewData)
+        [NonAction]
+        public virtual void AppendLookupLists(ScaffoldViewData<T> viewData)
         {
             // find any properties that implement IEntity
             foreach (PropertyInfo property in typeof(T).GetProperties())

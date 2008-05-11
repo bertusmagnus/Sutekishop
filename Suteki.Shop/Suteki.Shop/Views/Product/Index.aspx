@@ -21,7 +21,7 @@
        } 
    } %>
 
-<% foreach (var product in ViewData.Category.Products)
+<% foreach (var product in ViewData.Products)
    { %>
 
     <div onclick="location.href='<%= Url.Action("Item", "Product", new { Id = product.ProductId.ToString() }) %>'" class="product">

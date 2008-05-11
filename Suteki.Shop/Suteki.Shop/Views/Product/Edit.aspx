@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Product.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Product.Edit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
     <h1>Product</h1>
@@ -16,14 +16,21 @@
         <%= Html.Hidden("productId", ViewData.Product.ProductId)%>
         <%= Html.Hidden("position", ViewData.Product.Position)%>
 
-        <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Product.Name)%>
-        
-        <label for="categoryid">Category</label>
-        <%= Html.Select("categoryid", ViewData.Categories, "Name", "CategoryId", ViewData.Product.CategoryId)%>
-        
-        <label for="weight">Weight</label>
-        <%= Html.TextBox("weight", ViewData.Product.Weight.ToString())%>
+        <div class="columnContainer">
+            <div class="contentLeftColumn">
+                <label for="name">Name</label>
+                <%= Html.TextBox("name", ViewData.Product.Name)%>
+                
+                <label for="categoryid">Category</label>
+                <%= Html.Select("categoryid", ViewData.Categories, "Name", "CategoryId", ViewData.Product.CategoryId)%>
+                
+                <label for="weight">Weight</label>
+                <%= Html.TextBox("weight", ViewData.Product.Weight.ToString())%>
+                
+                <label for="price">Price £</label>
+                <%= Html.TextBox("price", ViewData.Product.Price.ToString("0.00"))%>
+            </div>
+        </div>
         
         <label for="description">Description</label>
         <%= Html.TextArea("description", ViewData.Product.Description)%>
@@ -44,12 +51,17 @@
         <h3>Photos</h3>
         
         <div class="imageList">
-        <% foreach(var productImage in ViewData.Product.ProductImages) { %>
-
-            <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName) %>
-
+        <% foreach(var productImage in ViewData.Product.ProductImages.InOrder()) { %>
+            <div class="imageEdit">
+            <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName) %><br />
+            <%= Html.UpArrowLink<ProductController>(c => c.MoveImageUp(ViewData.Product.ProductId, productImage.Position)) %>
+            <%= Html.DownArrowLink<ProductController>(c => c.MoveImageDown(ViewData.Product.ProductId, productImage.Position)) %> &nbsp;&nbsp;
+            <%= Html.CrossLink<ProductController>(c => c.DeleteImage(ViewData.Product.ProductId, productImage.ProductImageId)) %>
+            </div>
         <% } %>
         </div>
+        
+        <div class="clear" />
         
         <% for (int i = 0; i < 5; i++)
            { %>

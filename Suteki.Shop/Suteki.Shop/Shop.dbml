@@ -22,15 +22,6 @@
       <Association Name="Image_ProductImage" Member="ProductImages" OtherKey="ImageId" Type="ProductImage" />
     </Type>
   </Table>
-  <Table Name="dbo.ProductImage" Member="ProductImages">
-    <Type Name="ProductImage">
-      <Column Name="ProductImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
-      <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Size" Member="Sizes">
     <Type Name="Size">
       <Column Name="SizeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -141,8 +132,8 @@
       <Column Name="Price" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Weight" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
       <Association Name="Product_Size" Member="Sizes" OtherKey="ProductId" Type="Size" />
+      <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
       <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
     </Type>
   </Table>
@@ -196,6 +187,16 @@
       <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" Type="Contact" IsForeignKey="true" />
       <Association Name="OrderStatus_Order" Member="OrderStatus" ThisKey="OrderStatusId" Type="OrderStatus" IsForeignKey="true" />
       <Association Name="User_Order" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ProductImage" Member="ProductImages">
+    <Type Name="ProductImage">
+      <Column Name="ProductImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
+      <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

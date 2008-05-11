@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Suteki.Shop.Validation;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop
 {
@@ -27,7 +29,7 @@ namespace Suteki.Shop
         {
             get
             {
-                if (HasMainImage) return this.ProductImages[0].Image;
+                if (HasMainImage) return this.ProductImages.InOrder().First().Image;
                 return null;
             }
         }

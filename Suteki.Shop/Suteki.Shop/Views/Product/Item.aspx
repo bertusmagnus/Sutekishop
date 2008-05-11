@@ -13,7 +13,7 @@ function onThumbnailClick(img)
 </script>
 
 
-<h1><%= ViewData.Product.Name %></h1>
+<h1><%= ViewData.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Product.Price.ToString("£0.00") %></h1>
 
 <% if(Context.User.IsInRole("Administrator")) { %>
     <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Product.ProductId), "Edit") %></p>
@@ -26,15 +26,16 @@ function onThumbnailClick(img)
 <% } %>
 </div>
 
-<p><%= ViewData.Product.Description %></p>
-
 <div class="imageList">
-<% foreach(var productImage in ViewData.Product.ProductImages) { %>
+<% foreach(var productImage in ViewData.Product.ProductImages.InOrder()) { %>
 
     <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName, new { onclick = "onThumbnailClick(this)" })%>
 
 <% } %>
 </div>
+
+<p><%= ViewData.Product.Description %></p>
+
 </div>
 
 
