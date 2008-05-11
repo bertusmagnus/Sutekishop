@@ -13,7 +13,7 @@ function onThumbnailClick(img)
 </script>
 
 
-<h1><%= ViewData.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Product.Price.ToString("£0.00") %></h1>
+<h1><%= ViewData.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Product.Price.ToString("£0.00") %><%= ViewData.Product.IsActiveAsString %></h1>
 
 <% if(Context.User.IsInRole("Administrator")) { %>
     <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Product.ProductId), "Edit") %></p>

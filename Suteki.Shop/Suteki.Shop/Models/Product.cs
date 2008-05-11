@@ -50,5 +50,14 @@ namespace Suteki.Shop
                 return this.Sizes[0];
             }
         }
+
+        public string IsActiveAsString
+        {
+            get
+            {
+                if (IsActive) return string.Empty;
+                return " Not Active";
+            }
+        }
     }
 }

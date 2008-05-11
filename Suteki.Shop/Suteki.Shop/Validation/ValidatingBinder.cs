@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.ComponentModel;
 using System.Text;
+using System.Data.Linq.Mapping;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Validation
 {
@@ -18,11 +20,10 @@ namespace Suteki.Shop.Validation
         {
             Type targetType = target.GetType();
             string typeName = targetType.Name;
-            PropertyInfo[] properties = targetType.GetProperties();
 
             StringBuilder exceptionMessage = new StringBuilder();
 
-            foreach (PropertyInfo property in properties)
+            foreach (PropertyInfo property in targetType.GetProperties())
             {
                 string propertyName = property.Name;
                 if (!string.IsNullOrEmpty(objectPrefix))
@@ -52,7 +53,7 @@ namespace Suteki.Shop.Validation
                     }
                     catch (Exception exception)
                     {
-                        if (exception.InnerException is FormatException || 
+                        if (exception.InnerException is FormatException ||
                             exception.InnerException is IndexOutOfRangeException)
                         {
                             exceptionMessage.AppendFormat("'{0}' is not a valid value for {1}<br />", stringValue, property.Name);
@@ -65,6 +66,14 @@ namespace Suteki.Shop.Validation
                         {
                             throw;
                         }
+                    }
+                }
+                else
+                {
+                    // boolean values like checkboxes don't appear unless checked, so set false by default
+                    if (property.PropertyType == typeof(bool) && property.HasAttribute(typeof(ColumnAttribute)))
+                    {
+                        property.SetValue(target, false, null);
                     }
                 }
             }

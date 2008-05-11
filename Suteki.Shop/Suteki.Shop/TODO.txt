@@ -1,9 +1,7 @@
 ﻿SutekiShop To Do list
 =====================
 
-* Non-size products
-
-* Size editing
+* Non-active categories
 
 * Stock Screen
 
@@ -12,6 +10,8 @@
 * Credit Card Encryption
 
 * Emails
+
+* Shopping basket off main menu (do this as part of sub Master page for shop)
 
 * CMS
 	- Menu management

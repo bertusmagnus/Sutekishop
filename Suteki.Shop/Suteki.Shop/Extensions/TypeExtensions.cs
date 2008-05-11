@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Data.Linq.Mapping;
+using System.Collections.Generic;
 
 namespace Suteki.Shop.Extensions
 {
@@ -36,6 +37,23 @@ namespace Suteki.Shop.Extensions
                 return true;
             }
             return false;
+        }
+
+        public static IEnumerable<PropertyInfo> PropertiesWithAttributeOf(this Type type, Type attributeType)
+        {
+            foreach(PropertyInfo property in type.GetProperties())
+            {
+                if (property.HasAttribute(attributeType))
+                {
+                    yield return property;
+                }
+            }
+        }
+
+        public static bool HasAttribute(this PropertyInfo property, Type attributeType)
+        {
+            object[] attributes = property.GetCustomAttributes(attributeType, true);
+            return attributes.Length > 0;
         }
     }
 }

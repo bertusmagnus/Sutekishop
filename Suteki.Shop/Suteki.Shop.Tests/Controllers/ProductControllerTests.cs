@@ -66,6 +66,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
+
+            productControllerMock.ExpectGet(c => c.CurrentUser).Returns(new User { RoleId = Role.AdministratorId });
         }
 
         [Test]

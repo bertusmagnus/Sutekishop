@@ -29,6 +29,9 @@
                 
                 <label for="price">Price £</label>
                 <%= Html.TextBox("price", ViewData.Product.Price.ToString("0.00"))%>
+                
+                <label for="isactive">Active</label>
+                <%= Html.CheckBox("isactive", "", "True", ViewData.Product.IsActive)%>
             </div>
         </div>
         

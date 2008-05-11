@@ -51,6 +51,11 @@ namespace Suteki.Shop.Controllers
             Category category = categoryRepository.GetById(id);
             var products = category.Products.InOrder();
 
+            if (!CurrentUser.IsAdministrator)
+            {
+                products = products.Active();
+            }
+
             return RenderView("Index", View.Data.WithProducts(products).WithCategory(category));
         }
 

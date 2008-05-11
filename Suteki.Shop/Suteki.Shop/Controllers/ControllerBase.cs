@@ -12,7 +12,7 @@ namespace Suteki.Shop.Controllers
         /// </summary>
         public IBaseControllerService BaseControllerService { get; set; }
 
-        protected User CurrentUser
+        public virtual User CurrentUser
         {
             get
             {
