@@ -21,6 +21,9 @@
         <label for="askifmaxweight">Ask If Max Weight</label>
         <%= Html.CheckBox("askifmaxweight", "", "true", ViewData.Item.AskIfMaxWeight)%>
         
+        <label for="flatrate">Flat Rate</label>
+        <%= Html.TextBox("flatrate", ViewData.Item.FlatRate.ToString("0.00"))%>
+        
         <label for="isactive">Active</label>
         <%= Html.CheckBox("isactive", "", "true", ViewData.Item.IsActive)%>
         

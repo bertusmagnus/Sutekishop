@@ -148,17 +148,6 @@
       <Association Name="PostZone_Country" Member="PostZone" ThisKey="PostZoneId" Type="PostZone" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.PostZone" Member="PostZones">
-    <Type Name="PostZone">
-      <Column Name="PostZoneId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Multiplier" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="AskIfMaxWeight" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="PostZone_Country" Member="Countries" OtherKey="PostZoneId" Type="Country" />
-    </Type>
-  </Table>
   <Table Name="dbo.OrderStatus" Member="OrderStatus">
     <Type Name="OrderStatus">
       <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -197,6 +186,18 @@
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
       <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PostZone" Member="PostZones">
+    <Type Name="PostZone">
+      <Column Name="PostZoneId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Multiplier" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="AskIfMaxWeight" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="FlatRate" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Association Name="PostZone_Country" Member="Countries" OtherKey="PostZoneId" Type="Country" />
     </Type>
   </Table>
 </Database>

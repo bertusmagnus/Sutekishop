@@ -56,7 +56,7 @@ namespace Suteki.Shop
 
         public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages, Contact contact)
         {
-            if (!postages.Any()) return postageTotal = PostageResult.WithPhone;
+            if (!postages.Any()) return PostageResult.WithPhone;
 
             int totalWeight = BasketItems
                 .Sum(bi => bi.Size.Product.Weight);
@@ -68,16 +68,13 @@ namespace Suteki.Shop
 
             if (postageToApply == null)
             {
-                // total weight is greater than any of the defined postage bands so phone
-                return postageTotal = PostageResult.WithPhone;
-            }
-
-            if (contact.Country.PostZone.AskIfMaxWeight)
-            {
-                Postage maxPostage = postages.Where(p => p.IsActive).OrderByDescending(p => p.MaxWeight).First();
-                if (postageToApply == maxPostage)
+                if (contact.Country.PostZone.AskIfMaxWeight)
                 {
                     return postageTotal = PostageResult.WithPhone;
+                }
+                else
+                {
+                    return postageTotal = PostageResult.WithPrice(contact.Country.PostZone.FlatRate);
                 }
             }
 

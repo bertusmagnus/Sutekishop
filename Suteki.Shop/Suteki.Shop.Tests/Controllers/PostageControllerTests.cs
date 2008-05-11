@@ -27,7 +27,6 @@ namespace Suteki.Shop.Tests.Controllers
             postageRepository = new Mock<IRepository<Postage>>().Object;
             orderableService = new Mock<IOrderableService<Postage>>().Object;
 
-            //postageController = new PostageController(postageRepository, orderableService);
             postageController = new PostageController();
             postageController.Repository = postageRepository;
             postageController.OrderableService = orderableService;

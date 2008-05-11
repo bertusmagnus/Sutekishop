@@ -69,9 +69,6 @@ namespace Suteki.Shop
     partial void InsertCountry(Country instance);
     partial void UpdateCountry(Country instance);
     partial void DeleteCountry(Country instance);
-    partial void InsertPostZone(PostZone instance);
-    partial void UpdatePostZone(PostZone instance);
-    partial void DeletePostZone(PostZone instance);
     partial void InsertOrderStatus(OrderStatus instance);
     partial void UpdateOrderStatus(OrderStatus instance);
     partial void DeleteOrderStatus(OrderStatus instance);
@@ -81,6 +78,9 @@ namespace Suteki.Shop
     partial void InsertProductImage(ProductImage instance);
     partial void UpdateProductImage(ProductImage instance);
     partial void DeleteProductImage(ProductImage instance);
+    partial void InsertPostZone(PostZone instance);
+    partial void UpdatePostZone(PostZone instance);
+    partial void DeletePostZone(PostZone instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -217,14 +217,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		public System.Data.Linq.Table<PostZone> PostZones
-		{
-			get
-			{
-				return this.GetTable<PostZone>();
-			}
-		}
-		
 		public System.Data.Linq.Table<OrderStatus> OrderStatus
 		{
 			get
@@ -246,6 +238,14 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<ProductImage>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PostZone> PostZones
+		{
+			get
+			{
+				return this.GetTable<PostZone>();
 			}
 		}
 	}
@@ -3258,216 +3258,6 @@ namespace Suteki.Shop
 		}
 	}
 	
-	[Table(Name="dbo.PostZone")]
-	public partial class PostZone : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _PostZoneId;
-		
-		private string _Name;
-		
-		private decimal _Multiplier;
-		
-		private bool _AskIfMaxWeight;
-		
-		private int _Position;
-		
-		private bool _IsActive;
-		
-		private EntitySet<Country> _Countries;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnPostZoneIdChanging(int value);
-    partial void OnPostZoneIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnMultiplierChanging(decimal value);
-    partial void OnMultiplierChanged();
-    partial void OnAskIfMaxWeightChanging(bool value);
-    partial void OnAskIfMaxWeightChanged();
-    partial void OnPositionChanging(int value);
-    partial void OnPositionChanged();
-    partial void OnIsActiveChanging(bool value);
-    partial void OnIsActiveChanged();
-    #endregion
-		
-		public PostZone()
-		{
-			this._Countries = new EntitySet<Country>(new Action<Country>(this.attach_Countries), new Action<Country>(this.detach_Countries));
-			OnCreated();
-		}
-		
-		[Column(Storage="_PostZoneId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int PostZoneId
-		{
-			get
-			{
-				return this._PostZoneId;
-			}
-			set
-			{
-				if ((this._PostZoneId != value))
-				{
-					this.OnPostZoneIdChanging(value);
-					this.SendPropertyChanging();
-					this._PostZoneId = value;
-					this.SendPropertyChanged("PostZoneId");
-					this.OnPostZoneIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Multiplier", DbType="Decimal(18,4) NOT NULL")]
-		public decimal Multiplier
-		{
-			get
-			{
-				return this._Multiplier;
-			}
-			set
-			{
-				if ((this._Multiplier != value))
-				{
-					this.OnMultiplierChanging(value);
-					this.SendPropertyChanging();
-					this._Multiplier = value;
-					this.SendPropertyChanged("Multiplier");
-					this.OnMultiplierChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AskIfMaxWeight", DbType="Bit NOT NULL")]
-		public bool AskIfMaxWeight
-		{
-			get
-			{
-				return this._AskIfMaxWeight;
-			}
-			set
-			{
-				if ((this._AskIfMaxWeight != value))
-				{
-					this.OnAskIfMaxWeightChanging(value);
-					this.SendPropertyChanging();
-					this._AskIfMaxWeight = value;
-					this.SendPropertyChanged("AskIfMaxWeight");
-					this.OnAskIfMaxWeightChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Position", DbType="Int NOT NULL")]
-		public int Position
-		{
-			get
-			{
-				return this._Position;
-			}
-			set
-			{
-				if ((this._Position != value))
-				{
-					this.OnPositionChanging(value);
-					this.SendPropertyChanging();
-					this._Position = value;
-					this.SendPropertyChanged("Position");
-					this.OnPositionChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
-		public bool IsActive
-		{
-			get
-			{
-				return this._IsActive;
-			}
-			set
-			{
-				if ((this._IsActive != value))
-				{
-					this.OnIsActiveChanging(value);
-					this.SendPropertyChanging();
-					this._IsActive = value;
-					this.SendPropertyChanged("IsActive");
-					this.OnIsActiveChanged();
-				}
-			}
-		}
-		
-		[Association(Name="PostZone_Country", Storage="_Countries", OtherKey="PostZoneId")]
-		public EntitySet<Country> Countries
-		{
-			get
-			{
-				return this._Countries;
-			}
-			set
-			{
-				this._Countries.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Countries(Country entity)
-		{
-			this.SendPropertyChanging();
-			entity.PostZone = this;
-		}
-		
-		private void detach_Countries(Country entity)
-		{
-			this.SendPropertyChanging();
-			entity.PostZone = null;
-		}
-	}
-	
 	[Table(Name="dbo.OrderStatus")]
 	public partial class OrderStatus : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -4391,6 +4181,240 @@ namespace Suteki.Shop
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[Table(Name="dbo.PostZone")]
+	public partial class PostZone : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _PostZoneId;
+		
+		private string _Name;
+		
+		private decimal _Multiplier;
+		
+		private bool _AskIfMaxWeight;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+		private decimal _FlatRate;
+		
+		private EntitySet<Country> _Countries;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostZoneIdChanging(int value);
+    partial void OnPostZoneIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnMultiplierChanging(decimal value);
+    partial void OnMultiplierChanged();
+    partial void OnAskIfMaxWeightChanging(bool value);
+    partial void OnAskIfMaxWeightChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnFlatRateChanging(decimal value);
+    partial void OnFlatRateChanged();
+    #endregion
+		
+		public PostZone()
+		{
+			this._Countries = new EntitySet<Country>(new Action<Country>(this.attach_Countries), new Action<Country>(this.detach_Countries));
+			OnCreated();
+		}
+		
+		[Column(Storage="_PostZoneId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int PostZoneId
+		{
+			get
+			{
+				return this._PostZoneId;
+			}
+			set
+			{
+				if ((this._PostZoneId != value))
+				{
+					this.OnPostZoneIdChanging(value);
+					this.SendPropertyChanging();
+					this._PostZoneId = value;
+					this.SendPropertyChanged("PostZoneId");
+					this.OnPostZoneIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Multiplier", DbType="Decimal(18,4) NOT NULL")]
+		public decimal Multiplier
+		{
+			get
+			{
+				return this._Multiplier;
+			}
+			set
+			{
+				if ((this._Multiplier != value))
+				{
+					this.OnMultiplierChanging(value);
+					this.SendPropertyChanging();
+					this._Multiplier = value;
+					this.SendPropertyChanged("Multiplier");
+					this.OnMultiplierChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AskIfMaxWeight", DbType="Bit NOT NULL")]
+		public bool AskIfMaxWeight
+		{
+			get
+			{
+				return this._AskIfMaxWeight;
+			}
+			set
+			{
+				if ((this._AskIfMaxWeight != value))
+				{
+					this.OnAskIfMaxWeightChanging(value);
+					this.SendPropertyChanging();
+					this._AskIfMaxWeight = value;
+					this.SendPropertyChanged("AskIfMaxWeight");
+					this.OnAskIfMaxWeightChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_FlatRate", DbType="Money NOT NULL")]
+		public decimal FlatRate
+		{
+			get
+			{
+				return this._FlatRate;
+			}
+			set
+			{
+				if ((this._FlatRate != value))
+				{
+					this.OnFlatRateChanging(value);
+					this.SendPropertyChanging();
+					this._FlatRate = value;
+					this.SendPropertyChanged("FlatRate");
+					this.OnFlatRateChanged();
+				}
+			}
+		}
+		
+		[Association(Name="PostZone_Country", Storage="_Countries", OtherKey="PostZoneId")]
+		public EntitySet<Country> Countries
+		{
+			get
+			{
+				return this._Countries;
+			}
+			set
+			{
+				this._Countries.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Countries(Country entity)
+		{
+			this.SendPropertyChanging();
+			entity.PostZone = this;
+		}
+		
+		private void detach_Countries(Country entity)
+		{
+			this.SendPropertyChanging();
+			entity.PostZone = null;
 		}
 	}
 }

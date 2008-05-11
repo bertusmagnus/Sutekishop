@@ -10,6 +10,7 @@
         <th class="thin">Name</th>
         <th class="thin number">Multiplier</th>
         <th class="wide">Ask If Max Weight</th>
+        <th class="thin number">Flat Rate</th>
         <th class="thin">Active</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -19,6 +20,7 @@
         <td><%= Html.ActionLink<PostZoneController>(c => c.Edit(postZone.PostZoneId), postZone.Name)%></td>
         <td class="number"><%= postZone.Multiplier.ToString("0.00##") %></td>
         <td><%= Html.Tick(postZone.AskIfMaxWeight)%></td>
+        <td class="number"><%= postZone.FlatRate.ToString("£0.00") %></td>
         <td><%= Html.Tick(postZone.IsActive)%></td>
         <td><%= Html.UpArrowLink<PostZoneController>(c => c.MoveUp(postZone.Position))%></td>
         <td><%= Html.DownArrowLink<PostZoneController>(c => c.MoveDown(postZone.Position))%></td>
