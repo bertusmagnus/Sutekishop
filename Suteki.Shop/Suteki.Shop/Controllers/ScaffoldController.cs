@@ -104,33 +104,39 @@ namespace Suteki.Shop.Controllers
         [NonAction]
         public virtual void AppendLookupLists(ScaffoldViewData<T> viewData)
         {
-            // find any properties that implement IEntity
+            // find any properties that are attributed as a linq entity
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
                 if (property.PropertyType.IsLinqEntity())
                 {
-                    if (Kernel == null)
-                    {
-                        throw new ApplicationException("The Kernel property must be set before AppendLookupLists is called");
-                    }
-
-                    // get the repository for this Entity
-                    Type repositoryType = typeof(IRepository<>).MakeGenericType(new Type[] { property.PropertyType });
-                    object repository = Kernel.Resolve(repositoryType);
-                    if (repository == null)
-                    {
-                        throw new ApplicationException("Could not find IRepository<{0}> in kernel".With(property.PropertyType));
-                    }
-
-                    MethodInfo getAllMethod = repositoryType.GetMethod("GetAll");
-
-                    // get the items
-                    object items = getAllMethod.Invoke(repository, new object[] { });
-
-                    // add the items to the viewData
-                    viewData.WithLookupList(property.PropertyType, items);
+                    AppendLookupList(viewData, property);
                 }
             }
+        }
+
+        private void AppendLookupList(ScaffoldViewData<T> viewData, PropertyInfo property)
+        {
+            if (Kernel == null)
+            {
+                throw new ApplicationException("The Kernel property must be set before AppendLookupLists is called");
+            }
+
+            // get the repository for this Entity
+            Type repositoryType = typeof(IRepository<>).MakeGenericType(new Type[] { property.PropertyType });
+
+            object repository = Kernel.Resolve(repositoryType);
+            if (repository == null)
+            {
+                throw new ApplicationException("Could not find IRepository<{0}> in kernel".With(property.PropertyType));
+            }
+
+            MethodInfo getAllMethod = repositoryType.GetMethod("GetAll");
+
+            // get the items
+            object items = getAllMethod.Invoke(repository, new object[] { });
+
+            // add the items to the viewData
+            viewData.WithLookupList(property.PropertyType, items);
         }
     }
 }

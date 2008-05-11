@@ -28,11 +28,14 @@ namespace Suteki.Shop.Services
             var keys = form.AllKeys.Where(key => key.StartsWith("size_") && form[key].Length > 0);
             if (keys.Count() > 0)
             {
-                var sizesToDelete = product.Sizes.Select(size => size);
-                sizesToDelete.ForEach(size => sizeRepository.DeleteOnSubmit(size));
-                sizeRepository.SubmitChanges();
+                Clear(product);
             }
-            keys.ForEach(key => new Size { Name = form[key], Product = product } );
+            keys.ForEach(key => new Size { Name = form[key], Product = product, IsActive = true } );
+        }
+
+        public void Clear(Product product)
+        {
+            product.Sizes.ForEach(size => size.IsActive = false);
         }
     }
 }

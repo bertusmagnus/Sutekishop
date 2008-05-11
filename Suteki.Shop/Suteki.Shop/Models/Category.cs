@@ -3,7 +3,7 @@ using Suteki.Shop.Validation;
 
 namespace Suteki.Shop
 {
-    public partial class Category : IOrderable
+    public partial class Category : IOrderable, IActivatable
     {
         partial void OnNameChanging(string value)
         {

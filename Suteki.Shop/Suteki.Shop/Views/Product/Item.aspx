@@ -45,8 +45,12 @@ function onThumbnailClick(img)
 
     <%= Html.ErrorBox(ViewData)%>
 
-    <label for="sizeid">Size</label>
-    <%= Html.Select("sizeid", ViewData.Product.Sizes, "Name", "SizeId")%>
+    <% if(ViewData.Product.HasSize) { %>
+        <label for="sizeid">Size</label>
+        <%= Html.Select("sizeid", ViewData.Product.Sizes.Active(), "Name", "SizeId")%>
+    <% } else { %>
+        <%= Html.Hidden("sizeid", ViewData.Product.DefaultSize.SizeId) %>
+    <% } %>
 
     <label for="quantity">Quantity</label>
     <%= Html.Select("quantity", 1.To(10).Select(i => new { Value = i }), "Value", "Value") %>

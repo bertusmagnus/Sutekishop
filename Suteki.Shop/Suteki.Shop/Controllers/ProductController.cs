@@ -9,6 +9,7 @@ using Suteki.Shop.Validation;
 using System.Security.Permissions;
 using MvcContrib.Filters;
 using Suteki.Shop.Services;
+using System.Data.Linq;
 
 namespace Suteki.Shop.Controllers
 {
@@ -83,7 +84,7 @@ namespace Suteki.Shop.Controllers
             Product product = null;
             if (productId == 0)
             {
-                product = new Product();
+                product = CreateDefaultProduct();
             }
             else
             {
@@ -109,6 +110,17 @@ namespace Suteki.Shop.Controllers
             productRepository.SubmitChanges();
 
             return RenderView("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
+        }
+
+        private Product CreateDefaultProduct()
+        {
+            return new Product
+            {
+                Sizes = new EntitySet<Size>
+                {
+                    new Size { IsActive = false, Name = "-", IsInStock = true }
+                }
+            };
         }
 
         private void UpdateImages(Product product, HttpRequestBase request)
@@ -188,6 +200,16 @@ namespace Suteki.Shop.Controllers
             productImageRepository.SubmitChanges();
 
             return RenderEditView(id);
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult ClearSizes(int id)
+        {
+            Product product = productRepository.GetById(id);
+            sizeService.Clear(product);
+            productRepository.SubmitChanges();
+
+            return RenderView("Edit", EditViewData.WithProduct(product));
         }
 
         public ShopViewData EditViewData

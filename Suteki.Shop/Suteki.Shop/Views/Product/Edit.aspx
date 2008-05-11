@@ -38,9 +38,11 @@
         <h3>Sizes</h3>
         
         <p>
-        <% foreach(var size in ViewData.Product.Sizes) { %>
+        <% foreach(var size in ViewData.Product.Sizes.Active()) { %>
             <%= size.Name %>&nbsp;
         <% } %>
+        
+        <%= Html.ActionLink<ProductController>(c => c.ClearSizes(ViewData.Product.ProductId), "Clear all sizes")%>
         </p>
         <div class="sizeInput">
         <% for(int i=0; i<10; i++) { %>

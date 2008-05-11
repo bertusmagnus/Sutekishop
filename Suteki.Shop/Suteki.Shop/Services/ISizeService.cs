@@ -6,5 +6,6 @@ namespace Suteki.Shop.Services
     {
         ISizeService WithVaues(System.Collections.Specialized.NameValueCollection form);
         void Update(Product product);
+        void Clear(Product product);
     }
 }

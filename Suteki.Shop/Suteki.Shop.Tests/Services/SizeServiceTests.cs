@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Suteki.Shop.Services;
 using System.Collections.Specialized;
@@ -44,7 +45,7 @@ namespace Suteki.Shop.Tests.Services
         }
 
         [Test]
-        public void Update_ShouldDeleteExistingSizesWhenNewOnesAreGiven()
+        public void Update_ShouldMarkExistingSizesInactiveWhenNewOnesAreGiven()
         {
             NameValueCollection form = new NameValueCollection();
             form.Add("size_1", "New 1");
@@ -54,42 +55,34 @@ namespace Suteki.Shop.Tests.Services
             {
                 Sizes =
                 {
-                    new Size { Name = "Old 1" },
-                    new Size { Name = "Old 2" },
-                    new Size { Name = "Old 3" }
+                    new Size { Name = "Old 1", IsActive = true },
+                    new Size { Name = "Old 2", IsActive = true },
+                    new Size { Name = "Old 3", IsActive = true }
                 }
             };
 
-            // mock the behaviour of the sizeRepository
-            List<Size> sizesToDelete = new List<Size>();
-            Mock.Get(sizeRepository).Expect(sr => sr.DeleteOnSubmit(It.IsAny<Size>()))
-                .Callback<Size>(s => sizesToDelete.Add(s));
-
             sizeService.WithVaues(form).Update(product);
 
-            // bit of a test hack, but you get the idea :)
-            sizesToDelete.ForEach(s => product.Sizes.Remove(s));
+            Assert.AreEqual(5, product.Sizes.Count, "incorrect number of sizes");
+            
+            Assert.IsFalse(product.Sizes[0].IsActive);
+            Assert.IsFalse(product.Sizes[1].IsActive);
+            Assert.IsFalse(product.Sizes[2].IsActive);
 
-            Assert.AreEqual(2, product.Sizes.Count, "incorrect number of sizes");
-            Assert.AreEqual("New 1", product.Sizes[0].Name);
-            Assert.AreEqual("New 2", product.Sizes[1].Name);
+            Assert.IsTrue(product.Sizes[3].IsActive);
+            Assert.IsTrue(product.Sizes[4].IsActive);
+
+            Assert.AreEqual("New 1", product.Sizes[3].Name);
+            Assert.AreEqual("New 2", product.Sizes[4].Name);
         }
 
         [Test]
-        public void Update_ShouldNotDeleteExistingKeysWhenNoNewAreGiven()
+        public void Update_ShouldNotDeactivateExistingKeysWhenNoNewAreGiven()
         {
             NameValueCollection form = new NameValueCollection();
             form.Add("someOtherKey", "xyz");
 
-            Product product = new Product
-            {
-                Sizes =
-                {
-                    new Size { Name = "Old 1" },
-                    new Size { Name = "Old 2" },
-                    new Size { Name = "Old 3" }
-                }
-            };
+            Product product = CreateProductWithSizes();
 
             // sizeRepository DeleteOnSubmit should not be called
             Mock.Get(sizeRepository).Expect(sr => sr.DeleteOnSubmit(It.IsAny<Size>()))
@@ -98,9 +91,33 @@ namespace Suteki.Shop.Tests.Services
             sizeService.WithVaues(form).Update(product);
 
             Assert.AreEqual(3, product.Sizes.Count, "incorrect number of sizes");
-            Assert.AreEqual("Old 1", product.Sizes[0].Name);
-            Assert.AreEqual("Old 2", product.Sizes[1].Name);
-            Assert.AreEqual("Old 3", product.Sizes[2].Name);
+            Assert.IsTrue(product.Sizes[0].IsActive);
+            Assert.IsTrue(product.Sizes[1].IsActive);
+            Assert.IsTrue(product.Sizes[2].IsActive);
+        }
+
+        private static Product CreateProductWithSizes()
+        {
+            Product product = new Product
+            {
+                Sizes =
+                {
+                    new Size { Name = "Old 1", IsActive = true },
+                    new Size { Name = "Old 2", IsActive = true },
+                    new Size { Name = "Old 3", IsActive = true }
+                }
+            };
+            return product;
+        }
+
+        [Test]
+        public void Clear_ShouldSetAllSizesToInactive()
+        {
+            Product product = CreateProductWithSizes();
+
+            sizeService.Clear(product);
+
+            Assert.AreEqual(0, product.Sizes.Where(size => size.IsActive).Count());
         }
     }
 }

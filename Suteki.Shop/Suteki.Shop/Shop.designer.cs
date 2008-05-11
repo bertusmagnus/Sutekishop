@@ -36,12 +36,6 @@ namespace Suteki.Shop
     partial void InsertImage(Image instance);
     partial void UpdateImage(Image instance);
     partial void DeleteImage(Image instance);
-    partial void InsertSize(Size instance);
-    partial void UpdateSize(Size instance);
-    partial void DeleteSize(Size instance);
-    partial void InsertCategory(Category instance);
-    partial void UpdateCategory(Category instance);
-    partial void DeleteCategory(Category instance);
     partial void InsertBasket(Basket instance);
     partial void UpdateBasket(Basket instance);
     partial void DeleteBasket(Basket instance);
@@ -63,9 +57,6 @@ namespace Suteki.Shop
     partial void InsertRole(Role instance);
     partial void UpdateRole(Role instance);
     partial void DeleteRole(Role instance);
-    partial void InsertProduct(Product instance);
-    partial void UpdateProduct(Product instance);
-    partial void DeleteProduct(Product instance);
     partial void InsertCountry(Country instance);
     partial void UpdateCountry(Country instance);
     partial void DeleteCountry(Country instance);
@@ -81,6 +72,15 @@ namespace Suteki.Shop
     partial void InsertPostZone(PostZone instance);
     partial void UpdatePostZone(PostZone instance);
     partial void DeletePostZone(PostZone instance);
+    partial void InsertSize(Size instance);
+    partial void UpdateSize(Size instance);
+    partial void DeleteSize(Size instance);
+    partial void InsertProduct(Product instance);
+    partial void UpdateProduct(Product instance);
+    partial void DeleteProduct(Product instance);
+    partial void InsertCategory(Category instance);
+    partial void UpdateCategory(Category instance);
+    partial void DeleteCategory(Category instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -126,22 +126,6 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Image>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Size> Sizes
-		{
-			get
-			{
-				return this.GetTable<Size>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Category> Categories
-		{
-			get
-			{
-				return this.GetTable<Category>();
 			}
 		}
 		
@@ -201,14 +185,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		public System.Data.Linq.Table<Product> Products
-		{
-			get
-			{
-				return this.GetTable<Product>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Country> Countries
 		{
 			get
@@ -246,6 +222,30 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<PostZone>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Size> Sizes
+		{
+			get
+			{
+				return this.GetTable<Size>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Product> Products
+		{
+			get
+			{
+				return this.GetTable<Product>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Category> Categories
+		{
+			get
+			{
+				return this.GetTable<Category>();
 			}
 		}
 	}
@@ -664,440 +664,6 @@ namespace Suteki.Shop
 		{
 			this.SendPropertyChanging();
 			entity.Image = null;
-		}
-	}
-	
-	[Table(Name="dbo.Size")]
-	public partial class Size : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _SizeId;
-		
-		private int _ProductId;
-		
-		private string _Name;
-		
-		private bool _IsInStock;
-		
-		private EntitySet<BasketItem> _BasketItems;
-		
-		private EntityRef<Product> _Product;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnSizeIdChanging(int value);
-    partial void OnSizeIdChanged();
-    partial void OnProductIdChanging(int value);
-    partial void OnProductIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnIsInStockChanging(bool value);
-    partial void OnIsInStockChanged();
-    #endregion
-		
-		public Size()
-		{
-			this._BasketItems = new EntitySet<BasketItem>(new Action<BasketItem>(this.attach_BasketItems), new Action<BasketItem>(this.detach_BasketItems));
-			this._Product = default(EntityRef<Product>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_SizeId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int SizeId
-		{
-			get
-			{
-				return this._SizeId;
-			}
-			set
-			{
-				if ((this._SizeId != value))
-				{
-					this.OnSizeIdChanging(value);
-					this.SendPropertyChanging();
-					this._SizeId = value;
-					this.SendPropertyChanged("SizeId");
-					this.OnSizeIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ProductId", DbType="Int NOT NULL")]
-		public int ProductId
-		{
-			get
-			{
-				return this._ProductId;
-			}
-			set
-			{
-				if ((this._ProductId != value))
-				{
-					if (this._Product.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnProductIdChanging(value);
-					this.SendPropertyChanging();
-					this._ProductId = value;
-					this.SendPropertyChanged("ProductId");
-					this.OnProductIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_IsInStock", DbType="Bit NOT NULL")]
-		public bool IsInStock
-		{
-			get
-			{
-				return this._IsInStock;
-			}
-			set
-			{
-				if ((this._IsInStock != value))
-				{
-					this.OnIsInStockChanging(value);
-					this.SendPropertyChanging();
-					this._IsInStock = value;
-					this.SendPropertyChanged("IsInStock");
-					this.OnIsInStockChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Size_BasketItem", Storage="_BasketItems", OtherKey="SizeId")]
-		public EntitySet<BasketItem> BasketItems
-		{
-			get
-			{
-				return this._BasketItems;
-			}
-			set
-			{
-				this._BasketItems.Assign(value);
-			}
-		}
-		
-		[Association(Name="Product_Size", Storage="_Product", ThisKey="ProductId", IsForeignKey=true)]
-		public Product Product
-		{
-			get
-			{
-				return this._Product.Entity;
-			}
-			set
-			{
-				Product previousValue = this._Product.Entity;
-				if (((previousValue != value) 
-							|| (this._Product.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Product.Entity = null;
-						previousValue.Sizes.Remove(this);
-					}
-					this._Product.Entity = value;
-					if ((value != null))
-					{
-						value.Sizes.Add(this);
-						this._ProductId = value.ProductId;
-					}
-					else
-					{
-						this._ProductId = default(int);
-					}
-					this.SendPropertyChanged("Product");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_BasketItems(BasketItem entity)
-		{
-			this.SendPropertyChanging();
-			entity.Size = this;
-		}
-		
-		private void detach_BasketItems(BasketItem entity)
-		{
-			this.SendPropertyChanging();
-			entity.Size = null;
-		}
-	}
-	
-	[Table(Name="dbo.Category")]
-	public partial class Category : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _CategoryId;
-		
-		private string _Name;
-		
-		private System.Nullable<int> _ParentId;
-		
-		private int _Position;
-		
-		private EntitySet<Category> _Categories;
-		
-		private EntitySet<Product> _Products;
-		
-		private EntityRef<Category> _Category1;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnCategoryIdChanging(int value);
-    partial void OnCategoryIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnParentIdChanging(System.Nullable<int> value);
-    partial void OnParentIdChanged();
-    partial void OnPositionChanging(int value);
-    partial void OnPositionChanged();
-    #endregion
-		
-		public Category()
-		{
-			this._Categories = new EntitySet<Category>(new Action<Category>(this.attach_Categories), new Action<Category>(this.detach_Categories));
-			this._Products = new EntitySet<Product>(new Action<Product>(this.attach_Products), new Action<Product>(this.detach_Products));
-			this._Category1 = default(EntityRef<Category>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_CategoryId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int CategoryId
-		{
-			get
-			{
-				return this._CategoryId;
-			}
-			set
-			{
-				if ((this._CategoryId != value))
-				{
-					this.OnCategoryIdChanging(value);
-					this.SendPropertyChanging();
-					this._CategoryId = value;
-					this.SendPropertyChanged("CategoryId");
-					this.OnCategoryIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ParentId", DbType="Int")]
-		public System.Nullable<int> ParentId
-		{
-			get
-			{
-				return this._ParentId;
-			}
-			set
-			{
-				if ((this._ParentId != value))
-				{
-					if (this._Category1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnParentIdChanging(value);
-					this.SendPropertyChanging();
-					this._ParentId = value;
-					this.SendPropertyChanged("ParentId");
-					this.OnParentIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Position", DbType="Int NOT NULL")]
-		public int Position
-		{
-			get
-			{
-				return this._Position;
-			}
-			set
-			{
-				if ((this._Position != value))
-				{
-					this.OnPositionChanging(value);
-					this.SendPropertyChanging();
-					this._Position = value;
-					this.SendPropertyChanged("Position");
-					this.OnPositionChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Category_Category", Storage="_Categories", OtherKey="ParentId")]
-		public EntitySet<Category> Categories
-		{
-			get
-			{
-				return this._Categories;
-			}
-			set
-			{
-				this._Categories.Assign(value);
-			}
-		}
-		
-		[Association(Name="Category_Product", Storage="_Products", OtherKey="CategoryId")]
-		public EntitySet<Product> Products
-		{
-			get
-			{
-				return this._Products;
-			}
-			set
-			{
-				this._Products.Assign(value);
-			}
-		}
-		
-		[Association(Name="Category_Category", Storage="_Category1", ThisKey="ParentId", IsForeignKey=true)]
-		public Category Category1
-		{
-			get
-			{
-				return this._Category1.Entity;
-			}
-			set
-			{
-				Category previousValue = this._Category1.Entity;
-				if (((previousValue != value) 
-							|| (this._Category1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Category1.Entity = null;
-						previousValue.Categories.Remove(this);
-					}
-					this._Category1.Entity = value;
-					if ((value != null))
-					{
-						value.Categories.Add(this);
-						this._ParentId = value.CategoryId;
-					}
-					else
-					{
-						this._ParentId = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Category1");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Categories(Category entity)
-		{
-			this.SendPropertyChanging();
-			entity.Category1 = this;
-		}
-		
-		private void detach_Categories(Category entity)
-		{
-			this.SendPropertyChanging();
-			entity.Category1 = null;
-		}
-		
-		private void attach_Products(Product entity)
-		{
-			this.SendPropertyChanging();
-			entity.Category = this;
-		}
-		
-		private void detach_Products(Product entity)
-		{
-			this.SendPropertyChanging();
-			entity.Category = null;
 		}
 	}
 	
@@ -2728,309 +2294,6 @@ namespace Suteki.Shop
 		}
 	}
 	
-	[Table(Name="dbo.Product")]
-	public partial class Product : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ProductId;
-		
-		private int _CategoryId;
-		
-		private string _Name;
-		
-		private string _Description;
-		
-		private decimal _Price;
-		
-		private int _Position;
-		
-		private int _Weight;
-		
-		private EntitySet<Size> _Sizes;
-		
-		private EntitySet<ProductImage> _ProductImages;
-		
-		private EntityRef<Category> _Category;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnProductIdChanging(int value);
-    partial void OnProductIdChanged();
-    partial void OnCategoryIdChanging(int value);
-    partial void OnCategoryIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnPriceChanging(decimal value);
-    partial void OnPriceChanged();
-    partial void OnPositionChanging(int value);
-    partial void OnPositionChanged();
-    partial void OnWeightChanging(int value);
-    partial void OnWeightChanged();
-    #endregion
-		
-		public Product()
-		{
-			this._Sizes = new EntitySet<Size>(new Action<Size>(this.attach_Sizes), new Action<Size>(this.detach_Sizes));
-			this._ProductImages = new EntitySet<ProductImage>(new Action<ProductImage>(this.attach_ProductImages), new Action<ProductImage>(this.detach_ProductImages));
-			this._Category = default(EntityRef<Category>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_ProductId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ProductId
-		{
-			get
-			{
-				return this._ProductId;
-			}
-			set
-			{
-				if ((this._ProductId != value))
-				{
-					this.OnProductIdChanging(value);
-					this.SendPropertyChanging();
-					this._ProductId = value;
-					this.SendPropertyChanged("ProductId");
-					this.OnProductIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_CategoryId", DbType="Int NOT NULL")]
-		public int CategoryId
-		{
-			get
-			{
-				return this._CategoryId;
-			}
-			set
-			{
-				if ((this._CategoryId != value))
-				{
-					if (this._Category.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCategoryIdChanging(value);
-					this.SendPropertyChanging();
-					this._CategoryId = value;
-					this.SendPropertyChanged("CategoryId");
-					this.OnCategoryIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Name", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Description", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string Description
-		{
-			get
-			{
-				return this._Description;
-			}
-			set
-			{
-				if ((this._Description != value))
-				{
-					this.OnDescriptionChanging(value);
-					this.SendPropertyChanging();
-					this._Description = value;
-					this.SendPropertyChanged("Description");
-					this.OnDescriptionChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Price", DbType="Money NOT NULL")]
-		public decimal Price
-		{
-			get
-			{
-				return this._Price;
-			}
-			set
-			{
-				if ((this._Price != value))
-				{
-					this.OnPriceChanging(value);
-					this.SendPropertyChanging();
-					this._Price = value;
-					this.SendPropertyChanged("Price");
-					this.OnPriceChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Position", DbType="Int NOT NULL")]
-		public int Position
-		{
-			get
-			{
-				return this._Position;
-			}
-			set
-			{
-				if ((this._Position != value))
-				{
-					this.OnPositionChanging(value);
-					this.SendPropertyChanging();
-					this._Position = value;
-					this.SendPropertyChanged("Position");
-					this.OnPositionChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Weight", DbType="Int NOT NULL")]
-		public int Weight
-		{
-			get
-			{
-				return this._Weight;
-			}
-			set
-			{
-				if ((this._Weight != value))
-				{
-					this.OnWeightChanging(value);
-					this.SendPropertyChanging();
-					this._Weight = value;
-					this.SendPropertyChanged("Weight");
-					this.OnWeightChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Product_Size", Storage="_Sizes", OtherKey="ProductId")]
-		public EntitySet<Size> Sizes
-		{
-			get
-			{
-				return this._Sizes;
-			}
-			set
-			{
-				this._Sizes.Assign(value);
-			}
-		}
-		
-		[Association(Name="Product_ProductImage", Storage="_ProductImages", OtherKey="ProductId")]
-		public EntitySet<ProductImage> ProductImages
-		{
-			get
-			{
-				return this._ProductImages;
-			}
-			set
-			{
-				this._ProductImages.Assign(value);
-			}
-		}
-		
-		[Association(Name="Category_Product", Storage="_Category", ThisKey="CategoryId", IsForeignKey=true)]
-		public Category Category
-		{
-			get
-			{
-				return this._Category.Entity;
-			}
-			set
-			{
-				Category previousValue = this._Category.Entity;
-				if (((previousValue != value) 
-							|| (this._Category.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Category.Entity = null;
-						previousValue.Products.Remove(this);
-					}
-					this._Category.Entity = value;
-					if ((value != null))
-					{
-						value.Products.Add(this);
-						this._CategoryId = value.CategoryId;
-					}
-					else
-					{
-						this._CategoryId = default(int);
-					}
-					this.SendPropertyChanged("Category");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Sizes(Size entity)
-		{
-			this.SendPropertyChanging();
-			entity.Product = this;
-		}
-		
-		private void detach_Sizes(Size entity)
-		{
-			this.SendPropertyChanging();
-			entity.Product = null;
-		}
-		
-		private void attach_ProductImages(ProductImage entity)
-		{
-			this.SendPropertyChanging();
-			entity.Product = this;
-		}
-		
-		private void detach_ProductImages(ProductImage entity)
-		{
-			this.SendPropertyChanging();
-			entity.Product = null;
-		}
-	}
-	
 	[Table(Name="dbo.Country")]
 	public partial class Country : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -4415,6 +3678,815 @@ namespace Suteki.Shop
 		{
 			this.SendPropertyChanging();
 			entity.PostZone = null;
+		}
+	}
+	
+	[Table(Name="dbo.Size")]
+	public partial class Size : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _SizeId;
+		
+		private int _ProductId;
+		
+		private string _Name;
+		
+		private bool _IsInStock;
+		
+		private bool _IsActive;
+		
+		private EntitySet<BasketItem> _BasketItems;
+		
+		private EntityRef<Product> _Product;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnSizeIdChanging(int value);
+    partial void OnSizeIdChanged();
+    partial void OnProductIdChanging(int value);
+    partial void OnProductIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnIsInStockChanging(bool value);
+    partial void OnIsInStockChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Size()
+		{
+			this._BasketItems = new EntitySet<BasketItem>(new Action<BasketItem>(this.attach_BasketItems), new Action<BasketItem>(this.detach_BasketItems));
+			this._Product = default(EntityRef<Product>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_SizeId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int SizeId
+		{
+			get
+			{
+				return this._SizeId;
+			}
+			set
+			{
+				if ((this._SizeId != value))
+				{
+					this.OnSizeIdChanging(value);
+					this.SendPropertyChanging();
+					this._SizeId = value;
+					this.SendPropertyChanged("SizeId");
+					this.OnSizeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ProductId", DbType="Int NOT NULL")]
+		public int ProductId
+		{
+			get
+			{
+				return this._ProductId;
+			}
+			set
+			{
+				if ((this._ProductId != value))
+				{
+					if (this._Product.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnProductIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductId = value;
+					this.SendPropertyChanged("ProductId");
+					this.OnProductIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsInStock", DbType="Bit NOT NULL")]
+		public bool IsInStock
+		{
+			get
+			{
+				return this._IsInStock;
+			}
+			set
+			{
+				if ((this._IsInStock != value))
+				{
+					this.OnIsInStockChanging(value);
+					this.SendPropertyChanging();
+					this._IsInStock = value;
+					this.SendPropertyChanged("IsInStock");
+					this.OnIsInStockChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Size_BasketItem", Storage="_BasketItems", OtherKey="SizeId")]
+		public EntitySet<BasketItem> BasketItems
+		{
+			get
+			{
+				return this._BasketItems;
+			}
+			set
+			{
+				this._BasketItems.Assign(value);
+			}
+		}
+		
+		[Association(Name="Product_Size", Storage="_Product", ThisKey="ProductId", IsForeignKey=true)]
+		public Product Product
+		{
+			get
+			{
+				return this._Product.Entity;
+			}
+			set
+			{
+				Product previousValue = this._Product.Entity;
+				if (((previousValue != value) 
+							|| (this._Product.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Product.Entity = null;
+						previousValue.Sizes.Remove(this);
+					}
+					this._Product.Entity = value;
+					if ((value != null))
+					{
+						value.Sizes.Add(this);
+						this._ProductId = value.ProductId;
+					}
+					else
+					{
+						this._ProductId = default(int);
+					}
+					this.SendPropertyChanged("Product");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BasketItems(BasketItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Size = this;
+		}
+		
+		private void detach_BasketItems(BasketItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Size = null;
+		}
+	}
+	
+	[Table(Name="dbo.Product")]
+	public partial class Product : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ProductId;
+		
+		private int _CategoryId;
+		
+		private string _Name;
+		
+		private string _Description;
+		
+		private decimal _Price;
+		
+		private int _Position;
+		
+		private int _Weight;
+		
+		private bool _IsActive;
+		
+		private EntitySet<ProductImage> _ProductImages;
+		
+		private EntitySet<Size> _Sizes;
+		
+		private EntityRef<Category> _Category;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnProductIdChanging(int value);
+    partial void OnProductIdChanged();
+    partial void OnCategoryIdChanging(int value);
+    partial void OnCategoryIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnPriceChanging(decimal value);
+    partial void OnPriceChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnWeightChanging(int value);
+    partial void OnWeightChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Product()
+		{
+			this._ProductImages = new EntitySet<ProductImage>(new Action<ProductImage>(this.attach_ProductImages), new Action<ProductImage>(this.detach_ProductImages));
+			this._Sizes = new EntitySet<Size>(new Action<Size>(this.attach_Sizes), new Action<Size>(this.detach_Sizes));
+			this._Category = default(EntityRef<Category>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ProductId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ProductId
+		{
+			get
+			{
+				return this._ProductId;
+			}
+			set
+			{
+				if ((this._ProductId != value))
+				{
+					this.OnProductIdChanging(value);
+					this.SendPropertyChanging();
+					this._ProductId = value;
+					this.SendPropertyChanged("ProductId");
+					this.OnProductIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CategoryId", DbType="Int NOT NULL")]
+		public int CategoryId
+		{
+			get
+			{
+				return this._CategoryId;
+			}
+			set
+			{
+				if ((this._CategoryId != value))
+				{
+					if (this._Category.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCategoryIdChanging(value);
+					this.SendPropertyChanging();
+					this._CategoryId = value;
+					this.SendPropertyChanged("CategoryId");
+					this.OnCategoryIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Description", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Price", DbType="Money NOT NULL")]
+		public decimal Price
+		{
+			get
+			{
+				return this._Price;
+			}
+			set
+			{
+				if ((this._Price != value))
+				{
+					this.OnPriceChanging(value);
+					this.SendPropertyChanging();
+					this._Price = value;
+					this.SendPropertyChanged("Price");
+					this.OnPriceChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Weight", DbType="Int NOT NULL")]
+		public int Weight
+		{
+			get
+			{
+				return this._Weight;
+			}
+			set
+			{
+				if ((this._Weight != value))
+				{
+					this.OnWeightChanging(value);
+					this.SendPropertyChanging();
+					this._Weight = value;
+					this.SendPropertyChanged("Weight");
+					this.OnWeightChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Product_ProductImage", Storage="_ProductImages", OtherKey="ProductId")]
+		public EntitySet<ProductImage> ProductImages
+		{
+			get
+			{
+				return this._ProductImages;
+			}
+			set
+			{
+				this._ProductImages.Assign(value);
+			}
+		}
+		
+		[Association(Name="Product_Size", Storage="_Sizes", OtherKey="ProductId")]
+		public EntitySet<Size> Sizes
+		{
+			get
+			{
+				return this._Sizes;
+			}
+			set
+			{
+				this._Sizes.Assign(value);
+			}
+		}
+		
+		[Association(Name="Category_Product", Storage="_Category", ThisKey="CategoryId", IsForeignKey=true)]
+		public Category Category
+		{
+			get
+			{
+				return this._Category.Entity;
+			}
+			set
+			{
+				Category previousValue = this._Category.Entity;
+				if (((previousValue != value) 
+							|| (this._Category.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Category.Entity = null;
+						previousValue.Products.Remove(this);
+					}
+					this._Category.Entity = value;
+					if ((value != null))
+					{
+						value.Products.Add(this);
+						this._CategoryId = value.CategoryId;
+					}
+					else
+					{
+						this._CategoryId = default(int);
+					}
+					this.SendPropertyChanged("Category");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = this;
+		}
+		
+		private void detach_ProductImages(ProductImage entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = null;
+		}
+		
+		private void attach_Sizes(Size entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = this;
+		}
+		
+		private void detach_Sizes(Size entity)
+		{
+			this.SendPropertyChanging();
+			entity.Product = null;
+		}
+	}
+	
+	[Table(Name="dbo.Category")]
+	public partial class Category : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _CategoryId;
+		
+		private string _Name;
+		
+		private System.Nullable<int> _ParentId;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+		private EntitySet<Product> _Products;
+		
+		private EntitySet<Category> _Categories;
+		
+		private EntityRef<Category> _Category1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCategoryIdChanging(int value);
+    partial void OnCategoryIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnParentIdChanging(System.Nullable<int> value);
+    partial void OnParentIdChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Category()
+		{
+			this._Products = new EntitySet<Product>(new Action<Product>(this.attach_Products), new Action<Product>(this.detach_Products));
+			this._Categories = new EntitySet<Category>(new Action<Category>(this.attach_Categories), new Action<Category>(this.detach_Categories));
+			this._Category1 = default(EntityRef<Category>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_CategoryId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int CategoryId
+		{
+			get
+			{
+				return this._CategoryId;
+			}
+			set
+			{
+				if ((this._CategoryId != value))
+				{
+					this.OnCategoryIdChanging(value);
+					this.SendPropertyChanging();
+					this._CategoryId = value;
+					this.SendPropertyChanged("CategoryId");
+					this.OnCategoryIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ParentId", DbType="Int")]
+		public System.Nullable<int> ParentId
+		{
+			get
+			{
+				return this._ParentId;
+			}
+			set
+			{
+				if ((this._ParentId != value))
+				{
+					if (this._Category1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnParentIdChanging(value);
+					this.SendPropertyChanging();
+					this._ParentId = value;
+					this.SendPropertyChanged("ParentId");
+					this.OnParentIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Category_Product", Storage="_Products", OtherKey="CategoryId")]
+		public EntitySet<Product> Products
+		{
+			get
+			{
+				return this._Products;
+			}
+			set
+			{
+				this._Products.Assign(value);
+			}
+		}
+		
+		[Association(Name="Category_Category", Storage="_Categories", OtherKey="ParentId")]
+		public EntitySet<Category> Categories
+		{
+			get
+			{
+				return this._Categories;
+			}
+			set
+			{
+				this._Categories.Assign(value);
+			}
+		}
+		
+		[Association(Name="Category_Category", Storage="_Category1", ThisKey="ParentId", IsForeignKey=true)]
+		public Category Category1
+		{
+			get
+			{
+				return this._Category1.Entity;
+			}
+			set
+			{
+				Category previousValue = this._Category1.Entity;
+				if (((previousValue != value) 
+							|| (this._Category1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Category1.Entity = null;
+						previousValue.Categories.Remove(this);
+					}
+					this._Category1.Entity = value;
+					if ((value != null))
+					{
+						value.Categories.Add(this);
+						this._ParentId = value.CategoryId;
+					}
+					else
+					{
+						this._ParentId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Category1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Products(Product entity)
+		{
+			this.SendPropertyChanging();
+			entity.Category = this;
+		}
+		
+		private void detach_Products(Product entity)
+		{
+			this.SendPropertyChanging();
+			entity.Category = null;
+		}
+		
+		private void attach_Categories(Category entity)
+		{
+			this.SendPropertyChanging();
+			entity.Category1 = this;
+		}
+		
+		private void detach_Categories(Category entity)
+		{
+			this.SendPropertyChanging();
+			entity.Category1 = null;
 		}
 	}
 }

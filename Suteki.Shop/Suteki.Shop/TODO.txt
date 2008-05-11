@@ -1,11 +1,11 @@
 ﻿SutekiShop To Do list
 =====================
 
-* Image ordering
-
 * Non-size products
 
 * Size editing
+
+* Stock Screen
 
 * Order Management
 

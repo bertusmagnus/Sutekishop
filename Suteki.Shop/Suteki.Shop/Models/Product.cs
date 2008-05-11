@@ -5,7 +5,7 @@ using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop
 {
-    public partial class Product : IOrderable
+    public partial class Product : IOrderable, IActivatable
     {
         partial void OnNameChanging(string value)
         {
@@ -31,6 +31,23 @@ namespace Suteki.Shop
             {
                 if (HasMainImage) return this.ProductImages.InOrder().First().Image;
                 return null;
+            }
+        }
+
+        public bool HasSize
+        {
+            get
+            {
+                return this.Sizes.Active().Count() > 0;
+            }
+        }
+
+        public Size DefaultSize
+        {
+            get
+            {
+                if (this.Sizes.Count() == 0) throw new ApplicationException("Product has no default size");
+                return this.Sizes[0];
             }
         }
     }
