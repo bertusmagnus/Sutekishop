@@ -92,7 +92,7 @@
             <dt>Postcode</dt><dd><%= ViewData.Order.Contact.Postcode %>&nbsp;</dd>
             <dt>Country</dt><dd><%= ViewData.Order.Contact.Country.Name %>&nbsp;</dd>
             <dt>Telephone</dt><dd><%= ViewData.Order.Contact.Telephone %>&nbsp;</dd>
-            <dt>Email</dt><dd><%= ViewData.Order.Email %>&nbsp;</dd>
+            <dt>Email</dt><dd><%= Html.Mailto(ViewData.Order.Email, ViewData.Order.Email) %>&nbsp;</dd>
         </dl>
         
     </div>
@@ -140,10 +140,40 @@
         <dl>
             <dt>Card Type</dt><dd><%= ViewData.Order.Card.CardType.Name %>&nbsp;</dd>
             <dt>Card Holder</dt><dd><%= ViewData.Order.Card.Holder %>&nbsp;</dd>
-            <dt>Card Number</dt><dd>xxxx-xxxx-xxxx-xxxx</dd>
         </dl>
         
         <% } %>
+        
+        <% if(User.IsInRole("Administrator")) { %>
+
+            <%= Html.ErrorBox(ViewData) %>
+
+            <% if (ViewData.Card == null) { %>
+
+                <% using (Html.Form("Order", "ShowCard")) { %>
+                    
+                    <%= Html.Hidden("orderId", ViewData.Order.OrderId) %>
+                    
+                    <label for="privateKey">Private Key</label>
+                    <%= Html.TextBox("privateKey")%>
+                    
+                    <%= Html.SubmitButton("cardDetailsSubmit", "Get Card Details")%>
+
+                <% } %>
+            
+            <% } else { %>
+            
+                <dl>
+                    <dt>Card Number</dt><dd><%= ViewData.Card.Number %></dd>
+                    <dt>Issue Number</dt><dd><%= ViewData.Card.IssueNumber %></dd>
+                    <dt>Security Code</dt><dd><%= ViewData.Card.SecurityCode %></dd>
+                    <dt>Start Date</dt><dd><%= ViewData.Card.StartDateAsString %></dd>
+                    <dt>Expiry Date</dt><dd><%= ViewData.Card.ExpiryDateAsString %></dd>
+                </dl>
+            
+            <% } %>
+
+        <% } %>        
         
     </div>
     <div class="contentRightColumn">

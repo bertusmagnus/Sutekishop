@@ -111,6 +111,7 @@
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="HtmlHelpers\Pager.cs" />
     <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\CardType.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Country.cs" />
@@ -142,8 +143,10 @@
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
     <Compile Include="Routes\RouteManager.cs" />
     <Compile Include="Services\BaseControllerService.cs" />
+    <Compile Include="Services\EncryptionService.cs" />
     <Compile Include="Services\HttpFileService.cs" />
     <Compile Include="Services\IBaseControllerService.cs" />
+    <Compile Include="Services\IEncryptionService.cs" />
     <Compile Include="Services\IHttpFileService.cs" />
     <Compile Include="Services\IImageFileService.cs" />
     <Compile Include="Services\IImageService.cs" />
@@ -288,6 +291,13 @@
     <Compile Include="Views\Product\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\Rescues\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\Rescues\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -346,6 +356,7 @@
     <Content Include="Views\Product\Edit.aspx" />
     <Content Include="Views\Product\Index.aspx" />
     <Content Include="Views\Product\Item.aspx" />
+    <Content Include="Views\Shared\Rescues\Default.aspx" />
     <Content Include="Views\User\Edit.aspx" />
     <Content Include="Views\User\Index.aspx" />
   </ItemGroup>

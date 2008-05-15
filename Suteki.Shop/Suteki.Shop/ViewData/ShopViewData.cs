@@ -35,6 +35,8 @@ namespace Suteki.Shop.ViewData
 
         public PostageResult PostageResult { get; set; }
 
+        public Card Card { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithErrorMessage(string errorMessage)
@@ -142,6 +144,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithTotalPostage(PostageResult postageResult)
         {
             this.PostageResult = postageResult;
+            return this;
+        }
+
+        public ShopViewData WithCard(Card card)
+        {
+            this.Card = card;
             return this;
         }
     }

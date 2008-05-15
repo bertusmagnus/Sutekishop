@@ -7,6 +7,9 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
 using Suteki.Shop.Extensions;
+using Suteki.Shop.Services;
+using MvcContrib;
+using System.Security.Permissions;
 
 namespace Suteki.Shop.Controllers
 {
@@ -18,20 +21,25 @@ namespace Suteki.Shop.Controllers
         IRepository<CardType> cardTypeRepository;
         IRepository<Postage> postageRepository;
 
+        IEncryptionService encryptionService;
+
         public OrderController(
             IRepository<Order> orderRepository,
             IRepository<Basket> basketRepository,
             IRepository<Country> countryRepository,
             IRepository<CardType> cardTypeRepository,
-            IRepository<Postage> postageRepository)
+            IRepository<Postage> postageRepository,
+            IEncryptionService encryptionService)
         {
             this.orderRepository = orderRepository;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
             this.postageRepository = postageRepository;
+            this.encryptionService = encryptionService;
         }
-        
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Index()
         {
             OrderSearchCriteria criteria = new OrderSearchCriteria();
@@ -55,6 +63,25 @@ namespace Suteki.Shop.Controllers
         {
             Order order = orderRepository.GetById(id);
             return RenderView("Item", CheckoutViewData(order));
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult ShowCard(int orderId, string privateKey)
+        {
+            Order order = orderRepository.GetById(orderId);
+
+            Card card = order.Card.Copy();
+
+            try
+            {
+                encryptionService.PrivateKey = privateKey;
+                encryptionService.DecryptCard(card);
+                return RenderView("Item", CheckoutViewData(order).WithCard(card));
+            }
+            catch (ValidationException exception)
+            {
+                return RenderView("Item", CheckoutViewData(order).WithErrorMessage(exception.Message));
+            }
         }
 
         public ActionResult Checkout(int id)
@@ -89,7 +116,8 @@ namespace Suteki.Shop.Controllers
             Order order = new Order
             {
                 OrderStatusId = OrderStatus.CreatedId,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                DispatchedDate = DateTime.Now
             };
 
             Validator validator = new Validator
@@ -154,6 +182,7 @@ namespace Suteki.Shop.Controllers
             Card card = new Card();
             order.Card = card;
             ValidatingBinder.UpdateFrom(card, Request.Form, "card");
+            encryptionService.EncryptCard(card);
         }
 
         private void UpdateOrder(Order order)

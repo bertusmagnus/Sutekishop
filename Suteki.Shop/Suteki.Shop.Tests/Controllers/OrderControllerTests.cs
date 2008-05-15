@@ -8,6 +8,7 @@ using Suteki.Shop.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Specialized;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -22,6 +23,8 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<CardType> cardTypeRepository;
         IRepository<Postage> postageRepository;
 
+        IEncryptionService encryptionService;
+
         ControllerTestContext testContext;
 
         [SetUp]
@@ -33,12 +36,15 @@ namespace Suteki.Shop.Tests.Controllers
             cardTypeRepository = new Mock<IRepository<CardType>>().Object;
             postageRepository = new Mock<IRepository<Postage>>().Object;
 
+            encryptionService = new Mock<IEncryptionService>().Object;
+
             orderController = new OrderController(
                 orderRepository,
                 basketRepository,
                 countryRepository,
                 cardTypeRepository,
-                postageRepository);
+                postageRepository,
+                encryptionService);
 
             testContext = new ControllerTestContext(orderController);
 
@@ -100,6 +106,8 @@ namespace Suteki.Shop.Tests.Controllers
             Basket basket = new Basket();
             Order order = new Order();
 
+            Mock.Get(encryptionService).Expect(es => es.EncryptCard(It.IsAny<Card>())).Verifiable();
+
             Mock.Get(orderRepository).Expect(or => or.InsertOnSubmit(It.IsAny<Order>()))
                 .Callback<Order>(o => { order = o; order.Basket = basket; })
                 .Verifiable();
@@ -151,6 +159,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["card.securitycode"], card.SecurityCode.ToString());
 
             Mock.Get(orderRepository).Verify();
+            Mock.Get(encryptionService).Verify();
         }
 
         private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix)
@@ -273,6 +282,43 @@ namespace Suteki.Shop.Tests.Controllers
                 .ForView("Index")
                 .AssertAreSame(orders.ElementAt(1), vd => vd.Orders.First());
                 
+        }
+
+        [Test]
+        public void ShowCard_ShouldDecryptCardAndShowOrder()
+        {
+            int orderId = 10;
+            string privateKey = "abcd";
+
+            Order order = new Order
+            {
+                Card = new Card
+                {
+                    CardTypeId = 1,
+                    Holder = "Jon Anderson",
+                    IssueNumber = "",
+                    StartMonth = 1,
+                    StartYear = 2004,
+                    ExpiryMonth = 3,
+                    ExpiryYear = 2010
+                },
+                Basket = new Basket(),
+            };
+            order.Card.SetEncryptedNumber("asldfkjaslfjdslsdjkfjflkdjdlsakj");
+            order.Card.SetEncryptedSecurityCode("asldkfjsadlfjdskjfdlkd");
+
+            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+
+            Mock.Get(encryptionService).ExpectSet(es => es.PrivateKey).Verifiable();
+            Mock.Get(encryptionService).Expect(es => es.DecryptCard(It.IsAny<Card>())).Verifiable();
+
+            orderController.ShowCard(orderId, privateKey)
+                .ReturnsRenderViewResult()
+                .ForView("Item")
+                .AssertAreEqual(order.Card.Number, vd => vd.Card.Number)
+                .AssertAreEqual(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);
+
+            Mock.Get(encryptionService).Verify();
         }
     }
 }

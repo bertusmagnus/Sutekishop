@@ -13,5 +13,10 @@ namespace Suteki.Shop.Controllers
         {
             return RenderView("Index", View.Data);
         }
+
+        public ActionResult Error()
+        {
+            throw new ApplicationException("This error was thrown!");
+        }
     }
 }

@@ -2,10 +2,13 @@
 using System.Web.Mvc;
 using Suteki.Shop.Services;
 using System.Web.Security;
+using MvcContrib;
+using MvcContrib.Attributes;
 
 namespace Suteki.Shop.Controllers
 {
-    public abstract class ControllerBase : Controller
+    [Rescue("Default")]
+    public abstract class ControllerBase : ConventionController
     {
         /// <summary>
         /// Supplies services and configuration to all controllers
