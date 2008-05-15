@@ -47,7 +47,7 @@ function onThumbnailClick(img)
 
     <% if(ViewData.Product.HasSize) { %>
         <label for="sizeid">Size</label>
-        <%= Html.Select("sizeid", ViewData.Product.Sizes.Active(), "Name", "SizeId")%>
+        <%= Html.Select("sizeid", ViewData.Product.Sizes.Active(), "NameAndStock", "SizeId")%>
     <% } else { %>
         <%= Html.Hidden("sizeid", ViewData.Product.DefaultSize.SizeId) %>
     <% } %>

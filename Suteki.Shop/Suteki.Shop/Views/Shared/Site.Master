@@ -43,6 +43,9 @@
                         <%= Html.ActionLink<OrderController>(c => c.Index(), "Orders") %>
                     </li>
                     <li>
+                        <%= Html.ActionLink<StockController>(c => c.Index(), "Stock") %>
+                    </li>
+                    <li>
                         <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
                     </li>
                     <li>

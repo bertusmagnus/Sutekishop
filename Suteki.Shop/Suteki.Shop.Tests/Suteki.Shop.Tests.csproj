@@ -84,6 +84,7 @@
     <Compile Include="Controllers\OrderControllerTests.cs" />
     <Compile Include="Controllers\PostageControllerTests.cs" />
     <Compile Include="Controllers\ProductControllerTests.cs" />
+    <Compile Include="Controllers\StockControllerTests.cs" />
     <Compile Include="Controllers\UserControllerTests.cs" />
     <Compile Include="Extensions\CategoryWriterTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Services\MoveTests.cs" />
     <Compile Include="Services\OrderableServiceTests.cs" />
     <Compile Include="Services\SizeServiceTests.cs" />
+    <Compile Include="Services\StockServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="TestHelpers\ActionResultExtensions.cs" />
     <Compile Include="TestHelpers\ControllerTestContext.cs" />

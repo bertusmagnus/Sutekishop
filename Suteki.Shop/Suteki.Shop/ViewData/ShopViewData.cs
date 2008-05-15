@@ -37,6 +37,8 @@ namespace Suteki.Shop.ViewData
 
         public Card Card { get; set; }
 
+        public IEnumerable<StockItem> StockItems { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithErrorMessage(string errorMessage)
@@ -150,6 +152,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithCard(Card card)
         {
             this.Card = card;
+            return this;
+        }
+
+        public ShopViewData WithStockItems(IEnumerable<StockItem> stockItems)
+        {
+            this.StockItems = stockItems;
             return this;
         }
     }

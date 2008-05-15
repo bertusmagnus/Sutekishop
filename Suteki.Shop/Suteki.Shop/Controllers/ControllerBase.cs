@@ -4,6 +4,7 @@ using Suteki.Shop.Services;
 using System.Web.Security;
 using MvcContrib;
 using MvcContrib.Attributes;
+using System.Collections.Specialized;
 
 namespace Suteki.Shop.Controllers
 {
@@ -22,6 +23,21 @@ namespace Suteki.Shop.Controllers
                 User user = this.ControllerContext.HttpContext.User as User;
                 if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
                 return user;
+            }
+        }
+
+        public virtual NameValueCollection Form
+        {
+            get
+            {
+                if (Request.RequestType == "POST")
+                {
+                    return Request.Form;
+                }
+                else
+                {
+                    return Request.QueryString;
+                }
             }
         }
 
