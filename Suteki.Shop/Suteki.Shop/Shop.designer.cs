@@ -81,6 +81,15 @@ namespace Suteki.Shop
     partial void InsertCategory(Category instance);
     partial void UpdateCategory(Category instance);
     partial void DeleteCategory(Category instance);
+    partial void InsertContent(Content instance);
+    partial void UpdateContent(Content instance);
+    partial void DeleteContent(Content instance);
+    partial void InsertContentType(ContentType instance);
+    partial void UpdateContentType(ContentType instance);
+    partial void DeleteContentType(ContentType instance);
+    partial void InsertMenu(Menu instance);
+    partial void UpdateMenu(Menu instance);
+    partial void DeleteMenu(Menu instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -246,6 +255,30 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Category>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Content> Contents
+		{
+			get
+			{
+				return this.GetTable<Content>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ContentType> ContentTypes
+		{
+			get
+			{
+				return this.GetTable<ContentType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Menu> Menus
+		{
+			get
+			{
+				return this.GetTable<Menu>();
 			}
 		}
 	}
@@ -4487,6 +4520,816 @@ namespace Suteki.Shop
 		{
 			this.SendPropertyChanging();
 			entity.Category1 = null;
+		}
+	}
+	
+	[Table(Name="dbo.Content")]
+	[InheritanceMapping(Code="0", Type=typeof(Content))]
+	[InheritanceMapping(Code="1", Type=typeof(TextContent), IsDefault=true)]
+	[InheritanceMapping(Code="2", Type=typeof(ActionContent))]
+	public partial class Content : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ContentId;
+		
+		private int _MenuId;
+		
+		private int _ContentTypeId;
+		
+		private string _Name;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+		private EntityRef<ContentType> _ContentType;
+		
+		private EntityRef<Menu> _Menu;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnContentIdChanging(int value);
+    partial void OnContentIdChanged();
+    partial void OnMenuIdChanging(int value);
+    partial void OnMenuIdChanged();
+    partial void OnContentTypeIdChanging(int value);
+    partial void OnContentTypeIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Content()
+		{
+			this._ContentType = default(EntityRef<ContentType>);
+			this._Menu = default(EntityRef<Menu>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ContentId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ContentId
+		{
+			get
+			{
+				return this._ContentId;
+			}
+			set
+			{
+				if ((this._ContentId != value))
+				{
+					this.OnContentIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContentId = value;
+					this.SendPropertyChanged("ContentId");
+					this.OnContentIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_MenuId", DbType="Int NOT NULL")]
+		public int MenuId
+		{
+			get
+			{
+				return this._MenuId;
+			}
+			set
+			{
+				if ((this._MenuId != value))
+				{
+					if (this._Menu.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMenuIdChanging(value);
+					this.SendPropertyChanging();
+					this._MenuId = value;
+					this.SendPropertyChanged("MenuId");
+					this.OnMenuIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL", IsDiscriminator=true)]
+		public int ContentTypeId
+		{
+			get
+			{
+				return this._ContentTypeId;
+			}
+			set
+			{
+				if ((this._ContentTypeId != value))
+				{
+					if (this._ContentType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnContentTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContentTypeId = value;
+					this.SendPropertyChanged("ContentTypeId");
+					this.OnContentTypeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Association(Name="ContentType_Content", Storage="_ContentType", ThisKey="ContentTypeId", IsForeignKey=true)]
+		public ContentType ContentType
+		{
+			get
+			{
+				return this._ContentType.Entity;
+			}
+			set
+			{
+				ContentType previousValue = this._ContentType.Entity;
+				if (((previousValue != value) 
+							|| (this._ContentType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ContentType.Entity = null;
+						previousValue.Contents.Remove(this);
+					}
+					this._ContentType.Entity = value;
+					if ((value != null))
+					{
+						value.Contents.Add(this);
+						this._ContentTypeId = value.ContentTypeId;
+					}
+					else
+					{
+						this._ContentTypeId = default(int);
+					}
+					this.SendPropertyChanged("ContentType");
+				}
+			}
+		}
+		
+		[Association(Name="Menu_Content", Storage="_Menu", ThisKey="MenuId", IsForeignKey=true)]
+		public Menu Menu
+		{
+			get
+			{
+				return this._Menu.Entity;
+			}
+			set
+			{
+				Menu previousValue = this._Menu.Entity;
+				if (((previousValue != value) 
+							|| (this._Menu.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Menu.Entity = null;
+						previousValue.Contents.Remove(this);
+					}
+					this._Menu.Entity = value;
+					if ((value != null))
+					{
+						value.Contents.Add(this);
+						this._MenuId = value.MenuId;
+					}
+					else
+					{
+						this._MenuId = default(int);
+					}
+					this.SendPropertyChanged("Menu");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	public partial class TextContent : Content
+	{
+		
+		private int _ContentTypeId;
+		
+		private string _Text;
+
+        private string _UrlName;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnContentTypeIdChanging(int value);
+    partial void OnContentTypeIdChanged();
+    partial void OnTextChanging(string value);
+    partial void OnTextChanged();
+    partial void OnUrlNameChanging(string value);
+    partial void OnUrlNameChanged();
+    #endregion
+		
+		public TextContent()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL")]
+		public int ContentTypeId
+		{
+			get
+			{
+				return this._ContentTypeId;
+			}
+			set
+			{
+				if ((this._ContentTypeId != value))
+				{
+					this.OnContentTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContentTypeId = value;
+					this.SendPropertyChanged("ContentTypeId");
+					this.OnContentTypeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Text", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string Text
+		{
+			get
+			{
+				return this._Text;
+			}
+			set
+			{
+				if ((this._Text != value))
+				{
+					this.OnTextChanging(value);
+					this.SendPropertyChanging();
+					this._Text = value;
+					this.SendPropertyChanged("Text");
+					this.OnTextChanged();
+				}
+			}
+		}
+
+        [Column(Storage = "_UrlName", DbType = "NVarChar(250) NOT NULL")]
+        public string UrlName
+        {
+            get
+            {
+                return this._UrlName;
+            }
+            set
+            {
+                if ((this._UrlName != value))
+                {
+                    this.OnUrlNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._UrlName = value;
+                    this.SendPropertyChanged("UrlName");
+                    this.OnUrlNameChanged();
+                }
+            }
+        }
+    }
+	
+	public partial class ActionContent : Content
+	{
+		
+		private int _ContentTypeId;
+		
+		private string _Controller;
+		
+		private string _Action;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnContentTypeIdChanging(int value);
+    partial void OnContentTypeIdChanged();
+    partial void OnControllerChanging(string value);
+    partial void OnControllerChanged();
+    partial void OnActionChanging(string value);
+    partial void OnActionChanged();
+    #endregion
+		
+		public ActionContent()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL")]
+		public int ContentTypeId
+		{
+			get
+			{
+				return this._ContentTypeId;
+			}
+			set
+			{
+				if ((this._ContentTypeId != value))
+				{
+					this.OnContentTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContentTypeId = value;
+					this.SendPropertyChanged("ContentTypeId");
+					this.OnContentTypeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Controller", DbType="NVarChar(50)")]
+		public string Controller
+		{
+			get
+			{
+				return this._Controller;
+			}
+			set
+			{
+				if ((this._Controller != value))
+				{
+					this.OnControllerChanging(value);
+					this.SendPropertyChanging();
+					this._Controller = value;
+					this.SendPropertyChanged("Controller");
+					this.OnControllerChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Action", DbType="NVarChar(50)")]
+		public string Action
+		{
+			get
+			{
+				return this._Action;
+			}
+			set
+			{
+				if ((this._Action != value))
+				{
+					this.OnActionChanging(value);
+					this.SendPropertyChanging();
+					this._Action = value;
+					this.SendPropertyChanged("Action");
+					this.OnActionChanged();
+				}
+			}
+		}
+	}
+	
+	[Table(Name="dbo.ContentType")]
+	public partial class ContentType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ContentTypeId;
+		
+		private string _Name;
+		
+		private EntitySet<Content> _Contents;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnContentTypeIdChanging(int value);
+    partial void OnContentTypeIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public ContentType()
+		{
+			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
+			OnCreated();
+		}
+		
+		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int ContentTypeId
+		{
+			get
+			{
+				return this._ContentTypeId;
+			}
+			set
+			{
+				if ((this._ContentTypeId != value))
+				{
+					this.OnContentTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContentTypeId = value;
+					this.SendPropertyChanged("ContentTypeId");
+					this.OnContentTypeIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Association(Name="ContentType_Content", Storage="_Contents", OtherKey="ContentTypeId")]
+		public EntitySet<Content> Contents
+		{
+			get
+			{
+				return this._Contents;
+			}
+			set
+			{
+				this._Contents.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Contents(Content entity)
+		{
+			this.SendPropertyChanging();
+			entity.ContentType = this;
+		}
+		
+		private void detach_Contents(Content entity)
+		{
+			this.SendPropertyChanging();
+			entity.ContentType = null;
+		}
+	}
+	
+	[Table(Name="dbo.Menu")]
+	public partial class Menu : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _MenuId;
+		
+		private System.Nullable<int> _ParentMenuId;
+		
+		private string _Name;
+		
+		private int _Position;
+		
+		private bool _IsActive;
+		
+		private EntitySet<Content> _Contents;
+		
+		private EntitySet<Menu> _Menus;
+		
+		private EntityRef<Menu> _Menu1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnMenuIdChanging(int value);
+    partial void OnMenuIdChanged();
+    partial void OnParentMenuIdChanging(System.Nullable<int> value);
+    partial void OnParentMenuIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+		
+		public Menu()
+		{
+			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
+			this._Menus = new EntitySet<Menu>(new Action<Menu>(this.attach_Menus), new Action<Menu>(this.detach_Menus));
+			this._Menu1 = default(EntityRef<Menu>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_MenuId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int MenuId
+		{
+			get
+			{
+				return this._MenuId;
+			}
+			set
+			{
+				if ((this._MenuId != value))
+				{
+					this.OnMenuIdChanging(value);
+					this.SendPropertyChanging();
+					this._MenuId = value;
+					this.SendPropertyChanged("MenuId");
+					this.OnMenuIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ParentMenuId", DbType="Int")]
+		public System.Nullable<int> ParentMenuId
+		{
+			get
+			{
+				return this._ParentMenuId;
+			}
+			set
+			{
+				if ((this._ParentMenuId != value))
+				{
+					if (this._Menu1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnParentMenuIdChanging(value);
+					this.SendPropertyChanging();
+					this._ParentMenuId = value;
+					this.SendPropertyChanged("ParentMenuId");
+					this.OnParentMenuIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(250) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Menu_Content", Storage="_Contents", OtherKey="MenuId")]
+		public EntitySet<Content> Contents
+		{
+			get
+			{
+				return this._Contents;
+			}
+			set
+			{
+				this._Contents.Assign(value);
+			}
+		}
+		
+		[Association(Name="Menu_Menu", Storage="_Menus", OtherKey="ParentMenuId")]
+		public EntitySet<Menu> Menus
+		{
+			get
+			{
+				return this._Menus;
+			}
+			set
+			{
+				this._Menus.Assign(value);
+			}
+		}
+		
+		[Association(Name="Menu_Menu", Storage="_Menu1", ThisKey="ParentMenuId", IsForeignKey=true)]
+		public Menu Menu1
+		{
+			get
+			{
+				return this._Menu1.Entity;
+			}
+			set
+			{
+				Menu previousValue = this._Menu1.Entity;
+				if (((previousValue != value) 
+							|| (this._Menu1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Menu1.Entity = null;
+						previousValue.Menus.Remove(this);
+					}
+					this._Menu1.Entity = value;
+					if ((value != null))
+					{
+						value.Menus.Add(this);
+						this._ParentMenuId = value.MenuId;
+					}
+					else
+					{
+						this._ParentMenuId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Menu1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Contents(Content entity)
+		{
+			this.SendPropertyChanging();
+			entity.Menu = this;
+		}
+		
+		private void detach_Contents(Content entity)
+		{
+			this.SendPropertyChanging();
+			entity.Menu = null;
+		}
+		
+		private void attach_Menus(Menu entity)
+		{
+			this.SendPropertyChanging();
+			entity.Menu1 = this;
+		}
+		
+		private void detach_Menus(Menu entity)
+		{
+			this.SendPropertyChanging();
+			entity.Menu1 = null;
 		}
 	}
 }

@@ -8,13 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Suteki.Shop.Views.Shared
-{
-
-
-    public partial class Site
-    {
-
+namespace Suteki.Shop.Views.Shared {
+    
+    
+    public partial class Site {
+        
         /// <summary>
         /// MainContentPlaceHolder control.
         /// </summary>

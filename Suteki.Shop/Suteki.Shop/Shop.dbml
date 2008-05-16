@@ -203,4 +203,44 @@
       <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" Type="Category" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Content" Member="Contents">
+    <Type Name="Content" InheritanceCode="0">
+      <Column Name="ContentId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MenuId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ContentTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" IsDiscriminator="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="ContentType_Content" Member="ContentType" ThisKey="ContentTypeId" Type="ContentType" IsForeignKey="true" />
+      <Association Name="Menu_Content" Member="Menu" ThisKey="MenuId" Type="Menu" IsForeignKey="true" />
+      <Type Name="TextContent" InheritanceCode="1" IsInheritanceDefault="true">
+        <Column Name="ContentTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+        <Column Name="Text" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      </Type>
+      <Type Name="ActionContent" InheritanceCode="2">
+        <Column Name="ContentTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+        <Column Name="Controller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+        <Column Name="Action" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      </Type>
+    </Type>
+  </Table>
+  <Table Name="dbo.ContentType" Member="ContentTypes">
+    <Type Name="ContentType">
+      <Column Name="ContentTypeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="ContentType_Content" Member="Contents" OtherKey="ContentTypeId" Type="Content" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Menu" Member="Menus">
+    <Type Name="Menu">
+      <Column Name="MenuId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ParentMenuId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Menu_Content" Member="Contents" OtherKey="MenuId" Type="Content" />
+      <Association Name="Menu_Menu" Member="Menus" OtherKey="ParentMenuId" Type="Menu" />
+      <Association Name="Menu_Menu" Member="Menu1" ThisKey="ParentMenuId" Type="Menu" IsForeignKey="true" />
+    </Type>
+  </Table>
 </Database>

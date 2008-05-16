@@ -3,8 +3,6 @@
 
 * Non-active categories
 
-* Stock Screen
-
 * Order Management
 
 * Credit Card Encryption
@@ -23,3 +21,5 @@
 	- Management
 	
 * Reports
+
+* Don't show customer users on users page

@@ -23,78 +23,19 @@
             </div>
             
             <div>
-                <ul class="mainMenu">
-                    <li>
-                        <%= Html.ActionLink<HomeController>(c => c.Index(), "Home")%>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<BasketController>(c => c.Index(), "Basket") %>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- Admin menu should only show when the user is an administrator -->
-            <% if (Context.User.IsInRole("Administrator"))
-               { %>
-            
-            <div>
-                <ul class="mainMenu">
-                    <li>
-                        <%= Html.ActionLink<OrderController>(c => c.Index(), "Orders") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<StockController>(c => c.Index(), "Stock") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<CountryController>(c => c.Index(), "Countries") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<PostageController>(c => c.Index(), "Postage Bands") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<PostZoneController>(c => c.Index(), "Postage Zones") %>
-                    </li>
-                </ul>
-            </div>
-            
-            <% } %>
-            
-            <div class="clear">
+                <%= MainMenu %>
             </div>
             
         </div>
 
-        <div id="mainContent">
+        <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
 
-            <div class="columnsContainer">
-
-                <div class="leftColumn">
-                    <%= LeftMenuContents %>
-                </div>
-
-                <div class="rightColumn">
-                    <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
-                    </asp:ContentPlaceHolder>
-                </div><!--/rightColumn-->
-
-                <div class="clear">
-                </div>
-
-            </div><!--/columnsContainer-->
-
-            <div class="footer">
-                <p>
-                    Suteki Limited &copy; Copyright 2008
-                </p>
-            </div><!--/footer-->
-
-        </div><!--/mainContent-->
+        <div class="footer">
+            <p>
+                Suteki Limited &copy; Copyright 2008
+            </p>
+        </div><!--/footer-->
 
     </div><!--/page-->
 </body>

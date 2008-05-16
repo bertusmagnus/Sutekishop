@@ -54,6 +54,12 @@ namespace Suteki.Shop.Tests.Routes
             AssertRoutes(Routes, "~/SomeController/SomeAction/103", new { Id = "103" });
         }
 
+        [Test]
+        public void CmsUrlsShouldMapToCmsControllerIndexAction()
+        {
+            AssertRoutes(Routes, "~/cms/help", new { Controller = "Cms", Action = "Index", UrlName = "help" });
+        }
+
         /// <summary>
         /// Common method for asserting routes
         /// </summary>

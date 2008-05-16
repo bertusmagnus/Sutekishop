@@ -11,6 +11,10 @@ namespace Suteki.Shop.Routes
             // Note: Change the URL to "{controller}.mvc/{action}/{id}" to enable
             //       automatic support on IIS6 and IIS7 classic mode
 
+            routes.MapRoute("Cms",
+                "cms/{urlname}",
+                new { controller = "Cms", action = "Index", urlname = "" });
+
             routes.MapRoute("Default",
                 "{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", id = "" },

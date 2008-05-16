@@ -86,12 +86,18 @@ h2 a
 {
 	background-color: #A5A0B0;
 	width: 180px;
-	height: 600px;
+	height: 100%;
 	float: left;
 	padding: 0;
 	border-right-style:solid;
 	border-right-color:#C0C0C0;
 	border-right-width:1px;
+}
+
+.contentsContainer
+{
+	height: 600px;
+	width: 100%;	
 }
 
 .rightColumn

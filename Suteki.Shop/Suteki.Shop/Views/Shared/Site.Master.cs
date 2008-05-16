@@ -13,7 +13,7 @@ namespace Suteki.Shop.Views.Shared
 {
     public partial class Site : System.Web.Mvc.ViewMasterPage
     {
-        protected string LeftMenuContents
+        protected string MainMenu
         {
             get
             {
@@ -21,10 +21,10 @@ namespace Suteki.Shop.Views.Shared
 
                 if (controller != null)
                 {
-                    IRepository<Suteki.Shop.Category> categoryRepository =
-                        controller.BaseControllerService.CategoryRepository;
+                    IRepository<Suteki.Shop.Menu> menuRepository =
+                        controller.BaseControllerService.MenuRepository;
 
-                    return Html.WriteCategories(categoryRepository.GetRootCategory(), CategoryDisplay.View);
+                    return Html.WriteMenu(menuRepository.GetById(1));
                 }
 
                 return "";

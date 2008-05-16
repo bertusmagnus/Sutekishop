@@ -20,4 +20,16 @@ insert OrderStatus values(1, 'Created')
 insert OrderStatus values(2, 'Dispatched')
 insert OrderStatus values(3, 'Rejected')
 
+insert ContentType values(1, 'Text')
+insert ContentType values(2, 'Action')
 
+set identity_insert menu on
+insert menu(menuId, parentMenuId, [Name], Position, IsActive) values(1, null, 'Main', 1, 1)
+set identity_insert menu off
+
+set identity_insert [content] on
+insert [content](contentId, menuId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
+values(1, 1, 2, 'Online Shop', null, null, 'Home', 'Index', 1, 1)
+insert [content](contentId, menuId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
+values(2, 1, 1, 'Home', 'Home', 'Homepage Content', null, null, 2, 1)
+set identity_insert [content] off
