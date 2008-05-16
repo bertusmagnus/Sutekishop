@@ -22,6 +22,8 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<BasketItem> basketItemRepository;
         IRepository<User> userRepository;
         IRepository<Postage> postageRepository;
+        IRepository<Size> sizeRepository;
+
         IUserService userService;
 
         [SetUp]
@@ -31,6 +33,8 @@ namespace Suteki.Shop.Tests.Controllers
             basketItemRepository = new Mock<IRepository<BasketItem>>().Object;
             userRepository = new Mock<IRepository<User>>().Object;
             postageRepository = new Mock<IRepository<Postage>>().Object;
+            sizeRepository = new Mock<IRepository<Size>>().Object;
+
             userService = new Mock<IUserService>().Object;
 
             basketController = new Mock<BasketController>(
@@ -38,6 +42,7 @@ namespace Suteki.Shop.Tests.Controllers
                 basketItemRepository, 
                 userRepository,
                 postageRepository,
+                sizeRepository,
                 userService).Object;
             testContext = new ControllerTestContext(basketController);
 
@@ -70,29 +75,31 @@ namespace Suteki.Shop.Tests.Controllers
                     new Basket()
                 }
             };
+            Mock.Get(basketController).Expect(bc => bc.CurrentUser).Returns(user);
             return user;
         }
 
         [Test]
         public void Update_ShouldAddBasketLineToCurrentBasket()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("sizeid", "5");
-            form.Add("quantity", "2");
-            testContext.TestContext.RequestMock.ExpectGet(request => request.Form).Returns(form);
-
+            CreateUpdateForm();
             User user = CreateUserWithBasket();
-            testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
 
             // expect 
             Mock.Get(basketRepository).Expect(or => or.SubmitChanges()).Verifiable();
             Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user).Verifiable();
-            Mock.Get(basketController).Expect(oc => oc.SetAuthenticationCookie(user.Email)).Verifiable();
-            Mock.Get(basketController).Expect(oc => oc.SetContextUserTo(user)).Verifiable();
+            Mock.Get(basketController).Expect(bc => bc.SetAuthenticationCookie(user.Email)).Verifiable();
+            Mock.Get(basketController).Expect(bc => bc.SetContextUserTo(user)).Verifiable();
 
-            RenderViewResult result = basketController.Update() as RenderViewResult;
+            Size size = new Size
+            {
+                IsInStock = true,
+            };
+            Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
-            Assert.AreEqual("Index", result.ViewName);
+            basketController.Update()
+                .ReturnsRenderViewResult()
+                .ForView("Index");
 
             Assert.AreEqual(1, user.Baskets[0].BasketItems.Count, "expected BasketItem is missing");
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
@@ -101,6 +108,46 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(basketRepository).Verify();
             Mock.Get(basketController).Verify();
             Mock.Get(userService).Verify();
+        }
+
+        private void CreateUpdateForm()
+        {
+            NameValueCollection form = new NameValueCollection();
+            form.Add("sizeid", "5");
+            form.Add("quantity", "2");
+            testContext.TestContext.RequestMock.ExpectGet(request => request.Form).Returns(form);
+        }
+
+        [Test]
+        public void Update_ShouldShowErrorMessageIfItemIsOutOfStock()
+        {
+            CreateUpdateForm();
+            User user = CreateUserWithBasket();
+
+            // expect 
+            Mock.Get(basketRepository).Expect(or => or.SubmitChanges());
+            Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user);
+            Mock.Get(basketController).Expect(bc => bc.SetAuthenticationCookie(user.Email));
+            Mock.Get(basketController).Expect(bc => bc.SetContextUserTo(user));
+
+            Size size = new Size
+            {
+                Name = "S",
+                IsInStock = false,
+                IsActive = true,
+                Product = new Product { Name = "Denim Jacket" }
+            };
+            Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
+
+            string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
+
+            basketController.Update()
+                .ReturnsRenderViewResult()
+                .ForView("Index")
+                .AssertAreEqual(expectedMessage, vd => vd.ErrorMessage);
+
+            Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
+
         }
 
         [Test]

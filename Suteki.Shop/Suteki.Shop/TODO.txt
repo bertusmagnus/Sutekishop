@@ -8,6 +8,7 @@
 * Order Management
 
 * Credit Card Encryption
+	- done, but nice to have the client side silverlight storage.
 
 * Emails
 

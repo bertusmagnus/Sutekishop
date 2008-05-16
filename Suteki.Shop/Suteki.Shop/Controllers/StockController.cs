@@ -7,38 +7,48 @@ using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using Suteki.Shop.Extensions;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Controllers
 {
     public class StockController : ControllerBase
     {
-        IStockService stockService;
+        IRepository<Category> categoryRepository;
+        IRepository<Size> sizeRepository;
 
-        public StockController(IStockService stockService)
+        public StockController(
+            IRepository<Category> categoryRepository,
+            IRepository<Size> sizeRepository)
         {
-            this.stockService = stockService;
+            this.categoryRepository = categoryRepository;
+            this.sizeRepository = sizeRepository;
         }
 
         public ActionResult Index()
         {
-            var stockItems = stockService.GetAll();
-            return RenderView("Index", View.Data.WithStockItems(stockItems));
+            return RenderIndexView();
+        }
+
+        private ActionResult RenderIndexView()
+        {
+            Category root = categoryRepository.GetRootCategory();
+            return RenderView("Index", View.Data.WithCategory(root));
         }
 
         public ActionResult Update()
         {
-            var stockItems = stockService.GetAll().ToList();
-            UpdateFromForm(stockItems, Form);
-            stockService.Update(stockItems);
+            var sizes = sizeRepository.GetAll().ToList();
+            UpdateFromForm(sizes, Form);
+            sizeRepository.SubmitChanges();
 
-            return RenderView("Index", View.Data.WithStockItems(stockItems));
+            return RenderIndexView();
         }
 
-        private void UpdateFromForm(IEnumerable<StockItem> stockItems, NameValueCollection form)
+        private void UpdateFromForm(IEnumerable<Size> sizes, NameValueCollection form)
         {
-            foreach (StockItem stockItem in stockItems)
+            foreach (Size size in sizes)
             {
-                stockItem.IsInStock = form["stockitem_{0}".With(stockItem.SizeId)] != null;
+                size.IsInStock = form["stockitem_{0}".With(size.SizeId)] != null;
             }
         }
     }

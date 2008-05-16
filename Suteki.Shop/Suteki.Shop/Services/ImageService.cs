@@ -47,14 +47,13 @@ namespace Suteki.Shop.Services
                 newImageSize = imageComparer.PortraitSize;
             }
 
-            // do GDI magic to resize the and save the new image
             using (Bitmap bitmap = new Bitmap(newImageSize.Width, newImageSize.Height,
                 System.Drawing.Imaging.PixelFormat.Format24bppRgb))
             {
                 bitmap.SetResolution(image.HorizontalResolution, image.VerticalResolution);
                 using (Graphics graphics = Graphics.FromImage(bitmap))
                 {
-                    graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
+                    graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     graphics.DrawImage(image,
                         new Rectangle(0, 0, newImageSize.Width, newImageSize.Height),
                         new Rectangle(0, 0, image.Width, image.Height),
@@ -62,7 +61,6 @@ namespace Suteki.Shop.Services
                 }
 
                 bitmap.Save(targetPath, ImageFormat.Jpeg);
-                //Console.WriteLine("Wrote jpg to: '{0}'", targetPath);
             }
         }
     }

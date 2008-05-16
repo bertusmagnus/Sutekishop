@@ -8,6 +8,7 @@ using Suteki.Shop.Repositories;
 using Suteki.Shop.Validation;
 using System.Web.Security;
 using Suteki.Shop.Services;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Controllers
 {
@@ -17,6 +18,7 @@ namespace Suteki.Shop.Controllers
         IRepository<BasketItem> basketItemRepository;
         IRepository<User> userRepository;
         IRepository<Postage> postageRepository;
+        IRepository<Size> sizeRepository;
         IUserService userService;
 
         public BasketController(
@@ -24,20 +26,20 @@ namespace Suteki.Shop.Controllers
             IRepository<BasketItem> basketItemRepository,
             IRepository<User> userRepository,
             IRepository<Postage> postageRepository,
+            IRepository<Size> sizeRepository,
             IUserService userService)
         {
             this.basketRepository = basketRepository;
             this.basketItemRepository = basketItemRepository;
             this.userRepository = userRepository;
             this.postageRepository = postageRepository;
+            this.sizeRepository = sizeRepository;
             this.userService = userService;
         }
 
         public ActionResult Index()
         {
-            User user = this.ControllerContext.HttpContext.User as User;
-            if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
-
+            User user = CurrentUser;
             return RenderIndexView(user.CurrentBasket);
         }
 
@@ -59,6 +61,13 @@ namespace Suteki.Shop.Controllers
             try
             {
                 ValidatingBinder.UpdateFrom(basketItem, Request.Form);
+
+                Size size = sizeRepository.GetById(basketItem.SizeId);
+                if (!size.IsInStock)
+                {
+                    return RenderIndexViewWithError(basket, size);
+                }
+
                 basket.BasketItems.Add(basketItem);
                 basketRepository.SubmitChanges();
                 return RenderIndexView(basket);
@@ -70,13 +79,29 @@ namespace Suteki.Shop.Controllers
             }
         }
 
+        private ActionResult RenderIndexViewWithError(Basket basket, Size size)
+        {
+            string message = null;
+            if (size.Product.HasSize)
+            {
+                message = "Sorry, {0}, Size {1} is out of stock.".With(size.Product.Name, size.Name);
+            }
+            else
+            {
+                message = "Sorry, {0} is out of stock.".With(size.Product.Name);
+            }
+            return RenderView("Index", IndexViewData(basket).WithErrorMessage(message));
+        }
+
         private ActionResult RenderIndexView(Basket basket)
         {
-            var postages = postageRepository.GetAll();
+            return RenderView("Index", IndexViewData(basket));
+        }
 
-            return RenderView("Index", View.Data
-                .WithBasket(basket)
-                .WithTotalPostage(basket.CalculatePostage(postages)));
+        private ShopViewData IndexViewData(Basket basket)
+        {
+            var postages = postageRepository.GetAll();
+            return View.Data.WithBasket(basket).WithTotalPostage(basket.CalculatePostage(postages));
         }
 
         public ActionResult Remove(int id)

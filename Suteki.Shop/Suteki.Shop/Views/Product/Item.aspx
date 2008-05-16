@@ -50,6 +50,7 @@ function onThumbnailClick(img)
         <%= Html.Select("sizeid", ViewData.Product.Sizes.Active(), "NameAndStock", "SizeId")%>
     <% } else { %>
         <%= Html.Hidden("sizeid", ViewData.Product.DefaultSize.SizeId) %>
+        <label><%= ViewData.Product.DefaultSize.NameAndStock %></label>
     <% } %>
 
     <label for="quantity">Quantity</label>
@@ -59,5 +60,11 @@ function onThumbnailClick(img)
     
 <% } %>
 </div>
+
+<p>If an item is out of stock, please email us at 
+<a href="mailto:<%= ((ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress %>">
+<%= ((ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress %>
+</a>
+ so that we can let you know when it will be available.</p>
 
 </asp:Content>

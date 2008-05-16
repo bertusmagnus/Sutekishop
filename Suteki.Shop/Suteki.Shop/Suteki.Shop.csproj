@@ -111,6 +111,7 @@
     <Compile Include="HtmlHelpers\CategoryWriter.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="HtmlHelpers\Pager.cs" />
+    <Compile Include="HtmlHelpers\StockWriter.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardType.cs" />
     <Compile Include="Models\Category.cs" />
@@ -156,12 +157,10 @@
     <Compile Include="Services\ImageService.cs" />
     <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\ISizeService.cs" />
-    <Compile Include="Services\IStockService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\Move.cs" />
     <Compile Include="Services\OrderableService.cs" />
     <Compile Include="Services\SizeService.cs" />
-    <Compile Include="Services\StockService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Shop.designer.cs">
       <AutoGen>True</AutoGen>

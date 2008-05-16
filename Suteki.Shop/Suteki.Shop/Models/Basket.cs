@@ -7,6 +7,14 @@ namespace Suteki.Shop
     {
         private PostageResult postageTotal;
 
+        public bool IsEmpty
+        {
+            get
+            {
+                return !BasketItems.Any();
+            }
+        }
+
         public decimal Total
         {
             get

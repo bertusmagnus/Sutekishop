@@ -7,12 +7,7 @@
 
 <% using(Html.Form<StockController>(c => c.Update())) { %>
 
-    <% foreach(var stockItem in ViewData.StockItems) { %>
-
-    <label for="stockitem_<%= stockItem.SizeId %>"><%= stockItem.Name %></label>
-    <%= Html.CheckBox("stockitem_" + stockItem.SizeId, "", "True", stockItem.IsInStock) %>
-
-    <% } %>
+    <%= Html.WriteStock(ViewData.Category) %>
 
     <%= Html.SubmitButton() %>
 

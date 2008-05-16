@@ -22,7 +22,7 @@ namespace Suteki.Shop.Tests.Services
 
             imageService = new ImageService(
                 new ImageFileService(imageFolderPath),
-                300, 300, 100, 100);
+                500, 500, 100, 100);
 
             string jpgTestPath = Path.Combine(imageFolderPath, image.FileNameAsString);
             string jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);
@@ -33,8 +33,10 @@ namespace Suteki.Shop.Tests.Services
             Assert.IsTrue(File.Exists(jpgMainPath));
             Assert.IsTrue(File.Exists(jpgThumbPath));
 
-            File.Delete(jpgMainPath);
-            File.Delete(jpgThumbPath);
+            Console.WriteLine(jpgMainPath);
+
+            //File.Delete(jpgMainPath);
+            //File.Delete(jpgThumbPath);
         }
 
         public void GuidGenerator()

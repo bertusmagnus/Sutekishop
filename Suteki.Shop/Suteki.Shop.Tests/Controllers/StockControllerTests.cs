@@ -7,6 +7,7 @@ using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using System.Collections.Specialized;
 using NUnit.Framework.SyntaxHelpers;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -14,27 +15,37 @@ namespace Suteki.Shop.Tests.Controllers
     public class StockControllerTests
     {
         StockController stockController;
-        IStockService stockService;
+        IRepository<Category> categoryRepository;
+        IRepository<Size> sizeRepository;
 
         [SetUp]
         public void SetUp()
         {
-            stockService = new Mock<IStockService>().Object;
+            categoryRepository = new Mock<IRepository<Category>>().Object;
+            sizeRepository = new Mock<IRepository<Size>>().Object;
 
-            stockController = new Mock<StockController>(stockService).Object;
+            stockController = new Mock<StockController>(
+                categoryRepository,
+                sizeRepository).Object;
         }
 
         [Test]
-        public void Index_ShouldShowAllStock()
+        public void Index_ShouldPassRootCategoryToIndexView()
         {
-            IEnumerable<StockItem> stockItems = CreateStockItems();
+            Category root = BuildCategories();
 
-            Mock.Get(stockService).Expect(s => s.GetAll()).Returns(stockItems);
+            Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
             stockController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreSame(stockItems, vd => vd.StockItems);
+                .AssertAreSame(root, vd => vd.Category);
+        }
+
+        private Category BuildCategories()
+        {
+            Category root = new Category { CategoryId = 1, Name = "Root" };
+            return root;
         }
 
         private static IEnumerable<StockItem> CreateStockItems()
@@ -54,18 +65,30 @@ namespace Suteki.Shop.Tests.Controllers
             form.Add("stockitem_1", "True");
             Mock.Get(stockController).ExpectGet(c => c.Form).Returns(form);
 
-            var stockItems = CreateStockItems();
+            var sizes = CreateSizes();
 
-            Mock.Get(stockService).Expect(s => s.GetAll()).Returns(stockItems);
-            Mock.Get(stockService).Expect(s => s.Update(stockItems));
+            Mock.Get(sizeRepository).Expect(s => s.GetAll()).Returns(sizes);
+            Mock.Get(sizeRepository).Expect(s => s.SubmitChanges());
+
+            Category root = BuildCategories();
+            Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
             stockController.Update()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreSame(stockItems, vd => vd.StockItems);
+                .AssertNotNull(vd => vd.Category);
 
-            Assert.That(stockItems.First().IsInStock, Is.True);
-            Assert.That(stockItems.Last().IsInStock, Is.False);
+            Assert.That(sizes.First().IsInStock, Is.True);
+            Assert.That(sizes.Last().IsInStock, Is.False);
+        }
+
+        private IQueryable<Size> CreateSizes()
+        {
+            return new List<Size>
+            {
+                new Size { SizeId = 1, IsInStock = false },
+                new Size { SizeId = 2, IsInStock = true }
+            }.AsQueryable();
         }
     }
 }

@@ -91,6 +91,12 @@ namespace Suteki.Shop.HtmlHelpers
             return categoryWriter.Write();
         }
 
+        public static string WriteStock(this HtmlHelper htmlHelper, Category rootCategory)
+        {
+            StockWriter stockWriter = new StockWriter(htmlHelper, rootCategory);
+            return stockWriter.Write();
+        }
+
         public static string UpArrowLink<T>(this HtmlHelper htmlHelper, Expression<Action<T>> action) where T : Controller
         {
             return "<a href=\"{0}\" class=\"arrowlink\">{1}</a>".With(

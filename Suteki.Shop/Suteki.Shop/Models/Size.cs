@@ -6,7 +6,7 @@
         {
             get
             {
-                return Name + (IsInStock ? "" : " (out of stock)");
+                return Name + (IsInStock ? "" : " Out of Stock");
             }
         }
     }

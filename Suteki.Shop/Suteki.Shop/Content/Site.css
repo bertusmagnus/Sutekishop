@@ -575,3 +575,32 @@ td.number
 	width: 100%;
 	margin: 10px 0;
 }
+
+/*-------------------------------------- pager -------------------------------------------*/
+
+.stockItem
+{
+	display: block;
+	clear: left;
+}
+
+.stockItem input[type=checkbox]
+{
+	display: inline;
+	margin: 0;
+}
+
+.stockCheckbox
+{
+	display: block;
+	float: left;
+	width: 40px; /* width here controls the spacing of the checkboxes */
+}
+
+.stockProduct
+{
+	display: block;
+	float: left;
+	width: 150px;
+}
+

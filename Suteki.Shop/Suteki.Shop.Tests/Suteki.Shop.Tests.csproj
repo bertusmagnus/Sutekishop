@@ -104,7 +104,6 @@
     <Compile Include="Services\MoveTests.cs" />
     <Compile Include="Services\OrderableServiceTests.cs" />
     <Compile Include="Services\SizeServiceTests.cs" />
-    <Compile Include="Services\StockServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="TestHelpers\ActionResultExtensions.cs" />
     <Compile Include="TestHelpers\ControllerTestContext.cs" />
