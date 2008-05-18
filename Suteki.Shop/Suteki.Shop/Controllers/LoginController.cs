@@ -20,7 +20,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
-            return RenderView("Index", View.Data);
+            return RenderView("Index", ShopView.Data);
         }
 
         public ActionResult Authenticate(string email, string password)
@@ -31,7 +31,7 @@ namespace Suteki.Shop.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return RenderView("Index", View.Data.WithErrorMessage("Unknown email or password"));
+            return RenderView("Index", ShopView.Data.WithErrorMessage("Unknown email or password"));
         }
 
         public ActionResult Logout()

@@ -22,4 +22,6 @@
 	
 * Reports
 
+* Site Map
+
 * Don't show customer users on users page

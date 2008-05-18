@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using NUnit.Framework;
 using Suteki.Shop.ViewData;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Tests
 {
@@ -20,81 +21,46 @@ namespace Suteki.Shop.Tests
             return result;
         }
 
-        // shop view data
+        // View Data
 
-        public static RenderViewResult AssertNotNull<T>(this RenderViewResult result, Func<ShopViewData, T> property)
-        {
-            Assert.IsNotNull(property(result.GetShopViewData()));
-            return result;
-        }
-
-        public static RenderViewResult AssertNull<T>(this RenderViewResult result, Func<ShopViewData, T> property)
-        {
-            Assert.IsNull(property(result.GetShopViewData()));
-            return result;
-        }
-
-        public static RenderViewResult AssertAreSame<T>(
+        public static RenderViewResult AssertNotNull<TViewData, T>(
             this RenderViewResult result, 
-            T expected, 
-            Func<ShopViewData, T> property)
+            Func<TViewData, T> property) where TViewData : ViewDataBase
         {
-            Assert.AreSame(expected, property(result.GetShopViewData()));
+            Assert.IsNotNull(property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static RenderViewResult AssertAreEqual<T>(
+        public static RenderViewResult AssertNull<TViewData, T>(
+            this RenderViewResult result,
+            Func<TViewData, T> property) where TViewData : ViewDataBase
+        {
+            Assert.IsNull(property(result.GetViewData<TViewData>()));
+            return result;
+        }
+
+        public static RenderViewResult AssertAreSame<TViewData, T>(
+            this RenderViewResult result, 
+            T expected,
+            Func<TViewData, T> property) where TViewData : ViewDataBase
+        {
+            Assert.AreSame(expected, property(result.GetViewData<TViewData>()));
+            return result;
+        }
+
+        public static RenderViewResult AssertAreEqual<TViewData, T>(
             this RenderViewResult result,
             T expected,
-            Func<ShopViewData, T> property)
+            Func<TViewData, T> property) where TViewData : ViewDataBase
         {
-            Assert.AreEqual(expected, property(result.GetShopViewData()));
+            Assert.AreEqual(expected, property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static ShopViewData GetShopViewData(this RenderViewResult result)
+        public static TViewData GetViewData<TViewData>(this RenderViewResult result) where TViewData : ViewDataBase
         {
-            ShopViewData viewData = result.ViewData as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
-            return viewData;
-        }
-
-        // scaffold view data
-
-        public static RenderViewResult SAssertNotNull<T, TProperty>(this RenderViewResult result, Func<ScaffoldViewData<T>, TProperty> property)
-        {
-            Assert.IsNotNull(property(result.GetScaffoldViewData<T>()));
-            return result;
-        }
-
-        public static RenderViewResult SAssertNull<T, TProperty>(this RenderViewResult result, Func<ScaffoldViewData<T>, TProperty> property)
-        {
-            Assert.IsNull(property(result.GetScaffoldViewData<T>()));
-            return result;
-        }
-
-        public static RenderViewResult SAssertAreSame<T, TProperty>(
-            this RenderViewResult result,
-            TProperty expected,
-            Func<ScaffoldViewData<T>, TProperty> property)
-        {
-            Assert.AreSame(expected, property(result.GetScaffoldViewData<T>()));
-            return result;
-        }
-
-        public static RenderViewResult SAssertAreEqual<T, TProperty>(
-            this RenderViewResult result,
-            TProperty expected,
-            Func<ScaffoldViewData<T>, TProperty> property)
-        {
-            Assert.AreEqual(expected, property(result.GetScaffoldViewData<T>()));
-            return result;
-        }
-
-        public static ScaffoldViewData<T> GetScaffoldViewData<T>(this RenderViewResult result)
-        {
-            ScaffoldViewData<T> viewData = result.ViewData as ScaffoldViewData<T>;
-            Assert.IsNotNull(viewData, "viewData is not ScaffoldViewData");
+            TViewData viewData = result.ViewData as TViewData;
+            Assert.IsNotNull(viewData, "viewData is not {0}".With(typeof(TViewData).Name));
             return viewData;
         }
     }

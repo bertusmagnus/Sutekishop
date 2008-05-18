@@ -8,6 +8,7 @@ using Suteki.Shop.Services;
 using System.Collections.Specialized;
 using NUnit.Framework.SyntaxHelpers;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -39,7 +40,7 @@ namespace Suteki.Shop.Tests.Controllers
             stockController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreSame(root, vd => vd.Category);
+                .AssertAreSame<ShopViewData, Category>(root, vd => vd.Category);
         }
 
         private Category BuildCategories()
@@ -76,7 +77,7 @@ namespace Suteki.Shop.Tests.Controllers
             stockController.Update()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertNotNull(vd => vd.Category);
+                .AssertNotNull<ShopViewData, Category>(vd => vd.Category);
 
             Assert.That(sizes.First().IsInStock, Is.True);
             Assert.That(sizes.Last().IsInStock, Is.False);

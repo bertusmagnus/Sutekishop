@@ -39,7 +39,19 @@ namespace Suteki.Shop.HtmlHelpers
                 writer.RenderEndTag();
             }
 
+            WriteEditOptions(writer, menu);
+
             writer.RenderEndTag();
+        }
+
+        private void WriteEditOptions(HtmlTextWriter writer, Menu menu)
+        {
+            if (htmlHelper.CurrentUser().IsAdministrator)
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.Li);
+                writer.Write(htmlHelper.ActionLink<CmsController>(c => c.Add(menu.MenuId), "New page"));
+                writer.RenderEndTag();
+            }
         }
     }
 

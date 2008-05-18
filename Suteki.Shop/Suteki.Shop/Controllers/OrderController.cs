@@ -56,7 +56,7 @@ namespace Suteki.Shop.Controllers
                 .ByCreatedDate()
                 .ToPagedList(Request.PageNumber(), 20);
 
-            return RenderView("Index", View.Data.WithOrders(orders));
+            return RenderView("Index", ShopView.Data.WithOrders(orders));
         }
 
         public ActionResult Item(int id)
@@ -105,7 +105,7 @@ namespace Suteki.Shop.Controllers
         {
             order.CalculatePostage(postageRepository.GetAll());
 
-            return View.Data
+            return ShopView.Data
                 .WithCountries(countryRepository.GetAll().InOrder())
                 .WithCardTypes(cardTypeRepository.GetAll())
                 .WithOrder(order);

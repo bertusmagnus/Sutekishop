@@ -1,0 +1,55 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" 
+CodeBehind="Cms.master.cs" Inherits="Suteki.Shop.Views.Shared.Cms" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+
+        <div>
+            
+            <!-- Admin menu should only show when the user is an administrator -->
+            <% if (Context.User.IsInRole("Administrator"))
+               { %>
+            
+            <div>
+                <ul class="mainMenu">
+                    <li>
+                        <a href="">Admin Menu Item</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <% } %>
+            
+            <div class="clear">
+            </div>
+            
+        </div>
+
+        <div id="mainContent">
+
+            <div class="columnsContainer">
+
+                <div class="leftColumn">
+                    <div class="contentsContainer">
+                        <div class="category">
+                            <ul>                    
+                                <li>
+                                    <a href="">Sub Menu Item</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rightColumn">
+                    <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div><!--/rightColumn-->
+
+                <div class="clear">
+                </div>
+
+            </div><!--/columnsContainer-->
+
+        </div><!--/mainContent-->
+
+</asp:Content>

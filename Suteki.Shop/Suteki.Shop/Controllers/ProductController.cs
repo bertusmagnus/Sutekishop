@@ -56,7 +56,7 @@ namespace Suteki.Shop.Controllers
                 products = products.Active();
             }
 
-            return RenderView("Index", View.Data.WithProducts(products).WithCategory(category));
+            return RenderView("Index", ShopView.Data.WithProducts(products).WithCategory(category));
         }
 
         public ActionResult Item(int id)
@@ -67,7 +67,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderItemView(int id)
         {
             Product product = productRepository.GetById(id);
-            return RenderView("Item", View.Data.WithProduct(product));
+            return RenderView("Item", ShopView.Data.WithProduct(product));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -221,7 +221,7 @@ namespace Suteki.Shop.Controllers
         {
             get
             {
-                return View.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
+                return ShopView.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
             }
         }
     }

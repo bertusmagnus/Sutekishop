@@ -22,7 +22,7 @@ namespace Suteki.Shop.Routes
 
             routes.MapRoute("DefaultAspx",
                 "Default.aspx",
-                new { controller = "Home", action = "Index", id = "" });
+                new { controller = "Cms", action = "Index", urlName = "" });
 
         }
     }

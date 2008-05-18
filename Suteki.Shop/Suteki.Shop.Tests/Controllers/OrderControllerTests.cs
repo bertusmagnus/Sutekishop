@@ -82,13 +82,13 @@ namespace Suteki.Shop.Tests.Controllers
             // exercise Checkout action
             orderController.Checkout(basketId)
                 .ReturnsRenderViewResult()
-                .AssertNotNull(vd => vd.Order)
-                .AssertNotNull(vd => vd.Order.Contact)
-                .AssertNotNull(vd => vd.Order.Contact1)
-                .AssertNotNull(vd => vd.Order.Card)
-                .AssertAreSame(basket, vd => vd.Order.Basket)
-                .AssertNotNull(vd => vd.Countries)
-                .AssertAreSame(cardTypes, vd => vd.CardTypes);
+                .AssertNotNull<ShopViewData, Order>(vd => vd.Order)
+                .AssertNotNull<ShopViewData, Contact>(vd => vd.Order.Contact)
+                .AssertNotNull<ShopViewData, Contact>(vd => vd.Order.Contact1)
+                .AssertNotNull<ShopViewData, Card>(vd => vd.Order.Card)
+                .AssertAreSame<ShopViewData, Basket>(basket, vd => vd.Order.Basket)
+                .AssertNotNull<ShopViewData, IEnumerable<Country>>(vd => vd.Countries)
+                .AssertAreSame<ShopViewData, IEnumerable<CardType>>(cardTypes, vd => vd.CardTypes);
 
             Mock.Get(basketRepository).Verify();
             Mock.Get(countryRepository).Verify();
@@ -235,7 +235,7 @@ namespace Suteki.Shop.Tests.Controllers
             orderController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreSame(orders.First(), vd => vd.Orders.First());
+                .AssertAreSame<ShopViewData, Order>(orders.First(), vd => vd.Orders.First());
         }
 
         [Test]
@@ -280,7 +280,7 @@ namespace Suteki.Shop.Tests.Controllers
             orderController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreSame(orders.ElementAt(1), vd => vd.Orders.First());
+                .AssertAreSame<ShopViewData, Order>(orders.ElementAt(1), vd => vd.Orders.First());
                 
         }
 
@@ -315,8 +315,8 @@ namespace Suteki.Shop.Tests.Controllers
             orderController.ShowCard(orderId, privateKey)
                 .ReturnsRenderViewResult()
                 .ForView("Item")
-                .AssertAreEqual(order.Card.Number, vd => vd.Card.Number)
-                .AssertAreEqual(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);
+                .AssertAreEqual<ShopViewData, string>(order.Card.Number, vd => vd.Card.Number)
+                .AssertAreEqual<ShopViewData, int>(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);
 
             Mock.Get(encryptionService).Verify();
         }

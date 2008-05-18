@@ -27,7 +27,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView()
         {
             var items = Repository.GetAll().InOrder();
-            return RenderView("Index", Scaffold.Data<T>().With(items));
+            return RenderView("Index", ScaffoldView.Data<T>().With(items));
         }
 
         public virtual ActionResult New()
@@ -42,7 +42,7 @@ namespace Suteki.Shop.Controllers
         [NonAction]
         public virtual ScaffoldViewData<T> BuildEditViewData()
         {
-            ScaffoldViewData<T> viewData = Scaffold.Data<T>();
+            ScaffoldViewData<T> viewData = ScaffoldView.Data<T>();
             AppendLookupLists(viewData);
             return viewData;
         }

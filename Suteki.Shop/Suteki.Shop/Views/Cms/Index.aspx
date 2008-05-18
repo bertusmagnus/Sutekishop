@@ -1,6 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Suteki.Shop.Views.Cms.Index" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Cms.Master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Index.aspx.cs" Inherits="Suteki.Shop.Views.Cms.Index" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-This is the content view
+<% if(User.IsInRole("Administrator")) { %>
+    <p><%= Html.ActionLink<CmsController>(c => c.Edit(ViewData.TextContent.ContentId), "Edit") %></p>
+<% } %>
+
+<%= ViewData.TextContent.Text %>
 
 </asp:Content>

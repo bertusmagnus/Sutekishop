@@ -144,7 +144,7 @@ namespace Suteki.Shop.Tests.Controllers
             basketController.Update()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .AssertAreEqual(expectedMessage, vd => vd.ErrorMessage);
+                .AssertAreEqual<ShopViewData, string>(expectedMessage, vd => vd.ErrorMessage);
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
 

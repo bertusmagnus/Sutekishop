@@ -43,7 +43,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.Index()
                 .ReturnsRenderViewResult()
                 .ForView("Index")
-                .SAssertNotNull<Postage, IEnumerable<Postage>>(vd => vd.Items);
+                .AssertNotNull<ScaffoldViewData<Postage>, IEnumerable<Postage>>(vd => vd.Items);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.New()
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .SAssertNotNull<Postage, Postage>(vd => vd.Item);
+                .AssertNotNull<ScaffoldViewData<Postage>, Postage>(vd => vd.Item);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageController.Edit(postageId)
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .SAssertAreSame<Postage, Postage>(postage, vd => vd.Item);
+                .AssertAreSame<ScaffoldViewData<Postage>, Postage>(postage, vd => vd.Item);
         }
 
         [Test]

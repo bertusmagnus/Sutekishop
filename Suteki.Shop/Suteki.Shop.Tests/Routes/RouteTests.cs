@@ -21,13 +21,13 @@ namespace Suteki.Shop.Tests.Routes
         [Test]
         public void DefaultShouldRouteToHomeIndex()
         {
-            AssertRoutes(Routes, "~/Default.aspx", new { Controller = "Home", Action = "Index" });
+            AssertRoutes(Routes, "~/Default.aspx", new { Controller = "Cms", Action = "Index", UrlName = "" });
         }
 
         [Test]
         public void DomainOnlyShouldRouteToHomeIndex()
         {
-            AssertRoutes(Routes, "~/", new { Controller = "Home", Action = "Index" });
+            AssertRoutes(Routes, "~/", new { Controller = "Home", Action = "Index", Id = "" });
         }
 
         [Test]

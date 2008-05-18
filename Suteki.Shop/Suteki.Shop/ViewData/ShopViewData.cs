@@ -4,11 +4,8 @@ using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.ViewData
 {
-    public class ShopViewData : IMessageViewData, IErrorViewData
+    public class ShopViewData : ViewDataBase
     {
-        public string ErrorMessage { get; set; }
-        public string Message { get; set; }
-        
         public Category Category { get; set; }
         public IEnumerable<Category> Categories { get; set; }
 
@@ -40,18 +37,6 @@ namespace Suteki.Shop.ViewData
         public IEnumerable<StockItem> StockItems { get; set; }
 
         // attempt at a fluent interface
-
-        public ShopViewData WithErrorMessage(string errorMessage)
-        {
-            this.ErrorMessage = errorMessage;
-            return this;
-        }
-
-        public ShopViewData WithMessage(string message)
-        {
-            this.Message = message;
-            return this;
-        }
 
         public ShopViewData WithCategory(Category category)
         {
@@ -164,9 +149,9 @@ namespace Suteki.Shop.ViewData
 
     /// <summary>
     /// So you can write 
-    /// View.Data.WithProducts(myProducts);
+    /// ShopView.Data.WithProducts(myProducts);
     /// </summary>
-    public class View
+    public class ShopView
     {
         public static ShopViewData Data { get { return new ShopViewData(); } }
     }

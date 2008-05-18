@@ -33,7 +33,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView()
         {
             Category root = categoryRepository.GetRootCategory();
-            return RenderView("Index", View.Data.WithCategory(root));
+            return RenderView("Index", ShopView.Data.WithCategory(root));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -91,7 +91,7 @@ namespace Suteki.Shop.Controllers
         {
             get
             {
-                return View.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
+                return ShopView.Data.WithCategories(categoryRepository.GetAll().Alphabetical());
             }
         }
 

@@ -101,7 +101,7 @@ namespace Suteki.Shop.Controllers
         private ShopViewData IndexViewData(Basket basket)
         {
             var postages = postageRepository.GetAll();
-            return View.Data.WithBasket(basket).WithTotalPostage(basket.CalculatePostage(postages));
+            return ShopView.Data.WithBasket(basket).WithTotalPostage(basket.CalculatePostage(postages));
         }
 
         public ActionResult Remove(int id)

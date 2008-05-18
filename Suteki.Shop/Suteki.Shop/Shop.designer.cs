@@ -4793,8 +4793,6 @@ namespace Suteki.Shop
 	public partial class TextContent : Content
 	{
 		
-		private int _ContentTypeId;
-		
 		private string _Text;
 
         private string _UrlName;
@@ -4803,8 +4801,6 @@ namespace Suteki.Shop
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnContentTypeIdChanging(int value);
-    partial void OnContentTypeIdChanged();
     partial void OnTextChanging(string value);
     partial void OnTextChanged();
     partial void OnUrlNameChanging(string value);
@@ -4814,26 +4810,6 @@ namespace Suteki.Shop
 		public TextContent()
 		{
 			OnCreated();
-		}
-		
-		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL")]
-		public int ContentTypeId
-		{
-			get
-			{
-				return this._ContentTypeId;
-			}
-			set
-			{
-				if ((this._ContentTypeId != value))
-				{
-					this.OnContentTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._ContentTypeId = value;
-					this.SendPropertyChanged("ContentTypeId");
-					this.OnContentTypeIdChanged();
-				}
-			}
 		}
 		
 		[Column(Storage="_Text", DbType="Text", UpdateCheck=UpdateCheck.Never)]
@@ -4880,8 +4856,6 @@ namespace Suteki.Shop
 	public partial class ActionContent : Content
 	{
 		
-		private int _ContentTypeId;
-		
 		private string _Controller;
 		
 		private string _Action;
@@ -4890,8 +4864,6 @@ namespace Suteki.Shop
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnContentTypeIdChanging(int value);
-    partial void OnContentTypeIdChanged();
     partial void OnControllerChanging(string value);
     partial void OnControllerChanged();
     partial void OnActionChanging(string value);
@@ -4901,26 +4873,6 @@ namespace Suteki.Shop
 		public ActionContent()
 		{
 			OnCreated();
-		}
-		
-		[Column(Storage="_ContentTypeId", DbType="Int NOT NULL")]
-		public int ContentTypeId
-		{
-			get
-			{
-				return this._ContentTypeId;
-			}
-			set
-			{
-				if ((this._ContentTypeId != value))
-				{
-					this.OnContentTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._ContentTypeId = value;
-					this.SendPropertyChanged("ContentTypeId");
-					this.OnContentTypeIdChanged();
-				}
-			}
 		}
 		
 		[Column(Storage="_Controller", DbType="NVarChar(50)")]

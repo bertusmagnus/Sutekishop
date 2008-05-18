@@ -119,6 +119,7 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Content.cs" />
+    <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\IActivatable.cs" />
     <Compile Include="Models\Image.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ActivatableExtensions.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
+    <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
@@ -175,10 +177,12 @@
     <Compile Include="Validation\ValidationException.cs" />
     <Compile Include="Validation\ValidationExtensions.cs" />
     <Compile Include="Validation\Validator.cs" />
+    <Compile Include="ViewData\CmsViewData.cs" />
     <Compile Include="ViewData\IMessageViewData.cs" />
     <Compile Include="ViewData\ScaffoldViewData.cs" />
     <Compile Include="ViewData\ShopViewData.cs" />
     <Compile Include="ViewData\IErrorViewData.cs" />
+    <Compile Include="ViewData\ViewDataBase.cs" />
     <Compile Include="Views\Category\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -192,6 +196,13 @@
     </Compile>
     <Compile Include="Views\Category\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cms\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Cms\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Cms\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -305,6 +316,13 @@
     <Compile Include="Views\Product\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\Cms.master.cs">
+      <DependentUpon>Cms.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\Cms.master.designer.cs">
+      <DependentUpon>Cms.master</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Rescues\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -403,6 +421,8 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Cms\Edit.aspx" />
+    <Content Include="Views\Shared\Cms.master" />
     <Content Include="Views\Cms\Index.aspx" />
     <Content Include="Views\Shared\Shop.Master" />
   </ItemGroup>

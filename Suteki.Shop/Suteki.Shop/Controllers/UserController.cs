@@ -27,7 +27,7 @@ namespace Suteki.Shop.Controllers
         public ActionResult Index()
         {
             var users = userRepository.GetAll();
-            return RenderView("Index", View.Data.WithUsers(users));
+            return RenderView("Index", ShopView.Data.WithUsers(users));
         }
 
         public ActionResult New()
@@ -105,7 +105,7 @@ namespace Suteki.Shop.Controllers
         {
             get
             {
-                return View.Data.WithRoles(roleRepository.GetAll());
+                return ShopView.Data.WithRoles(roleRepository.GetAll());
             }
         }
     }

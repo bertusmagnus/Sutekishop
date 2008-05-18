@@ -32,7 +32,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView()
         {
             Category root = categoryRepository.GetRootCategory();
-            return RenderView("Index", View.Data.WithCategory(root));
+            return RenderView("Index", ShopView.Data.WithCategory(root));
         }
 
         public ActionResult Update()

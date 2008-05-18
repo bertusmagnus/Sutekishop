@@ -4,11 +4,8 @@ using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.ViewData
 {
-    public class ScaffoldViewData<T> : IMessageViewData, IErrorViewData
+    public class ScaffoldViewData<T> : ViewDataBase
     {
-        public string ErrorMessage { get; set; }
-        public string Message { get; set; }
-
         public IEnumerable<T> Items { get; set; }
         public T Item { get; set; }
 
@@ -23,18 +20,6 @@ namespace Suteki.Shop.ViewData
         public ScaffoldViewData<T> With(IEnumerable<T> items)
         {
             this.Items = items;
-            return this;
-        }
-
-        public ScaffoldViewData<T> WithErrorMessage(string errorMessage)
-        {
-            this.ErrorMessage = errorMessage;
-            return this;
-        }
-
-        public ScaffoldViewData<T> WithMessage(string message)
-        {
-            this.Message = message;
             return this;
         }
 
@@ -54,7 +39,7 @@ namespace Suteki.Shop.ViewData
         }
     }
 
-    public static class Scaffold
+    public static class ScaffoldView
     {
         public static ScaffoldViewData<T> Data<T>()
         {
