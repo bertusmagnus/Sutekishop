@@ -24,7 +24,7 @@ namespace Suteki.Shop.Views.Shared
                     IRepository<Suteki.Shop.Menu> menuRepository =
                         controller.BaseControllerService.MenuRepository;
 
-                    return Html.WriteMenu(menuRepository.GetById(1));
+                    return Html.WriteMenu(menuRepository.GetTopLevelMenu());
                 }
 
                 return "";

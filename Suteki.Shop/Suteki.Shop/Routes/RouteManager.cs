@@ -13,15 +13,24 @@ namespace Suteki.Shop.Routes
 
             routes.MapRoute("Cms",
                 "cms/{urlname}",
-                new { controller = "Cms", action = "Index", urlname = "" });
+                new { controller = "Cms", action = "Index", urlname = "" },
+                new { urlname = @"[^\.]*" });
 
-            routes.MapRoute("Default",
-                "{controller}/{action}/{id}",
+            routes.MapRoute("Shop",
+                "shop/{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", id = "" },
                 new { controller = @"[^\.]*" });
 
             routes.MapRoute("DefaultAspx",
                 "Default.aspx",
+                new { controller = "Cms", action = "Index", urlName = "" });
+
+            routes.MapRoute("Root",
+                "",
+                new { controller = "Cms", action = "Index", urlName = "" });
+
+            routes.MapRoute("Home",
+                "home",
                 new { controller = "Cms", action = "Index", urlName = "" });
 
         }

@@ -8,16 +8,24 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.Validation;
 using Suteki.Shop.Extensions;
 using System.Security.Permissions;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Controllers
 {
     public class CmsController : ControllerBase
     {
         IRepository<Content> contentRepository;
+        IRepository<Menu> menuRepository;
+        IOrderableService<Content> contentOrderableService;
 
-        public CmsController(IRepository<Content> contentRepository)
+        public CmsController(
+            IRepository<Content> contentRepository,
+            IRepository<Menu> menuRepository,
+            IOrderableService<Content> contentOrderableService)
         {
             this.contentRepository = contentRepository;
+            this.menuRepository = menuRepository;
+            this.contentOrderableService = contentOrderableService;
         }
 
         public ActionResult Index(string urlName)
@@ -43,7 +51,8 @@ namespace Suteki.Shop.Controllers
             {
                 MenuId = id,
                 IsActive = true,
-                ContentTypeId = ContentType.TextId
+                ContentTypeId = ContentType.TextId,
+                Position = contentOrderableService.NextPosition
             };
 
             return RenderView("Edit", CmsView.Data.WithTextContent(textContent));
@@ -89,6 +98,41 @@ namespace Suteki.Shop.Controllers
             contentRepository.SubmitChanges();
 
             return RenderView("Index", CmsView.Data.WithTextContent(content));
+        }
+
+        public ActionResult List()
+        {
+            return RenderListView();
+        }
+
+        private ActionResult RenderListView()
+        {
+            Menu mainMenu = menuRepository.GetTopLevelMenu();
+            return RenderView("List", CmsView.Data.WithMenu(mainMenu));
+        }
+
+        public ActionResult MoveUp(int id)
+        {
+            Content content = contentRepository.GetById(id);
+
+            contentOrderableService
+                .MoveItemAtPosition(content.Position)
+                .ConstrainedBy(c => c.MenuId == content.MenuId)
+                .UpOne();
+
+            return RenderListView();
+        }
+
+        public ActionResult MoveDown(int id)
+        {
+            Content content = contentRepository.GetById(id);
+
+            contentOrderableService
+                .MoveItemAtPosition(content.Position)
+                .ConstrainedBy(c => c.MenuId == content.MenuId)
+                .DownOne();
+
+            return RenderListView();
         }
     }
 }

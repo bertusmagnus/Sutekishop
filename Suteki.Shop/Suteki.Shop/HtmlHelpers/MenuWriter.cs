@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.IO;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.HtmlHelpers
 {
@@ -32,26 +33,14 @@ namespace Suteki.Shop.HtmlHelpers
             writer.AddAttribute(HtmlTextWriterAttribute.Class, "mainMenu");
             writer.RenderBeginTag(HtmlTextWriterTag.Ul);
 
-            foreach (Content content in menu.Contents)
+            foreach (Content content in menu.Contents.InOrder())
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 MenuLinkFactory.ForContent(content).WithHelper(htmlHelper).WriteActionLinkWith(writer);
                 writer.RenderEndTag();
             }
 
-            WriteEditOptions(writer, menu);
-
             writer.RenderEndTag();
-        }
-
-        private void WriteEditOptions(HtmlTextWriter writer, Menu menu)
-        {
-            if (htmlHelper.CurrentUser().IsAdministrator)
-            {
-                writer.RenderBeginTag(HtmlTextWriterTag.Li);
-                writer.Write(htmlHelper.ActionLink<CmsController>(c => c.Add(menu.MenuId), "New page"));
-                writer.RenderEndTag();
-            }
         }
     }
 

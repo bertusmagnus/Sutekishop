@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Web;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Services
 {
@@ -25,6 +27,11 @@ namespace Suteki.Shop.Services
         public string GetMainPath(Image image)
         {
             return GetFullPath(image.MainFileName);
+        }
+
+        public string GetRelativeUrl(string filename)
+        {
+            return "ProductPhotos/{0}".With(filename);
         }
     }
 }

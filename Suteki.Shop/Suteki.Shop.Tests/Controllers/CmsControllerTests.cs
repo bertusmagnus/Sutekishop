@@ -10,6 +10,7 @@ using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -19,6 +20,8 @@ namespace Suteki.Shop.Tests.Controllers
         CmsController cmsController;
 
         IRepository<Content> contentRepository;
+        IRepository<Menu> menuRepository;
+        IOrderableService<Content> contentOrderableService;
 
         [SetUp]
         public void SetUp()
@@ -27,8 +30,13 @@ namespace Suteki.Shop.Tests.Controllers
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
 
             contentRepository = new Mock<IRepository<Content>>().Object;
+            menuRepository = new Mock<IRepository<Menu>>().Object;
+            contentOrderableService = new Mock<IOrderableService<Content>>().Object;
 
-            cmsController = new Mock<CmsController>(contentRepository).Object;
+            cmsController = new Mock<CmsController>(
+                contentRepository, 
+                menuRepository,
+                contentOrderableService).Object;
         }
 
         [Test]
@@ -147,6 +155,19 @@ namespace Suteki.Shop.Tests.Controllers
             TestUpdateAction(contentId, menuId, form);
 
             Mock.Get(contentRepository).Verify();
+        }
+
+        [Test]
+        public void List_ShouldShowListOfExistingContent()
+        {
+            Menu mainMenu = new Menu();
+
+            Mock.Get(menuRepository).Expect(mr => mr.GetById(1)).Returns(mainMenu);            
+
+            cmsController.List()
+                .ReturnsRenderViewResult()
+                .ForView("List")
+                .AssertAreSame<CmsViewData, Menu>(mainMenu, vd => vd.Menu);
         }
     }
 }

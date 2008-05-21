@@ -12,7 +12,7 @@ CodeBehind="Cms.master.cs" Inherits="Suteki.Shop.Views.Shared.Cms" %>
             <div>
                 <ul class="mainMenu">
                     <li>
-                        <a href="">Admin Menu Item</a>
+                        <%= Html.ActionLink<CmsController>(c => c.List(), "Content") %>
                     </li>
                 </ul>
             </div>

@@ -46,6 +46,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="CookComputing.XmlRpcV2, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MvcContrib.dll</HintPath>
@@ -143,6 +147,7 @@
     <Compile Include="Repositories\ActivatableExtensions.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
+    <Compile Include="Repositories\MenuRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
@@ -210,6 +215,13 @@
     </Compile>
     <Compile Include="Views\Cms\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Cms\List.aspx.cs">
+      <DependentUpon>List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Cms\List.aspx.designer.cs">
+      <DependentUpon>List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Country\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
@@ -365,6 +377,8 @@
     <Compile Include="Views\User\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="XmlRpc\MetaWeblog.cs" />
+    <Compile Include="XmlRpc\MetaWeblogAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
@@ -421,10 +435,13 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="metablogapi.aspx" />
     <Content Include="Views\Cms\Edit.aspx" />
+    <Content Include="Views\Cms\List.aspx" />
     <Content Include="Views\Shared\Cms.master" />
     <Content Include="Views\Cms\Index.aspx" />
     <Content Include="Views\Shared\Shop.Master" />
+    <Content Include="wlwmanifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

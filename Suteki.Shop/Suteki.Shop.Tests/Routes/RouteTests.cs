@@ -19,7 +19,13 @@ namespace Suteki.Shop.Tests.Routes
         }
 
         [Test]
-        public void DefaultShouldRouteToHomeIndex()
+        public void RootShouldRouteToCms()
+        {
+            AssertRoutes(Routes, "~/", new { Controller = "Cms", Action = "Index", UrlName = "" });
+        }
+
+        [Test]
+        public void DefaultShouldRouteToCms()
         {
             AssertRoutes(Routes, "~/Default.aspx", new { Controller = "Cms", Action = "Index", UrlName = "" });
         }
@@ -27,37 +33,43 @@ namespace Suteki.Shop.Tests.Routes
         [Test]
         public void DomainOnlyShouldRouteToHomeIndex()
         {
-            AssertRoutes(Routes, "~/", new { Controller = "Home", Action = "Index", Id = "" });
+            AssertRoutes(Routes, "~/shop", new { Controller = "Home", Action = "Index", Id = "" });
         }
 
         [Test]
         public void ControllerOnlyShouldDefaultToIndex()
         {
-            AssertRoutes(Routes, "~/MyController", new { Controller = "MyController", Action = "Index" });
+            AssertRoutes(Routes, "~/shop/MyController", new { Controller = "MyController", Action = "Index" });
         }
 
         [Test]
         public void AnyControllerActionPairShouldRouteToCorrectControllerAction()
         {
-            AssertRoutes(Routes, "~/MyController/MyAction", new { Controller = "MyController", Action = "MyAction" });
+            AssertRoutes(Routes, "~/shop/MyController/MyAction", new { Controller = "MyController", Action = "MyAction" });
         }
 
         [Test]
         public void IdNotSpecifiedShouldDefaultToEmptyString()
         {
-            AssertRoutes(Routes, "~/SomeController/SomeAction", new { Id = string.Empty });
+            AssertRoutes(Routes, "~/shop/SomeController/SomeAction", new { Id = string.Empty });
         }
 
         [Test]
         public void IdSpecifiedShouldBecomeIdProperty()
         {
-            AssertRoutes(Routes, "~/SomeController/SomeAction/103", new { Id = "103" });
+            AssertRoutes(Routes, "~/shop/SomeController/SomeAction/103", new { Id = "103" });
         }
 
         [Test]
         public void CmsUrlsShouldMapToCmsControllerIndexAction()
         {
             AssertRoutes(Routes, "~/cms/help", new { Controller = "Cms", Action = "Index", UrlName = "help" });
+        }
+
+        [Test]
+        public void RootCmsShouldRouteToCmsIndex()
+        {
+            AssertRoutes(Routes, "~/cms", new { Controller = "Cms", Action = "Index", UrlName = "" });
         }
 
         /// <summary>

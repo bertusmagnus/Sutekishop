@@ -7,6 +7,7 @@
 
     <%= Html.Hidden("menuid", ViewData.TextContent.MenuId) %>
     <%= Html.Hidden("contenttypeid", ViewData.TextContent.ContentTypeId)%>
+    <%= Html.Hidden("position", ViewData.TextContent.Position) %>
 
     <label for="name">Name</label>
     <%= Html.TextBox("name", ViewData.TextContent.Name) %>

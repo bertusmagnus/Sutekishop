@@ -1,5 +1,7 @@
 ﻿using System;
 using Suteki.Shop.Repositories;
+using System.Web;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Services
 {
@@ -17,6 +19,31 @@ namespace Suteki.Shop.Services
                 return emailAddress; 
             }
             set { emailAddress = value; }
+        }
+
+        public virtual string siteUrl 
+        {
+            get
+            {
+
+                Uri url = CurrentHttpContext.Request.Url;
+                string relativePath = CurrentHttpContext.Request.ApplicationPath;
+                string port = (url.Port == 80) ? "" : ":{0}".With(url.Port.ToString());
+
+                return "{0}://{1}{2}{3}".With(url.Scheme, url.Host, port, relativePath);
+            }
+        }
+
+        public virtual HttpContext CurrentHttpContext
+        {
+            get
+            {
+                if (HttpContext.Current == null)
+                {
+                    throw new ApplicationException("There is no current HttpContext");
+                }
+                return HttpContext.Current;
+            }
         }
 
         public BaseControllerService(
