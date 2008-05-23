@@ -103,6 +103,24 @@ namespace Suteki.Shop.HtmlHelpers
             return menuWriter.Write();
         }
 
+        public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, object attributes)
+        {
+            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, attributes);
+            return menuWriter.Write();
+        }
+
+        public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, bool nest)
+        {
+            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, nest, false);
+            return menuWriter.Write();
+        }
+
+        public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, bool nest, object attributes)
+        {
+            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, nest, attributes);
+            return menuWriter.Write();
+        }
+
         public static string UpArrowLink<T>(this HtmlHelper htmlHelper, Expression<Action<T>> action) where T : Controller
         {
             return "<a href=\"{0}\" class=\"arrowlink\">{1}</a>".With(

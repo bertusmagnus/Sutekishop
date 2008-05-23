@@ -118,6 +118,7 @@
     <Compile Include="HtmlHelpers\MenuWriter.cs" />
     <Compile Include="HtmlHelpers\Pager.cs" />
     <Compile Include="HtmlHelpers\StockWriter.cs" />
+    <Compile Include="Models\ActionContent.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardType.cs" />
     <Compile Include="Models\Category.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
+    <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderSearchCriteria.cs" />
     <Compile Include="Models\OrderStatus.cs" />
@@ -147,7 +149,6 @@
     <Compile Include="Repositories\ActivatableExtensions.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
-    <Compile Include="Repositories\MenuRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
@@ -335,6 +336,13 @@
     <Compile Include="Views\Shared\Cms.master.designer.cs">
       <DependentUpon>Cms.master</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\CmsSubMenu.master.cs">
+      <DependentUpon>CmsSubMenu.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\CmsSubMenu.master.designer.cs">
+      <DependentUpon>CmsSubMenu.master</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Rescues\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -435,6 +443,7 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Shared\CmsSubMenu.master" />
     <Content Include="metablogapi.aspx" />
     <Content Include="Views\Cms\Edit.aspx" />
     <Content Include="Views\Cms\List.aspx" />

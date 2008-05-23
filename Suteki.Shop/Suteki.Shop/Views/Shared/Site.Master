@@ -12,11 +12,6 @@
         <div class="header">
         
             <div class="logo">
-                <div id="loginStatus">
-                    <%= Html.LoginLink() %>
-                    <%= Html.LoginStatus() %>
-                </div>
-                
                 <h1>
                     Suteki Shop
                 </h1>
@@ -32,6 +27,11 @@
         </asp:ContentPlaceHolder>
 
         <div class="footer">
+            <div id="loginStatus">
+                <%= Html.LoginLink() %>
+                <%= Html.LoginStatus() %>
+            </div>
+                
             <p>
                 Suteki Limited &copy; Copyright 2008
             </p>

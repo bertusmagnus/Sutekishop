@@ -8,7 +8,7 @@ namespace Suteki.Shop.Services
     public class BaseControllerService : IBaseControllerService
     {
         public IRepository<Category> CategoryRepository { get; private set; }
-        public IRepository<Menu> MenuRepository { get; private set; }
+        public IRepository<Content> ContentRepository { get; private set; }
         private string emailAddress;
 
         public string EmailAddress
@@ -48,10 +48,10 @@ namespace Suteki.Shop.Services
 
         public BaseControllerService(
             IRepository<Category> categoryRepository,
-            IRepository<Menu> menuRepository)
+            IRepository<Content> contentRepository)
         {
             this.CategoryRepository = categoryRepository;
-            this.MenuRepository = menuRepository;
+            this.ContentRepository = contentRepository;
         }
     }
 }

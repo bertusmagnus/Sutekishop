@@ -1,17 +1,43 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Cms.master" AutoEventWireup="true" CodeBehind="List.aspx.cs" Inherits="Suteki.Shop.Views.Cms.List" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="List.aspx.cs" Inherits="Suteki.Shop.Views.Cms.List" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Menu.MenuId), "New Page") %>
+<h1><%= ViewData.Menu.Name %></h1>
 
-<ul>
+<p>
+    <%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Menu.ContentId), "New Page") %>&nbsp;
+    <%= Html.ActionLink<CmsController>(c => c.NewMenu(ViewData.Menu.ContentId), "New Menu") %>
+</p>
+
+<table>
+    <tr>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+        <th class="thin">&nbsp;</th>
+    </tr>
 <% foreach(var content in ViewData.Menu.Contents.InOrder()) { %>
-    <li>
-    <%= content.Name %>
-    <%= Html.ActionLink<CmsController>(c => c.Edit(content.ContentId), "Edit") %>
-    <%= Html.UpArrowLink<CmsController>(c => c.MoveUp(content.ContentId)) %>
-    <%= Html.DownArrowLink<CmsController>(c => c.MoveDown(content.ContentId))%>
-    </li>
+    <tr>
+        <td><%= content.Type %></td>
+        <td><%= content.Link(Html) %></td>
+        <td><%= content.EditLink(Html) %></td>
+        <td><%= Html.Tick(content.IsActive) %></td>
+        <td>
+            <%= Html.UpArrowLink<CmsController>(c => c.MoveUp(content.ContentId)) %>
+            &nbsp;<%= Html.DownArrowLink<CmsController>(c => c.MoveDown(content.ContentId))%>
+        </td>
+        
+        <% if (content.IsMenu) { %>
+            <td><%= Html.ActionLink<CmsController>(c => c.Add(content.ContentId), "New Page") %></td>
+            <td><%= Html.ActionLink<CmsController>(c => c.NewMenu(content.ContentId), "New Menu")%></td>
+        <% } else { %>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        <% } %>
+    </tr>
 <% } %>
-</ul>
+</table>
 
 </asp:Content>

@@ -352,9 +352,9 @@ namespace Suteki.Shop.XmlRpc
 
             TextContent content = new TextContent
             {
-                MenuId = 1,
+                ParentContentId = 1,
                 Position = contentOrderableService.NextPosition,
-                ContentTypeId = ContentType.TextId,
+                ContentTypeId = ContentType.TextContentId,
                 IsActive = publish,
                 Name = post.title,
                 Text = post.description

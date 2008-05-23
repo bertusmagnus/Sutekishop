@@ -1,16 +1,20 @@
 ﻿SutekiShop To Do list
 =====================
 
+* DataContext lifetime!!!
+
 * Non-active categories
 
 * Order Management
+	- mostly done (probably need a print page)
 
 * Credit Card Encryption
 	- done, but nice to have the client side silverlight storage.
 
 * Emails
 
-* Shopping basket off main menu (do this as part of sub Master page for shop)
+* Shopping basket off main menu 
+	- done, but need separate logo, not as a menu item
 
 * CMS
 	- Menu management

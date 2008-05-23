@@ -5,105 +5,84 @@ using System.Web.UI;
 using System.IO;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.HtmlHelpers
 {
     public class MenuWriter
     {
         HtmlHelper htmlHelper;
-        Menu mainMenu;
+        Menu menu;
+        object attributes;
+        bool nest;
 
-        public MenuWriter(HtmlHelper htmlHelper, Menu mainMenu)
+        public MenuWriter(HtmlHelper htmlHelper, Menu menu)
+            : this(htmlHelper, menu, false, null)
+        { }
+
+        public MenuWriter(HtmlHelper htmlHelper, Menu menu, object attributes)
+            : this(htmlHelper, menu, false, attributes)
+        { }
+
+        public MenuWriter(HtmlHelper htmlHelper, Menu menu, bool nest, object attributes)
         {
             this.htmlHelper = htmlHelper;
-            this.mainMenu = mainMenu;
+            this.menu = menu;
+            this.nest = nest;
+            this.attributes = attributes;
         }
 
         public string Write()
         {
             HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
 
-            WriteMenu(writer, mainMenu);
+            WriteMenu(writer, menu);
 
             return writer.InnerWriter.ToString();
         }
 
         private void WriteMenu(HtmlTextWriter writer, Menu menu)
         {
-            writer.AddAttribute(HtmlTextWriterAttribute.Class, "mainMenu");
+            if (menu == null) return;
+
+            WriteAttributes(writer);
             writer.RenderBeginTag(HtmlTextWriterTag.Ul);
 
             foreach (Content content in menu.Contents.InOrder())
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
-                MenuLinkFactory.ForContent(content).WithHelper(htmlHelper).WriteActionLinkWith(writer);
+                writer.Write(content.Link(htmlHelper));
+
+                if (nest && content is Menu)
+                {
+                    WriteMenu(writer, (Menu)content);
+                }
+
                 writer.RenderEndTag();
             }
 
+            WriteEditLink(writer, menu);
+
             writer.RenderEndTag();
         }
-    }
 
-    public class MenuLinkFactory
-    {
-        public static IMenuLink ForContent(Content content)
+        private void WriteEditLink(HtmlTextWriter writer, Menu menu)
         {
-            if (content is TextContent) return new TextMenuLink((TextContent)content);
-            if (content is ActionContent) return new ActionMenuLink((ActionContent)content);
-            throw new ArgumentException("content is not a recognised content type");
+            if (htmlHelper.CurrentUser().IsAdministrator)
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.Li);
+                writer.Write(htmlHelper.ActionLink<CmsController>(c => c.List(menu.ContentId), "Edit this menu"));
+                writer.RenderEndTag();
+            }
         }
 
-        public static IMenuLink ForMenu(Menu menu)
+        private void WriteAttributes(HtmlTextWriter writer)
         {
-            return null;
-        }
-    }
-
-    public interface IMenuLink
-    {
-        MenuLink WithHelper(HtmlHelper htmlHelper);
-    }
-
-    public abstract class MenuLink : IMenuLink
-    {
-        protected HtmlHelper htmlHelper;
-
-        public abstract void WriteActionLinkWith(HtmlTextWriter writer);
-
-        public MenuLink WithHelper(HtmlHelper htmlHelper)
-        {
-            this.htmlHelper = htmlHelper;
-            return this;
-        }
-    }
-
-    public class TextMenuLink : MenuLink
-    {
-        TextContent textContent;
-
-        public TextMenuLink(TextContent textContent)
-        {
-            this.textContent = textContent;
-        }
-
-        public override void WriteActionLinkWith(HtmlTextWriter writer)
-        {
-            writer.Write(htmlHelper.ActionLink<CmsController>(c => c.Index(textContent.UrlName), textContent.Name));
-        }
-    }
-
-    public class ActionMenuLink : MenuLink
-    {
-        ActionContent actionContent;
-
-        public ActionMenuLink(ActionContent actionContent)
-        {
-            this.actionContent = actionContent;
-        }
-
-        public override void WriteActionLinkWith(HtmlTextWriter writer)
-        {
-            writer.Write(htmlHelper.ActionLink(actionContent.Name, actionContent.Action, actionContent.Controller));
+            if (attributes == null) return;
+            foreach (var property in attributes.GetProperties())
+            {
+                writer.AddAttribute(property.Name, property.Value.ToString());
+            }
         }
     }
 }

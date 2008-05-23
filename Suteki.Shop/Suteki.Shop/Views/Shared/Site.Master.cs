@@ -21,10 +21,10 @@ namespace Suteki.Shop.Views.Shared
 
                 if (controller != null)
                 {
-                    IRepository<Suteki.Shop.Menu> menuRepository =
-                        controller.BaseControllerService.MenuRepository;
+                    IRepository<Content> contentRepository =
+                        controller.BaseControllerService.ContentRepository;
 
-                    return Html.WriteMenu(menuRepository.GetTopLevelMenu());
+                    return Html.WriteMenu(contentRepository.GetMainMenu(), new { _class = "mainMenu" });
                 }
 
                 return "";

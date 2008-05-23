@@ -89,6 +89,7 @@
     <Compile Include="Controllers\UserControllerTests.cs" />
     <Compile Include="Extensions\CategoryWriterTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
+    <Compile Include="Models\ContentTests.cs" />
     <Compile Include="Models\ImageTests.cs" />
     <Compile Include="Models\OrderTests.cs" />
     <Compile Include="Models\TextContentTests.cs" />

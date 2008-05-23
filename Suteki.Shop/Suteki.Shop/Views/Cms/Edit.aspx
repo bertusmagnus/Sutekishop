@@ -1,22 +1,31 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Cms.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Cms.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Cms.Edit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<h1>Text Content</h1>
+<h1>Content</h1>
 
-<% using(Html.Form<CmsController>(c => c.Update(ViewData.TextContent.ContentId))) { %>
+<p><%= ViewData.Content.Link(Html) %></p>
 
-    <%= Html.Hidden("menuid", ViewData.TextContent.MenuId) %>
-    <%= Html.Hidden("contenttypeid", ViewData.TextContent.ContentTypeId)%>
-    <%= Html.Hidden("position", ViewData.TextContent.Position) %>
+<%= Html.MessageBox(ViewData) %>
+<%= Html.ErrorBox(ViewData) %>
+
+<% using(Html.Form<CmsController>(c => c.Update(ViewData.Content.ContentId))) { %>
+
+    <%= Html.Hidden("parentcontentid", ViewData.Content.ParentContentId)%>
+    <%= Html.Hidden("contenttypeid", ViewData.Content.ContentTypeId)%>
+    <%= Html.Hidden("position", ViewData.Content.Position) %>
 
     <label for="name">Name</label>
-    <%= Html.TextBox("name", ViewData.TextContent.Name) %>
+    <%= Html.TextBox("name", ViewData.Content.Name) %>
 
-    <label for="text">Text</label>
-    <%= Html.TextArea("text", ViewData.TextContent.Text) %>
+    <% if(ViewData.Content.IsTextContent) { %>
+
+        <label for="text">Text</label>
+        <%= Html.TextArea("text", ViewData.TextContent.Text) %>
+    
+    <% } %>
 
     <label for="isactive">Active</label>
-    <%= Html.CheckBox("isactive", "", "True", ViewData.TextContent.IsActive)%>
+    <%= Html.CheckBox("isactive", "", "True", ViewData.Content.IsActive)%>
 
     <%= Html.SubmitButton() %>
 

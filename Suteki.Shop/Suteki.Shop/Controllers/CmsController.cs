@@ -15,33 +15,43 @@ namespace Suteki.Shop.Controllers
     public class CmsController : ControllerBase
     {
         IRepository<Content> contentRepository;
-        IRepository<Menu> menuRepository;
         IOrderableService<Content> contentOrderableService;
 
         public CmsController(
             IRepository<Content> contentRepository,
-            IRepository<Menu> menuRepository,
             IOrderableService<Content> contentOrderableService)
         {
             this.contentRepository = contentRepository;
-            this.menuRepository = menuRepository;
             this.contentOrderableService = contentOrderableService;
         }
 
         public ActionResult Index(string urlName)
         {
-            TextContent content;
+            Content content;
 
             if (string.IsNullOrEmpty(urlName))
             {
-                content = contentRepository.GetAll().OfType<TextContent>().InOrder().First();
+                content = contentRepository.GetAll().DefaultText();
             }
             else
             {
                 content = contentRepository.GetAll().WithUrlName(urlName);
             }
 
-            return RenderView("Index", CmsView.Data.WithTextContent(content));
+            if (content is Menu)
+            {
+                content = contentRepository.GetAll()
+                    .WithParent(content)
+                    .DefaultText();
+            }
+
+            if (content is ActionContent)
+            {
+                ActionContent actionContent = content as ActionContent;
+                return RedirectToAction(actionContent.Action, actionContent.Controller);
+            }
+
+            return RenderView("Index", CmsView.Data.WithContent(content));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -49,36 +59,33 @@ namespace Suteki.Shop.Controllers
         {
             TextContent textContent = new TextContent
             {
-                MenuId = id,
+                ParentContentId = id,
                 IsActive = true,
-                ContentTypeId = ContentType.TextId,
+                ContentTypeId = ContentType.TextContentId,
                 Position = contentOrderableService.NextPosition
             };
 
-            return RenderView("Edit", CmsView.Data.WithTextContent(textContent));
+            return RenderView("Edit", CmsView.Data.WithContent(textContent));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
-            TextContent content = contentRepository.GetById(id) as TextContent;
-            if (content == null) throw new ApplicationException("Content with id = {0} is not TextContent".With(id));
-
-            return RenderView("Edit", CmsView.Data.WithTextContent(content));
+            Content content = contentRepository.GetById(id);
+            return RenderView("Edit", CmsView.Data.WithContent(content));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Update(int id)
         {
-            TextContent content = null;
+            Content content = null;
             if (id == 0)
             {
-                content = new TextContent();
+                content = CreateContent();
             }
             else
             {
-                content = (TextContent)contentRepository.GetById(id);
-                if (content == null) throw new ApplicationException("content, id = {0} is not TextContent".With(id));
+                content = contentRepository.GetById(id);
             }
 
             try
@@ -88,7 +95,7 @@ namespace Suteki.Shop.Controllers
             catch (ValidationException validationException)
             {
                 return RenderView("Edit", 
-                    CmsView.Data.WithTextContent(content).WithErrorMessage(validationException.Message));
+                    CmsView.Data.WithContent(content).WithErrorMessage(validationException.Message));
             }
 
             if (id == 0)
@@ -97,18 +104,40 @@ namespace Suteki.Shop.Controllers
             }
             contentRepository.SubmitChanges();
 
-            return RenderView("Index", CmsView.Data.WithTextContent(content));
+            return RenderView("List", CmsView.Data.WithContent(content.Content1));
         }
 
-        public ActionResult List()
+        /// <summary>
+        /// Create the correct subtype of content based on the contentTypeId returned in the form post
+        /// </summary>
+        /// <returns></returns>
+        private Content CreateContent()
         {
-            return RenderListView();
+            Content content = null;
+            int contentTypeId = int.Parse(this.Form["contenttypeid"]);
+            switch (contentTypeId)
+            {
+                case ContentType.TextContentId:
+                    content = new TextContent();
+                    break;
+                case ContentType.MenuId:
+                    content = new Menu();
+                    break;
+                default:
+                    throw new ApplicationException("Unknown ContentTypeId: {0}".With(contentTypeId));
+            }
+            return content;
         }
 
-        private ActionResult RenderListView()
+        public ActionResult List(int id)
         {
-            Menu mainMenu = menuRepository.GetTopLevelMenu();
-            return RenderView("List", CmsView.Data.WithMenu(mainMenu));
+            return RenderListView(id);
+        }
+
+        private ActionResult RenderListView(int contentId)
+        {
+            Menu menu = contentRepository.GetById(contentId) as Menu;
+            return RenderView("List", CmsView.Data.WithContent(menu));
         }
 
         public ActionResult MoveUp(int id)
@@ -117,10 +146,10 @@ namespace Suteki.Shop.Controllers
 
             contentOrderableService
                 .MoveItemAtPosition(content.Position)
-                .ConstrainedBy(c => c.MenuId == content.MenuId)
+                .ConstrainedBy(c => c.ParentContentId == content.ParentContentId)
                 .UpOne();
 
-            return RenderListView();
+            return RenderListView(content.ParentContentId.Value);
         }
 
         public ActionResult MoveDown(int id)
@@ -129,10 +158,23 @@ namespace Suteki.Shop.Controllers
 
             contentOrderableService
                 .MoveItemAtPosition(content.Position)
-                .ConstrainedBy(c => c.MenuId == content.MenuId)
+                .ConstrainedBy(c => c.ParentContentId == content.ParentContentId)
                 .DownOne();
 
-            return RenderListView();
+            return RenderListView(content.ParentContentId.Value);
+        }
+
+        public ActionResult NewMenu(int id)
+        {
+            Menu menu = new Menu
+            {
+                ContentTypeId = ContentType.MenuId,
+                ParentContentId = id,
+                IsActive = true,
+                Position = contentOrderableService.NextPosition
+            };
+
+            return RenderView("Edit", CmsView.Data.WithContent(menu));
         }
     }
 }

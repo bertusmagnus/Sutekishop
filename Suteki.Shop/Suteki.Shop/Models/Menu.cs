@@ -1,20 +1,24 @@
 ﻿using System;
-using Suteki.Shop.Validation;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc;
 
 namespace Suteki.Shop
 {
-    public partial class TextContent
+    public partial class Menu
     {
-        partial void OnTextChanging(string value)
-        {
-            value.Label("Text").IsRequired();
-        }
+        public const int MainMenuId = 1;
 
         public override string EditLink(HtmlHelper htmlHelper)
         {
             return htmlHelper.ActionLink<CmsController>(c => c.Edit(ContentId), "Edit");
+        }
+
+        public bool IsMainMenu
+        {
+            get
+            {
+                return ContentId == MainMenuId;
+            }
         }
     }
 }
