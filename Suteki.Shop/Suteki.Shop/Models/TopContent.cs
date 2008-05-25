@@ -1,17 +1,11 @@
 ﻿using System;
-using Suteki.Shop.Validation;
-using Suteki.Shop.Controllers;
 using System.Web.Mvc;
+using Suteki.Shop.Controllers;
 
 namespace Suteki.Shop
 {
-    public partial class TextContent : ITextContent
+    public partial class TopContent : ITextContent
     {
-        partial void OnTextChanging(string value)
-        {
-            //value.Label("Text").IsRequired();
-        }
-
         public override string EditLink(HtmlHelper htmlHelper)
         {
             return htmlHelper.ActionLink<CmsController>(c => c.Edit(ContentId), "Edit");

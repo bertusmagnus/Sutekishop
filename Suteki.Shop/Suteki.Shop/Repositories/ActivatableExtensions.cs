@@ -14,5 +14,19 @@ namespace Suteki.Shop.Repositories
         {
             return items.AsQueryable().Active();
         }
+
+        public static IQueryable<T> ActiveFor<T>(this IQueryable<T> items, User user) where T : IActivatable
+        {
+            if (user.IsAdministrator)
+            {
+                return items;
+            }
+            return items.Active();
+        }
+
+        public static IEnumerable<T> ActiveFor<T>(this IEnumerable<T> items, User user) where T : IActivatable
+        {
+            return items.AsQueryable().ActiveFor(user);
+        }
     }
 }

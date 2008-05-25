@@ -23,6 +23,7 @@ insert OrderStatus values(3, 'Rejected')
 insert ContentType values(1, 'Menu')
 insert ContentType values(2, 'Text')
 insert ContentType values(3, 'Action')
+insert ContentType values(4, 'Top')
 
 set identity_insert [content] on
 
@@ -30,7 +31,7 @@ insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [te
 values(1, null, 1, 'Main Menu', 'Main_menu', null, null, null, 1, 1)
 
 insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
-values(2, 1, 2, 'Home', 'Home', 'Homepage Content', null, null, 2, 1)
+values(2, 1, 4, 'Home', 'Home', 'Homepage Content', null, null, 2, 1)
 
 insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
 values(3, 1, 3, 'Online Shop', 'Online_Shop', null, 'Home', 'Index', 3, 1)

@@ -10,7 +10,6 @@
 
 <% using(Html.Form<CmsController>(c => c.Update(ViewData.Content.ContentId))) { %>
 
-    <%= Html.Hidden("parentcontentid", ViewData.Content.ParentContentId)%>
     <%= Html.Hidden("contenttypeid", ViewData.Content.ContentTypeId)%>
     <%= Html.Hidden("position", ViewData.Content.Position) %>
 
@@ -23,6 +22,9 @@
         <%= Html.TextArea("text", ViewData.TextContent.Text) %>
     
     <% } %>
+
+    <label for="parentcontentid">Parent Menu</label>
+    <%= Html.Select("parentcontentid", ViewData.Menus, "Name", "ContentId", ViewData.Content.ParentContentId)%>
 
     <label for="isactive">Active</label>
     <%= Html.CheckBox("isactive", "", "True", ViewData.Content.IsActive)%>

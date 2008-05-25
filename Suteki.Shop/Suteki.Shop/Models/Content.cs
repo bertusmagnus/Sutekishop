@@ -22,7 +22,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return this is TextContent;
+                return this is ITextContent;
             }
         }
 

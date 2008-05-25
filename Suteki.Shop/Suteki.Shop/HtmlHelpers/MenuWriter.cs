@@ -48,7 +48,7 @@ namespace Suteki.Shop.HtmlHelpers
             WriteAttributes(writer);
             writer.RenderBeginTag(HtmlTextWriterTag.Ul);
 
-            foreach (Content content in menu.Contents.InOrder())
+            foreach (Content content in menu.Contents.InOrder().ActiveFor(htmlHelper.CurrentUser()))
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 writer.Write(content.Link(htmlHelper));
@@ -70,6 +70,7 @@ namespace Suteki.Shop.HtmlHelpers
         {
             if (htmlHelper.CurrentUser().IsAdministrator)
             {
+                writer.AddAttribute("class", "editMenuLink");
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 writer.Write(htmlHelper.ActionLink<CmsController>(c => c.List(menu.ContentId), "Edit this menu"));
                 writer.RenderEndTag();

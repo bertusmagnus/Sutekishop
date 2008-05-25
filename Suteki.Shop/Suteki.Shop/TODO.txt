@@ -3,10 +3,11 @@
 
 * DataContext lifetime!!!
 
-* Non-active categories
+* SSL certificate
 
 * Order Management
 	- mostly done (probably need a print page)
+	- checkout page layout needs fixing
 
 * Credit Card Encryption
 	- done, but nice to have the client side silverlight storage.
@@ -28,4 +29,4 @@
 
 * Site Map
 
-* Don't show customer users on users page
+* Order processor page permissions

@@ -26,7 +26,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
-            var users = userRepository.GetAll();
+            var users = userRepository.GetAll().Editable();
             return RenderView("Index", ShopView.Data.WithUsers(users));
         }
 

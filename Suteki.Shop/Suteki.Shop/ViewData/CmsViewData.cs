@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Suteki.Shop.ViewData
 {
     public class CmsViewData : ViewDataBase
     {
         public Content Content { get; set; }
+        public IEnumerable<Menu> Menus { get; set; }
 
-        public TextContent TextContent
+        public ITextContent TextContent
         {
             get
             {
-                TextContent textContent = Content as TextContent;
+                ITextContent textContent = Content as ITextContent;
                 if (textContent == null)
-                    throw new ApplicationException("ViewData Content is not of type TextContent");
+                    throw new ApplicationException("ViewData Content is not of type ITextContent");
                 return textContent;
             }
         }
@@ -33,6 +35,12 @@ namespace Suteki.Shop.ViewData
         public CmsViewData WithContent(Content content)
         {
             this.Content = content;
+            return this;
+        }
+
+        public CmsViewData WithMenus(IEnumerable<Menu> menus)
+        {
+            this.Menus = menus;
             return this;
         }
     }

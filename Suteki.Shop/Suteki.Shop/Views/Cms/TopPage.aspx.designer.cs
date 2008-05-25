@@ -8,9 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Suteki.Shop.Views.Cms {
-    
-    
-    public partial class Index {
+namespace Suteki.Shop.Views.Cms
+{
+
+
+    public partial class TopPage
+    {
     }
 }

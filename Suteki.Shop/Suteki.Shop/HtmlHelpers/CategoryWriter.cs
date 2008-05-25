@@ -52,7 +52,7 @@ namespace Suteki.Shop.HtmlHelpers
             
             
             bool first = true;
-            foreach (Category category in categories)
+            foreach (Category category in categories.ActiveFor(htmlHelper.CurrentUser()))
             {
                 if (first)
                 {
@@ -73,9 +73,10 @@ namespace Suteki.Shop.HtmlHelpers
         {
             if (display == CategoryDisplay.Edit)
             {
-                return "{0} {1} {2} {3}".With(
+                return "{0} {1} {2} {3} {4}".With(
                     WriteCategoryLink(category),
                     htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"),
+                    htmlHelper.Tick(category.IsActive),
                     htmlHelper.UpArrowLink<CategoryController>(c => c.MoveUp(category.CategoryId)),
                     htmlHelper.DownArrowLink<CategoryController>(c => c.MoveDown(category.CategoryId))
                     );

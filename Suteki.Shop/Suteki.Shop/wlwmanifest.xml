@@ -9,15 +9,15 @@
     <adminLinkText>Administer your blog</adminLinkText>
     <adminUrl>
       <![CDATA[
-        {blog-homepage-url}admin
+        {blog-homepage-url}
     ]]>
     </adminUrl>
+    <!--
     <postEditingUrl>
       <![CDATA[
         {blog-homepage-url}admin/EditPosts.aspx
     ]]>
     </postEditingUrl>
-    <!--
     <watermarkImageUrl>images/subtextWatermark.png</watermarkImageUrl>
     <imageUrl>images/subtextLogo32-23.png</imageUrl>
     -->

@@ -24,5 +24,10 @@ namespace Suteki.Shop.Repositories
                     user.IsEnabled
                 );
         }
+
+        public static IQueryable<User> Editable(this IQueryable<User> users)
+        {
+            return users.Where(user => !(user.RoleId == Role.CustomerId));
+        }
     }
 }

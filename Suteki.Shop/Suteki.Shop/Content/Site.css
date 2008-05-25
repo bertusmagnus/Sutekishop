@@ -131,6 +131,11 @@ h2 a
 	clear: both;	
 }
 
+#topContent
+{
+	padding: 10px 20px;
+}
+
 /* --------------------------- columns ------------------------ */
 
 .columnContainer
@@ -238,6 +243,11 @@ dd
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+}
+
+li.editMenuLink a
+{
+	color: Red;	
 }
 
 .mainMenu a
@@ -518,6 +528,7 @@ textarea
 
 .cross
 {
+	display: inline;
 	background-image: url(Images/cross.png);
 	background-repeat: no-repeat;
 	width: 10pt;
@@ -526,6 +537,7 @@ textarea
 
 .tick
 {
+	display: inline;
 	background-image: url(Images/tick.png);
 	background-repeat: no-repeat;
 	width: 10pt;

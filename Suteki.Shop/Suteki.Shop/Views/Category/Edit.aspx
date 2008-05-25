@@ -17,6 +17,9 @@
         <label for="parentid">Parent Category</label>
         <%= Html.Select("parentid", ViewData.Categories, "Name", "CategoryId", ViewData.Category.ParentId)%>
         
+        <label for="isactive">Active</label>
+        <%= Html.CheckBox("isactive", "", "True", ViewData.Category.IsActive)%>
+        
         <%= Html.SubmitButton() %>
 
     <% } %>

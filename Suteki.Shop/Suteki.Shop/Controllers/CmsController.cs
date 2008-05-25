@@ -31,7 +31,7 @@ namespace Suteki.Shop.Controllers
 
             if (string.IsNullOrEmpty(urlName))
             {
-                content = contentRepository.GetAll().DefaultText();
+                content = (Content)contentRepository.GetAll().DefaultText();
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Suteki.Shop.Controllers
 
             if (content is Menu)
             {
-                content = contentRepository.GetAll()
+                content = (Content)contentRepository.GetAll()
                     .WithParent(content)
                     .DefaultText();
             }
@@ -51,7 +51,12 @@ namespace Suteki.Shop.Controllers
                 return RedirectToAction(actionContent.Action, actionContent.Controller);
             }
 
-            return RenderView("Index", CmsView.Data.WithContent(content));
+            if (content is TopContent)
+            {
+                return RenderView("TopPage", CmsView.Data.WithContent(content));
+            }
+
+            return RenderView("SubPage", CmsView.Data.WithContent(content));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -65,14 +70,23 @@ namespace Suteki.Shop.Controllers
                 Position = contentOrderableService.NextPosition
             };
 
-            return RenderView("Edit", CmsView.Data.WithContent(textContent));
+            return RenderView("Edit", EditViewData.WithContent(textContent));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
             Content content = contentRepository.GetById(id);
-            return RenderView("Edit", CmsView.Data.WithContent(content));
+            return RenderView("Edit", EditViewData.WithContent(content));
+        }
+
+        private CmsViewData EditViewData
+        {
+            get
+            {
+                var menus = contentRepository.GetAll().Menus();
+                return CmsView.Data.WithMenus(menus);
+            }
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]

@@ -4631,6 +4631,7 @@ namespace Suteki.Shop
 	[InheritanceMapping(Code="1", Type=typeof(Menu), IsDefault=true)]
 	[InheritanceMapping(Code="2", Type=typeof(TextContent))]
 	[InheritanceMapping(Code="3", Type=typeof(ActionContent))]
+	[InheritanceMapping(Code="4", Type=typeof(TopContent))]
 	public partial class Content : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
@@ -5058,6 +5059,45 @@ namespace Suteki.Shop
 					this._Action = value;
 					this.SendPropertyChanged("Action");
 					this.OnActionChanged();
+				}
+			}
+		}
+	}
+	
+	public partial class TopContent : Content
+	{
+		
+		private string _Text;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnTextChanging(string value);
+    partial void OnTextChanged();
+    #endregion
+		
+		public TopContent()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_Text", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string Text
+		{
+			get
+			{
+				return this._Text;
+			}
+			set
+			{
+				if ((this._Text != value))
+				{
+					this.OnTextChanging(value);
+					this.SendPropertyChanging();
+					this._Text = value;
+					this.SendPropertyChanged("Text");
+					this.OnTextChanged();
 				}
 			}
 		}

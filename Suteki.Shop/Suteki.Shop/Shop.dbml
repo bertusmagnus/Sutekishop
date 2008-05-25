@@ -230,6 +230,9 @@
         <Column Name="Controller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
         <Column Name="Action" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       </Type>
+      <Type Name="TopContent" InheritanceCode="4">
+        <Column Name="Text" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      </Type>
     </Type>
   </Table>
 </Database>

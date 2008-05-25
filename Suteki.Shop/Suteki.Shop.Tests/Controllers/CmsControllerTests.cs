@@ -44,7 +44,6 @@ namespace Suteki.Shop.Tests.Controllers
 
             var contents = new List<Content>
             {
-                new TextContent { UrlName = "Online Shop" },
                 new TextContent { UrlName = "Home" },
                 new ActionContent { Name = "Help Pages" }
             }.AsQueryable();
@@ -53,10 +52,30 @@ namespace Suteki.Shop.Tests.Controllers
 
             cmsController.Index(urlName)
                 .ReturnsRenderViewResult()
-                .ForView("Index")
-                .AssertAreSame<CmsViewData, TextContent>(
-                    contents.OfType<TextContent>().Single(c => c.UrlName == "Home"), 
+                .ForView("SubPage")
+                .AssertAreSame<CmsViewData, ITextContent>(
+                    contents.OfType<ITextContent>().First(), 
                     vd => vd.TextContent);
+        }
+
+        [Test]
+        public void Index_ShouldRenderTopContentWithTopPageView()
+        {
+            string urlName = "home_page";
+
+            var contents = new List<Content>
+            {
+                new TopContent { UrlName = "home_page" }
+            }.AsQueryable();
+
+            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
+
+            cmsController.Index(urlName)
+                .ReturnsRenderViewResult()
+                .ForView("TopPage")
+                .AssertAreSame<CmsViewData, ITextContent>(
+                    contents.OfType<ITextContent>().First(), vd => vd.TextContent);
+
         }
 
         [Test]
@@ -64,10 +83,13 @@ namespace Suteki.Shop.Tests.Controllers
         {
             int menuId = 1;
 
+            var menus = new List<Content>().AsQueryable();
+            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
+
             cmsController.Add(menuId)
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .AssertNotNull<CmsViewData, TextContent>(vd => vd.TextContent)
+                .AssertNotNull<CmsViewData, ITextContent>(vd => vd.TextContent)
                 .AssertAreEqual<CmsViewData, int>(menuId, vd => vd.Content.ParentContentId.Value);
         }
 
@@ -79,10 +101,14 @@ namespace Suteki.Shop.Tests.Controllers
             TextContent content = new TextContent { ContentId = contentId };
             Mock.Get(contentRepository).Expect(cr => cr.GetById(contentId)).Returns(content).Verifiable();
 
+            var menus = new List<Content>().AsQueryable();
+            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
+
             cmsController.Edit(contentId)
                 .ReturnsRenderViewResult()
                 .ForView("Edit")
-                .AssertAreEqual<CmsViewData, int>(contentId, vd => vd.Content.ContentId);
+                .AssertAreEqual<CmsViewData, int>(contentId, vd => vd.Content.ContentId)
+                .AssertNotNull<CmsViewData, IEnumerable<Menu>>(vd => vd.Menus);
 
             Mock.Get(contentRepository).Verify();
         }

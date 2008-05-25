@@ -7,7 +7,7 @@ using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Views.Cms
 {
-    public partial class Index : ViewPage<CmsViewData>
+    public partial class SubPage : ViewPage<CmsViewData>
     {
     }
 }

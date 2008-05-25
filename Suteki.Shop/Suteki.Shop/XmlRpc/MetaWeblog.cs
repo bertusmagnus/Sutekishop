@@ -250,7 +250,7 @@ namespace Suteki.Shop.XmlRpc
             //return post;
         }
 
-        private string GetPostUrl(TextContent content)
+        private string GetPostUrl(Content content)
         {
             return "{0}cms/{1}".With(baseControllerService.siteUrl, content.UrlName);
         }
@@ -262,11 +262,11 @@ namespace Suteki.Shop.XmlRpc
             var posts = contentRepository
                 .GetAll()
                 .InOrder()
-                .OfType<TextContent>()
+                .Where(c => c is ITextContent)
                 .Select(content => new Post 
                 { 
                     dateCreated = DateTime.Now,
-                    description = content.Text,
+                    description = ((ITextContent)content).Text,
                     title = content.Name,
                     postid = content.ContentId,
                     permalink = GetPostUrl(content)

@@ -37,9 +37,9 @@ namespace Suteki.Shop.Repositories
             return contents.Where(c => c.ParentContentId == parentContentId);
         }
 
-        public static TextContent DefaultText(this IQueryable<Content> contents)
+        public static ITextContent DefaultText(this IQueryable<Content> contents)
         {
-            TextContent text = contents.OfType<TextContent>().InOrder().FirstOrDefault();
+            ITextContent text = contents.InOrder().OfType<ITextContent>().FirstOrDefault();
 
             if (text == null)
             {
@@ -53,6 +53,11 @@ namespace Suteki.Shop.Repositories
             }
 
             return text;
+        }
+
+        public static IQueryable<Menu> Menus(this IQueryable<Content> contents)
+        {
+            return contents.OfType<Menu>();
         }
     }
 }

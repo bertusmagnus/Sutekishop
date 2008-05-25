@@ -260,14 +260,14 @@
         <elementListCompartment Id="b0e1ef18-b153-49ce-bb91-2fbd0183a42c" absoluteBounds="6.7650000000000006, 12.085, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(8.75 : 12.0297045205775); (9 : 12.0297045205775); (9 : 12.7027498372396); (8.75 : 12.7027498372396)]" fixedFrom="Caller" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(8.75 : 12.0297045205775); (9 : 12.0297045205775); (9 : 12.7027498372396); (8.75 : 12.7027498372396)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ShopDataContext/Content/Content_Content" />
       <nodes>
         <classShapeMoniker Id="b482d129-6145-471f-afc1-e4ec2a3e5690" />
         <classShapeMoniker Id="b482d129-6145-471f-afc1-e4ec2a3e5690" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(7.75 : 11.0689925130208); (7.75 : 11.625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(7.75 : 11.0689925130208); (7.75 : 11.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ShopDataContext/ContentType/ContentType_Content" />
       <nodes>
         <classShapeMoniker Id="58302c7b-f9b1-49b5-88b0-de18b38996ab" />
@@ -290,6 +290,18 @@
       <nodes>
         <classShapeMoniker Id="b482d129-6145-471f-afc1-e4ec2a3e5690" />
         <classShapeMoniker Id="4c328f17-bda9-4bfb-be1d-58792c372f41" />
+      </nodes>
+    </inheritanceConnector>
+    <classShape Id="5f26cc26-5256-4431-922b-e05ca2d5bb87" absoluteBounds="12.875, 15.25, 2, 1.0016910807291666">
+      <DataClassMoniker Name="/ShopDataContext/TopContent" />
+      <nestedChildShapes>
+        <elementListCompartment Id="789f9b58-3cfe-4239-9d1f-72dcf03855eb" absoluteBounds="12.89, 15.71, 1.9700000000000002, 0.44169108072916663" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <inheritanceConnector edgePoints="[(7.75 : 13.7804996744792); (7.75 : 14.875); (13.875 : 14.875); (13.875 : 15.25)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="7a7fe09e-e9ef-4b01-9ff3-bde95e827b62">
+      <nodes>
+        <classShapeMoniker Id="b482d129-6145-471f-afc1-e4ec2a3e5690" />
+        <classShapeMoniker Id="5f26cc26-5256-4431-922b-e05ca2d5bb87" />
       </nodes>
     </inheritanceConnector>
   </nestedChildShapes>

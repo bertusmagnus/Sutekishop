@@ -80,7 +80,7 @@ namespace Suteki.Shop.HtmlHelpers
                 writer.AddAttribute("class", "cross");
             }
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
-            writer.Write("&nbsp;");
+            writer.Write("&nbsp;&nbsp;&nbsp;&nbsp;");
             writer.RenderEndTag();
             return writer.InnerWriter.ToString();
         }
