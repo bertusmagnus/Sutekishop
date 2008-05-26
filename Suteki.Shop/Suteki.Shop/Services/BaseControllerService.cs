@@ -21,7 +21,7 @@ namespace Suteki.Shop.Services
             set { emailAddress = value; }
         }
 
-        public virtual string siteUrl 
+        public virtual string SiteUrl 
         {
             get
             {

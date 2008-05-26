@@ -97,6 +97,7 @@
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\RsdController.cs" />
     <Compile Include="Controllers\ScaffoldController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Validation\Validator.cs" />
     <Compile Include="ViewData\CmsViewData.cs" />
     <Compile Include="ViewData\IMessageViewData.cs" />
+    <Compile Include="ViewData\RsdViewData.cs" />
     <Compile Include="ViewData\ScaffoldViewData.cs" />
     <Compile Include="ViewData\ShopViewData.cs" />
     <Compile Include="ViewData\IErrorViewData.cs" />
@@ -338,6 +340,13 @@
     <Compile Include="Views\Product\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Rsd\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Rsd\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Cms.master.cs">
       <DependentUpon>Cms.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -452,9 +461,9 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
-    <Content Include="rsd.xml" />
     <Content Include="Views\Cms\SubPage.aspx" />
     <Content Include="Views\Cms\TopPage.aspx" />
+    <Content Include="Views\Rsd\Index.aspx" />
     <Content Include="Views\Shared\CmsSubMenu.master" />
     <Content Include="metablogapi.aspx" />
     <Content Include="Views\Cms\Edit.aspx" />

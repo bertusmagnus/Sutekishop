@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Suteki Shop</title>
     <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
-    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../rsd.xml" />
-    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../wlwmanifest.xml" />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href=<%= RsdUrl %> />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
 </head>
 <body>
     <div class="page">

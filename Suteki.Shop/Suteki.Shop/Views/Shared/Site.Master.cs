@@ -8,6 +8,7 @@ using Suteki.Shop.ViewData;
 using Suteki.Shop.HtmlHelpers;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Views.Shared
 {
@@ -28,6 +29,31 @@ namespace Suteki.Shop.Views.Shared
                 }
 
                 return "";
+            }
+        }
+
+        protected string SiteUrl
+        {
+            get
+            {
+                ControllerBase controller = this.ViewContext.Controller as ControllerBase;
+                return controller.BaseControllerService.SiteUrl;
+            }
+        }
+
+        protected string RsdUrl
+        {
+            get
+            {
+                return "\"{0}rsd.xml\"".With(SiteUrl);
+            }
+        }
+
+        protected string WlwManifestUrl
+        {
+            get
+            {
+                return "\"{0}wlwmanifest.xml\"".With(SiteUrl);
             }
         }
     }

@@ -103,7 +103,7 @@ namespace Suteki.Shop.XmlRpc
                 {
                     blogid = "1",
                     blogName = "Suteki Shop",
-                    url = baseControllerService.siteUrl
+                    url = baseControllerService.SiteUrl
                 }
             };
 
@@ -252,7 +252,7 @@ namespace Suteki.Shop.XmlRpc
 
         private string GetPostUrl(Content content)
         {
-            return "{0}cms/{1}".With(baseControllerService.siteUrl, content.UrlName);
+            return "{0}cms/{1}".With(baseControllerService.SiteUrl, content.UrlName);
         }
 
         public Post[] getRecentPosts(string blogid, string username, string password, int numberOfPosts)
@@ -475,7 +475,7 @@ namespace Suteki.Shop.XmlRpc
 
             ////If all works, we return a mediaobjectinfo struct back holding the URL.
             mediaObjectInfo media;
-            media.url = baseControllerService.siteUrl + imageFileService.GetRelativeUrl(mediaobject.name);
+            media.url = baseControllerService.SiteUrl + imageFileService.GetRelativeUrl(mediaobject.name);
             return media;
         }
 

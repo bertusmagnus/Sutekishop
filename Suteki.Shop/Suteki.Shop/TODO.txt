@@ -5,6 +5,8 @@
 
 * SSL certificate
 
+* SEO work - products and categories (page titles and meta descriptions)
+
 * Order Management
 	- mostly done (probably need a print page)
 	- checkout page layout needs fixing
@@ -13,6 +15,8 @@
 	- done, but nice to have the client side silverlight storage.
 
 * Emails
+
+* Logging - emails, errors
 
 * Shopping basket off main menu 
 	- done, but need separate logo, not as a menu item

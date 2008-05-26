@@ -33,6 +33,9 @@ namespace Suteki.Shop.Routes
                 "home",
                 new { controller = "Cms", action = "Index", urlName = "" });
 
+            routes.MapRoute("Rsd",
+                "rsd.xml",
+                new { controller = "Rsd", action = "Index" });
         }
     }
 }
