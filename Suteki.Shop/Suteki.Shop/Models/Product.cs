@@ -2,14 +2,20 @@
 using System.Linq;
 using Suteki.Shop.Validation;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.Models.ModelHelpers;
 
 namespace Suteki.Shop
 {
-    public partial class Product : IOrderable, IActivatable
+    public partial class Product : IOrderable, IActivatable, IUrlNamed
     {
         partial void OnNameChanging(string value)
         {
             value.Label("Name").IsRequired();
+        }
+
+        partial void OnNameChanged()
+        {
+            UrlName = Name.ToUrlFriendly();
         }
 
         partial void OnDescriptionChanging(string value)

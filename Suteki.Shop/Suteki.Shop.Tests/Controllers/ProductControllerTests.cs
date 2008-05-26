@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Moq;
 using Suteki.Shop.Controllers;
@@ -103,18 +104,16 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Item_ShouldShowItemView()
         {
-            int productId = 3;
-            Product product = new Product();
+            string urlName = "Product_4";
 
-            productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product);
+            // product repository GetAll expectation is already set by
+            // MockRepositoryBuilder.CreateProductRepository() in SetUp()
 
-            RenderViewResult result = productController.Item(productId) as RenderViewResult;
-
-            Assert.AreEqual("Item", result.ViewName);
-            ShopViewData viewData = result.ViewData as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
-            Assert.IsNotNull(viewData.Product, "viewData.Product should not be null");
-            Assert.AreSame(product, viewData.Product, "viewData.Product is not the same as the test product");
+            RenderViewResult result = productController.Item(urlName)
+                .ReturnsRenderViewResult()
+                .ForView("Item")
+                .AssertNotNull<ShopViewData, Product>(vd => vd.Product)
+                .AssertAreEqual<ShopViewData, string>(urlName, vd => vd.Product.UrlName);
         }
 
         [Test]

@@ -1,16 +1,16 @@
 ﻿using System;
 using Suteki.Shop.Validation;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Models.ModelHelpers;
 
 namespace Suteki.Shop
 {
-    public partial class Content : IOrderable, IActivatable
+    public partial class Content : IOrderable, IActivatable, IUrlNamed
     {
         partial void  OnNameChanged()
         {
-            UrlName = Regex.Replace(Name, @"[^A-Za-z0-9]", "_");
+            UrlName = Name.ToUrlFriendly();
         }
 
         partial void OnNameChanging(string value)

@@ -31,7 +31,7 @@ namespace Suteki.Shop.Controllers
 
             if (string.IsNullOrEmpty(urlName))
             {
-                content = (Content)contentRepository.GetAll().DefaultText();
+                content = contentRepository.GetAll().DefaultText();
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Suteki.Shop.Controllers
 
             if (content is Menu)
             {
-                content = (Content)contentRepository.GetAll()
+                content = contentRepository.GetAll()
                     .WithParent(content)
                     .DefaultText();
             }

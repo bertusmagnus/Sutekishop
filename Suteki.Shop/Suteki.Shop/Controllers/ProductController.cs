@@ -59,14 +59,14 @@ namespace Suteki.Shop.Controllers
             return RenderView("Index", ShopView.Data.WithProducts(products).WithCategory(category));
         }
 
-        public ActionResult Item(int id)
+        public ActionResult Item(string urlName)
         {
-            return RenderItemView(id);
+            return RenderItemView(urlName);
         }
 
-        private ActionResult RenderItemView(int id)
+        private ActionResult RenderItemView(string urlName)
         {
-            Product product = productRepository.GetById(id);
+            Product product = productRepository.GetAll().WithUrlName(urlName);
             return RenderView("Item", ShopView.Data.WithProduct(product));
         }
 

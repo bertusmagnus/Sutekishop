@@ -16,6 +16,11 @@ namespace Suteki.Shop.Routes
                 new { controller = "Cms", action = "Index", urlname = "" },
                 new { urlname = @"[^\.]*" });
 
+            routes.MapRoute("Product",
+                "product/{urlname}",
+                new { controller = "Product", action = "Item", urlname = "" },
+                new { urlname = @"[^\.]*" });
+
             routes.MapRoute("Shop",
                 "shop/{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", id = "" },

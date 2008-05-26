@@ -55,7 +55,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
        { %>
     
     <tr>
-        <td><%= Html.ActionLink<ProductController>(c => c.Item(basketItem.Size.ProductId), basketItem.Size.Product.Name)%></td>
+        <td><%= Html.ActionLink<ProductController>(c => c.Item(basketItem.Size.Product.UrlName), basketItem.Size.Product.Name)%></td>
         <td><%= basketItem.Size.Name%></td>
         <td class="number"><%= basketItem.Quantity%></td>
         <td class="number"><%= basketItem.Size.Product.Price.ToString("£0.00")%></td>

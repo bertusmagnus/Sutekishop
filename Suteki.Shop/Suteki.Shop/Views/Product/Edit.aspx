@@ -4,7 +4,7 @@
     <h1>Product</h1>
     
     <% if(ViewData.Product.ProductId > 0) { %>
-        <%= Html.ActionLink<ProductController>(c => c.Item(ViewData.Product.ProductId), "Preview") %>
+        <%= Html.ActionLink<ProductController>(c => c.Item(ViewData.Product.UrlName), "Preview") %>
     <% } %>
 
     <%= Html.ErrorBox(ViewData) %>

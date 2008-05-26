@@ -18,15 +18,6 @@ namespace Suteki.Shop.Repositories
             return mainMenu; 
         }
 
-        public static Content WithUrlName(this IQueryable<Content> contents, string urlName)
-        {
-            Content content = contents
-                .SingleOrDefault(tc => tc.UrlName.ToLower() == urlName.ToLower());
-
-            if (content == null) throw new ApplicationException("Unknown UrlName '{0}'".With(urlName));
-            return content;
-        }
-
         public static IQueryable<Content> WithParent(this IQueryable<Content> contents, Content parent)
         {
             return contents.WithParent(parent.ContentId);
@@ -37,9 +28,9 @@ namespace Suteki.Shop.Repositories
             return contents.Where(c => c.ParentContentId == parentContentId);
         }
 
-        public static ITextContent DefaultText(this IQueryable<Content> contents)
+        public static Content DefaultText(this IQueryable<Content> contents)
         {
-            ITextContent text = contents.InOrder().OfType<ITextContent>().FirstOrDefault();
+            Content text = contents.InOrder().Where(c => c is ITextContent).FirstOrDefault();
 
             if (text == null)
             {
