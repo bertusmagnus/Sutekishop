@@ -9,7 +9,7 @@ insert [role] (RoleId, [Name]) values(4, 'Guest')
 insert [user] (Email, [Password], RoleId, IsEnabled) 
 	values('admin@sutekishop.co.uk', 'D033E22AE348AEB5660FC2140AEC35850C4DA997', 1, 1)
 
-insert category ([Name], ParentId, Position) values('- Root', null, 1)
+insert category ([Name], ParentId, Position, IsActive) values('- Root', null, 1, 1)
 
 insert CardType values(1,	'Visa / Delta / Electron',	0)
 insert CardType values(2,	'Master Card / Euro Card',	0)
