@@ -3,6 +3,8 @@ using System.Linq;
 using Suteki.Common.Extensions;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Suteki.Common.Validation;
+using EnumerableExtensions=Suteki.Common.Extensions.EnumerableExtensions;
 
 namespace Suteki.Common.Validation
 {
@@ -29,7 +31,7 @@ namespace Suteki.Common.Validation
         {
             if(string.IsNullOrEmpty(value))
             {
-                throw new ValidationException("You must enter a value for {0}".With(label));
+                throw new ValidationException(StringExtensions.With("You must enter a value for {0}", label));
             }
 
             return this;
@@ -92,12 +94,12 @@ namespace Suteki.Common.Validation
 
         public ValidationProperty IsCreditCard()
         {
-            value.Label(label).IsNumeric().WithLengthRange(13.To(18));
+            value.Label(label).IsNumeric().WithLengthRange(EnumerableExtensions.To(13, 18));
 
             var numbers = value.Trim().Reverse().Select(c => int.Parse(c.ToString()));
 
-            int oddSum = numbers.AtOddPositions().Sum();
-            int doubleEvenSum = numbers.AtEvenPositions().SelectMany(i => new int[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
+            int oddSum = EnumerableExtensions.AtOddPositions(numbers).Sum();
+            int doubleEvenSum = EnumerableExtensions.AtEvenPositions(numbers).SelectMany(i => new int[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
 
             if ((oddSum + doubleEvenSum) % 10 != 0)
             {

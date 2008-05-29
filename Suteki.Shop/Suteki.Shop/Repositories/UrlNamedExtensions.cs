@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Suteki.Shop.Extensions;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Repositories
 {

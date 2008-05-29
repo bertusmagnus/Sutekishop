@@ -1,5 +1,5 @@
 ﻿using System;
-using Suteki.Shop.Extensions;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop
 {

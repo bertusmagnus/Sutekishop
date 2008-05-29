@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
+using Suteki.Common;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 
@@ -64,5 +65,4 @@ namespace Suteki.Common.Services
         void UpOne();
         void DownOne();
     }
-
 }

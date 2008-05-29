@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Suteki.Common
+﻿namespace Suteki.Common
 {
     public interface IOrderable
     {

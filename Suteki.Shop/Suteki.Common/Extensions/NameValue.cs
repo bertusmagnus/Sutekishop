@@ -10,12 +10,12 @@ namespace Suteki.Common.Extensions
     /// </summary>
     /// <typeparam name="TName"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class NameValue<TName, TValue>
+    public class NameValue<TValue>
     {
-        public TName Name { get; private set; }
+        public string Name { get; private set; }
         public TValue Value { get { return valueFunction(); } }
 
-        Func<TValue> valueFunction;
+        readonly Func<TValue> valueFunction;
 
         /// <summary>
         /// Example:
@@ -23,10 +23,20 @@ namespace Suteki.Common.Extensions
         /// </summary>
         /// <param name="name"></param>
         /// <param name="valueFunction"></param>
-        public NameValue(TName name, Func<TValue> valueFunction)
+        public NameValue(string name, Func<TValue> valueFunction)
         {
+            name = RemoveLeadingUnderscoreIfPresent(name);
             Name = name;
             this.valueFunction = valueFunction;
+        }
+
+        private static string RemoveLeadingUnderscoreIfPresent(string name)
+        {
+            if (name.StartsWith("_"))
+            {
+                return name.Substring(1);
+            }
+            return name;
         }
     }
 }

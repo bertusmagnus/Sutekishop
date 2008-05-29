@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Suteki.Common.Extensions;
 using System.Data.Linq;
+using Suteki.Common.Extensions;
+using Suteki.Common.Repositories;
 
 namespace Suteki.Common.Repositories
 {
@@ -21,14 +22,14 @@ namespace Suteki.Common.Repositories
 
             var whereExpression = Expression.Lambda<Func<T, bool>>
                 (
-                    Expression.Equal(
-                        Expression.Property(
-                            itemParameter,
-                            typeof(T).GetPrimaryKey().Name
+                Expression.Equal(
+                    Expression.Property(
+                        itemParameter,
+                        TypeExtensions.GetPrimaryKey(typeof(T)).Name
                         ),
-                        Expression.Constant(id)
+                    Expression.Constant(id)
                     ),
-                    new ParameterExpression[] { itemParameter }
+                new ParameterExpression[] { itemParameter }
                 );
 
             return GetAll().Where(whereExpression).Single();

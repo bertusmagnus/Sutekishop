@@ -4,9 +4,11 @@ using System.IO;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Web.Mvc;
+using Suteki.Common.Extensions;
+using Suteki.Common.HtmlHelpers;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
-using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.HtmlHelpers
 {

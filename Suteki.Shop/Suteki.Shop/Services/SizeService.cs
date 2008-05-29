@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Specialized;
-using Suteki.Shop.Extensions;
-using Suteki.Shop.Repositories;
+using Suteki.Common.Extensions;
+using Suteki.Common.Repositories;
 
 namespace Suteki.Shop.Services
 {

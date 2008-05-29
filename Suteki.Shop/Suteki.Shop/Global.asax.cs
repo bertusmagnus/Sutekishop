@@ -6,6 +6,7 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using MvcContrib.Castle;
 using MvcContrib.ControllerFactories;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
 using Castle.MicroKernel.Registration;

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Suteki.Shop.Extensions;
+﻿using System.Collections.Generic;
+using Suteki.Common.Extensions;
+using Suteki.Common.ViewData;
 
 namespace Suteki.Shop.ViewData
 {

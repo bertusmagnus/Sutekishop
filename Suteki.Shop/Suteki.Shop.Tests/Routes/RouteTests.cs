@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.Routing;
 using NUnit.Framework;
+using Suteki.Common.Extensions;
 using Suteki.Shop.Routes;
-using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Tests.Routes
 {

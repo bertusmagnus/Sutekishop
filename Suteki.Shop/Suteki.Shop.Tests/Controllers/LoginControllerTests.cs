@@ -1,6 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
+using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.Repositories;

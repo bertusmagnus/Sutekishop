@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Collections.Specialized;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Validation

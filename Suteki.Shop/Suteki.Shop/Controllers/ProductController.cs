@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Suteki.Common.Repositories;
+using Suteki.Common.Services;
+using Suteki.Common.Validation;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
-using Suteki.Shop.Validation;
 using System.Security.Permissions;
 using MvcContrib.Filters;
 using Suteki.Shop.Services;
 using System.Data.Linq;
+using OrderableExtensions=Suteki.Common.Repositories.OrderableExtensions;
 
 namespace Suteki.Shop.Controllers
 {
@@ -49,7 +52,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView(int id)
         {
             Category category = categoryRepository.GetById(id);
-            var products = category.Products.InOrder();
+            var products = OrderableExtensions.InOrder(category.Products);
 
             if (!CurrentUser.IsAdministrator)
             {

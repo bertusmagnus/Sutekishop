@@ -4,13 +4,14 @@ using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Moq;
+using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
-using Suteki.Shop.Services;
 using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers

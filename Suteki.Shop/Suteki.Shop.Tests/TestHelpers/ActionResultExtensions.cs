@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
 using NUnit.Framework;
+using Suteki.Common.Extensions;
 using Suteki.Shop.ViewData;
-using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Tests
 {

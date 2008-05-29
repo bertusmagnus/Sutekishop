@@ -2,6 +2,8 @@
 using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Tests.Repositories;
@@ -10,7 +12,6 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
 using System.Web.Mvc;
-using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {

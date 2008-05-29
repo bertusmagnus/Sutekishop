@@ -10,7 +10,7 @@ namespace Suteki.Shop.Controllers
 {
     // don't forget to change back to ConventionController when mvcContrib catches up with CTP 3
     [Rescue("Default")]
-    public abstract class ControllerBase : Controller 
+    public abstract class ControllerBase : ConventionController, IProvidesBaseService
     {
         /// <summary>
         /// Supplies services and configuration to all controllers

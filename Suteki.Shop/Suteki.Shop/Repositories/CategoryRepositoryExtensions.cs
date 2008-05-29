@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Suteki.Common.Repositories;
 
 namespace Suteki.Shop.Repositories
 {

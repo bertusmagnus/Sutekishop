@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 
 namespace Suteki.Shop.Tests.Validation
 {

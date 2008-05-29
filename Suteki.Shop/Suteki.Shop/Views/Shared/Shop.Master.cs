@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Suteki.Common.Repositories;
 using Suteki.Shop;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.HtmlHelpers;
@@ -17,7 +18,7 @@ namespace Suteki.Shop.Views.Shared
         {
             get
             {
-                ControllerBase controller = this.ViewContext.Controller as ControllerBase;
+                var controller = this.ViewContext.Controller as IProvidesBaseService;
 
                 if (controller != null)
                 {

@@ -1,8 +1,7 @@
-﻿using System;
-namespace Suteki.Common.Services
+﻿namespace Suteki.Common.Services
 {
     public interface IOrderableService<T>
-     where T : class, Suteki.Common.IOrderable
+        where T : class, IOrderable
     {
         IOrderServiceWithPosition<T> MoveItemAtPosition(int postion);
         int NextPosition { get; }

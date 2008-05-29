@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 
 namespace Suteki.Shop.Services
 {
@@ -11,14 +11,14 @@ namespace Suteki.Shop.Services
         readonly string publicKey;
 
         /// <summary>
-        /// Only supply the publicKey for the TFB Web Server
+        /// Only supply the publicKey
         /// </summary>
         /// <param name="publicKey"></param>
         public EncryptionService(string publicKey) : this(publicKey, null)
         { }
 
         /// <summary>
-        /// Supply both public and private keys for the EDF Application
+        /// Supply both public and private keys
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="privateKey"></param>

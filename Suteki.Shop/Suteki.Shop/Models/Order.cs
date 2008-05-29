@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 
 namespace Suteki.Shop
 {

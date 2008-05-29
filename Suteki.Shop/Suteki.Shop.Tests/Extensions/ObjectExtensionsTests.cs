@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Suteki.Shop.Extensions;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Tests.Extensions
 {

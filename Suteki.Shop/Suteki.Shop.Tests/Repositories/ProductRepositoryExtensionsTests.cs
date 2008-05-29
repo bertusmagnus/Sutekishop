@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 using System.Collections.Generic;
 

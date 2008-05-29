@@ -1,5 +1,6 @@
 ﻿using System;
-using Suteki.Shop.Validation;
+using Suteki.Common;
+using Suteki.Common.Validation;
 using System.Web.Mvc;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Models.ModelHelpers;

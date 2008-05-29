@@ -117,6 +117,10 @@
     <Compile Include="Validation\ValidationExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Suteki.Common\Suteki.Common.csproj">
+      <Project>{5A734DD0-928C-4A1E-8D12-7DDD607D89C6}</Project>
+      <Name>Suteki.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Suteki.Shop\Suteki.Shop.csproj">
       <Project>{F63A91D4-3A6C-4729-BE83-D6CB45A53EF3}</Project>
       <Name>Suteki.Shop</Name>

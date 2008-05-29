@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using System.IO;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 
 namespace Suteki.Shop.Services
 {

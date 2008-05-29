@@ -1,8 +1,7 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Services;
-using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Tests.Services
 {

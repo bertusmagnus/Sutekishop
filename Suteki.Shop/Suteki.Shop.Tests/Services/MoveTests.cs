@@ -2,9 +2,10 @@
 using System.Linq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using Suteki.Shop.Extensions;
+using Suteki.Common;
+using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Shop.Repositories;
-using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Services
 {

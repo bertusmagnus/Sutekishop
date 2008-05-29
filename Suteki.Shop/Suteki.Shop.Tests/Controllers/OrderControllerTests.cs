@@ -1,10 +1,10 @@
 ﻿using System;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc;
 using Suteki.Shop.ViewData;
-using Suteki.Shop.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Specialized;

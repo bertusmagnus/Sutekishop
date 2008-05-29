@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Tests.Repositories

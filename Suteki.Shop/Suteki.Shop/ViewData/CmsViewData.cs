@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Suteki.Common.ViewData;
 
 namespace Suteki.Shop.ViewData
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using System.Collections.Specialized;

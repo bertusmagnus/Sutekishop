@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Suteki.Shop.Extensions;
-using Suteki.Shop.Validation;
+using Suteki.Common.Extensions;
+using Suteki.Common.Validation;
+using EnumerableExtensions=Suteki.Common.Extensions.EnumerableExtensions;
 
 namespace Suteki.Shop
 {
@@ -11,7 +12,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return 1.To(12);
+                return EnumerableExtensions.To(1, 12);
             }
         }
 
@@ -19,7 +20,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return DateTime.Now.Year.To(DateTime.Now.Year + 8);
+                return EnumerableExtensions.To(DateTime.Now.Year, DateTime.Now.Year + 8);
             }
         }
 
@@ -27,7 +28,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return (DateTime.Now.Year - 4).To(DateTime.Now.Year);
+                return EnumerableExtensions.To((DateTime.Now.Year - 4), DateTime.Now.Year);
             }
         }
 
@@ -91,7 +92,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return "{0:00} / {1:0000}".With(StartMonth, StartYear);
+                return StringExtensions.With("{0:00} / {1:0000}", StartMonth, StartYear);
             }
         }
 

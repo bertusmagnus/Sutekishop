@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 using NUnit.Framework;
 using Moq;

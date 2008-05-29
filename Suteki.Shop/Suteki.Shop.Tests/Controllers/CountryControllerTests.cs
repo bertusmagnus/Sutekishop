@@ -2,11 +2,11 @@
 using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
+using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Repositories;
 using Castle.MicroKernel;
 using System.Collections.Generic;
-using Suteki.Shop.ViewData;
 using System.Threading;
 using System.Security.Principal;
 

@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="List.aspx.cs" Inherits="Suteki.Shop.Views.Cms.List" %>
+<%@ Import Namespace="Suteki.Common.Repositories"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1><%= ViewData.Model.Menu.Name%></h1>

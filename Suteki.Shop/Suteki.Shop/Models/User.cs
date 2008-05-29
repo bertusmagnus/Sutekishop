@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Security.Principal;
-using Suteki.Shop.Validation;
+using Suteki.Common.Validation;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
 

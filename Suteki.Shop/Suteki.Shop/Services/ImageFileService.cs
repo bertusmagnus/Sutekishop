@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web;
-using Suteki.Shop.Extensions;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Services
 {

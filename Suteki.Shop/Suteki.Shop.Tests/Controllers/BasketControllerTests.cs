@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;

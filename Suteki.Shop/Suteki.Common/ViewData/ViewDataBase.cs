@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Suteki.Shop.ViewData
+﻿namespace Suteki.Common.ViewData
 {
     public abstract class ViewDataBase : IMessageViewData, IErrorViewData
     {

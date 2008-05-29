@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Common.ViewData
 {
-    public class ScaffoldViewData<T> : IMessageViewData, IErrorViewData
+    public class ScaffoldViewData<T> : ViewDataBase
     {
-        public string ErrorMessage { get; set; }
-        public string Message { get; set; }
-
         public IEnumerable<T> Items { get; set; }
         public T Item { get; set; }
+
+        private readonly Dictionary<Type, object> lookupLists = new Dictionary<Type, object>();
 
         public ScaffoldViewData<T> With(T item)
         {
@@ -23,20 +23,24 @@ namespace Suteki.Common.ViewData
             return this;
         }
 
-        public ScaffoldViewData<T> WithErrorMessage(string errorMessage)
+        public ScaffoldViewData<T> WithLookupList(Type entityType, object items)
         {
-            this.ErrorMessage = errorMessage;
+            lookupLists.Add(entityType, items);
             return this;
         }
 
-        public ScaffoldViewData<T> WithMessage(string message)
+        public IEnumerable<TLookup> GetLookUpList<TLookup>()
         {
-            this.Message = message;
-            return this;
+            if (!lookupLists.ContainsKey(typeof(TLookup)))
+            {
+                throw new ApplicationException("List of type {0} does not exist in lookup list".With(
+                    typeof(TLookup).Name));
+            }
+            return (IEnumerable<TLookup>)lookupLists[typeof(TLookup)];
         }
     }
 
-    public static class Scaffold
+    public static class ScaffoldView
     {
         public static ScaffoldViewData<T> Data<T>()
         {

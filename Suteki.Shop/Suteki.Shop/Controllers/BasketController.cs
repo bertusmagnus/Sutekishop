@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
+using Suteki.Common.Extensions;
+using Suteki.Common.Repositories;
+using Suteki.Common.Validation;
 using Suteki.Shop.ViewData;
-using Suteki.Shop.Repositories;
-using Suteki.Shop.Validation;
-using System.Web.Security;
 using Suteki.Shop.Services;
-using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.Controllers
 {

@@ -95,6 +95,7 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IProvidesBaseService.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -102,26 +103,19 @@
     <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RsdController.cs" />
-    <Compile Include="Controllers\ScaffoldController.cs" />
+    <Compile Include="Controllers\ShopScaffoldController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\NameValue.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Extensions\PagedList.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers\CategoryWriter.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="HtmlHelpers\MenuWriter.cs" />
-    <Compile Include="HtmlHelpers\Pager.cs" />
     <Compile Include="HtmlHelpers\StockWriter.cs" />
     <Compile Include="Models\ActionContent.cs" />
     <Compile Include="Models\Card.cs" />
@@ -133,7 +127,6 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\IActivatable.cs" />
     <Compile Include="Models\Image.cs" />
-    <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\ITextContent.cs" />
@@ -158,12 +151,9 @@
     <Compile Include="Repositories\ActivatableExtensions.cs" />
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
-    <Compile Include="Repositories\OrderableExtensions.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
-    <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\UrlNamedExtensions.cs" />
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
     <Compile Include="Routes\RouteManager.cs" />
@@ -177,11 +167,8 @@
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageFileService.cs" />
     <Compile Include="Services\ImageService.cs" />
-    <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\ISizeService.cs" />
     <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Services\Move.cs" />
-    <Compile Include="Services\OrderableService.cs" />
     <Compile Include="Services\SizeService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Shop.designer.cs">
@@ -189,17 +176,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Shop.dbml</DependentUpon>
     </Compile>
-    <Compile Include="Validation\ValidatingBinder.cs" />
-    <Compile Include="Validation\ValidationException.cs" />
-    <Compile Include="Validation\ValidationExtensions.cs" />
-    <Compile Include="Validation\Validator.cs" />
     <Compile Include="ViewData\CmsViewData.cs" />
-    <Compile Include="ViewData\IMessageViewData.cs" />
     <Compile Include="ViewData\RsdViewData.cs" />
-    <Compile Include="ViewData\ScaffoldViewData.cs" />
     <Compile Include="ViewData\ShopViewData.cs" />
-    <Compile Include="ViewData\IErrorViewData.cs" />
-    <Compile Include="ViewData\ViewDataBase.cs" />
     <Compile Include="Views\Category\Edit.aspx.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -480,6 +459,12 @@
     <Content Include="wlwmanifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Suteki.Common\Suteki.Common.csproj">
+      <Project>{5A734DD0-928C-4A1E-8D12-7DDD607D89C6}</Project>
+      <Name>Suteki.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ProductPhotos\" />
   </ItemGroup>
@@ -493,7 +478,6 @@
   <Target Name="AfterBuild">
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(ProjectDir)" />
   </Target>
-
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Services;
 using System.Collections.Specialized;
 using Suteki.Shop.Repositories;

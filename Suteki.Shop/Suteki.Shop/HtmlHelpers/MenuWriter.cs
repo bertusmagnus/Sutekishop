@@ -3,9 +3,10 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.IO;
+using Suteki.Common.Extensions;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
-using Suteki.Shop.Extensions;
 
 namespace Suteki.Shop.HtmlHelpers
 {

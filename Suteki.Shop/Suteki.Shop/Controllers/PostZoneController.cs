@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Security.Permissions;
+using Suteki.Common.Controllers;
 
 namespace Suteki.Shop.Controllers
 {

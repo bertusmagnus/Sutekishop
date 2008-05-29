@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Suteki.Shop.Validation;
+using Suteki.Common;
+using Suteki.Common.Repositories;
+using Suteki.Common.Validation;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Models.ModelHelpers;
 

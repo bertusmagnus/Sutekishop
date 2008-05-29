@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 
@@ -7,12 +6,12 @@ namespace Suteki.Common.HtmlHelpers
 {
     public class Pager
     {
-        StringBuilder htmlText = new StringBuilder();
+        readonly StringBuilder htmlText = new StringBuilder();
 
-        HtmlHelper htmlHelper;
-        string controller;
-        string action;
-        IPagedList pagedList;
+        readonly HtmlHelper htmlHelper;
+        readonly string controller;
+        readonly string action;
+        readonly IPagedList pagedList;
 
         public Pager(
             HtmlHelper htmlHelper,
@@ -60,9 +59,9 @@ namespace Suteki.Common.HtmlHelpers
             else
             {
                 htmlText.AppendFormat("{0} ", htmlHelper.ActionLink(text, action, controller, new
-                {
-                    CurrentPage = pageNumber
-                }));
+                                                                                                  {
+                                                                                                      CurrentPage = pageNumber
+                                                                                                  }));
             }
         }
     }

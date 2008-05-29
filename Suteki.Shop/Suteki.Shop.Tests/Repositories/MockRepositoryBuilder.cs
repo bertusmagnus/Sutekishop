@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Data.Linq;
 using Moq;
-using Suteki.Shop.Repositories;
+using Suteki.Common.Repositories;
 using NUnit.Framework;
 
 namespace Suteki.Shop.Tests.Repositories

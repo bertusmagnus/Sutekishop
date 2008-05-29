@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Data.Linq.Mapping;
 
 namespace Suteki.Common.Extensions
 {
@@ -12,18 +10,18 @@ namespace Suteki.Common.Extensions
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static IEnumerable<NameValue<string, object>> GetProperties(this object item)
+        public static IEnumerable<NameValue<object>> GetProperties(this object item)
         {
             foreach (PropertyInfo property in item.GetType().GetProperties())
             {
-                yield return new NameValue<string, object>(property.Name, () => property.GetValue(item, null));
+                yield return new NameValue<object>(property.Name, () => property.GetValue(item, null));
             }
         }
 
-        public static NameValue<string, object> GetPrimaryKey(this object item)
+        public static NameValue<object> GetPrimaryKey(this object item)
         {
             PropertyInfo property = item.GetType().GetPrimaryKey();
-            return new NameValue<string, object>(property.Name, () => property.GetValue(item, null));
+            return new NameValue<object>(property.Name, () => property.GetValue(item, null));
         }
     }
 }

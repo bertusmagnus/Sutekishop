@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Data.Linq;
 using System.Collections.Generic;
+using Suteki.Common;
 
 namespace Suteki.Common.Repositories
 {
