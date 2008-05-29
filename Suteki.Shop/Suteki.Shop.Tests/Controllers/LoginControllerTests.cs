@@ -33,7 +33,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             string view = "Index";
 
-            RenderViewResult result = loginController.Index() as RenderViewResult;
+            ViewResult result = loginController.Index() as ViewResult;
 
             Assert.AreEqual(view, result.ViewName);
         }
@@ -47,7 +47,7 @@ namespace Suteki.Shop.Tests.Controllers
             // should set cookie
             loginControllerMock.Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
 
-            ActionRedirectResult result = loginController.Authenticate(email, password) as ActionRedirectResult;
+            var result = loginController.Authenticate(email, password) as RedirectToRouteResult;
 
             Assert.AreEqual("Index", result.Values["action"]);
             Assert.AreEqual("Home", result.Values["controller"]);
@@ -58,21 +58,17 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Authenticate_ShouldNotAuthenticateInvalidUser()
         {
-            string email = "Henry@suteki.co.uk";
-            string password = "henry3"; // invalid password
+            const string email = "Henry@suteki.co.uk";
+            const string password = "henry3";
 
             // throw if SetAuthenticationToken is called
             loginControllerMock.Expect(c => c.SetAuthenticationCookie(email))
                 .Throws(new Exception("SetAuthenticationToken shouldn't be called"));
 
-            RenderViewResult result = loginController.Authenticate(email, password) as RenderViewResult;
-
-            // should show view Index
-            Assert.AreEqual("Index", result.ViewName);
-
-            // Should show error message
-            Assert.AreEqual("Unknown email or password",
-                ((IErrorViewData)result.ViewData).ErrorMessage);
+            loginController.Authenticate(email, password)
+                .ReturnsViewResult()
+                .ForView("Index")
+                .AssertAreEqual<IErrorViewData, string>("Unknown email or password", vd => vd.ErrorMessage);
         }
 
         [Test]
@@ -80,7 +76,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             loginControllerMock.Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
 
-            ActionRedirectResult result = loginController.Logout() as ActionRedirectResult;
+            RedirectToRouteResult result = loginController.Logout() as RedirectToRouteResult;
 
             Assert.AreEqual("Index", result.Values["action"]);
             Assert.AreEqual("Home", result.Values["controller"]);

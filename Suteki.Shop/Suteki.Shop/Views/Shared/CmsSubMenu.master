@@ -10,7 +10,7 @@
         <div class="leftColumn">
             <div class="contentsContainer">
                 <div class="category">
-                    <%= Html.WriteMenu(ViewData.Content.SubMenu, true) %>
+                    <%= Html.WriteMenu(ViewData.Model.Content.SubMenu, true) %>
                 </div>
             </div>
         </div>

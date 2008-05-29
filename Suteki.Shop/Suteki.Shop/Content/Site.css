@@ -150,36 +150,36 @@ h2 a
 {
 	display: block;
 	float: left;
-	margin: 0 0 0 0;
-	padding: 20px 0 20px 0;
-	width: 150px;
+	margin: 5px 0 0 0;
+	padding: 0 0;
+	width: 140px;
 }
 
 .columnContainer input[type=text]
 {
 	display: block;
-	margin: 5px 0 0 150px;
+	margin: 5px 0 0 140px;
 	width: 150px;
 }
 
 .columnContainer input[type=checkbox]
 {
 	display: block;
-	margin: 5px 0 0 150px;
+	margin: 5px 0 0 140px;
 	width: 15px;
 }
 
 .columnContainer select
 {
 	display: block;
-	margin: 5px 0 0 150px;
+	margin: 5px 0 0 140px;
 	width: 154px;
 }
 
 .columnContainer textarea
 {
 	display: block;
-	margin: 5px 0 0 150px;
+	margin: 5px 0 0 140px;
 	width: 150px;
 	height: 50px;
 }
@@ -212,7 +212,7 @@ dt
 	display: block;
 	float: left;
 	margin: 0 0 0 0;
-	padding: 20px 0 20px 0;
+	padding: 0;
 	width: 100px;
 	font-weight: bold;	
 }

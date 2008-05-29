@@ -24,7 +24,7 @@ namespace Suteki.Common.Controllers
         private ActionResult RenderIndexView()
         {
             var items = Repository.GetAll().InOrder();
-            return RenderView("Index", Scaffold.Data<T>().With(items));
+            return View("Index", Scaffold.Data<T>().With(items));
         }
 
         public ActionResult New()
@@ -33,13 +33,13 @@ namespace Suteki.Common.Controllers
             {
                 Position = OrderableService.NextPosition
             };
-            return RenderView("Edit", Scaffold.Data<T>().With(item));
+            return View("Edit", Scaffold.Data<T>().With(item));
         }
 
         public ActionResult Edit(int id)
         {
             T item = Repository.GetById(id);
-            return RenderView("Edit", Scaffold.Data<T>().With(item));
+            return View("Edit", Scaffold.Data<T>().With(item));
         }
 
         public ActionResult Update()
@@ -69,7 +69,7 @@ namespace Suteki.Common.Controllers
             }
             catch (ValidationException validationException)
             {
-                return RenderView("Edit", Scaffold.Data<T>().With(item)
+                return View("Edit", Scaffold.Data<T>().With(item)
                     .WithErrorMessage(validationException.Message));
             }
         }

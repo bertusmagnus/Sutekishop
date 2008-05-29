@@ -56,13 +56,13 @@ namespace Suteki.Shop.Controllers
                 .ByCreatedDate()
                 .ToPagedList(Request.PageNumber(), 20);
 
-            return RenderView("Index", ShopView.Data.WithOrders(orders));
+            return View("Index", ShopView.Data.WithOrders(orders));
         }
 
         public ActionResult Item(int id)
         {
             Order order = orderRepository.GetById(id);
-            return RenderView("Item", CheckoutViewData(order));
+            return View("Item", CheckoutViewData(order));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -76,11 +76,11 @@ namespace Suteki.Shop.Controllers
             {
                 encryptionService.PrivateKey = privateKey;
                 encryptionService.DecryptCard(card);
-                return RenderView("Item", CheckoutViewData(order).WithCard(card));
+                return View("Item", CheckoutViewData(order).WithCard(card));
             }
             catch (ValidationException exception)
             {
-                return RenderView("Item", CheckoutViewData(order).WithErrorMessage(exception.Message));
+                return View("Item", CheckoutViewData(order).WithErrorMessage(exception.Message));
             }
         }
 
@@ -90,7 +90,7 @@ namespace Suteki.Shop.Controllers
             Order order = new Order();
             PopulateOrderForView(order, id);
             
-            return RenderView("Checkout", CheckoutViewData(order));
+            return View("Checkout", CheckoutViewData(order));
         }
 
         private void PopulateOrderForView(Order order, int basketId)
@@ -133,12 +133,12 @@ namespace Suteki.Shop.Controllers
                 validator.Validate();
                 orderRepository.InsertOnSubmit(order);
                 orderRepository.SubmitChanges();
-                return RenderView("Item", CheckoutViewData(order));
+                return View("Item", CheckoutViewData(order));
             }
             catch (ValidationException validationException)
             {
                 PopulateOrderForView(order, order.BasketId);
-                return RenderView("Checkout", CheckoutViewData(order)
+                return View("Checkout", CheckoutViewData(order)
                     .WithErrorMessage(validationException.Message)
                     );
             }
@@ -207,7 +207,7 @@ namespace Suteki.Shop.Controllers
                 orderRepository.SubmitChanges();
             }
 
-            return RenderView("Item", CheckoutViewData(order));
+            return View("Item", CheckoutViewData(order));
         }
 
         public ActionResult Reject(int id)
@@ -221,7 +221,7 @@ namespace Suteki.Shop.Controllers
                 orderRepository.SubmitChanges();
             }
 
-            return RenderView("Item", CheckoutViewData(order));
+            return View("Item", CheckoutViewData(order));
         }
     }
 }

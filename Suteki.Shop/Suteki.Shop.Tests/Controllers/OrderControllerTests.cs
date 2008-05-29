@@ -81,7 +81,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             // exercise Checkout action
             orderController.Checkout(basketId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .AssertNotNull<ShopViewData, Order>(vd => vd.Order)
                 .AssertNotNull<ShopViewData, Contact>(vd => vd.Order.Contact)
                 .AssertNotNull<ShopViewData, Contact>(vd => vd.Order.Contact1)
@@ -114,15 +114,15 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
 
             // exercise PlaceOrder action
-            RenderViewResult result = orderController.PlaceOrder() as RenderViewResult;
+            ViewResult result = orderController.PlaceOrder() as ViewResult;
 
             // Assertions
-            Assert.IsNotNull(result, "result is not a RenderViewResult");
+            Assert.IsNotNull(result, "result is not a ViewResult");
 
-            Assert.AreNotEqual("Checkout", result.ViewName, ((ShopViewData)result.ViewData).ErrorMessage);
+            Assert.AreNotEqual("Checkout", result.ViewName, ((ShopViewData)result.ViewData.Model).ErrorMessage);
             Assert.AreEqual("Item", result.ViewName, "View name is not 'Item'");
 
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "view data is not ShopViewData");
 
             Assert.AreSame(order, viewData.Order, "The view data order not correct");
@@ -233,7 +233,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders).Verifiable();
 
             orderController.Index()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertAreSame<ShopViewData, Order>(orders.First(), vd => vd.Orders.First());
         }
@@ -253,7 +253,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
 
             orderController.Dispatch(orderId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Item");
 
             Assert.IsTrue(order.IsDispatched, "order has not been dispatched");
@@ -278,7 +278,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders);
 
             orderController.Index()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertAreSame<ShopViewData, Order>(orders.ElementAt(1), vd => vd.Orders.First());
                 
@@ -313,7 +313,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(encryptionService).Expect(es => es.DecryptCard(It.IsAny<Card>())).Verifiable();
 
             orderController.ShowCard(orderId, privateKey)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Item")
                 .AssertAreEqual<ShopViewData, string>(order.Card.Number, vd => vd.Card.Number)
                 .AssertAreEqual<ShopViewData, int>(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);

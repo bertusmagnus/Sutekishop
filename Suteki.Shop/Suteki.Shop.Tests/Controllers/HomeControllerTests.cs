@@ -20,7 +20,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             string view = "Index";
 
-            RenderViewResult result = homeController.Index() as RenderViewResult;
+            ViewResult result = homeController.Index() as ViewResult;
 
             Assert.AreEqual(view, result.ViewName);
         }

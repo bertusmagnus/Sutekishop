@@ -38,7 +38,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
             stockController.Index()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertAreSame<ShopViewData, Category>(root, vd => vd.Category);
         }
@@ -75,7 +75,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
             stockController.Update()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertNotNull<ShopViewData, Category>(vd => vd.Category);
 

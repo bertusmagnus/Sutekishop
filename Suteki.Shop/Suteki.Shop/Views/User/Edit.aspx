@@ -3,24 +3,24 @@
 
     <h1>User</h1>
     
-    <%= Html.ErrorBox(ViewData) %>
-    <%= Html.MessageBox(ViewData) %>
+    <%= Html.ErrorBox(ViewData.Model) %>
+    <%= Html.MessageBox(ViewData.Model) %>
 
     <% using(Html.Form("User", "Update")) { %>
 
-        <%= Html.Hidden("userid", ViewData.User.UserId) %>
+        <%= Html.Hidden("userid", ViewData.Model.User.UserId.ToString()) %>
 
         <label for="email">Email</label>
-        <%= Html.TextBox("email", ViewData.User.Email) %>
+        <%= Html.TextBox("email", ViewData.Model.User.Email) %>
         
         <label for="password">Password (leave blank if you don't want to change)</label>
         <%= Html.Password("password") %>
 
         <label for="roleid">Role</label>
-        <%= Html.Select("roleid", ViewData.Roles, "Name", "RoleId", ViewData.User.RoleId)%>
+        <%= Html.DropDownList("roleid", new SelectList(ViewData.Model.Roles, "RoleId", "Name", ViewData.Model.User.RoleId))%>
         
         <label for="isenabled">User can log on</label>
-        <%= Html.CheckBox("isenabled", "", "True", ViewData.User.IsEnabled) %>
+        <%= Html.CheckBox("isenabled", "", "True", ViewData.Model.User.IsEnabled) %>
 
         <%= Html.SubmitButton() %>
 

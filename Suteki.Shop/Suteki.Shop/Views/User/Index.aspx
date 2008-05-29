@@ -10,7 +10,7 @@
             <th>User can log in</th>
         </tr>
         
-        <% foreach (var user in ViewData.Users)
+        <% foreach (var user in ViewData.Model.Users)
            { %>
             
             <tr>

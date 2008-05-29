@@ -45,7 +45,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Update()
         {
-            User user = CurrentUser;
+            var user = CurrentUser;
 
             // if the current user is a guest, promote them to a new customer
             if (user.RoleId == Role.GuestId)
@@ -55,28 +55,20 @@ namespace Suteki.Shop.Controllers
                 this.SetContextUserTo(user);
             }
 
-            Basket basket = user.CurrentBasket;
+            var basket = user.CurrentBasket;
 
-            BasketItem basketItem = new BasketItem();
-            try
+            var basketItem = new BasketItem();
+            ValidatingBinder.UpdateFrom(basketItem, Request.Form);
+
+            var size = sizeRepository.GetById(basketItem.SizeId);
+            if (!size.IsInStock)
             {
-                ValidatingBinder.UpdateFrom(basketItem, Request.Form);
-
-                Size size = sizeRepository.GetById(basketItem.SizeId);
-                if (!size.IsInStock)
-                {
-                    return RenderIndexViewWithError(basket, size);
-                }
-
-                basket.BasketItems.Add(basketItem);
-                basketRepository.SubmitChanges();
-                return RenderIndexView(basket);
+                return RenderIndexViewWithError(basket, size);
             }
-            catch(ValidationException)
-            {
-                // we shouldn't get a validation exception here, so this is a genuine system error
-                throw;
-            }
+
+            basket.BasketItems.Add(basketItem);
+            basketRepository.SubmitChanges();
+            return RenderIndexView(basket);
         }
 
         private ActionResult RenderIndexViewWithError(Basket basket, Size size)
@@ -90,12 +82,12 @@ namespace Suteki.Shop.Controllers
             {
                 message = "Sorry, {0} is out of stock.".With(size.Product.Name);
             }
-            return RenderView("Index", IndexViewData(basket).WithErrorMessage(message));
+            return View("Index", IndexViewData(basket).WithErrorMessage(message));
         }
 
         private ActionResult RenderIndexView(Basket basket)
         {
-            return RenderView("Index", IndexViewData(basket));
+            return View("Index", IndexViewData(basket));
         }
 
         private ShopViewData IndexViewData(Basket basket)

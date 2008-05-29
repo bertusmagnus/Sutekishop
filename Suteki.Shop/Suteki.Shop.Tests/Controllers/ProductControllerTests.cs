@@ -77,40 +77,42 @@ namespace Suteki.Shop.Tests.Controllers
             int categoryId = 4;
 
             Category category = new Category
-            {
-                CategoryId = categoryId,
-                Products =
-                {
-                    new Product(),
-                    new Product()
-                }
-            };
+                                    {
+                                        CategoryId = categoryId,
+                                        Products =
+                                            {
+                                                new Product(),
+                                                new Product()
+                                            }
+                                    };
 
             categoryRepositoryMock.Expect(r => r.GetById(categoryId)).Returns(category).Verifiable();
 
-            RenderViewResult result = productController.Index(categoryId) as RenderViewResult;
+            var result = productController.Index(categoryId) as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            if (result.ViewData.Model == null) Assert.Fail("ViewData.Model is null");
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Products, "viewData.Products should not be null");
             Assert.IsNotNull(viewData.Category, "viewData.Category should not be null");
             Assert.AreEqual(categoryId, viewData.Category.CategoryId);
 
-            ProductRepositoryExtensionsTests.AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(viewData.Products);
+            ProductRepositoryExtensionsTests.AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(
+                viewData.Products);
             categoryRepositoryMock.Verify();
         }
 
         [Test]
         public void Item_ShouldShowItemView()
         {
-            string urlName = "Product_4";
+            const string urlName = "Product_4";
 
             // product repository GetAll expectation is already set by
             // MockRepositoryBuilder.CreateProductRepository() in SetUp()
 
-            RenderViewResult result = productController.Item(urlName)
-                .ReturnsRenderViewResult()
+            ViewResult result = productController.Item(urlName)
+                .ReturnsViewResult()
                 .ForView("Item")
                 .AssertNotNull<ShopViewData, Product>(vd => vd.Product)
                 .AssertAreEqual<ShopViewData, string>(urlName, vd => vd.Product.UrlName);
@@ -121,15 +123,15 @@ namespace Suteki.Shop.Tests.Controllers
         {
             int categoryId = 4;
 
-            RenderViewResult result = productController.New(categoryId) as RenderViewResult;
+            ViewResult result = productController.New(categoryId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
         }
 
-        private void AssertEditViewIsCorrectlyCalled(RenderViewResult result)
+        private void AssertEditViewIsCorrectlyCalled(ViewResult result)
         {
             Assert.AreEqual("Edit", result.ViewName);
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Product, "viewData.Product should not be null");
             Assert.IsNotNull(viewData.Categories, "viewData.Categories should not be null");
@@ -143,7 +145,7 @@ namespace Suteki.Shop.Tests.Controllers
             Product product = new Product();
             productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product).Verifiable();
 
-            RenderViewResult result = productController.Edit(productId) as RenderViewResult;
+            ViewResult result = productController.Edit(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
             productRepositoryMock.Verify();
@@ -188,7 +190,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
-            RenderViewResult result = productController.Update(productId) as RenderViewResult;
+            ViewResult result = productController.Update(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
 
@@ -238,7 +240,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
-            RenderViewResult result = productController.Update(productId) as RenderViewResult;
+            ViewResult result = productController.Update(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
 

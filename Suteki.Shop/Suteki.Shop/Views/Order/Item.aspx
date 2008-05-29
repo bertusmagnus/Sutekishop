@@ -6,21 +6,21 @@
     <h3>Order Details</h3>
 
 <dl>
-    <dt>Order Number</dt><dd><%= ViewData.Order.OrderId.ToString() %>&nbsp;</dd>
-    <dt>Date</dt><dd><%= ViewData.Order.CreatedDate.ToShortDateString() %></dd>
+    <dt>Order Number</dt><dd><%= ViewData.Model.Order.OrderId.ToString()%>&nbsp;</dd>
+    <dt>Date</dt><dd><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></dd>
 
 <% if(User.IsInRole("Administrator")) { %>
-    <dt>Status</dt><dd><%= ViewData.Order.OrderStatus.Name %></dd>
-    <dt>Dispatched</dt><dd><%= ViewData.Order.DispatchedDateAsString %></dd>
-    <dt>Updated by</dt><dd><%= ViewData.Order.UserAsString %></dd>
+    <dt>Status</dt><dd><%= ViewData.Model.Order.OrderStatus.Name %></dd>
+    <dt>Dispatched</dt><dd><%= ViewData.Model.Order.DispatchedDateAsString %></dd>
+    <dt>Updated by</dt><dd><%= ViewData.Model.Order.UserAsString %></dd>
 <% } %>
     
 </dl>
 
-<% if(User.IsInRole("Administrator") && ViewData.Order.IsCreated) { %>
+<% if(User.IsInRole("Administrator") && ViewData.Model.Order.IsCreated) { %>
 <div class="orderAction">
-    <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
-    <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
 </div>    
 <% } %>
 
@@ -33,7 +33,7 @@
         <th class="thin number">Total Price</th>
     </tr>
     
-    <% foreach (var basketItem in ViewData.Order.Basket.BasketItems)
+    <% foreach (var basketItem in ViewData.Model.Order.Basket.BasketItems)
        { %>
     
     <tr>
@@ -51,7 +51,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.Total.ToString("£0.00")%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.Total.ToString("£0.00")%></td>
     </tr>
 
     <tr>
@@ -59,7 +59,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.PostageTotal%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
         <td>&nbsp;</td>
     </tr>
 
@@ -68,7 +68,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.TotalWithPostage%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.TotalWithPostage%></td>
         <td>&nbsp;</td>
     </tr>
     
@@ -82,17 +82,17 @@
         <h3>Card Holder</h3>
         
         <dl>
-            <dt>First Name</dt><dd><%= ViewData.Order.Contact.Firstname %>&nbsp;</dd>
-            <dt>Last Name</dt><dd><%= ViewData.Order.Contact.Lastname %>&nbsp;</dd>
-            <dt>Address 1</dt><dd><%= ViewData.Order.Contact.Address1 %>&nbsp;</dd>
-            <dt>Address 2</dt><dd><%= ViewData.Order.Contact.Address2 %>&nbsp;</dd>
-            <dt>Address 3</dt><dd><%= ViewData.Order.Contact.Address3 %>&nbsp;</dd>
-            <dt>Town</dt><dd><%= ViewData.Order.Contact.Town %>&nbsp;</dd>
-            <dt>County</dt><dd><%= ViewData.Order.Contact.County %>&nbsp;</dd>
-            <dt>Postcode</dt><dd><%= ViewData.Order.Contact.Postcode %>&nbsp;</dd>
-            <dt>Country</dt><dd><%= ViewData.Order.Contact.Country.Name %>&nbsp;</dd>
-            <dt>Telephone</dt><dd><%= ViewData.Order.Contact.Telephone %>&nbsp;</dd>
-            <dt>Email</dt><dd><%= Html.Mailto(ViewData.Order.Email, ViewData.Order.Email) %>&nbsp;</dd>
+            <dt>First Name</dt><dd><%= ViewData.Model.Order.Contact.Firstname %>&nbsp;</dd>
+            <dt>Last Name</dt><dd><%= ViewData.Model.Order.Contact.Lastname %>&nbsp;</dd>
+            <dt>Address 1</dt><dd><%= ViewData.Model.Order.Contact.Address1 %>&nbsp;</dd>
+            <dt>Address 2</dt><dd><%= ViewData.Model.Order.Contact.Address2 %>&nbsp;</dd>
+            <dt>Address 3</dt><dd><%= ViewData.Model.Order.Contact.Address3 %>&nbsp;</dd>
+            <dt>Town</dt><dd><%= ViewData.Model.Order.Contact.Town %>&nbsp;</dd>
+            <dt>County</dt><dd><%= ViewData.Model.Order.Contact.County %>&nbsp;</dd>
+            <dt>Postcode</dt><dd><%= ViewData.Model.Order.Contact.Postcode %>&nbsp;</dd>
+            <dt>Country</dt><dd><%= ViewData.Model.Order.Contact.Country.Name %>&nbsp;</dd>
+            <dt>Telephone</dt><dd><%= ViewData.Model.Order.Contact.Telephone %>&nbsp;</dd>
+            <dt>Email</dt><dd><%= Html.Mailto(ViewData.Model.Order.Email, ViewData.Model.Order.Email) %>&nbsp;</dd>
         </dl>
         
     </div>
@@ -101,24 +101,24 @@
         
         <h3>Delivery Address</h3>
         
-        <% if(ViewData.Order.UseCardHolderContact) { %>
+        <% if(ViewData.Model.Order.UseCardHolderContact) { %>
         
         <p>Use Card Holder Contact</p>
         
         <% } else { %>
         
         <dl>
-            <dt>First Name</dt><dd><%= ViewData.Order.Contact1.Firstname %>&nbsp;</dd>
-            <dt>Last Name</dt><dd><%= ViewData.Order.Contact1.Lastname %>&nbsp;</dd>
-            <dt>Address 1</dt><dd><%= ViewData.Order.Contact1.Address1 %>&nbsp;</dd>
-            <dt>Address 2</dt><dd><%= ViewData.Order.Contact1.Address2 %>&nbsp;</dd>
-            <dt>Address 3</dt><dd><%= ViewData.Order.Contact1.Address3 %>&nbsp;</dd>
-            <dt>Town</dt><dd><%= ViewData.Order.Contact1.Town %>&nbsp;</dd>
-            <dt>County</dt><dd><%= ViewData.Order.Contact1.County %>&nbsp;</dd>
-            <dt>Postcode</dt><dd><%= ViewData.Order.Contact1.Postcode %>&nbsp;</dd>
-            <dt>Country</dt><dd><%= ViewData.Order.Contact1.Country.Name %>&nbsp;</dd>
-            <dt>Telephone</dt><dd><%= ViewData.Order.Contact1.Telephone %>&nbsp;</dd>
-            <dt>Additional Information</dt><dd><%= ViewData.Order.AdditionalInformation %>&nbsp;</dd>
+            <dt>First Name</dt><dd><%= ViewData.Model.Order.Contact1.Firstname %>&nbsp;</dd>
+            <dt>Last Name</dt><dd><%= ViewData.Model.Order.Contact1.Lastname %>&nbsp;</dd>
+            <dt>Address 1</dt><dd><%= ViewData.Model.Order.Contact1.Address1 %>&nbsp;</dd>
+            <dt>Address 2</dt><dd><%= ViewData.Model.Order.Contact1.Address2 %>&nbsp;</dd>
+            <dt>Address 3</dt><dd><%= ViewData.Model.Order.Contact1.Address3 %>&nbsp;</dd>
+            <dt>Town</dt><dd><%= ViewData.Model.Order.Contact1.Town %>&nbsp;</dd>
+            <dt>County</dt><dd><%= ViewData.Model.Order.Contact1.County %>&nbsp;</dd>
+            <dt>Postcode</dt><dd><%= ViewData.Model.Order.Contact1.Postcode %>&nbsp;</dd>
+            <dt>Country</dt><dd><%= ViewData.Model.Order.Contact1.Country.Name %>&nbsp;</dd>
+            <dt>Telephone</dt><dd><%= ViewData.Model.Order.Contact1.Telephone %>&nbsp;</dd>
+            <dt>Additional Information</dt><dd><%= ViewData.Model.Order.AdditionalInformation %>&nbsp;</dd>
         </dl>
         
         <% } %>
@@ -131,28 +131,28 @@
 <div class="columnContainer">
     <div class="contentLeftColumn">
 
-        <% if(ViewData.Order.PayByTelephone) { %>
+        <% if(ViewData.Model.Order.PayByTelephone) { %>
         
         <p>Pay By Telephone</p>
         
         <% } else { %>
 
         <dl>
-            <dt>Card Type</dt><dd><%= ViewData.Order.Card.CardType.Name %>&nbsp;</dd>
-            <dt>Card Holder</dt><dd><%= ViewData.Order.Card.Holder %>&nbsp;</dd>
+            <dt>Card Type</dt><dd><%= ViewData.Model.Order.Card.CardType.Name %>&nbsp;</dd>
+            <dt>Card Holder</dt><dd><%= ViewData.Model.Order.Card.Holder %>&nbsp;</dd>
         </dl>
         
         <% } %>
         
         <% if(User.IsInRole("Administrator")) { %>
 
-            <%= Html.ErrorBox(ViewData) %>
+            <%= Html.ErrorBox(ViewData.Model) %>
 
-            <% if (ViewData.Card == null) { %>
+            <% if (ViewData.Model.Card == null) { %>
 
                 <% using (Html.Form("Order", "ShowCard")) { %>
                     
-                    <%= Html.Hidden("orderId", ViewData.Order.OrderId) %>
+                    <%= Html.Hidden("orderId", ViewData.Model.Order.OrderId.ToString()) %>
                     
                     <label for="privateKey">Private Key</label>
                     <%= Html.TextBox("privateKey")%>
@@ -164,11 +164,11 @@
             <% } else { %>
             
                 <dl>
-                    <dt>Card Number</dt><dd><%= ViewData.Card.Number %></dd>
-                    <dt>Issue Number</dt><dd><%= ViewData.Card.IssueNumber %></dd>
-                    <dt>Security Code</dt><dd><%= ViewData.Card.SecurityCode %></dd>
-                    <dt>Start Date</dt><dd><%= ViewData.Card.StartDateAsString %></dd>
-                    <dt>Expiry Date</dt><dd><%= ViewData.Card.ExpiryDateAsString %></dd>
+                    <dt>Card Number</dt><dd><%= ViewData.Model.Card.Number %></dd>
+                    <dt>Issue Number</dt><dd><%= ViewData.Model.Card.IssueNumber %></dd>
+                    <dt>Security Code</dt><dd><%= ViewData.Model.Card.SecurityCode %></dd>
+                    <dt>Start Date</dt><dd><%= ViewData.Model.Card.StartDateAsString %></dd>
+                    <dt>Expiry Date</dt><dd><%= ViewData.Model.Card.ExpiryDateAsString %></dd>
                 </dl>
             
             <% } %>

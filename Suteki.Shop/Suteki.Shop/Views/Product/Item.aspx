@@ -13,28 +13,28 @@ function onThumbnailClick(img)
 </script>
 
 
-<h1><%= ViewData.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Product.Price.ToString("£0.00") %><%= ViewData.Product.IsActiveAsString %></h1>
+<h1><%= ViewData.Model.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Model.Product.Price.ToString("£0.00") %><%= ViewData.Model.Product.IsActiveAsString %></h1>
 
 <% if(Context.User.IsInRole("Administrator")) { %>
-    <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Product.ProductId), "Edit") %></p>
+    <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Model.Product.ProductId), "Edit") %></p>
 <% } %>
 
 <div class="productDescription">
 <div class="mainImage">
-<% if(ViewData.Product.HasMainImage) { %>
-    <%= Html.Image("~/ProductPhotos/" + ViewData.Product.MainImage.MainFileName, new { id = "mainImage" })%>
+<% if(ViewData.Model.Product.HasMainImage) { %>
+    <%= Html.Image("~/ProductPhotos/" + ViewData.Model.Product.MainImage.MainFileName, new { id = "mainImage" })%>
 <% } %>
 </div>
 
 <div class="imageList">
-<% foreach(var productImage in ViewData.Product.ProductImages.InOrder()) { %>
+<% foreach(var productImage in ViewData.Model.Product.ProductImages.InOrder()) { %>
 
     <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName, new { onclick = "onThumbnailClick(this)" })%>
 
 <% } %>
 </div>
 
-<p><%= ViewData.Product.Description %></p>
+<p><%= ViewData.Model.Product.Description %></p>
 
 </div>
 
@@ -43,18 +43,18 @@ function onThumbnailClick(img)
 <% using (Html.Form("Basket", "Update"))
    { %>
 
-    <%= Html.ErrorBox(ViewData)%>
+    <%= Html.ErrorBox(ViewData.Model)%>
 
-    <% if(ViewData.Product.HasSize) { %>
+    <% if(ViewData.Model.Product.HasSize) { %>
         <label for="sizeid">Size</label>
-        <%= Html.Select("sizeid", ViewData.Product.Sizes.Active(), "NameAndStock", "SizeId")%>
+        <%= Html.DropDownList("sizeid", new SelectList(ViewData.Model.Product.Sizes.Active(), "SizeId", "NameAndStock" ))%>
     <% } else { %>
-        <%= Html.Hidden("sizeid", ViewData.Product.DefaultSize.SizeId) %>
-        <label><%= ViewData.Product.DefaultSize.NameAndStock %></label>
+        <%= Html.Hidden("sizeid", ViewData.Model.Product.DefaultSize.SizeId.ToString()) %>
+        <label><%= ViewData.Model.Product.DefaultSize.NameAndStock %></label>
     <% } %>
 
     <label for="quantity">Quantity</label>
-    <%= Html.Select("quantity", 1.To(10).Select(i => new { Value = i }), "Value", "Value") %>
+    <%= Html.DropDownList("quantity", new SelectList(1.To(10).Select(i => new { Value = i }), "Value", "Value")) %>
 
     <%= Html.SubmitButton("addToBasket", "Add to basket")%>
     

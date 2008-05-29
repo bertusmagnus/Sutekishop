@@ -53,10 +53,10 @@ namespace Suteki.Shop.Controllers
 
             if (content is TopContent)
             {
-                return RenderView("TopPage", CmsView.Data.WithContent(content));
+                return View("TopPage", CmsView.Data.WithContent(content));
             }
 
-            return RenderView("SubPage", CmsView.Data.WithContent(content));
+            return View("SubPage", CmsView.Data.WithContent(content));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -70,14 +70,14 @@ namespace Suteki.Shop.Controllers
                 Position = contentOrderableService.NextPosition
             };
 
-            return RenderView("Edit", EditViewData.WithContent(textContent));
+            return View("Edit", EditViewData.WithContent(textContent));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
             Content content = contentRepository.GetById(id);
-            return RenderView("Edit", EditViewData.WithContent(content));
+            return View("Edit", EditViewData.WithContent(content));
         }
 
         private CmsViewData EditViewData
@@ -108,7 +108,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                return RenderView("Edit", 
+                return View("Edit", 
                     CmsView.Data.WithContent(content).WithErrorMessage(validationException.Message));
             }
 
@@ -118,7 +118,7 @@ namespace Suteki.Shop.Controllers
             }
             contentRepository.SubmitChanges();
 
-            return RenderView("List", CmsView.Data.WithContent(content.Content1));
+            return View("List", CmsView.Data.WithContent(content.Content1));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderListView(int contentId)
         {
             Menu menu = contentRepository.GetById(contentId) as Menu;
-            return RenderView("List", CmsView.Data.WithContent(menu));
+            return View("List", CmsView.Data.WithContent(menu));
         }
 
         public ActionResult MoveUp(int id)
@@ -188,7 +188,7 @@ namespace Suteki.Shop.Controllers
                 Position = contentOrderableService.NextPosition
             };
 
-            return RenderView("Edit", CmsView.Data.WithContent(menu));
+            return View("Edit", CmsView.Data.WithContent(menu));
         }
     }
 }

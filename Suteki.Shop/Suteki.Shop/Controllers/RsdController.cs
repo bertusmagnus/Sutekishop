@@ -15,7 +15,7 @@ namespace Suteki.Shop.Controllers
             {
                 SiteUrl = base.BaseControllerService.SiteUrl
             };
-            return RenderView("Index", viewData);
+            return View("Index", viewData);
         }
     }
 }

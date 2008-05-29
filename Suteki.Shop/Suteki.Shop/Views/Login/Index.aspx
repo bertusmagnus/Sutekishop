@@ -3,7 +3,7 @@
 
     <h1>Login</h1>
 
-    <%= Html.ErrorBox(ViewData) %>
+    <%= Html.ErrorBox(ViewData.Model)%>
 
     <% using(Html.Form("Login", "Authenticate")) { %>
 

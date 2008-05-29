@@ -51,7 +51,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
 
             cmsController.Index(urlName)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("SubPage")
                 .AssertAreSame<CmsViewData, ITextContent>(
                     contents.OfType<ITextContent>().First(), 
@@ -71,7 +71,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
 
             cmsController.Index(urlName)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("TopPage")
                 .AssertAreSame<CmsViewData, ITextContent>(
                     contents.OfType<ITextContent>().First(), vd => vd.TextContent);
@@ -87,7 +87,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
 
             cmsController.Add(menuId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Edit")
                 .AssertNotNull<CmsViewData, ITextContent>(vd => vd.TextContent)
                 .AssertAreEqual<CmsViewData, int>(menuId, vd => vd.Content.ParentContentId.Value);
@@ -105,7 +105,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
 
             cmsController.Edit(contentId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Edit")
                 .AssertAreEqual<CmsViewData, int>(contentId, vd => vd.Content.ContentId)
                 .AssertNotNull<CmsViewData, IEnumerable<Menu>>(vd => vd.Menus);
@@ -170,10 +170,10 @@ namespace Suteki.Shop.Tests.Controllers
             return form;
         }
 
-        private RenderViewResult TestUpdateAction(int contentId, int menuId, NameValueCollection form)
+        private ViewResult TestUpdateAction(int contentId, int menuId, NameValueCollection form)
         {
             return cmsController.Update(contentId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("List");
                 //.AssertNotNull<CmsViewData, Content>(vd => vd.Content)
                 //.AssertAreEqual<CmsViewData, string>(form["name"], vd => vd.Content.Name)
@@ -210,7 +210,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(contentRepository).Expect(mr => mr.GetById(1)).Returns(mainMenu);            
 
             cmsController.List(1)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("List")
                 .AssertAreSame<CmsViewData, Menu>(mainMenu, vd => vd.Menu);
         }
@@ -221,7 +221,7 @@ namespace Suteki.Shop.Tests.Controllers
             int parentContentId = 1;
 
             cmsController.NewMenu(parentContentId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Edit")
                 .AssertNotNull<CmsViewData, Content>(vd => vd.Menu)
                 .AssertAreEqual<CmsViewData, int>(parentContentId, vd => vd.Menu.ParentContentId.Value);
@@ -244,11 +244,11 @@ namespace Suteki.Shop.Tests.Controllers
         }
     }
 
-    public static class RenderViewResultExtensionsForCmsTests
+    public static class ViewResultExtensionsForCmsTests
     {
-        public static RenderViewResult ForText(this RenderViewResult renderViewResult, NameValueCollection form)
+        public static ViewResult ForText(this ViewResult ViewResult, NameValueCollection form)
         {
-            return renderViewResult;
+            return ViewResult;
                 //.AssertAreEqual<CmsViewData, string>(form["text"], vd => vd.TextContent.Text);
         }
     }

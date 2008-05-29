@@ -7,29 +7,29 @@
 
 <!--
 
-<%= ViewData.GetType().Name %>
+<%= ViewData.Model.GetType().Name %>
 
-<%= ViewData.Message %>
+<%= ViewData.Model.Message %>
 
-<%= ViewData.StackTrace %>
+<%= ViewData.Model.StackTrace %>
 
-<% if (ViewData.InnerException != null)
+<% if (ViewData.Model.InnerException != null)
    { %>
 
-    <%= ViewData.InnerException.GetType().Name %>
+    <%= ViewData.Model.InnerException.GetType().Name %>
 
-    <%= ViewData.InnerException.Message %>
+    <%= ViewData.Model.InnerException.Message %>
 
-    <%= ViewData.InnerException.StackTrace %>
+    <%= ViewData.Model.InnerException.StackTrace %>
 
-    <% if (ViewData.InnerException.InnerException != null)
+    <% if (ViewData.Model.InnerException.InnerException != null)
        { %>
 
-        <%= ViewData.InnerException.InnerException.GetType().Name %>
+        <%= ViewData.Model.InnerException.InnerException.GetType().Name %>
 
-        <%= ViewData.InnerException.InnerException.Message %>
+        <%= ViewData.Model.InnerException.InnerException.Message %>
 
-        <%= ViewData.InnerException.InnerException.StackTrace %>
+        <%= ViewData.Model.InnerException.InnerException.StackTrace %>
 
     <% } %>
 

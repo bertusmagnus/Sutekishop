@@ -11,7 +11,7 @@ namespace Suteki.Shop.Controllers
     {
         public ActionResult Index()
         {
-            return RenderView("Index", ShopView.Data);
+            return View("Index", ShopView.Data);
         }
 
         public ActionResult Error()

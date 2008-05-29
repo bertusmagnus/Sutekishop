@@ -41,7 +41,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages.AsQueryable());
 
             postageController.Index()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertNotNull<ScaffoldViewData<Postage>, IEnumerable<Postage>>(vd => vd.Items);
         }
@@ -50,7 +50,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void New_ShouldShowEditViewWithNewPostage()
         {
             postageController.New()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Edit")
                 .AssertNotNull<ScaffoldViewData<Postage>, Postage>(vd => vd.Item);
         }
@@ -64,7 +64,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage);
 
             postageController.Edit(postageId)
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Edit")
                 .AssertAreSame<ScaffoldViewData<Postage>, Postage>(postage, vd => vd.Item);
         }
@@ -83,7 +83,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
 
             postageController.Update()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index");
 
             Assert.AreEqual(form["name"], postage.Name);
@@ -122,7 +122,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
 
             postageController.Update()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index");
 
             Assert.AreEqual(form["name"], postage.Name);

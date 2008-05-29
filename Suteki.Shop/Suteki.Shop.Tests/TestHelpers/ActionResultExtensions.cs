@@ -8,14 +8,14 @@ namespace Suteki.Shop.Tests
 {
     public static class ActionResultExtensions
     {
-        public static RenderViewResult ReturnsRenderViewResult(this ActionResult result)
+        public static ViewResult ReturnsViewResult(this ActionResult result)
         {
-            RenderViewResult renderViewResult = result as RenderViewResult;
-            Assert.IsNotNull(renderViewResult, "result is not a RenderViewResult");
-            return renderViewResult;
+            ViewResult viewResult = result as ViewResult;
+            Assert.IsNotNull(viewResult, "result is not a ViewResult");
+            return viewResult;
         }
 
-        public static RenderViewResult ForView(this RenderViewResult result, string viewName)
+        public static ViewResult ForView(this ViewResult result, string viewName)
         {
             Assert.AreEqual(viewName, result.ViewName);
             return result;
@@ -23,43 +23,43 @@ namespace Suteki.Shop.Tests
 
         // View Data
 
-        public static RenderViewResult AssertNotNull<TViewData, T>(
-            this RenderViewResult result, 
-            Func<TViewData, T> property) where TViewData : ViewDataBase
+        public static ViewResult AssertNotNull<TViewData, T>(
+            this ViewResult result,
+            Func<TViewData, T> property) where TViewData : class
         {
             Assert.IsNotNull(property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static RenderViewResult AssertNull<TViewData, T>(
-            this RenderViewResult result,
-            Func<TViewData, T> property) where TViewData : ViewDataBase
+        public static ViewResult AssertNull<TViewData, T>(
+            this ViewResult result,
+            Func<TViewData, T> property) where TViewData : class
         {
             Assert.IsNull(property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static RenderViewResult AssertAreSame<TViewData, T>(
-            this RenderViewResult result, 
+        public static ViewResult AssertAreSame<TViewData, T>(
+            this ViewResult result, 
             T expected,
-            Func<TViewData, T> property) where TViewData : ViewDataBase
+            Func<TViewData, T> property) where TViewData : class
         {
             Assert.AreSame(expected, property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static RenderViewResult AssertAreEqual<TViewData, T>(
-            this RenderViewResult result,
+        public static ViewResult AssertAreEqual<TViewData, T>(
+            this ViewResult result,
             T expected,
-            Func<TViewData, T> property) where TViewData : ViewDataBase
+            Func<TViewData, T> property) where TViewData : class
         {
             Assert.AreEqual(expected, property(result.GetViewData<TViewData>()));
             return result;
         }
 
-        public static TViewData GetViewData<TViewData>(this RenderViewResult result) where TViewData : ViewDataBase
+        public static TViewData GetViewData<TViewData>(this ViewResult result) where TViewData : class
         {
-            TViewData viewData = result.ViewData as TViewData;
+            TViewData viewData = result.ViewData.Model as TViewData;
             Assert.IsNotNull(viewData, "viewData is not {0}".With(typeof(TViewData).Name));
             return viewData;
         }

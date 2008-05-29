@@ -28,7 +28,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void SetUp()
         {
             // you have to be an administrator to access the category controller
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
             categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
             orderableService = new Mock<IOrderableService<Category>>().Object;
@@ -42,13 +42,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfCategories()
         {
-            RenderViewResult result = categoryController.Index() as RenderViewResult;
+            ViewResult result = categoryController.Index() as ViewResult;
 
-            Assert.IsNotNull(result, "expected a RenderViewResult");
+            Assert.IsNotNull(result, "expected a ViewResult");
 
             Assert.AreEqual("Index", result.ViewName, "ViewName is incorrect");
 
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
@@ -57,16 +57,16 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayCategoryEditView()
         {
-            RenderViewResult result = categoryController.New(1) as RenderViewResult;
+            ViewResult result = categoryController.New(1) as ViewResult;
 
             AssertEditViewIsCorrectlyShown(result);
         }
 
-        private void AssertEditViewIsCorrectlyShown(RenderViewResult result)
+        private void AssertEditViewIsCorrectlyShown(ViewResult result)
         {
             Assert.AreEqual("Edit", result.ViewName, "ViewName is incorrect");
 
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.IsNotNull(viewData.Category, "Category is null");
@@ -88,7 +88,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category);
 
-            RenderViewResult result = categoryController.Edit(categoryId) as RenderViewResult;
+            ViewResult result = categoryController.Edit(categoryId) as ViewResult;
 
             AssertEditViewIsCorrectlyShown(result);
             categoryRepositoryMock.Verify();
@@ -116,7 +116,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            RenderViewResult result = categoryController.Update(categoryId) as RenderViewResult;
+            ViewResult result = categoryController.Update(categoryId) as ViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");
@@ -152,7 +152,7 @@ namespace Suteki.Shop.Tests.Controllers
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category).Verifiable();
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            RenderViewResult result = categoryController.Update(categoryId) as RenderViewResult;
+            ViewResult result = categoryController.Update(categoryId) as ViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");

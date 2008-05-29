@@ -3,9 +3,9 @@
 
 <h1>Basket</h1>
 
-<%= Html.ErrorBox(ViewData) %>
+<%= Html.ErrorBox(ViewData.Model) %>
 
-<% if(ViewData.Basket.IsEmpty) { %>
+<% if(ViewData.Model.Basket.IsEmpty) { %>
 
     <p>Your basket is empty</p>
 
@@ -21,7 +21,7 @@
             <th class="thin number">Delete</th>
         </tr>
         
-        <% foreach (var basketItem in ViewData.Basket.BasketItems)
+        <% foreach (var basketItem in ViewData.Model.Basket.BasketItems)
            { %>
         
         <tr>
@@ -40,7 +40,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Basket.Total.ToString("£0.00") %></td>
+            <td class="number"><%= ViewData.Model.Basket.Total.ToString("£0.00")%></td>
             <td>&nbsp;</td>
         </tr>
 
@@ -49,7 +49,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Basket.PostageTotal %></td>
+            <td class="number"><%= ViewData.Model.Basket.PostageTotal%></td>
             <td>&nbsp;</td>
         </tr>
 
@@ -58,7 +58,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Basket.TotalWithPostage %></td>
+            <td class="number"><%= ViewData.Model.Basket.TotalWithPostage%></td>
             <td>&nbsp;</td>
         </tr>
         
@@ -66,7 +66,7 @@
 
     <p>&nbsp;</p>
 
-    <%= Html.ActionLink<OrderController>(c => c.Checkout(ViewData.Basket.BasketId), "Checkout", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Checkout(ViewData.Model.Basket.BasketId), "Checkout", new { _class = "linkButton" })%>
 
 <% } %>
 

@@ -3,23 +3,23 @@
 
     <h1>Country</h1>
     
-    <%= Html.ErrorBox(ViewData) %>
-    <%= Html.MessageBox(ViewData) %>
+    <%= Html.ErrorBox(ViewData.Model)%>
+    <%= Html.MessageBox(ViewData.Model)%>
 
     <% using (Html.Form("Country", "Update"))
        { %>
 
-        <%= Html.Hidden("countryid", ViewData.Item.CountryId)%>
-        <%= Html.Hidden("position", ViewData.Item.Position)%>
+        <%= Html.Hidden("countryid", ViewData.Model.Item.CountryId.ToString())%>
+        <%= Html.Hidden("position", ViewData.Model.Item.Position.ToString())%>
 
         <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Item.Name)%>
+        <%= Html.TextBox("name", ViewData.Model.Item.Name)%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "true", ViewData.Item.IsActive)%>
+        <%= Html.CheckBox("isactive", "", "true", ViewData.Model.Item.IsActive)%>
         
         <label for="postzoneid">Post Zone</label>
-        <%= Html.Select("postzoneid", ViewData.GetLookUpList<PostZone>(), "Name", "PostZoneId", ViewData.Item.PostZoneId)%>
+        <%= Html.DropDownList("postzoneid", new SelectList(ViewData.Model.GetLookUpList<PostZone>(), "PostZoneId", "Name", ViewData.Model.Item.PostZoneId))%>
         
         <%= Html.SubmitButton()%>
         

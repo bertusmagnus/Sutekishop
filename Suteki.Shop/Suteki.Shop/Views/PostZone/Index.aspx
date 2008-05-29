@@ -15,7 +15,8 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
-<% foreach(var postZone in ViewData.Items) { %>
+<% foreach (var postZone in ViewData.Model.Items)
+   { %>
     <tr>
         <td><%= Html.ActionLink<PostZoneController>(c => c.Edit(postZone.PostZoneId), postZone.Name)%></td>
         <td class="number"><%= postZone.Multiplier.ToString("0.00##") %></td>

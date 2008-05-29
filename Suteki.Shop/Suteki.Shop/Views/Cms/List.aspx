@@ -1,11 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="List.aspx.cs" Inherits="Suteki.Shop.Views.Cms.List" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<h1><%= ViewData.Menu.Name %></h1>
+<h1><%= ViewData.Model.Menu.Name%></h1>
 
 <p>
-    <%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Menu.ContentId), "New Page") %>&nbsp;
-    <%= Html.ActionLink<CmsController>(c => c.NewMenu(ViewData.Menu.ContentId), "New Menu") %>
+    <%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Model.Menu.ContentId), "New Page")%>&nbsp;
+    <%= Html.ActionLink<CmsController>(c => c.NewMenu(ViewData.Model.Menu.ContentId), "New Menu")%>
 </p>
 
 <table>
@@ -18,7 +18,8 @@
         <th class="thin">&nbsp;</th>
         <th class="thin">&nbsp;</th>
     </tr>
-<% foreach(var content in ViewData.Menu.Contents.InOrder()) { %>
+<% foreach (var content in ViewData.Model.Menu.Contents.InOrder())
+   { %>
     <tr>
         <td><%= content.Type %></td>
         <td><%= content.Link(Html) %></td>

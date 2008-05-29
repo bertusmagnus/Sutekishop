@@ -35,8 +35,8 @@ function toggleVisibilityWithCheckbox(checkbox, div)
     
     <p>Welcome to the Suteki Shop secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
     
-    <%= Html.ErrorBox(ViewData) %>
-    <%= Html.MessageBox(ViewData) %>
+    <%= Html.ErrorBox(ViewData.Model) %>
+    <%= Html.MessageBox(ViewData.Model) %>
 
 <!-- basket view -->
 
@@ -51,7 +51,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <th class="thin number">Total Price</th>
     </tr>
     
-    <% foreach (var basketItem in ViewData.Order.Basket.BasketItems)
+    <% foreach (var basketItem in ViewData.Model.Order.Basket.BasketItems)
        { %>
     
     <tr>
@@ -69,7 +69,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.Total.ToString("£0.00")%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.Total.ToString("£0.00")%></td>
     </tr>
 
     <tr>
@@ -77,7 +77,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.PostageTotal%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
         <td>&nbsp;</td>
     </tr>
 
@@ -86,7 +86,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= ViewData.Order.Basket.TotalWithPostage%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.TotalWithPostage%></td>
         <td>&nbsp;</td>
     </tr>
     
@@ -102,8 +102,8 @@ function toggleVisibilityWithCheckbox(checkbox, div)
     <% using (Html.Form("Order", "PlaceOrder"))
        { %>
 
-        <%= Html.Hidden("order.orderid", ViewData.Order.OrderId)%>
-        <%= Html.Hidden("order.basketid", ViewData.Order.BasketId) %>
+        <%= Html.Hidden("order.orderid", ViewData.Model.Order.OrderId.ToString())%>
+        <%= Html.Hidden("order.basketid", ViewData.Model.Order.BasketId.ToString()) %>
         
         <!-- card contact -->
 
@@ -113,42 +113,42 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <h3>Card Holder</h3>
         
         <label for="cardcontact.firstname">First Name</label>
-        <%= Html.TextBox("cardcontact.firstname", ViewData.Order.Contact.Firstname)%>
+        <%= Html.TextBox("cardcontact.firstname", ViewData.Model.Order.Contact.Firstname)%>
         
         <label for="cardcontact.lastname">Last Name</label>
-        <%= Html.TextBox("cardcontact.lastname", ViewData.Order.Contact.Lastname)%>
+        <%= Html.TextBox("cardcontact.lastname", ViewData.Model.Order.Contact.Lastname)%>
         
         <label for="cardcontact.address1">Address</label>
-        <%= Html.TextBox("cardcontact.address1", ViewData.Order.Contact.Address1)%>
+        <%= Html.TextBox("cardcontact.address1", ViewData.Model.Order.Contact.Address1)%>
         
         <label for="cardcontact.address2">&nbsp;</label>
-        <%= Html.TextBox("cardcontact.address2", ViewData.Order.Contact.Address2)%>
+        <%= Html.TextBox("cardcontact.address2", ViewData.Model.Order.Contact.Address2)%>
         
         <label for="cardcontact.address3">&nbsp;</label>
-        <%= Html.TextBox("cardcontact.address3", ViewData.Order.Contact.Address3)%>
+        <%= Html.TextBox("cardcontact.address3", ViewData.Model.Order.Contact.Address3)%>
         
         <label for="cardcontact.town">Town / City</label>
-        <%= Html.TextBox("cardcontact.town", ViewData.Order.Contact.Town)%>
+        <%= Html.TextBox("cardcontact.town", ViewData.Model.Order.Contact.Town)%>
 
         <label for="cardcontact.county">County</label>
-        <%= Html.TextBox("cardcontact.county", ViewData.Order.Contact.County)%>
+        <%= Html.TextBox("cardcontact.county", ViewData.Model.Order.Contact.County)%>
  
         <label for="cardcontact.postcode">Postcode</label>
-        <%= Html.TextBox("cardcontact.postcode", ViewData.Order.Contact.Postcode)%>
+        <%= Html.TextBox("cardcontact.postcode", ViewData.Model.Order.Contact.Postcode)%>
  
         <label for="cardcontact.countryid">Country</label>
-        <%= Html.Select("cardcontact.countryid", ViewData.Countries, "Name", "CountryId", ViewData.Order.Contact.CountryId)%>
+        <%= Html.DropDownList("cardcontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.Contact.CountryId))%>
         
         <label for="cardcontact.telephone">Telephone</label>
-        <%= Html.TextBox("cardcontact.telephone", ViewData.Order.Contact.Telephone)%>
+        <%= Html.TextBox("cardcontact.telephone", ViewData.Model.Order.Contact.Telephone)%>
  
         <!-- email details -->
         
         <label for="order.email">Email</label>
-        <%= Html.TextBox("order.email", ViewData.Order.Email)%>
+        <%= Html.TextBox("order.email", ViewData.Model.Order.Email)%>
  
         <label for="emailconfirm">Confirm Email</label>
-        <%= Html.TextBox("emailconfirm", ViewData.Order.Email)%>
+        <%= Html.TextBox("emailconfirm", ViewData.Model.Order.Email)%>
  
     </div>
     <div class="contentRightColumn">
@@ -158,47 +158,47 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <h3>Delivery Address</h3>
         
         <label for="order.usecardholdercontact">Use Cardholder Details</label>
-        <%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Order.UseCardHolderContact,
+        <%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Model.Order.UseCardHolderContact,
                         new { onclick = "javascript:toggleCardHolderDetails();" })%>
         
         <div id="deliveryAddress">
         
             <label for="deliverycontact.firstname">First Name</label>
-            <%= Html.TextBox("deliverycontact.firstname", ViewData.Order.Contact1.Firstname)%>
+            <%= Html.TextBox("deliverycontact.firstname", ViewData.Model.Order.Contact1.Firstname)%>
             
             <label for="deliverycontact.lastname">Last Name</label>
-            <%= Html.TextBox("deliverycontact.lastname", ViewData.Order.Contact1.Lastname)%>
+            <%= Html.TextBox("deliverycontact.lastname", ViewData.Model.Order.Contact1.Lastname)%>
             
             <label for="deliverycontact.address1">Address</label>
-            <%= Html.TextBox("deliverycontact.address1", ViewData.Order.Contact1.Address1)%>
+            <%= Html.TextBox("deliverycontact.address1", ViewData.Model.Order.Contact1.Address1)%>
             
             <label for="deliverycontact.address2">&nbsp;</label>
-            <%= Html.TextBox("deliverycontact.address2", ViewData.Order.Contact1.Address2)%>
+            <%= Html.TextBox("deliverycontact.address2", ViewData.Model.Order.Contact1.Address2)%>
             
             <label for="deliverycontact.address3">&nbsp;</label>
-            <%= Html.TextBox("deliverycontact.address3", ViewData.Order.Contact1.Address3)%>
+            <%= Html.TextBox("deliverycontact.address3", ViewData.Model.Order.Contact1.Address3)%>
             
             <label for="deliverycontact.town">Town / City</label>
-            <%= Html.TextBox("deliverycontact.town", ViewData.Order.Contact1.Town)%>
+            <%= Html.TextBox("deliverycontact.town", ViewData.Model.Order.Contact1.Town)%>
 
             <label for="deliverycontact.county">County</label>
-            <%= Html.TextBox("deliverycontact.county", ViewData.Order.Contact1.County)%>
+            <%= Html.TextBox("deliverycontact.county", ViewData.Model.Order.Contact1.County)%>
      
             <label for="deliverycontact.postcode">Postcode</label>
-            <%= Html.TextBox("deliverycontact.postcode", ViewData.Order.Contact1.Postcode)%>
+            <%= Html.TextBox("deliverycontact.postcode", ViewData.Model.Order.Contact1.Postcode)%>
      
             <label for="deliverycontact.countryid">Country</label>
-            <%= Html.Select("deliverycontact.countryid", ViewData.Countries, "Name", "CountryId", ViewData.Order.Contact1.CountryId)%>
+            <%= Html.DropDownList("deliverycontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.Contact1.CountryId))%>
             
             <label for="deliverycontact.telephone">Telephone</label>
-            <%= Html.TextBox("deliverycontact.telephone", ViewData.Order.Contact1.Telephone)%>
+            <%= Html.TextBox("deliverycontact.telephone", ViewData.Model.Order.Contact1.Telephone)%>
 
         </div>
         
         <!-- additional information -->  
         
         <label for="order.additionalinformation">Additional Information</label>
-        <%= Html.TextArea("order.additionalinformation", ViewData.Order.AdditionalInformation)%>
+        <%= Html.TextArea("order.additionalinformation", ViewData.Model.Order.AdditionalInformation)%>
         
     </div>      
 </div>        
@@ -211,38 +211,38 @@ function toggleVisibilityWithCheckbox(checkbox, div)
         <div id="cardDetails">
         
             <label for="card.cardtypeid">Country</label>
-            <%= Html.Select("card.cardtypeid", ViewData.CardTypes, "Name", "CardTypeId", ViewData.Order.Card.CardTypeId)%>
+            <%= Html.DropDownList("card.cardtypeid", new SelectList(ViewData.Model.CardTypes, "CardTypeId", "Name", ViewData.Model.Order.Card.CardTypeId))%>
             
             <label for="card.holder">Card Holder</label>
-            <%= Html.TextBox("card.holder", ViewData.Order.Card.Holder)%>
+            <%= Html.TextBox("card.holder", ViewData.Model.Order.Card.Holder)%>
      
             <label for="card.number">Card Number</label>
-            <%= Html.TextBox("card.number", ViewData.Order.Card.Number)%>
+            <%= Html.TextBox("card.number", ViewData.Model.Order.Card.Number)%>
      
             <div class="cardDate">
                 <label for="card.expirymonth">Expire Date</label>
-                <%= Html.Select("card.expirymonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryMonth)%>
-                <%= Html.Select("card.expiryyear", Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.ExpiryYear)%>
+                <%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%>
+                <%= Html.DropDownList("card.expiryyear", new SelectList(Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryYear))%>
             </div>
      
             <div class="cardDate">
                 <label for="card.startmonth">Start Data</label>
-                <%= Html.Select("card.startmonth", Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartMonth)%>
-                <%= Html.Select("card.startyear", Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Order.Card.StartYear)%>
+                <%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%>
+                <%= Html.DropDownList("card.startyear", new SelectList(Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartYear))%>
             </div>
      
             <label for="card.issuenumber">Issue Number</label>
-            <%= Html.TextBox("card.issuenumber", ViewData.Order.Card.IssueNumber)%>
+            <%= Html.TextBox("card.issuenumber", ViewData.Model.Order.Card.IssueNumber)%>
      
             <label for="card.securitycode">Security Code</label>
-            <%= Html.TextBox("card.securitycode", ViewData.Order.Card.SecurityCode)%>
+            <%= Html.TextBox("card.securitycode", ViewData.Model.Order.Card.SecurityCode)%>
 
         </div>
     </div>
     <div class="contentRightColumn">
     
         <label for="order.paybytelephone"><strong>I prefer to pay by cheque or telephone</strong></label>
-        <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Order.PayByTelephone,
+        <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Model.Order.PayByTelephone,
                         new { onclick = "javascript:toggleCard();" })%>
     
         <p>If you tick this option you will receive an order number.</p>

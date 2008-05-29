@@ -1,6 +1,10 @@
 ﻿SutekiShop To Do list
 =====================
 
+* Seft referential combos should not have item as parent (menu, category)
+
+* Default stock should be available
+
 * DataContext lifetime!!!
 
 * SSL certificate

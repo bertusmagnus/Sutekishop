@@ -36,7 +36,7 @@
 
 <div class="columnContainer">
     <div class="pager">
-    <%= Html.Pager("Order", "Index", ViewData.Orders) %>
+    <%= Html.Pager("Order", "Index", ViewData.Model.Orders) %>
     </div>
 
     <table>
@@ -50,7 +50,7 @@
             <th class="thin">Updated by</th>
         </tr>
 
-    <% foreach(var order in ViewData.Orders) { %>
+    <% foreach(var order in ViewData.Model.Orders) { %>
 
         <tr class="<%= order.OrderStatus.Name %>">
             <td><%= Html.ActionLink<OrderController>(c => c.Item(order.OrderId), order.OrderId.ToString()) %></td>
@@ -64,6 +64,6 @@
     <% } %>
     </table>
 
-    <p>Total orders: <%= ViewData.Orders.TotalCount %></p>
+    <p>Total orders: <%= ViewData.Model.Orders.TotalCount %></p>
 </div>
 </asp:Content>

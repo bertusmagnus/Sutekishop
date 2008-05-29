@@ -56,7 +56,7 @@ namespace Suteki.Shop.Controllers
                 products = products.Active();
             }
 
-            return RenderView("Index", ShopView.Data.WithProducts(products).WithCategory(category));
+            return View("Index", ShopView.Data.WithProducts(products).WithCategory(category));
         }
 
         public ActionResult Item(string urlName)
@@ -67,7 +67,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderItemView(string urlName)
         {
             Product product = productRepository.GetAll().WithUrlName(urlName);
-            return RenderView("Item", ShopView.Data.WithProduct(product));
+            return View("Item", ShopView.Data.WithProduct(product));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -80,7 +80,7 @@ namespace Suteki.Shop.Controllers
                 Position = productOrderableService.NextPosition
             };
 
-            return RenderView("Edit", EditViewData.WithProduct(defaultProduct)); 
+            return View("Edit", EditViewData.WithProduct(defaultProduct)); 
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -104,7 +104,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                return RenderView("Edit", EditViewData.WithProduct(product).WithErrorMessage(validationException.Message));
+                return View("Edit", EditViewData.WithProduct(product).WithErrorMessage(validationException.Message));
             }
 
             if (productId == 0)
@@ -114,7 +114,7 @@ namespace Suteki.Shop.Controllers
             
             productRepository.SubmitChanges();
 
-            return RenderView("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
+            return View("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
         }
 
         private Product CreateDefaultProduct()
@@ -150,7 +150,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderEditView(int id)
         {
             Product product = productRepository.GetById(id);
-            return RenderView("Edit", EditViewData.WithProduct(product));
+            return View("Edit", EditViewData.WithProduct(product));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -214,7 +214,7 @@ namespace Suteki.Shop.Controllers
             sizeService.Clear(product);
             productRepository.SubmitChanges();
 
-            return RenderView("Edit", EditViewData.WithProduct(product));
+            return View("Edit", EditViewData.WithProduct(product));
         }
 
         public ShopViewData EditViewData

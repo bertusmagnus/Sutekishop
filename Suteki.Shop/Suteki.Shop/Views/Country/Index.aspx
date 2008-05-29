@@ -13,7 +13,8 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
-<% foreach(var country in ViewData.Items) { %>
+<% foreach (var country in ViewData.Model.Items)
+   { %>
     <tr>
         <td><%= Html.ActionLink<CountryController>(c => c.Edit(country.CountryId), country.Name) %></td>
         <td><%= Html.Tick(country.IsActive) %></td>

@@ -56,10 +56,10 @@ namespace Suteki.Shop.Tests.Controllers
             User user = CreateUserWithBasket();
             testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
 
-            RenderViewResult result = basketController.Index() as RenderViewResult;
+            ViewResult result = basketController.Index() as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.AreSame(user.Baskets[0], viewData.Basket, "The user's basket has not been shown");
@@ -98,7 +98,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
             basketController.Update()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index");
 
             Assert.AreEqual(1, user.Baskets[0].BasketItems.Count, "expected BasketItem is missing");
@@ -122,7 +122,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void Update_ShouldShowErrorMessageIfItemIsOutOfStock()
         {
             CreateUpdateForm();
-            User user = CreateUserWithBasket();
+            var user = CreateUserWithBasket();
 
             // expect 
             Mock.Get(basketRepository).Expect(or => or.SubmitChanges());
@@ -130,7 +130,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(basketController).Expect(bc => bc.SetAuthenticationCookie(user.Email));
             Mock.Get(basketController).Expect(bc => bc.SetContextUserTo(user));
 
-            Size size = new Size
+            var size = new Size
             {
                 Name = "S",
                 IsInStock = false,
@@ -139,10 +139,10 @@ namespace Suteki.Shop.Tests.Controllers
             };
             Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
-            string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
+            var expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
             basketController.Update()
-                .ReturnsRenderViewResult()
+                .ReturnsViewResult()
                 .ForView("Index")
                 .AssertAreEqual<ShopViewData, string>(expectedMessage, vd => vd.ErrorMessage);
 
@@ -164,7 +164,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(basketItemRepository).Expect(ir => ir.DeleteOnSubmit(basketItem)).Verifiable();
             Mock.Get(basketItemRepository).Expect(ir => ir.SubmitChanges());
 
-            RenderViewResult result = basketController.Remove(basketItemIdToRemove) as RenderViewResult;
+            ViewResult result = basketController.Remove(basketItemIdToRemove) as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
             Mock.Get(basketItemRepository).Verify();

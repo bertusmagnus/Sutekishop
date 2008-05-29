@@ -33,7 +33,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView()
         {
             Category root = categoryRepository.GetRootCategory();
-            return RenderView("Index", ShopView.Data.WithCategory(root));
+            return View("Index", ShopView.Data.WithCategory(root));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -44,14 +44,14 @@ namespace Suteki.Shop.Controllers
                 ParentId = id,
                 Position = orderableService.NextPosition
             };
-            return RenderView("Edit", EditViewData.WithCategory(defaultCategory)); 
+            return View("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
             Category category = categoryRepository.GetById(id);
-            return RenderView("Edit", EditViewData.WithCategory(category));
+            return View("Edit", EditViewData.WithCategory(category));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -73,7 +73,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                return RenderView("Edit", EditViewData.WithCategory(category)
+                return View("Edit", EditViewData.WithCategory(category)
                     .WithErrorMessage(validationException.Message));
             }
 
@@ -84,7 +84,7 @@ namespace Suteki.Shop.Controllers
 
             categoryRepository.SubmitChanges();
 
-            return RenderView("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved"));
+            return View("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved"));
         }
 
         private ShopViewData EditViewData

@@ -3,22 +3,22 @@
 
     <h1>Category</h1>
     
-    <%= Html.ErrorBox(ViewData) %>
-    <%= Html.MessageBox(ViewData) %>
+    <%= Html.ErrorBox(ViewData.Model)%>
+    <%= Html.MessageBox(ViewData.Model)%>
 
     <% using(Html.Form("Category", "Update")) { %>
 
-        <%= Html.Hidden("categoryId", ViewData.Category.CategoryId) %>
-        <%= Html.Hidden("position", ViewData.Category.Position) %>
+        <%= Html.Hidden("categoryId", ViewData.Model.Category.CategoryId.ToString())%>
+        <%= Html.Hidden("position", ViewData.Model.Category.Position.ToString())%>
 
         <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Category.Name) %>
+        <%= Html.TextBox("name", ViewData.Model.Category.Name)%>
         
         <label for="parentid">Parent Category</label>
-        <%= Html.Select("parentid", ViewData.Categories, "Name", "CategoryId", ViewData.Category.ParentId)%>
+        <%= Html.DropDownList("parentid", new SelectList(ViewData.Model.Categories, "CategoryId", "Name", ViewData.Model.Category.ParentId))%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "True", ViewData.Category.IsActive)%>
+        <%= Html.CheckBox("isactive", "", "True", ViewData.Model.Category.IsActive)%>
         
         <%= Html.SubmitButton() %>
 

@@ -27,19 +27,19 @@ namespace Suteki.Shop.Controllers
         public ActionResult Index()
         {
             var users = userRepository.GetAll().Editable();
-            return RenderView("Index", ShopView.Data.WithUsers(users));
+            return View("Index", ShopView.Data.WithUsers(users));
         }
 
         public ActionResult New()
         {
             User defaultUser = new User { Email = "", Password = "", RoleId = 1, IsEnabled = true };
-            return RenderView("Edit", EditViewData.WithUser(defaultUser));
+            return View("Edit", EditViewData.WithUser(defaultUser));
         }
 
         public ActionResult Edit(int id)
         {
             User user = userRepository.GetById(id);
-            return RenderView("Edit", EditViewData.WithUser(user));
+            return View("Edit", EditViewData.WithUser(user));
         }
 
         public ActionResult Update(int userid)
@@ -63,7 +63,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                return RenderView("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
+                return View("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
             }
 
             if (userid == 0)
@@ -73,7 +73,7 @@ namespace Suteki.Shop.Controllers
 
             userRepository.SubmitChanges();
 
-            return RenderView("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
+            return View("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
         }
 
         /// <summary>

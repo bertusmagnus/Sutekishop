@@ -8,8 +8,9 @@ using System.Collections.Specialized;
 
 namespace Suteki.Shop.Controllers
 {
+    // don't forget to change back to ConventionController when mvcContrib catches up with CTP 3
     [Rescue("Default")]
-    public abstract class ControllerBase : ConventionController
+    public abstract class ControllerBase : Controller 
     {
         /// <summary>
         /// Supplies services and configuration to all controllers
@@ -34,10 +35,7 @@ namespace Suteki.Shop.Controllers
                 {
                     return Request.Form;
                 }
-                else
-                {
-                    return Request.QueryString;
-                }
+                return Request.QueryString;
             }
         }
 

@@ -7,7 +7,7 @@
 
 <% using(Html.Form<StockController>(c => c.Update())) { %>
 
-    <%= Html.WriteStock(ViewData.Category) %>
+    <%= Html.WriteStock(ViewData.Model.Category) %>
 
     <%= Html.SubmitButton() %>
 

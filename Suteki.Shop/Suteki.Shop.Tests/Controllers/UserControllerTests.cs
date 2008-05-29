@@ -44,13 +44,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldShowAListOfUsers()
         {
-            RenderViewResult result = userController.Index() as RenderViewResult;
+            ViewResult result = userController.Index() as ViewResult;
 
             // should show view Index
             Assert.AreEqual("Index", result.ViewName);
 
             // ViewData should be UserViewData
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some users
@@ -63,7 +63,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayUserEditView()
         {
-            RenderViewResult result = userController.New() as RenderViewResult;
+            ViewResult result = userController.New() as ViewResult;
 
             // should show Edit view
             Assert.AreEqual("Edit", result.ViewName);
@@ -86,15 +86,15 @@ namespace Suteki.Shop.Tests.Controllers
 
             userRepositoryMock.Expect(ur => ur.GetById(userId)).Returns(user).Verifiable();
 
-            RenderViewResult result = userController.Edit(userId) as RenderViewResult;
+            ViewResult result = userController.Edit(userId) as ViewResult;
 
             AssertUserEditViewDataIsCorrect(result);
             userRepositoryMock.Verify();
         }
 
-        private void AssertUserEditViewDataIsCorrect(RenderViewResult result)
+        private void AssertUserEditViewDataIsCorrect(ViewResult result)
         {
-            ShopViewData viewData = result.ViewData as ShopViewData;
+            ShopViewData viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
 
             // there should be some roles
@@ -133,7 +133,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
 
             // call Update
-            RenderViewResult result = userController.Update(0) as RenderViewResult;
+            ViewResult result = userController.Update(0) as ViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
@@ -184,7 +184,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
 
             // call Update
-            RenderViewResult result = userController.Update(userId) as RenderViewResult;
+            ViewResult result = userController.Update(userId) as ViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
