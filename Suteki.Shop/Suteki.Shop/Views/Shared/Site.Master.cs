@@ -37,8 +37,29 @@ namespace Suteki.Shop.Views.Shared
         {
             get
             {
-                var controller = this.ViewContext.Controller as IProvidesBaseService;
-                return controller.BaseControllerService.SiteUrl;
+                return GetController().BaseControllerService.SiteUrl;
+            }
+        }
+
+        private IProvidesBaseService GetController()
+        {
+            if (ViewContext != null) return ViewContext.Controller as IProvidesBaseService;
+            throw new ApplicationException("Controller does not implement IProvidesBaseService");
+        }
+
+        protected string Title
+        {
+            get
+            {
+                return GetController().BaseControllerService.ShopName;
+            }
+        }
+
+        protected string Email
+        {
+            get
+            {
+                return GetController().BaseControllerService.EmailAddress;
             }
         }
 

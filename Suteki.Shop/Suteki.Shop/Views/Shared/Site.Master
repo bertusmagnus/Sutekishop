@@ -14,9 +14,17 @@
         <div class="header">
         
             <div class="logo">
+
+                <div class="rightText">
+                    <p>
+                        <%= Html.Mailto(Email, Email) %>
+                    </p>                
+                </div>
+                
                 <h1>
-                    Suteki Shop
+                    <%= Title %>
                 </h1>
+                
             </div>
             
             <div>
@@ -29,7 +37,7 @@
         </asp:ContentPlaceHolder>
 
         <div class="footer">
-            <div id="loginStatus">
+            <div class="rightText">
                 <p>
                     <%= Html.LoginLink() %> |
                     <%= Html.LoginStatus() %>

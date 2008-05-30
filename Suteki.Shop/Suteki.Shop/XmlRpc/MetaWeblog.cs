@@ -151,14 +151,16 @@ namespace Suteki.Shop.XmlRpc
             ValidateUser(username, password);
             int contentId = GetContentId(postid);
 
-            TextContent content = contentRepository.GetById(contentId) as TextContent;
-            if(content == null)
+            var content = contentRepository.GetById(contentId);
+            var textContent = content as ITextContent;
+
+            if (textContent == null)
             {
                 throw new XmlRpcFaultException(1, "Invalid post id");
             }
 
             content.Name = post.title;
-            content.Text = post.description;
+            textContent.Text = post.description;
             content.IsActive = publish;
 
             contentRepository.SubmitChanges();
@@ -226,9 +228,10 @@ namespace Suteki.Shop.XmlRpc
             ValidateUser(username, password);
             int contentId = GetContentId(postid);
 
-            TextContent content = contentRepository.GetById(contentId) as TextContent;
+            var content = contentRepository.GetById(contentId);
+            var textContent = content as ITextContent;
 
-            if (content == null)
+            if (textContent == null)
             {
                 throw new XmlRpcFaultException(1, "invalid postid");
             }
@@ -236,7 +239,7 @@ namespace Suteki.Shop.XmlRpc
             return new Post
             {
                 link = GetPostUrl(content),
-                description = content.Text,
+                description = textContent.Text,
                 dateCreated = DateTime.Now,
                 postid = content.ContentId,
                 title = content.Name,

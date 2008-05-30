@@ -29,9 +29,10 @@ a:hover
 	color: #FFF;	
 }
 
-#loginStatus
+.rightText
 {
 	float: right;
+	margin: 0 10px 0 0;
 }
 
 .page
@@ -134,7 +135,7 @@ h2 a
 {
 }
 
-#topContent
+.topContent
 {
 	padding: 10px 20px;
 }

@@ -182,15 +182,22 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult NewMenu(int id)
         {
+            Content content = contentRepository.GetById(id);
+
+            if(!(content is Menu))
+            {
+                throw new ApplicationException("Content with id = {0} is not a menu".With(id));
+            }
+
             Menu menu = new Menu
             {
                 ContentTypeId = ContentType.MenuId,
-                ParentContentId = id,
+                Content1 = content,
                 IsActive = true,
                 Position = contentOrderableService.NextPosition
             };
 
-            return View("Edit", CmsView.Data.WithContent(menu));
+            return View("Edit", GetEditViewData(0).WithContent(menu));
         }
     }
 }

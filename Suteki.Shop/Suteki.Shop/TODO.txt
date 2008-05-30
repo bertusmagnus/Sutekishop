@@ -1,11 +1,7 @@
 ﻿SutekiShop To Do list
 =====================
 
-* Titles!
-
 * Self referential combos should not have self or children available as parent choice.
-
-* DataContext lifetime!!! (works, but bad hack)
 
 * SSL certificate
 
@@ -13,26 +9,25 @@
 	- mostly done (probably need a print page)
 	- checkout page layout needs fixing
 
-* Credit Card Encryption
-	- done, but nice to have the client side silverlight storage.
-
 * Emails
 
 * Logging - emails, errors
 
-* Shopping basket off main menu 
-	- done, but need separate logo, not as a menu item
-
-* CMS
-	- Menu management
-	- Create / Edit page
-	
 * Mailing list
 	- User can add themselves
 	- Management
 	
 * Reports
 
-* Site Map
+* Credit Card Encryption
+	- done, but nice to have the client side silverlight storage.
+
+------------------------------ later ------------------------------------------------
+
+* DataContext lifetime!!! (works, but bad hack)
+
+* Shopping basket off main menu 
+	- done, but need separate logo, not as a menu item
 
 * Order processor page permissions
+
