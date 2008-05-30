@@ -7,16 +7,14 @@ namespace Suteki.Shop.Services
 {
     public class ImageFileService : Suteki.Shop.Services.IImageFileService
     {
-        string imageFolderPath;
-
-        public ImageFileService(string imageFolderPath)
+        public virtual string GetImageFolderPath()
         {
-            this.imageFolderPath = imageFolderPath;
+            return HttpContext.Current.Server.MapPath("/ProductPhotos/");
         }
 
         public string GetFullPath(string filename)
         {
-            return Path.Combine(imageFolderPath, filename);
+            return Path.Combine(GetImageFolderPath(), filename);
         }
 
         public string GetThumbPath(Image image)

@@ -259,7 +259,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.IsTrue(order.IsDispatched, "order has not been dispatched");
             Assert.AreEqual(DateTime.Now.ToShortDateString(), order.DispatchedDateAsString, 
                 "DispatchedDateAsString is incorrect");
-            Assert.AreEqual(4, order.UserId, "UserId is incorrect"); // set SetUp
+            Assert.AreEqual(4, order.UserId, "UserId is incorrect"); // set GetFullPath_ShouldReturnFullPage
         }
 
         [Test]

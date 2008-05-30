@@ -1,4 +1,5 @@
 ﻿using System;
+using Moq;
 using NUnit.Framework;
 using Suteki.Shop.Services;
 using System.IO;
@@ -20,9 +21,10 @@ namespace Suteki.Shop.Tests.Services
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImages");
 
-            imageService = new ImageService(
-                new ImageFileService(imageFolderPath),
-                500, 500, 100, 100);
+            var imageFileService = new Mock<ImageFileService>().Object;
+            Mock.Get(imageFileService).Expect(ifs => ifs.GetImageFolderPath()).Returns(imageFolderPath);
+
+            imageService = new ImageService(imageFileService, 500, 500, 100, 100);
 
             string jpgTestPath = Path.Combine(imageFolderPath, image.FileNameAsString);
             string jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);

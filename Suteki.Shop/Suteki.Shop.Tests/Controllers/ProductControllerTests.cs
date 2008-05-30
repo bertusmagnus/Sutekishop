@@ -111,7 +111,7 @@ namespace Suteki.Shop.Tests.Controllers
             const string urlName = "Product_4";
 
             // product repository GetAll expectation is already set by
-            // MockRepositoryBuilder.CreateProductRepository() in SetUp()
+            // MockRepositoryBuilder.CreateProductRepository() in GetFullPath_ShouldReturnFullPage()
 
             ViewResult result = productController.Item(urlName)
                 .ReturnsViewResult()

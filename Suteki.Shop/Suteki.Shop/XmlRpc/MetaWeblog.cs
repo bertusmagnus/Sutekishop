@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using CookComputing.XmlRpc;
 using Suteki.Common.Extensions;
@@ -11,7 +8,6 @@ using Suteki.Common.Services;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
 using Suteki.Shop.Services;
-using Castle.MicroKernel;
 using System.Web;
 using Castle.Windsor;
 
@@ -54,9 +50,21 @@ namespace Suteki.Shop.XmlRpc
         }
 
         public MetaWeblog()
-            : this(GetIocContainer())
         {
+            // not using IoC container, manually creating
+            var dataContext = new ShopDataContext();
+            this.contentRepository = new Repository<Content>(dataContext);
+            this.userRepository = new Repository<User>(dataContext);
+            var categoryRepository = new Repository<Suteki.Shop.Category>(dataContext);
+            this.contentOrderableService = new OrderableService<Content>(contentRepository);
+            this.baseControllerService = new BaseControllerService(categoryRepository, contentRepository);
+            this.imageFileService = new ImageFileService();
         }
+
+//        public MetaWeblog()
+//            : this(GetIocContainer())
+//        {
+//        }
 
         /// <summary>
         /// We want to get all our sevices from the IoC container.
@@ -70,6 +78,7 @@ namespace Suteki.Shop.XmlRpc
                 throw new XmlRpcFaultException(1,
                     "MetaWeblog's default constructor can only be used with an HttpApplication that implemenets IContainerAccessor");
             }
+
             return containerAccessor.Container;
         }
 
