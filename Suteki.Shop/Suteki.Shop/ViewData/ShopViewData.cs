@@ -36,6 +36,8 @@ namespace Suteki.Shop.ViewData
 
         public IEnumerable<StockItem> StockItems { get; set; }
 
+        public IEnumerable<Content> Contents { get; set; }
+
         // attempt at a fluent interface
 
         public ShopViewData WithCategory(Category category)
@@ -145,6 +147,13 @@ namespace Suteki.Shop.ViewData
             this.StockItems = stockItems;
             return this;
         }
+
+        public ShopViewData WithContents(IEnumerable<Content> contents)
+        {
+            this.Contents = contents;
+            return this;
+        }
+
     }
 
     /// <summary>

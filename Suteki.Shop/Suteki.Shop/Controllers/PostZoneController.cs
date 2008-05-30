@@ -9,7 +9,7 @@ using Suteki.Common.Controllers;
 namespace Suteki.Shop.Controllers
 {
     [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-    public class PostZoneController : ScaffoldController<PostZone>
+    public class PostZoneController : ShopScaffoldController<PostZone>
     {
     }
 }

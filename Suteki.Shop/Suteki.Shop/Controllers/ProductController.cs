@@ -44,6 +44,11 @@ namespace Suteki.Shop.Controllers
             this.productImageOrderableService = productImageOrderableService;
         }
 
+        public override string GetControllerName()
+        {
+            return "";
+        }
+
         public ActionResult Index(int id)
         {
             return RenderIndexView(id);
@@ -52,6 +57,9 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderIndexView(int id)
         {
             Category category = categoryRepository.GetById(id);
+
+            AppendTitle(category.Name);
+
             var products = OrderableExtensions.InOrder(category.Products);
 
             if (!CurrentUser.IsAdministrator)
@@ -70,6 +78,7 @@ namespace Suteki.Shop.Controllers
         private ActionResult RenderItemView(string urlName)
         {
             Product product = productRepository.GetAll().WithUrlName(urlName);
+            AppendTitle(product.Name);
             return View("Item", ShopView.Data.WithProduct(product));
         }
 

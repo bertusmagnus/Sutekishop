@@ -31,7 +31,6 @@ a:hover
 
 #loginStatus
 {
-	border-width: 0;	
 	float: right;
 }
 
@@ -111,7 +110,7 @@ h2 a
 {
 	border-style: dotted;
 	border-width: 1px;
-	padding: 0px 0px 0px 10px;
+	padding: 0px 10px;
 }
 
 .error
@@ -129,6 +128,10 @@ h2 a
 .clear
 {
 	clear: both;	
+}
+
+.siteMap
+{
 }
 
 #topContent

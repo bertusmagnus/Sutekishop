@@ -1,15 +1,13 @@
 ﻿SutekiShop To Do list
 =====================
 
-* Seft referential combos should not have item as parent (menu, category)
+* Titles!
 
-* Default stock should be available
+* Self referential combos should not have self or children available as parent choice.
 
-* DataContext lifetime!!!
+* DataContext lifetime!!! (works, but bad hack)
 
 * SSL certificate
-
-* SEO work - products and categories (page titles and meta descriptions)
 
 * Order Management
 	- mostly done (probably need a print page)

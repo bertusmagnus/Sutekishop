@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Repositories
 {
@@ -17,18 +18,38 @@ namespace Suteki.Common.Repositories
             {
                 throw new ArgumentException(expression_not_property);
             }
-            MemberExpression memberExpression = propertyExpression.Body as MemberExpression;
-            PropertyInfo property = memberExpression.Member as PropertyInfo;
+            
+            var memberExpression = propertyExpression.Body as MemberExpression;
+            var property = memberExpression.Member as PropertyInfo;
             if (property == null)
             {
                 throw new ArgumentException(expression_not_property);
             }
 
-            T selectItem = new T();
+            var selectItem = new T();
             property.SetValue(selectItem, "<select>", null);
 
             var selectItems = new List<T> { selectItem }.AsQueryable();
             return selectItems.Union(items);
+        }
+
+        public static IQueryable<T> NotIncluding<T>(this IQueryable<T> items, int primaryKey)
+            where T : class
+        {
+            var itemParameter = Expression.Parameter(typeof(T), "item");
+
+            var whereExpression = Expression.Lambda<Func<T, bool>>
+                (
+                Expression.NotEqual(
+                    Expression.Property(
+                        itemParameter,
+                        typeof(T).GetPrimaryKey().Name
+                        ),
+                    Expression.Constant(primaryKey)
+                    ),
+                new ParameterExpression[] { itemParameter }
+                );
+            return items.Where(whereExpression);
         }
     }
 }

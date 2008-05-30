@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Suteki Shop</title>
+    <title><%= ViewData["Title"] %></title>
     <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
     <link rel="EditURI" type="application/rsd+xml" title="RSD" href=<%= RsdUrl %> />
     <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
@@ -30,12 +30,15 @@
 
         <div class="footer">
             <div id="loginStatus">
-                <%= Html.LoginLink() %>
-                <%= Html.LoginStatus() %>
+                <p>
+                    <%= Html.LoginLink() %> |
+                    <%= Html.LoginStatus() %>
+                </p>                
             </div>
                 
             <p>
-                Suteki Limited &copy; Copyright 2008
+                Suteki Limited &copy; Copyright 2008 |
+                <%= Html.ActionLink<SiteMapController>(c => c.Index(), "Site Map") %>
             </p>
         </div><!--/footer-->
 

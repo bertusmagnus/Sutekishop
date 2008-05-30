@@ -104,6 +104,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RsdController.cs" />
     <Compile Include="Controllers\ShopScaffoldController.cs" />
+    <Compile Include="Controllers\SiteMapController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Default.aspx.cs">
@@ -368,6 +369,13 @@
     <Compile Include="Views\Shared\Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="Views\SiteMap\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\SiteMap\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Stock\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -456,6 +464,7 @@
     <Content Include="Views\Cms\List.aspx" />
     <Content Include="Views\Shared\Cms.master" />
     <Content Include="Views\Shared\Shop.Master" />
+    <Content Include="Views\SiteMap\Index.aspx" />
     <Content Include="wlwmanifest.xml" />
   </ItemGroup>
   <ItemGroup>

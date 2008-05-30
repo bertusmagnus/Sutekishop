@@ -23,6 +23,11 @@ namespace Suteki.Shop.Controllers
             this.contentOrderableService = contentOrderableService;
         }
 
+        public override string GetControllerName()
+        {
+            return "";
+        }
+
         public ActionResult Index(string urlName)
         {
             Content content;
@@ -49,6 +54,8 @@ namespace Suteki.Shop.Controllers
                 return RedirectToAction(actionContent.Action, actionContent.Controller);
             }
 
+            AppendTitle(content.Name);
+
             if (content is TopContent)
             {
                 return View("TopPage", CmsView.Data.WithContent(content));
@@ -68,23 +75,20 @@ namespace Suteki.Shop.Controllers
                 Position = contentOrderableService.NextPosition
             };
 
-            return View("Edit", EditViewData.WithContent(textContent));
+            return View("Edit", GetEditViewData(0).WithContent(textContent));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
             Content content = contentRepository.GetById(id);
-            return View("Edit", EditViewData.WithContent(content));
+            return View("Edit", GetEditViewData(id).WithContent(content));
         }
 
-        private CmsViewData EditViewData
+        private CmsViewData GetEditViewData(int contentId)
         {
-            get
-            {
-                var menus = contentRepository.GetAll().Menus();
+                var menus = contentRepository.GetAll().NotIncluding(contentId).Menus();
                 return CmsView.Data.WithMenus(menus);
-            }
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -106,8 +110,8 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                return View("Edit", 
-                    CmsView.Data.WithContent(content).WithErrorMessage(validationException.Message));
+                return View("Edit",
+                    GetEditViewData(id).WithContent(content).WithErrorMessage(validationException.Message));
             }
 
             if (id == 0)

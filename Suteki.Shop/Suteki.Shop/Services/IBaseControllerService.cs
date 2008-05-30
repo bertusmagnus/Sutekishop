@@ -8,6 +8,7 @@ namespace Suteki.Shop.Services
     {
         IRepository<Category> CategoryRepository { get; }
         IRepository<Content> ContentRepository { get; }
+        string ShopName { get; set; }
         string EmailAddress { get; set; }
         string SiteUrl { get; }
     }

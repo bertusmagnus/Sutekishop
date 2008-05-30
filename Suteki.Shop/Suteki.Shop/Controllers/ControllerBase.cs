@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Suteki.Common.Extensions;
 using Suteki.Shop.Services;
 using System.Web.Security;
 using MvcContrib;
@@ -12,10 +13,33 @@ namespace Suteki.Shop.Controllers
     [Rescue("Default")]
     public abstract class ControllerBase : ConventionController, IProvidesBaseService
     {
+        private IBaseControllerService baseControllerService;
+
         /// <summary>
         /// Supplies services and configuration to all controllers
         /// </summary>
-        public IBaseControllerService BaseControllerService { get; set; }
+        public IBaseControllerService BaseControllerService
+        {
+            get { return baseControllerService; }
+            set 
+            { 
+                baseControllerService = value;
+                ViewData["Title"] = "{0}{1}".With(
+                    baseControllerService.ShopName,
+                    GetControllerName());
+            }
+        }
+
+        public virtual string GetControllerName()
+        {
+            return " - {0}".With(GetType().Name.Replace("Controller", ""));
+        }
+
+
+        public virtual void AppendTitle(string text)
+        {
+            ViewData["Title"] = "{0} - {1}".With(ViewData["Title"], text);
+        }
 
         public virtual User CurrentUser
         {

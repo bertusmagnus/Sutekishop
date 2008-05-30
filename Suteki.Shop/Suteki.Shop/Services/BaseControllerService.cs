@@ -10,7 +10,17 @@ namespace Suteki.Shop.Services
     {
         public IRepository<Category> CategoryRepository { get; private set; }
         public IRepository<Content> ContentRepository { get; private set; }
+        private string shopName;
         private string emailAddress;
+
+        public BaseControllerService(
+            IRepository<Category> categoryRepository,
+            IRepository<Content> contentRepository)
+        {
+            this.CategoryRepository = categoryRepository;
+            this.ContentRepository = contentRepository;
+        }
+
 
         public string EmailAddress
         {
@@ -20,6 +30,19 @@ namespace Suteki.Shop.Services
                 return emailAddress; 
             }
             set { emailAddress = value; }
+        }
+
+        public string ShopName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(shopName))
+                {
+                    return "Suteki Shop";
+                }
+                return shopName;
+            }
+            set { shopName = value; }
         }
 
         public virtual string SiteUrl 
@@ -47,12 +70,5 @@ namespace Suteki.Shop.Services
             }
         }
 
-        public BaseControllerService(
-            IRepository<Category> categoryRepository,
-            IRepository<Content> contentRepository)
-        {
-            this.CategoryRepository = categoryRepository;
-            this.ContentRepository = contentRepository;
-        }
     }
 }

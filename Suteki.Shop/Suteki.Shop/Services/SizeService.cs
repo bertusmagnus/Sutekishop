@@ -30,7 +30,7 @@ namespace Suteki.Shop.Services
             {
                 Clear(product);
             }
-            keys.ForEach(key => new Size { Name = form[key], Product = product, IsActive = true } );
+            keys.ForEach(key => new Size { Name = form[key], Product = product, IsActive = true, IsInStock = true } );
         }
 
         public void Clear(Product product)
