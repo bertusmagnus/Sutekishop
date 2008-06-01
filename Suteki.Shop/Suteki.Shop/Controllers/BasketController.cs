@@ -47,8 +47,8 @@ namespace Suteki.Shop.Controllers
             if (user.RoleId == Role.GuestId)
             {
                 user = userService.CreateNewCustomer();
-                this.SetAuthenticationCookie(user.Email);
-                this.SetContextUserTo(user);
+                SetAuthenticationCookie(user.Email);
+                SetContextUserTo(user);
             }
 
             var basket = user.CurrentBasket;
@@ -64,12 +64,13 @@ namespace Suteki.Shop.Controllers
 
             basket.BasketItems.Add(basketItem);
             basketRepository.SubmitChanges();
+
             return RenderIndexView(basket);
         }
 
         private ActionResult RenderIndexViewWithError(Basket basket, Size size)
         {
-            string message = null;
+            string message;
             if (size.Product.HasSize)
             {
                 message = "Sorry, {0}, Size {1} is out of stock.".With(size.Product.Name, size.Name);
