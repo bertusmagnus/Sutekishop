@@ -88,5 +88,16 @@ namespace Suteki.Common.HtmlHelpers
             Pager pageListBuilder = new Pager(htmlHelper, controller, action, pagedList);
             return pageListBuilder.WriteHtml();
         }
+
+        public static string Pager(
+        this HtmlHelper htmlHelper,
+        string controller,
+        string action,
+        IPagedList pagedList,
+        object criteria)
+        {
+            Pager pageListBuilder = new Pager(htmlHelper, controller, action, pagedList, criteria);
+            return pageListBuilder.WriteHtml();
+        }
     }
 }
