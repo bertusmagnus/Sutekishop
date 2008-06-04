@@ -54,7 +54,7 @@ namespace Suteki.Common.Controllers
 
         public virtual ActionResult Update()
         {
-            int id = int.Parse(this.ReadFromRequest(TypeExtensions.GetPrimaryKey(typeof(T)).Name));
+            int id = int.Parse(this.ReadFromRequest(typeof(T).GetPrimaryKey().Name));
             T item = null;
 
             if (id == 0)
@@ -106,7 +106,7 @@ namespace Suteki.Common.Controllers
             // find any properties that are attributed as a linq entity
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
-                if (TypeExtensions.IsLinqEntity(property.PropertyType))
+                if (property.PropertyType.IsLinqEntity())
                 {
                     AppendLookupList(viewData, property);
                 }
@@ -121,7 +121,7 @@ namespace Suteki.Common.Controllers
             }
 
             // get the repository for this Entity
-            Type repositoryType = typeof(IRepository<>).MakeGenericType(new Type[] { property.PropertyType });
+            Type repositoryType = typeof(IRepository<>).MakeGenericType(new[] { property.PropertyType });
 
             object repository = Kernel.Resolve(repositoryType);
             if (repository == null)

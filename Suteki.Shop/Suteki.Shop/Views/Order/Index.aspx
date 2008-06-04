@@ -8,21 +8,22 @@
 
     <div class="contentLeftColumn">
         <label for="orderid">Order Number</label>
-        <%= Html.TextBox("orderid") %>
+        <%= Html.TextBox("orderid", ViewData.Model.OrderSearchCriteria.OrderId) %>
 
         <label for="email">Email</label>
-        <%= Html.TextBox("email") %>
+        <%= Html.TextBox("email", ViewData.Model.OrderSearchCriteria.Email)%>
 
         <label for="lastname">Last Name</label>
-        <%= Html.TextBox("lastname")%>
+        <%= Html.TextBox("lastname", ViewData.Model.OrderSearchCriteria.Lastname)%>
 
         <%= Html.SubmitButton("searchSubmit", "Search") %>
     </div>
 
     <div class="contentRightColumn">
         <label for="postcode">Postcode</label>
-        <%= Html.TextBox("postcode") %>
+        <%= Html.TextBox("postcode", ViewData.Model.OrderSearchCriteria.Postcode)%>
     
+        <label for="orderstatusid">Status</label>
         <select id="orderstatusid" name="orderstatusid">
             <option value="0">Any</option>
             <option value="1">Created</option>
@@ -36,7 +37,7 @@
 
 <div class="columnContainer">
     <div class="pager">
-    <%= Html.Pager("Order", "Index", ViewData.Model.Orders) %>
+    <%= Html.Pager("Order", "Index", ViewData.Model.Orders, ViewData.Model.OrderSearchCriteria)%>
     </div>
 
     <table>

@@ -10,7 +10,7 @@ namespace Suteki.Shop.Repositories
         public static Basket CurrentBasket(this IQueryable<Basket> baskets)
         {
             if (baskets.Count() == 0) throw new ApplicationException("There is no current basket");
-            return baskets.First();
+            return baskets.OrderBy(b => b.BasketId).Last();
         }
 
         public static Basket CurrentBasket(this IEnumerable<Basket> baskets)

@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Common.Validation;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
@@ -12,13 +13,14 @@ namespace Suteki.Shop.Controllers
 {
     public class OrderController : ControllerBase
     {
-        IRepository<Order> orderRepository;
-        IRepository<Basket> basketRepository;
-        IRepository<Country> countryRepository;
-        IRepository<CardType> cardTypeRepository;
-        IRepository<Postage> postageRepository;
+        readonly IRepository<Order> orderRepository;
+        readonly IRepository<Basket> basketRepository;
+        readonly IRepository<Country> countryRepository;
+        readonly IRepository<CardType> cardTypeRepository;
+        readonly IRepository<Postage> postageRepository;
 
-        IEncryptionService encryptionService;
+        readonly IEncryptionService encryptionService;
+        readonly IEmailSender emailSender;
 
         public OrderController(
             IRepository<Order> orderRepository,
@@ -26,7 +28,8 @@ namespace Suteki.Shop.Controllers
             IRepository<Country> countryRepository,
             IRepository<CardType> cardTypeRepository,
             IRepository<Postage> postageRepository,
-            IEncryptionService encryptionService)
+            IEncryptionService encryptionService,
+            IEmailSender emailSender)
         {
             this.orderRepository = orderRepository;
             this.basketRepository = basketRepository;
@@ -34,12 +37,13 @@ namespace Suteki.Shop.Controllers
             this.cardTypeRepository = cardTypeRepository;
             this.postageRepository = postageRepository;
             this.encryptionService = encryptionService;
+            this.emailSender = emailSender;
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Index()
         {
-            OrderSearchCriteria criteria = new OrderSearchCriteria();
+            var criteria = new OrderSearchCriteria();
 
             try
             {
@@ -53,13 +57,40 @@ namespace Suteki.Shop.Controllers
                 .ByCreatedDate()
                 .ToPagedList(Request.PageNumber(), 20);
 
-            return View("Index", ShopView.Data.WithOrders(orders));
+            return View("Index", ShopView.Data
+                .WithOrders(orders)
+                .WithOrderSearchCriteria(criteria));
         }
 
         public ActionResult Item(int id)
         {
+            return ItemView(id);
+        }
+
+        private ViewResult ItemView(int id)
+        {
             Order order = orderRepository.GetById(id);
+            CheckCurrentUserCanViewOrder(order);
             return View("Item", CheckoutViewData(order));
+        }
+
+        [NonAction]
+        public virtual void CheckCurrentUserCanViewOrder(Order order)
+        {
+            if (!CurrentUser.IsAdministrator)
+            {
+                if (order.Basket.UserId != CurrentUser.UserId)
+                {
+                    throw new ApplicationException("You are attempting to view an order that was not created by you");
+                }
+            }            
+        }
+
+        public ActionResult Print(int id)
+        {
+            ViewResult viewResult = ItemView(id);
+            viewResult.MasterName = "Print";
+            return viewResult;
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -129,8 +160,9 @@ namespace Suteki.Shop.Controllers
             {
                 validator.Validate();
                 orderRepository.InsertOnSubmit(order);
+                CurrentUser.CreateNewBasket();
                 orderRepository.SubmitChanges();
-                return View("Item", CheckoutViewData(order));
+                return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
             }
             catch (ValidationException validationException)
             {

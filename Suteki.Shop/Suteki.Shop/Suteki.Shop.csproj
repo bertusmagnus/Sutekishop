@@ -106,6 +106,7 @@
     <Compile Include="Controllers\ShopScaffoldController.cs" />
     <Compile Include="Controllers\SiteMapController.cs" />
     <Compile Include="Controllers\StockController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -348,6 +349,13 @@
     <Compile Include="Views\Shared\CmsSubMenu.master.designer.cs">
       <DependentUpon>CmsSubMenu.master</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\Print.Master.cs">
+      <DependentUpon>Print.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\Print.Master.designer.cs">
+      <DependentUpon>Print.Master</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Rescues\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -455,6 +463,8 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Shared\Print.Master" />
+    <Content Include="Content\Print.css" />
     <Content Include="Views\Cms\SubPage.aspx" />
     <Content Include="Views\Cms\TopPage.aspx" />
     <Content Include="Views\Rsd\Index.aspx" />

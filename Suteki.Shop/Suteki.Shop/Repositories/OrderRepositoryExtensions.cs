@@ -12,28 +12,28 @@ namespace Suteki.Shop.Repositories
 
         public static IQueryable<Order> ThatMatch(this IQueryable<Order> orders, OrderSearchCriteria criteria)
         {
-            if (criteria.HasOrderId)
+            if (criteria.OrderId != 0)
             {
                 orders = orders.Where(o => o.OrderId == criteria.OrderId);
             }
-            if (criteria.HasEmail)
+            if (!string.IsNullOrEmpty(criteria.Email))
             {
                 orders = orders.Where(o => o.Email == criteria.Email);
             }
-            if (criteria.HasPostcode)
+            if (!string.IsNullOrEmpty(criteria.Postcode))
             {
                 orders = orders
                     .Where(o => 
                         o.Contact.Postcode == criteria.Postcode || 
                         o.Contact1.Postcode == criteria.Postcode);
             }
-            if (criteria.HasLastname)
+            if (!string.IsNullOrEmpty(criteria.Lastname))
             {
                 orders = orders.Where(o =>
                     o.Contact.Lastname == criteria.Lastname ||
                     o.Contact1.Lastname == criteria.Lastname);
             }
-            if (criteria.HasOrderStatusId)
+            if (criteria.OrderStatusId != 0)
             {
                 orders = orders.Where(o => o.OrderStatusId == criteria.OrderStatusId);
             }

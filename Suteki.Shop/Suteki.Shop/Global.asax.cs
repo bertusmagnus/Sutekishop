@@ -35,6 +35,11 @@ namespace Suteki.Shop
             InitializeWindsor();
         }
 
+        protected void Application_End(object sender, EventArgs e)
+        {
+            Container.Dispose();
+        }
+
         /// <summary>
         /// This web application uses the Castle Project's IoC container, Windsor see:
         /// http://www.castleproject.org/container/index.html

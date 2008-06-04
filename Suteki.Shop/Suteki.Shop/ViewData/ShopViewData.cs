@@ -21,6 +21,7 @@ namespace Suteki.Shop.ViewData
 
         public Order Order { get; set; }
         public PagedList<Order> Orders { get; set; }
+        public OrderSearchCriteria OrderSearchCriteria { get; set; }
 
         public IEnumerable<Country> Countries { get; set; }
         public Country Country { get; set; }
@@ -97,6 +98,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithOrder(Order order)
         {
             this.Order = order;
+            return this;
+        }
+
+        public ShopViewData WithOrderSearchCriteria(OrderSearchCriteria orderSearchCriteria)
+        {
+            this.OrderSearchCriteria = orderSearchCriteria;
             return this;
         }
 

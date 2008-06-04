@@ -207,7 +207,6 @@ namespace Suteki.Shop.Tests.Controllers
         public void List_ShouldShowListOfExistingContent()
         {
             Menu mainMenu = new Menu();
-
             Mock.Get(contentRepository).Expect(mr => mr.GetById(1)).Returns(mainMenu);            
 
             cmsController.List(1)
@@ -219,7 +218,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void NewMenu_ShouldShowMenuEditView()
         {
-            int parentContentId = 1;
+            const int parentContentId = 1;
+
+            Menu mainMenu = new Menu{ ContentId = parentContentId };
+            Mock.Get(contentRepository).Expect(mr => mr.GetById(parentContentId)).Returns(mainMenu);
+
+            var menus = new List<Content>().AsQueryable();
+            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
 
             cmsController.NewMenu(parentContentId)
                 .ReturnsViewResult()

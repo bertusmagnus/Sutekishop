@@ -82,6 +82,8 @@
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\QueriableExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Services\EmailSender.cs" />
+    <Compile Include="Services\IEmailSender.cs" />
     <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\Move.cs" />
     <Compile Include="Services\OrderableService.cs" />

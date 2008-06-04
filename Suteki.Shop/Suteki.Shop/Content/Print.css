@@ -1,0 +1,49 @@
+﻿body
+{
+	background-image: none;
+	text-align: left;
+}
+
+a
+{
+	color: Black;
+}
+a:hover
+{
+	color: Black;
+}
+
+th
+{
+}
+
+td
+{
+}
+
+h3
+{
+}
+
+dt
+{
+	width: 140px;
+}
+
+dd
+{
+	width: 150px;
+}
+
+.print
+{
+}
+
+.contentLeftColumn
+{
+}
+
+.contentRightColumn
+{
+}
+

@@ -6,10 +6,19 @@
 * SSL certificate
 
 * Order Management
-	- mostly done (probably need a print page)
-	- checkout page layout needs fixing
+	- email
 
 * Emails
+
+* Reports
+
+* Thumbnail in basket
+
+* Skin for JtG
+
+* Google analytics
+
+------------------------------ later ------------------------------------------------
 
 * Logging - emails, errors
 
@@ -17,12 +26,10 @@
 	- User can add themselves
 	- Management
 	
-* Reports
-
 * Credit Card Encryption
 	- done, but nice to have the client side silverlight storage.
-
------------------------------- later ------------------------------------------------
+	
+* Change submission forms to PRG (post redirect get)
 
 * DataContext lifetime!!! (works, but bad hack)
 

@@ -33,14 +33,19 @@ namespace Suteki.Shop
             {
                 if (Baskets.Count == 0)
                 {
-                    return new Basket
-                    {
-                        User = this,
-                        OrderDate = DateTime.Now
-                    };
+                    return CreateNewBasket();
                 }
                 return Baskets.CurrentBasket();
             }
+        }
+
+        public Basket CreateNewBasket()
+        {
+            return new Basket
+                       {
+                           User = this,
+                           OrderDate = DateTime.Now
+                       };
         }
 
         public IIdentity Identity

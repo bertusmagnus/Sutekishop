@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Security.Principal;
+using System.Threading;
 using NUnit.Framework;
 using Moq;
+using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc;
 using Suteki.Shop.ViewData;
@@ -24,27 +28,33 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<Postage> postageRepository;
 
         IEncryptionService encryptionService;
+        IEmailSender emailSender;
 
         ControllerTestContext testContext;
 
         [SetUp]
         public void SetUp()
         {
+            // you have to be an administrator to access the order controller
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+
             orderRepository = new Mock<IRepository<Order>>().Object;
             basketRepository = new Mock<IRepository<Basket>>().Object;
             countryRepository = new Mock<IRepository<Country>>().Object;
             cardTypeRepository = new Mock<IRepository<CardType>>().Object;
             postageRepository = new Mock<IRepository<Postage>>().Object;
+            emailSender = new Mock<IEmailSender>().Object;
 
             encryptionService = new Mock<IEncryptionService>().Object;
 
-            orderController = new OrderController(
+            orderController = new Mock<OrderController>(
                 orderRepository,
                 basketRepository,
                 countryRepository,
                 cardTypeRepository,
                 postageRepository,
-                encryptionService);
+                encryptionService,
+                emailSender).Object;
 
             testContext = new ControllerTestContext(orderController);
 
@@ -114,18 +124,12 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
 
             // exercise PlaceOrder action
-            ViewResult result = orderController.PlaceOrder() as ViewResult;
+            var result = orderController.PlaceOrder() as RedirectToRouteResult;
 
             // Assertions
-            Assert.IsNotNull(result, "result is not a ViewResult");
-
-            Assert.AreNotEqual("Checkout", result.ViewName, ((ShopViewData)result.ViewData.Model).ErrorMessage);
-            Assert.AreEqual("Item", result.ViewName, "View name is not 'Item'");
-
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "view data is not ShopViewData");
-
-            Assert.AreSame(order, viewData.Order, "The view data order not correct");
+            Assert.IsNotNull(result, "result is not a RedirectToRouteResult");
+            Assert.That(result.Values["action"], Is.EqualTo("Item"));
+            Assert.That(result.Values["id"], Is.EqualTo(order.OrderId));
 
             // Order
             Assert.AreEqual(10, order.OrderId, "OrderId is incorrect");
