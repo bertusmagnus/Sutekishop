@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Castle.Core.Logging;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Services;
 using System.Web.Security;
@@ -29,6 +30,8 @@ namespace Suteki.Shop.Controllers
                     GetControllerName());
             }
         }
+
+        public ILogger Logger { get; set; }
 
         public virtual string GetControllerName()
         {

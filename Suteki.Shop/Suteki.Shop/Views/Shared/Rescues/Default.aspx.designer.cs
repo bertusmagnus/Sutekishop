@@ -8,10 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Suteki.Shop.Views.Shared.Rescue
+namespace Suteki.Shop.Views.Shared.Rescues
 {
-
-
     public partial class Default
     {
     }
