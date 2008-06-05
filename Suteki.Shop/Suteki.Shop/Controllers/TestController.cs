@@ -1,18 +1,21 @@
 ﻿using System.Web.Mvc;
 using Castle.Core.Logging;
 using Suteki.Common.Extensions;
+using Suteki.Common.Services;
 
 namespace Suteki.Shop.Controllers
 {
-    public class TestController : Controller
+    public class TestController : ControllerBase
     {
         private readonly OrderController orderController;
         private readonly ILogger logger;
+        private readonly IEmailSender emailSender;
 
-        public TestController(OrderController orderController, ILogger logger)
+        public TestController(OrderController orderController, ILogger logger, IEmailSender emailSender)
         {
             this.orderController = orderController;
             this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         public ActionResult Index()
@@ -23,6 +26,13 @@ namespace Suteki.Shop.Controllers
 
             // do a redirect
             return RedirectToRoute(new {Controller = "Order", Action = "Item", Id = 8});
+        }
+
+        public ActionResult Email()
+        {
+            string toAddress = BaseControllerService.EmailAddress;
+            emailSender.Send(toAddress, "Hello from Suteki Shop", "The email body");
+            return Content("Email sent to {0}".With(toAddress));
         }
     }
 }

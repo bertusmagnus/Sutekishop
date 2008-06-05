@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Repositories

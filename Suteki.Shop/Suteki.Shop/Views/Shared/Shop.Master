@@ -30,6 +30,9 @@
                     <li>
                         <%= Html.ActionLink<PostZoneController>(c => c.Index(), "Postage Zones") %>
                     </li>
+                    <li>
+                        <%= Html.ActionLink<ReportController>(c => c.Index(), "Reports") %>
+                    </li>
                 </ul>
             </div>
             

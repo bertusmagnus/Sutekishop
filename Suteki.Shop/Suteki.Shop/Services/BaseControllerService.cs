@@ -11,6 +11,7 @@ namespace Suteki.Shop.Services
         public IRepository<Category> CategoryRepository { get; private set; }
         public IRepository<Content> ContentRepository { get; private set; }
         public string GoogleTrackingCode { get; set; }
+        public string MetaDescription { get; set; }
         private string shopName;
         private string emailAddress;
 

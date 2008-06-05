@@ -12,5 +12,6 @@ namespace Suteki.Shop.Services
         string ShopName { get; set; }
         string EmailAddress { get; set; }
         string SiteUrl { get; }
+        string MetaDescription { get; set; }
     }
 }

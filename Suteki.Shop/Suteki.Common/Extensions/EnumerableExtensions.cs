@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Extensions
@@ -65,6 +67,34 @@ namespace Suteki.Common.Extensions
                     yield return item;
                 }
             }
+        }
+
+
+        public static string AsCsv<T>(this IEnumerable<T> items)
+            where T : class
+        {
+            var csvBuilder = new StringBuilder();
+            var properties = typeof (T).GetProperties();
+            foreach (T item in items)
+            {
+                string line = properties.Select(p => p.GetValue(item, null).ToCsvValue()).ToArray().Join(",");
+                csvBuilder.AppendLine(line);
+            }
+            return csvBuilder.ToString();
+        }
+
+        private static string ToCsvValue<T>(this T item)
+        {
+            if (item is string)
+            {
+                return "\"{0}\"".With(item.ToString().Replace("\"", "\\\""));
+            }
+            double dummy;
+            if (double.TryParse(item.ToString(), out dummy))
+            {
+                return "{0}".With(item);
+            }
+            return "\"{0}\"".With(item);
         }
     }
 }

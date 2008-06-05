@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Extensions;
 using Suteki.Shop.ViewData;
 
@@ -19,6 +20,13 @@ namespace Suteki.Shop.Tests
         {
             Assert.AreEqual(viewName, result.ViewName);
             return result;
+        }
+
+        public static ContentResult ReturnsContentResult(this ActionResult result)
+        {
+            var contentResult = result as ContentResult;
+            Assert.That(contentResult, Is.Not.Null, "result is not a ContentResult");
+            return contentResult;
         }
 
         // View Data

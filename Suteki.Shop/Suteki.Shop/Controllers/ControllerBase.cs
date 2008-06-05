@@ -25,9 +25,12 @@ namespace Suteki.Shop.Controllers
             set 
             { 
                 baseControllerService = value;
+
                 ViewData["Title"] = "{0}{1}".With(
                     baseControllerService.ShopName,
                     GetControllerName());
+
+                ViewData["MetaDescription"] = "\"{0}\"".With(baseControllerService.MetaDescription);
             }
         }
 

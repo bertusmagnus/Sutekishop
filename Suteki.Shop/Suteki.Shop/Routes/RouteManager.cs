@@ -8,8 +8,8 @@ namespace Suteki.Shop.Routes
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            // Note: Change the URL to "{controller}.mvc/{action}/{id}" to enable
-            //       automatic support on IIS6 and IIS7 classic mode
+            // Handler to stop URL routing for Web resources.
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute("Cms",
                 "cms/{urlname}",
@@ -20,6 +20,10 @@ namespace Suteki.Shop.Routes
                 "product/{urlname}",
                 new { controller = "Product", action = "Item", urlname = "" },
                 new { urlname = @"[^\.]*" });
+
+            routes.MapRoute("reports",
+                "report/{action}.csv",
+                new { controller = "Report" });
 
             routes.MapRoute("Shop",
                 "shop/{controller}/{action}/{id}",

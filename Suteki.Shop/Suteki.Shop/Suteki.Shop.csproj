@@ -110,6 +110,7 @@
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RsdController.cs" />
     <Compile Include="Controllers\ShopScaffoldController.cs" />
     <Compile Include="Controllers\SiteMapController.cs" />
@@ -336,6 +337,13 @@
     <Compile Include="Views\Product\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Report\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Report\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Rsd\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -472,6 +480,7 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Report\Index.aspx" />
     <Content Include="Views\Shared\Print.Master" />
     <Content Include="Content\Print.css" />
     <Content Include="Views\Cms\SubPage.aspx" />

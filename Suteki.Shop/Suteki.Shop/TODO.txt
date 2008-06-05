@@ -5,11 +5,6 @@
 
 * SSL certificate
 
-* Order Management
-	- email
-
-* Emails
-
 * Reports
 
 * Thumbnail in basket

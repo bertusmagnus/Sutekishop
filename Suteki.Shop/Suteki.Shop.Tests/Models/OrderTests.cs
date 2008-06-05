@@ -65,7 +65,7 @@ namespace Suteki.Shop.Tests.Models
             return postages;
         }
 
-        private static Order Create350GramOrder()
+        public static Order Create350GramOrder()
         {
             Order order = new Order
             {
@@ -88,12 +88,15 @@ namespace Suteki.Shop.Tests.Models
                     }
                 },
                 UseCardHolderContact = true,
-                Contact = new Contact { Country = new Country { PostZone = new PostZone { Multiplier = 2.5M, AskIfMaxWeight = true } } }
+                Contact = new Contact { Country = new Country { PostZone = new PostZone { Multiplier = 2.5M, AskIfMaxWeight = true } } },
+                Email = "mike@mike.com",
+                CreatedDate = new DateTime(2008, 10, 18),
+                OrderStatus = new OrderStatus { Name = "Dispatched" }
             };
             return order;
         }
 
-        private static Order Create450GramOrder()
+        public static Order Create450GramOrder()
         {
             Order order = Create350GramOrder();
 
