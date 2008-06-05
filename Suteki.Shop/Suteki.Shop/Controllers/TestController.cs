@@ -1,38 +1,28 @@
 ﻿using System.Web.Mvc;
-using MvcContrib.UI;
+using Castle.Core.Logging;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Controllers
 {
     public class TestController : Controller
     {
-        private OrderController orderController;
+        private readonly OrderController orderController;
+        private readonly ILogger logger;
 
-        public TestController(OrderController orderController)
+        public TestController(OrderController orderController, ILogger logger)
         {
             this.orderController = orderController;
+            this.logger = logger;
         }
 
         public ActionResult Index()
         {
-            // pass the current controller context to orderController
-            orderController.ControllerContext = ControllerContext;
+            string html = this.CaptureActionHtml(orderController, "Print", c => (ViewResult)c.Item(8));
 
-            // create a new BlockRenderer
-            var blockRenderer = new BlockRenderer(HttpContext);
+            logger.Info(html);
 
-            // execute the Item action
-            var viewResult = (ViewResult) orderController.Item(1);
-
-            // change the master page name
-            viewResult.MasterName = "Print";
-
-            // we have to set the controller route value to the name of the controller we want to execute
-            // because the 
-            this.RouteData.Values["controller"] = "Order";
-
-            string result = blockRenderer.Capture(() => viewResult.ExecuteResult(ControllerContext));
-
-            return Content(result);
+            // do a redirect
+            return RedirectToRoute(new {Controller = "Order", Action = "Item", Id = 8});
         }
     }
 }

@@ -123,6 +123,8 @@ namespace Suteki.Shop.Tests.Controllers
                 .Verifiable();
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
 
+            Mock.Get(orderController).Expect(c => c.EmailOrder(It.IsAny<Order>())).Verifiable();
+
             // exercise PlaceOrder action
             var result = orderController.PlaceOrder() as RedirectToRouteResult;
 
@@ -164,6 +166,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             Mock.Get(orderRepository).Verify();
             Mock.Get(encryptionService).Verify();
+            Mock.Get(orderController).Verify();
         }
 
         private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix)

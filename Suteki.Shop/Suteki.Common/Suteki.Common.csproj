@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ScaffoldController.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\NameValue.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
@@ -83,9 +84,11 @@
     <Compile Include="Repositories\QueriableExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Services\EmailSender.cs" />
+    <Compile Include="Services\EmailSenderLogger.cs" />
     <Compile Include="Services\IEmailSender.cs" />
     <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\Move.cs" />
+    <Compile Include="Services\NullEmailSender.cs" />
     <Compile Include="Services\OrderableService.cs" />
     <Compile Include="Validation\ValidatingBinder.cs" />
     <Compile Include="Validation\ValidationException.cs" />

@@ -78,5 +78,13 @@ namespace Suteki.Shop.Views.Shared
                 return "\"{0}wlwmanifest.xml\"".With(SiteUrl);
             }
         }
+
+        protected string GoogleTrackingCode
+        {
+            get
+            {
+                return "\"{0}\"".With(GetController().BaseControllerService.GoogleTrackingCode);
+            }
+        }
     }
 }

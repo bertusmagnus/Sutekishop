@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using MvcContrib.UI;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -162,6 +163,8 @@ namespace Suteki.Shop.Controllers
                 orderRepository.InsertOnSubmit(order);
                 CurrentUser.CreateNewBasket();
                 orderRepository.SubmitChanges();
+                EmailOrder(order);
+
                 return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
             }
             catch (ValidationException validationException)
@@ -171,6 +174,19 @@ namespace Suteki.Shop.Controllers
                     .WithErrorMessage(validationException.Message)
                     );
             }
+        }
+
+        [NonAction]
+        public virtual void EmailOrder(Order order)
+        {
+            string subject = "{0}: your order".With(this.BaseControllerService.ShopName);
+
+            string message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
+
+            var toAddresses = new[] { order.Email, BaseControllerService.EmailAddress };
+
+            // send the message
+            emailSender.Send(toAddresses, subject, message);
         }
 
         private void UpdateCardContact(Order order)

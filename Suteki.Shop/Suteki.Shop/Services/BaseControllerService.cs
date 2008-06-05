@@ -10,6 +10,7 @@ namespace Suteki.Shop.Services
     {
         public IRepository<Category> CategoryRepository { get; private set; }
         public IRepository<Content> ContentRepository { get; private set; }
+        public string GoogleTrackingCode { get; set; }
         private string shopName;
         private string emailAddress;
 
@@ -20,7 +21,6 @@ namespace Suteki.Shop.Services
             this.CategoryRepository = categoryRepository;
             this.ContentRepository = contentRepository;
         }
-
 
         public string EmailAddress
         {

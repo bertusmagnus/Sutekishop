@@ -16,11 +16,7 @@
 
 * Skin for JtG
 
-* Google analytics
-
 ------------------------------ later ------------------------------------------------
-
-* Logging - emails, errors
 
 * Mailing list
 	- User can add themselves
@@ -31,7 +27,7 @@
 	
 * Change submission forms to PRG (post redirect get)
 
-* DataContext lifetime!!! (works, but bad hack)
+* MetaWeblog API to use WCF windsor integration
 
 * Shopping basket off main menu 
 	- done, but need separate logo, not as a menu item
