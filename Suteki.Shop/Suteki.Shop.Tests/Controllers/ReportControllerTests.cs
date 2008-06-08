@@ -59,8 +59,8 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
         private const string expectedOrdersCsv = 
-@"""0"",""mike@mike.com"",""Dispatched"",""18/10/2008 00:00:00"",""0""
-""0"",""mike@mike.com"",""Dispatched"",""18/10/2008 00:00:00"",""0""
+@"0,""mike@mike.com"",""Dispatched"",""18/10/2008 00:00:00"",0
+0,""mike@mike.com"",""Dispatched"",""18/10/2008 00:00:00"",0
 ";
 
     }

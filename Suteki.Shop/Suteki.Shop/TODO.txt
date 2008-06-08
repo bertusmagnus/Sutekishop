@@ -1,24 +1,25 @@
 ﻿SutekiShop To Do list
 =====================
 
+* Postage should update when country selected on order form
+
+* Invoice form (invoice number should be prefixed with 'W')
+
+* Client side silverlight private key storage
+
 * Self referential combos should not have self or children available as parent choice.
 
 * SSL certificate
+
+------------------------------ later ------------------------------------------------
 
 * Reports
 
 * Thumbnail in basket
 
-* Skin for JtG
-
------------------------------- later ------------------------------------------------
-
 * Mailing list
 	- User can add themselves
 	- Management
-	
-* Credit Card Encryption
-	- done, but nice to have the client side silverlight storage.
 	
 * Change submission forms to PRG (post redirect get)
 

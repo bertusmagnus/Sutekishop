@@ -43,50 +43,47 @@ namespace Suteki.Shop
             }
         }
 
-        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages)
+//        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages)
+//        {
+//            Contact defaultContact = new Contact
+//            {
+//                Country = new Country
+//                {
+//                    Name = "Default",
+//                    PostZone = new PostZone
+//                    {
+//                        AskIfMaxWeight = false,
+//                        Multiplier = 1M,
+//                        IsActive = true,
+//                    }
+//                }
+//            };
+//
+//            return CalculatePostage(postages, defaultContact);
+//        }
+
+        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages, PostZone postZone)
         {
-            Contact defaultContact = new Contact
+            if (postages == null)
             {
-                Country = new Country
-                {
-                    Name = "Default",
-                    PostZone = new PostZone
-                    {
-                        AskIfMaxWeight = false,
-                        Multiplier = 1M,
-                        IsActive = true,
-                    }
-                }
-            };
+                throw new ArgumentNullException("postages");
+            }
+            if (postZone == null)
+            {
+                throw new ArgumentNullException("postZone");
+            }
 
-            return CalculatePostage(postages, defaultContact);
-        }
-
-        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages, Contact contact)
-        {
-            if (!postages.Any()) return PostageResult.WithPhone;
-
-            int totalWeight = BasketItems
-                .Sum(bi => bi.Size.Product.Weight);
+            int totalWeight = (int)BasketItems
+                .Sum(bi => bi.TotalWeight);
 
             Postage postageToApply = postages
                 .Where(p => totalWeight <= p.MaxWeight && p.IsActive)
                 .OrderBy(p => p.MaxWeight)
                 .FirstOrDefault();
 
-            if (postageToApply == null)
-            {
-                if (contact.Country.PostZone.AskIfMaxWeight)
-                {
-                    return postageTotal = PostageResult.WithPhone;
-                }
-                else
-                {
-                    return postageTotal = PostageResult.WithPrice(contact.Country.PostZone.FlatRate);
-                }
-            }
+            if (postageToApply == null) return postageTotal = PostageResult.WithDefault(postZone);
 
-            decimal multiplier = contact.Country.PostZone.Multiplier;
+            decimal multiplier = postZone.Multiplier;
             decimal total = Math.Round(postageToApply.Price * multiplier, 2, MidpointRounding.AwayFromZero);
 
             return postageTotal = PostageResult.WithPrice(total);

@@ -39,3 +39,17 @@ insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [te
 values(3, 1, 3, 'Online Shop', 'Online_Shop', null, 'Home', 'Index', 3, 1)
 
 set identity_insert [content] off
+
+set identity_insert PostZone on
+
+insert PostZone (PostZoneId, [Name], Multiplier, AskIfMaxWeight, Position, IsActive, FlatRate)
+values(1, 'United Kingdom', 1, 0, 1, 1, 10)
+
+set identity_insert PostZone off
+
+set identity_insert [Country] on
+
+insert [Country] (CountryId, [Name], Position, IsActive, PostZoneId)
+values(1, 'United Kingdom', 1, 1, 1)
+
+set identity_insert [Country] off

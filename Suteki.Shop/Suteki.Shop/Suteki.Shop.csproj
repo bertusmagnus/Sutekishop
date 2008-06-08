@@ -164,6 +164,7 @@
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
+    <Compile Include="Repositories\PostZoneRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
     <Compile Include="Repositories\UrlNamedExtensions.cs" />
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
@@ -178,8 +179,10 @@
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageFileService.cs" />
     <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\IPostageService.cs" />
     <Compile Include="Services\ISizeService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\PostageService.cs" />
     <Compile Include="Services\SizeService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Shop.designer.cs">

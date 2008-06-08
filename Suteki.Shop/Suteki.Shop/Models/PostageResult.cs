@@ -13,5 +13,17 @@ namespace Suteki.Shop
         {
             return new PostageResult { Phone = false, Price = price };
         }
+
+        public static PostageResult WithDefault(PostZone postZone)
+        {
+            if (postZone.AskIfMaxWeight)
+            {
+                return WithPhone;
+            }
+            else
+            {
+                return WithPrice(postZone.FlatRate);
+            }
+        }
     }
 }

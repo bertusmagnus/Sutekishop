@@ -21,34 +21,30 @@ namespace Suteki.Shop.Tests.Controllers
         
         IRepository<Basket> basketRepository;
         IRepository<BasketItem> basketItemRepository;
-        IRepository<User> userRepository;
-        IRepository<Postage> postageRepository;
         IRepository<Size> sizeRepository;
 
         IUserService userService;
+        IPostageService postageService;
 
         [SetUp]
         public void SetUp()
         {
             basketRepository = new Mock<IRepository<Basket>>().Object;
             basketItemRepository = new Mock<IRepository<BasketItem>>().Object;
-            userRepository = new Mock<IRepository<User>>().Object;
-            postageRepository = new Mock<IRepository<Postage>>().Object;
             sizeRepository = new Mock<IRepository<Size>>().Object;
 
             userService = new Mock<IUserService>().Object;
+            postageService = new Mock<IPostageService>().Object;
 
             basketController = new Mock<BasketController>(
                 basketRepository, 
                 basketItemRepository, 
-                userRepository,
-                postageRepository,
                 sizeRepository,
-                userService).Object;
+                userService,
+                postageService).Object;
             testContext = new ControllerTestContext(basketController);
 
-
-            Mock.Get(postageRepository).Expect(p => p.GetAll()).Returns(new List<Postage>().AsQueryable());
+            Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Basket>()));
         }
 
         [Test]
@@ -95,12 +91,14 @@ namespace Suteki.Shop.Tests.Controllers
             Size size = new Size
             {
                 IsInStock = true,
+                Product = new Product
+                              {
+                                  Weight = 10
+                              }
             };
             Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
-            basketController.Update()
-                .ReturnsViewResult()
-                .ForView("Index");
+            basketController.Update();
 
             Assert.AreEqual(1, user.Baskets[0].BasketItems.Count, "expected BasketItem is missing");
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
@@ -157,7 +155,15 @@ namespace Suteki.Shop.Tests.Controllers
             int basketItemIdToRemove = 3;
 
             User user = CreateUserWithBasket();
-            BasketItem basketItem = new BasketItem { BasketItemId = basketItemIdToRemove };
+            BasketItem basketItem = new BasketItem 
+            { 
+                BasketItemId = basketItemIdToRemove,
+                Quantity = 1,
+                Size = new Size
+                           {
+                               Product = new Product { Weight = 100 }
+                           }
+            };
             user.Baskets[0].BasketItems.Add(basketItem);
             testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
 

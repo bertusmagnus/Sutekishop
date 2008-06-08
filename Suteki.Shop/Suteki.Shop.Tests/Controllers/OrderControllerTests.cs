@@ -25,10 +25,10 @@ namespace Suteki.Shop.Tests.Controllers
         IRepository<Basket> basketRepository;
         IRepository<Country> countryRepository;
         IRepository<CardType> cardTypeRepository;
-        IRepository<Postage> postageRepository;
 
         IEncryptionService encryptionService;
         IEmailSender emailSender;
+        IPostageService postageService;
 
         ControllerTestContext testContext;
 
@@ -42,23 +42,23 @@ namespace Suteki.Shop.Tests.Controllers
             basketRepository = new Mock<IRepository<Basket>>().Object;
             countryRepository = new Mock<IRepository<Country>>().Object;
             cardTypeRepository = new Mock<IRepository<CardType>>().Object;
-            postageRepository = new Mock<IRepository<Postage>>().Object;
-            emailSender = new Mock<IEmailSender>().Object;
 
+            emailSender = new Mock<IEmailSender>().Object;
             encryptionService = new Mock<IEncryptionService>().Object;
+            postageService = new Mock<IPostageService>().Object;
 
             orderController = new Mock<OrderController>(
                 orderRepository,
                 basketRepository,
                 countryRepository,
                 cardTypeRepository,
-                postageRepository,
                 encryptionService,
-                emailSender).Object;
+                emailSender,
+                postageService).Object;
 
             testContext = new ControllerTestContext(orderController);
 
-            Mock.Get(postageRepository).Expect(p => p.GetAll()).Returns(new List<Postage>().AsQueryable());
+            Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Order>()));
             
             testContext.TestContext.ContextMock.ExpectGet(h => h.User).Returns(new User { UserId = 4 });
             testContext.TestContext.RequestMock.ExpectGet(r => r.RequestType).Returns("GET");
@@ -259,9 +259,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
 
-            orderController.Dispatch(orderId)
-                .ReturnsViewResult()
-                .ForView("Item");
+            orderController.Dispatch(orderId);
 
             Assert.IsTrue(order.IsDispatched, "order has not been dispatched");
             Assert.AreEqual(DateTime.Now.ToShortDateString(), order.DispatchedDateAsString, 

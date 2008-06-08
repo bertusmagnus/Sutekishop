@@ -96,9 +96,11 @@
     <Compile Include="Extensions\CategoryWriterTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
+    <Compile Include="Models\BasketTests.cs" />
     <Compile Include="Models\ContentTests.cs" />
     <Compile Include="Models\ImageTests.cs" />
     <Compile Include="Models\OrderTests.cs" />
+    <Compile Include="Models\PostageTests.cs" />
     <Compile Include="Models\TextContentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CategoryRepositoryTests.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Services\ImageServiceTests.cs" />
     <Compile Include="Services\MoveTests.cs" />
     <Compile Include="Services\OrderableServiceTests.cs" />
+    <Compile Include="Services\PostageServiceTests.cs" />
     <Compile Include="Services\SizeServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="Spikes\UriSpike.cs" />

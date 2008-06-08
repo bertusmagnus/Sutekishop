@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
+using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Services;
 
@@ -10,27 +11,24 @@ namespace Suteki.Shop.Controllers
 {
     public class BasketController : ControllerBase
     {
-        IRepository<Basket> basketRepository;
-        IRepository<BasketItem> basketItemRepository;
-        IRepository<User> userRepository;
-        IRepository<Postage> postageRepository;
-        IRepository<Size> sizeRepository;
-        IUserService userService;
+        readonly IRepository<Basket> basketRepository;
+        readonly IRepository<BasketItem> basketItemRepository;
+        readonly IRepository<Size> sizeRepository;
+        readonly IUserService userService;
+        readonly IPostageService postageService;
 
         public BasketController(
             IRepository<Basket> basketRepository,
             IRepository<BasketItem> basketItemRepository,
-            IRepository<User> userRepository,
-            IRepository<Postage> postageRepository,
             IRepository<Size> sizeRepository,
-            IUserService userService)
+            IUserService userService,
+            IPostageService postageService)
         {
             this.basketRepository = basketRepository;
             this.basketItemRepository = basketItemRepository;
-            this.userRepository = userRepository;
-            this.postageRepository = postageRepository;
             this.sizeRepository = sizeRepository;
             this.userService = userService;
+            this.postageService = postageService;
         }
 
         public ActionResult Index()
@@ -65,7 +63,7 @@ namespace Suteki.Shop.Controllers
             basket.BasketItems.Add(basketItem);
             basketRepository.SubmitChanges();
 
-            return RenderIndexView(basket);
+            return RedirectToRoute(new {Controller = "Basket", Action = "Index"});
         }
 
         private ActionResult RenderIndexViewWithError(Basket basket, Size size)
@@ -89,8 +87,8 @@ namespace Suteki.Shop.Controllers
 
         private ShopViewData IndexViewData(Basket basket)
         {
-            var postages = postageRepository.GetAll();
-            return ShopView.Data.WithBasket(basket).WithTotalPostage(basket.CalculatePostage(postages));
+            return ShopView.Data.WithBasket(basket)
+                .WithTotalPostage(postageService.CalculatePostageFor(basket));
         }
 
         public ActionResult Remove(int id)

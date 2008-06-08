@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using MvcContrib.UI;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -18,17 +17,16 @@ namespace Suteki.Shop.Controllers
         readonly IRepository<Basket> basketRepository;
         readonly IRepository<Country> countryRepository;
         readonly IRepository<CardType> cardTypeRepository;
-        readonly IRepository<Postage> postageRepository;
 
         readonly IEncryptionService encryptionService;
         readonly IEmailSender emailSender;
+        readonly IPostageService postageService;
 
         public OrderController(
             IRepository<Order> orderRepository,
             IRepository<Basket> basketRepository,
             IRepository<Country> countryRepository,
             IRepository<CardType> cardTypeRepository,
-            IRepository<Postage> postageRepository,
             IEncryptionService encryptionService,
             IEmailSender emailSender)
         {
@@ -36,9 +34,26 @@ namespace Suteki.Shop.Controllers
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
-            this.postageRepository = postageRepository;
             this.encryptionService = encryptionService;
             this.emailSender = emailSender;
+        }
+
+        public OrderController(
+            IRepository<Order> orderRepository, 
+            IRepository<Basket> basketRepository, 
+            IRepository<Country> countryRepository, 
+            IRepository<CardType> cardTypeRepository, 
+            IEncryptionService encryptionService, 
+            IEmailSender emailSender, 
+            IPostageService postageService)
+        {
+            this.orderRepository = orderRepository;
+            this.basketRepository = basketRepository;
+            this.countryRepository = countryRepository;
+            this.cardTypeRepository = cardTypeRepository;
+            this.encryptionService = encryptionService;
+            this.emailSender = emailSender;
+            this.postageService = postageService;
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
@@ -117,14 +132,18 @@ namespace Suteki.Shop.Controllers
         {
             // create a default order
             Order order = new Order();
-            PopulateOrderForView(order, id);
-            
+            Basket basket = basketRepository.GetById(id);
+            PopulateOrderForView(order, basket);
+
+            // TODO; rethink order submission to allow updating order country before final checkout
+            //orderRepository.SubmitChanges();
+
             return View("Checkout", CheckoutViewData(order));
         }
 
-        private void PopulateOrderForView(Order order, int basketId)
+        private void PopulateOrderForView(Order order, Basket basket)
         {
-            if (order.Basket == null) order.Basket = basketRepository.GetById(basketId);
+            if (order.Basket == null) order.Basket = basket;
             if (order.Contact == null) order.Contact = new Contact();
             if (order.Contact1 == null) order.Contact1 = new Contact();
             if (order.Card == null) order.Card = new Card();
@@ -132,7 +151,7 @@ namespace Suteki.Shop.Controllers
 
         private ShopViewData CheckoutViewData(Order order)
         {
-            order.CalculatePostage(postageRepository.GetAll());
+            postageService.CalculatePostageFor(order);
 
             return ShopView.Data
                 .WithCountries(countryRepository.GetAll().InOrder())
@@ -169,7 +188,8 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                PopulateOrderForView(order, order.BasketId);
+                Basket basket = basketRepository.GetById(order.BasketId);
+                PopulateOrderForView(order, basket);
                 return View("Checkout", CheckoutViewData(order)
                     .WithErrorMessage(validationException.Message)
                     );
@@ -252,7 +272,7 @@ namespace Suteki.Shop.Controllers
                 orderRepository.SubmitChanges();
             }
 
-            return View("Item", CheckoutViewData(order));
+            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
         public ActionResult Reject(int id)
@@ -266,7 +286,14 @@ namespace Suteki.Shop.Controllers
                 orderRepository.SubmitChanges();
             }
 
-            return View("Item", CheckoutViewData(order));
+            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
+        }
+
+        public ActionResult UpdateCountry(int id, int countryId)
+        {
+            //Order order = orderRepository.GetById(id);
+
+            return RedirectToRoute(new { Controller = "Order", Action = "Checkout", id = id });
         }
     }
 }

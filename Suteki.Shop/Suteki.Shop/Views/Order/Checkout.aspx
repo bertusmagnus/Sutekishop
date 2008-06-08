@@ -29,11 +29,33 @@ function toggleVisibilityWithCheckbox(checkbox, div)
     }
 }
 
+function updateSelectedCountry(select)
+{
+    for(var i = 0; i < select.options.length; i++)
+    {
+        if(select.options[i].selected)
+        {
+            alert("Postage will be updated for " + select.options[i].text);
+            window.location = <%= "\"" + Url.RouteUrl(new { Controller = "Order", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
+                 + "?countryId=" + select.options[i].value ;
+        }
+    }
+}
+
+function addHandlers()
+{
+    var cardcontactCountryid = document.getElementById("cardcontact.countryid");
+    cardcontactCountryid.onchange = function() { updateSelectedCountry(this); }
+    
+    var deliverycontactCountryid = document.getElementById("deliverycontact.countryid");
+    deliverycontactCountryid.onchange = function() { updateSelectedCountry(this); }
+}
+
 </script>
 
     <h1>Checkout</h1>
     
-    <p>Welcome to the Suteki Shop secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
+    <p>Welcome to our secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
     
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
@@ -263,6 +285,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
 
 toggleCardHolderDetails();
 toggleCard();
+addHandlers();
 
 </script>
 

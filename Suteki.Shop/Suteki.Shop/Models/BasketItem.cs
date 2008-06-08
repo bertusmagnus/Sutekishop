@@ -11,5 +11,13 @@ namespace Suteki.Shop
                 return Size.Product.Price * Quantity;
             }
         }
+
+        public decimal TotalWeight
+        {
+            get
+            {
+                return Size.Product.Weight * Quantity;
+            }
+        }
     }
 }
