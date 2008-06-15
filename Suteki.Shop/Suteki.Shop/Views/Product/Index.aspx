@@ -8,7 +8,7 @@
     <p><%= Html.ActionLink<ProductController>(c => c.New(ViewData.Model.Category.CategoryId), "New Product") %></p>
 <% } %>
 
-<% foreach (var category in ViewData.Model.Category.Categories)
+<% foreach (var category in ViewData.Model.Category.Categories.ActiveFor((User)this.User))
    { %>
 
     <h2><%= Html.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name) %></h2>
@@ -26,7 +26,7 @@
 
     <div onclick="location.href='<%= Url.Action("Item", "Product", new { UrlName = product.UrlName }) %>'" class="product">
 
-        <%= product.Name %>
+        <div><%= product.Name %></div>
 
         <% if(product.HasMainImage) { %>
             <%= Html.Image("~/ProductPhotos/" + product.MainImage.ThumbFileName) %>

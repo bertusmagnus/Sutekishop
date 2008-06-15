@@ -1,4 +1,5 @@
 ﻿using System.Net.Mail;
+using System.Text;
 using Suteki.Common.Services;
 using Suteki.Common.Extensions;
 
@@ -29,7 +30,8 @@ namespace Suteki.Common.Services
                                       {
                                           From = new MailAddress(fromAddress),
                                           Subject = subject,
-                                          Body = body
+                                          Body = body,
+                                          IsBodyHtml = true
                                       };
             toAddress.ForEach(a => message.To.Add(a));
 

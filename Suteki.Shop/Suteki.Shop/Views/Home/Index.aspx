@@ -2,9 +2,6 @@
 
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     
-    <h1>Welcome to Suteki Shop</h1>
-    <p>
-    Suteki shop is a fully featured eCommerce application.        
-    </p>
+    <h1>Welcome to our online shop</h1>
 
 </asp:Content>

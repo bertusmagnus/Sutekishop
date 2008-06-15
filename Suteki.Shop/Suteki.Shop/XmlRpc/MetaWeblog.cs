@@ -51,7 +51,11 @@ namespace Suteki.Shop.XmlRpc
 
         public MetaWeblog()
         {
-            // not using IoC container, manually creating
+            
+        }
+
+        private void CreateServices()
+        {
             var dataContext = new ShopDataContext();
             this.contentRepository = new Repository<Content>(dataContext);
             this.userRepository = new Repository<User>(dataContext);
@@ -106,6 +110,8 @@ namespace Suteki.Shop.XmlRpc
 
         public BlogInfo[] getUsersBlogs(string appKey, string username, string password)
         {
+            CreateServices();
+
             ValidateUser(username, password);
 
             BlogInfo[] blogInfos = new BlogInfo[]
@@ -123,6 +129,8 @@ namespace Suteki.Shop.XmlRpc
 
         public bool deletePost(string appKey, string postid, string username, string password, [XmlRpcParameter(Description = "Where applicable, this specifies whether the blog should be republished after the post has been deleted.")] bool publish)
         {
+            CreateServices();
+
             ValidateUser(username, password);
             int contentId = GetContentId(postid);
 
@@ -148,6 +156,8 @@ namespace Suteki.Shop.XmlRpc
 
         public bool editPost(string postid, string username, string password, Post post, bool publish)
         {
+            CreateServices();
+
             ValidateUser(username, password);
             int contentId = GetContentId(postid);
 
@@ -225,6 +235,8 @@ namespace Suteki.Shop.XmlRpc
 
         public Post getPost(string postid, string username, string password)
         {
+            CreateServices();
+
             ValidateUser(username, password);
             int contentId = GetContentId(postid);
 
@@ -271,6 +283,8 @@ namespace Suteki.Shop.XmlRpc
 
         public Post[] getRecentPosts(string blogid, string username, string password, int numberOfPosts)
         {
+            CreateServices();
+
             ValidateUser(username, password);
 
             var posts = contentRepository
@@ -362,6 +376,8 @@ namespace Suteki.Shop.XmlRpc
         /// <returns></returns>
         public string newPost(string blogid, string username, string password, Post post, bool publish)
         {
+            CreateServices();
+
             ValidateUser(username, password);
 
             TextContent content = new TextContent
@@ -461,6 +477,8 @@ namespace Suteki.Shop.XmlRpc
 
         public mediaObjectInfo newMediaObject(object blogid, string username, string password, mediaObject mediaobject)
         {
+            CreateServices();
+
             ValidateUser(username, password);
 
             try
@@ -674,6 +692,7 @@ namespace Suteki.Shop.XmlRpc
         {
             return new MtTextFilter[] { new MtTextFilter("test", "test"), };
         }
+
         #endregion
     }
 }
