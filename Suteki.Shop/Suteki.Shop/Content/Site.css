@@ -50,7 +50,7 @@ a:hover
 	padding: 0;
 	background-color:#514E5C;
 	color: #CBC9CE;
-	border: solid 10px #514E5C;
+	/* border: solid 10px #514E5C; */
 }
 
 .header
