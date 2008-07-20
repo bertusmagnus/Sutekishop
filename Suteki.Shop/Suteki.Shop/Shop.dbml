@@ -9,8 +9,8 @@
       <Column Name="RoleId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="User_Basket" Member="Baskets" OtherKey="UserId" Type="Basket" />
       <Association Name="User_Order" Member="Orders" OtherKey="UserId" Type="Order" />
+      <Association Name="User_Basket" Member="Baskets" OtherKey="UserId" Type="Basket" />
       <Association Name="Role_User" Member="Role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
     </Type>
   </Table>
@@ -22,24 +22,14 @@
       <Association Name="Image_ProductImage" Member="ProductImages" OtherKey="ImageId" Type="ProductImage" />
     </Type>
   </Table>
-  <Table Name="dbo.Basket" Member="Baskets">
-    <Type Name="Basket">
-      <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="Basket_BasketItem" Member="BasketItems" OtherKey="BasketId" Type="BasketItem" />
-      <Association Name="Basket_Order" Member="Orders" OtherKey="BasketId" Type="Order" />
-      <Association Name="User_Basket" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.BasketItem" Member="BasketItems">
     <Type Name="BasketItem">
       <Column Name="BasketItemId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="SizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Basket_BasketItem" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
       <Association Name="Size_BasketItem" Member="Size" ThisKey="SizeId" Type="Size" IsForeignKey="true" />
+      <Association Name="Basket_BasketItem" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.CardType" Member="CardTypes">
@@ -110,6 +100,7 @@
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="PostZoneId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Country_Contact" Member="Contacts" OtherKey="CountryId" Type="Contact" />
+      <Association Name="Country_Basket" Member="Baskets" OtherKey="CountryId" Type="Basket" />
       <Association Name="PostZone_Country" Member="PostZone" ThisKey="PostZoneId" Type="PostZone" IsForeignKey="true" />
     </Type>
   </Table>
@@ -135,12 +126,12 @@
       <Column Name="DispatchedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
       <Association Name="Card_Order" Member="Card" ThisKey="CardId" Type="Card" IsForeignKey="true" />
       <Association Name="Contact_Order" Member="Contact" ThisKey="CardContactId" Type="Contact" IsForeignKey="true" />
       <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" Type="Contact" IsForeignKey="true" />
       <Association Name="OrderStatus_Order" Member="OrderStatus" ThisKey="OrderStatusId" Type="OrderStatus" IsForeignKey="true" />
       <Association Name="User_Order" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ProductImage" Member="ProductImages">
@@ -234,6 +225,18 @@
       <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
       <Association Name="Product_Size" Member="Sizes" OtherKey="ProductId" Type="Size" />
       <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Basket" Member="Baskets">
+    <Type Name="Basket">
+      <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CountryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Basket_BasketItem" Member="BasketItems" OtherKey="BasketId" Type="BasketItem" />
+      <Association Name="Basket_Order" Member="Orders" OtherKey="BasketId" Type="Order" />
+      <Association Name="Country_Basket" Member="Country" ThisKey="CountryId" Type="Country" IsForeignKey="true" />
+      <Association Name="User_Basket" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

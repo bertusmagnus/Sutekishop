@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
@@ -86,6 +87,31 @@ namespace Suteki.Shop.Controllers
         private ViewResult ItemView(int id)
         {
             Order order = orderRepository.GetById(id);
+
+            if (CurrentUser.IsAdministrator)
+            {
+                var cookie = Request.Cookies["privateKey"];
+                if (cookie != null)
+                {
+                    string privateKey = cookie.Value.Replace("%3D", "=");
+
+                    if (!order.PayByTelephone)
+                    {
+                        Card card = order.Card.Copy();
+                        try
+                        {
+                            encryptionService.PrivateKey = privateKey;
+                            encryptionService.DecryptCard(card);
+                            return View("Item", CheckoutViewData(order).WithCard(card));
+                        }
+                        catch (ValidationException exception)
+                        {
+                            return View("Item", CheckoutViewData(order).WithErrorMessage(exception.Message));
+                        }
+                    }
+                }
+            }
+
             CheckCurrentUserCanViewOrder(order);
             return View("Item", CheckoutViewData(order));
         }
@@ -108,6 +134,8 @@ namespace Suteki.Shop.Controllers
             viewResult.MasterName = "Print";
             return viewResult;
         }
+
+        
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult ShowCard(int orderId, string privateKey)
@@ -154,31 +182,17 @@ namespace Suteki.Shop.Controllers
             postageService.CalculatePostageFor(order);
 
             return ShopView.Data
-                .WithCountries(countryRepository.GetAll().InOrder())
+                .WithCountries(countryRepository.GetAll().Active().InOrder())
                 .WithCardTypes(cardTypeRepository.GetAll())
                 .WithOrder(order);
         }
 
         public ActionResult PlaceOrder()
         {
-            Order order = new Order
-            {
-                OrderStatusId = OrderStatus.CreatedId,
-                CreatedDate = DateTime.Now,
-                DispatchedDate = DateTime.Now
-            };
-
-            Validator validator = new Validator
-            {
-                () => UpdateOrder(order),
-                () => UpdateCardContact(order),
-                () => UpdateDeliveryContact(order),
-                () => UpdateCard(order)
-            };
-
+            Order order = new Order();
             try
             {
-                validator.Validate();
+                UpdateOrderFromForm(order);
                 orderRepository.InsertOnSubmit(order);
                 CurrentUser.CreateNewBasket();
                 orderRepository.SubmitChanges();
@@ -194,6 +208,23 @@ namespace Suteki.Shop.Controllers
                     .WithErrorMessage(validationException.Message)
                     );
             }
+        }
+
+        private void UpdateOrderFromForm(Order order)
+        {
+            order.OrderStatusId = OrderStatus.CreatedId;
+            order.CreatedDate = DateTime.Now;
+            order.DispatchedDate = DateTime.Now;
+
+            Validator validator = new Validator
+                                  {
+                                      () => UpdateOrder(order),
+                                      () => UpdateCardContact(order),
+                                      () => UpdateDeliveryContact(order),
+                                      () => UpdateCard(order)
+                                  };
+
+            validator.Validate();
         }
 
         [NonAction]
@@ -291,9 +322,30 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult UpdateCountry(int id, int countryId)
         {
-            //Order order = orderRepository.GetById(id);
+            Basket basket = basketRepository.GetById(id);
+            basket.CountryId = countryId;
+            basketRepository.SubmitChanges();
 
-            return RedirectToRoute(new { Controller = "Order", Action = "Checkout", id = id });
+            Order order = new Order();
+
+            try
+            {
+                UpdateOrderFromForm(order);
+            }
+            catch (ValidationException)
+            {
+                // ignore validation exceptions
+            }
+
+            PopulateOrderForView(order, basket);
+            return View("Checkout", CheckoutViewData(order));
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]        
+        public ActionResult Invoice(int id)
+        {
+            Order order = orderRepository.GetById(id);
+            return View("Invoice", ShopView.Data.WithOrder(order));
         }
     }
 }

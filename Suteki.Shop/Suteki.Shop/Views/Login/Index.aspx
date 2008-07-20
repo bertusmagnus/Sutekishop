@@ -5,7 +5,7 @@
 
     <%= Html.ErrorBox(ViewData.Model)%>
 
-    <% using(Html.Form("Login", "Authenticate")) { %>
+    <form method="post" action="<%= Url.Action("Authenticate", "Login").ToSslUrl() %>">
 
         <label for="username">Email</label>
         <%= Html.TextBox("email") %>
@@ -15,7 +15,7 @@
 
         <%= Html.SubmitButton() %>
 
-    <% } %>
+    </form>
 
 
 </asp:Content>

@@ -325,5 +325,20 @@ namespace Suteki.Shop.Tests.Controllers
 
             Mock.Get(encryptionService).Verify();
         }
+
+        [Test]
+        public void Invoice_ShouldShowOrderInInvoiceView()
+        {
+            int orderId = 10;
+
+            Order order = new Order();
+
+            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+
+            orderController.Invoice(orderId)
+                .ReturnsViewResult()
+                .ForView("Invoice")
+                .AssertAreSame<ShopViewData, Order>(order, vd => vd.Order);
+        }
     }
 }

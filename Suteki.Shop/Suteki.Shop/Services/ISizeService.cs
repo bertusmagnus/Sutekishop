@@ -4,7 +4,7 @@ namespace Suteki.Shop.Services
 {
     public interface ISizeService
     {
-        ISizeService WithVaues(System.Collections.Specialized.NameValueCollection form);
+        ISizeService WithValues(System.Collections.Specialized.NameValueCollection form);
         void Update(Product product);
         void Clear(Product product);
     }

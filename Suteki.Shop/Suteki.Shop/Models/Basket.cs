@@ -43,35 +43,14 @@ namespace Suteki.Shop
             }
         }
 
-//        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages)
-//        {
-//            Contact defaultContact = new Contact
-//            {
-//                Country = new Country
-//                {
-//                    Name = "Default",
-//                    PostZone = new PostZone
-//                    {
-//                        AskIfMaxWeight = false,
-//                        Multiplier = 1M,
-//                        IsActive = true,
-//                    }
-//                }
-//            };
-//
-//            return CalculatePostage(postages, defaultContact);
-//        }
-
-        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages, PostZone postZone)
+        public PostageResult CalculatePostage(System.Linq.IQueryable<Postage> postages)
         {
             if (postages == null)
             {
                 throw new ArgumentNullException("postages");
             }
-            if (postZone == null)
-            {
-                throw new ArgumentNullException("postZone");
-            }
+
+            PostZone postZone = Country.PostZone;
 
             int totalWeight = (int)BasketItems
                 .Sum(bi => bi.TotalWeight);

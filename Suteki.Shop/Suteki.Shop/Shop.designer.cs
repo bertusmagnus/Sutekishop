@@ -36,9 +36,6 @@ namespace Suteki.Shop
     partial void InsertImage(Image instance);
     partial void UpdateImage(Image instance);
     partial void DeleteImage(Image instance);
-    partial void InsertBasket(Basket instance);
-    partial void UpdateBasket(Basket instance);
-    partial void DeleteBasket(Basket instance);
     partial void InsertBasketItem(BasketItem instance);
     partial void UpdateBasketItem(BasketItem instance);
     partial void DeleteBasketItem(BasketItem instance);
@@ -87,6 +84,9 @@ namespace Suteki.Shop
     partial void InsertProduct(Product instance);
     partial void UpdateProduct(Product instance);
     partial void DeleteProduct(Product instance);
+    partial void InsertBasket(Basket instance);
+    partial void UpdateBasket(Basket instance);
+    partial void DeleteBasket(Basket instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -132,14 +132,6 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Image>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Basket> Baskets
-		{
-			get
-			{
-				return this.GetTable<Basket>();
 			}
 		}
 		
@@ -270,6 +262,14 @@ namespace Suteki.Shop
 				return this.GetTable<Product>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Basket> Baskets
+		{
+			get
+			{
+				return this.GetTable<Basket>();
+			}
+		}
 	}
 	
 	[Table(Name="dbo.[User]")]
@@ -290,9 +290,9 @@ namespace Suteki.Shop
 		
 		private System.Data.Linq.Binary _Timestamp;
 		
-		private EntitySet<Basket> _Baskets;
-		
 		private EntitySet<Order> _Orders;
+		
+		private EntitySet<Basket> _Baskets;
 		
 		private EntityRef<Role> _Role;
 		
@@ -316,8 +316,8 @@ namespace Suteki.Shop
 		
 		public User()
 		{
-			this._Baskets = new EntitySet<Basket>(new Action<Basket>(this.attach_Baskets), new Action<Basket>(this.detach_Baskets));
 			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
+			this._Baskets = new EntitySet<Basket>(new Action<Basket>(this.attach_Baskets), new Action<Basket>(this.detach_Baskets));
 			this._Role = default(EntityRef<Role>);
 			OnCreated();
 		}
@@ -446,19 +446,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Association(Name="User_Basket", Storage="_Baskets", OtherKey="UserId")]
-		public EntitySet<Basket> Baskets
-		{
-			get
-			{
-				return this._Baskets;
-			}
-			set
-			{
-				this._Baskets.Assign(value);
-			}
-		}
-		
 		[Association(Name="User_Order", Storage="_Orders", OtherKey="UserId")]
 		public EntitySet<Order> Orders
 		{
@@ -469,6 +456,19 @@ namespace Suteki.Shop
 			set
 			{
 				this._Orders.Assign(value);
+			}
+		}
+		
+		[Association(Name="User_Basket", Storage="_Baskets", OtherKey="UserId")]
+		public EntitySet<Basket> Baskets
+		{
+			get
+			{
+				return this._Baskets;
+			}
+			set
+			{
+				this._Baskets.Assign(value);
 			}
 		}
 		
@@ -526,18 +526,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		private void attach_Baskets(Basket entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = this;
-		}
-		
-		private void detach_Baskets(Basket entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = null;
-		}
-		
 		private void attach_Orders(Order entity)
 		{
 			this.SendPropertyChanging();
@@ -545,6 +533,18 @@ namespace Suteki.Shop
 		}
 		
 		private void detach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
+		private void attach_Baskets(Basket entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Baskets(Basket entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
@@ -689,213 +689,6 @@ namespace Suteki.Shop
 		}
 	}
 	
-	[Table(Name="dbo.Basket")]
-	public partial class Basket : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _BasketId;
-		
-		private int _UserId;
-		
-		private System.DateTime _OrderDate;
-		
-		private EntitySet<BasketItem> _BasketItems;
-		
-		private EntitySet<Order> _Orders;
-		
-		private EntityRef<User> _User;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnBasketIdChanging(int value);
-    partial void OnBasketIdChanged();
-    partial void OnUserIdChanging(int value);
-    partial void OnUserIdChanged();
-    partial void OnOrderDateChanging(System.DateTime value);
-    partial void OnOrderDateChanged();
-    #endregion
-		
-		public Basket()
-		{
-			this._BasketItems = new EntitySet<BasketItem>(new Action<BasketItem>(this.attach_BasketItems), new Action<BasketItem>(this.detach_BasketItems));
-			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
-			this._User = default(EntityRef<User>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_BasketId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int BasketId
-		{
-			get
-			{
-				return this._BasketId;
-			}
-			set
-			{
-				if ((this._BasketId != value))
-				{
-					this.OnBasketIdChanging(value);
-					this.SendPropertyChanging();
-					this._BasketId = value;
-					this.SendPropertyChanged("BasketId");
-					this.OnBasketIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_UserId", DbType="Int NOT NULL")]
-		public int UserId
-		{
-			get
-			{
-				return this._UserId;
-			}
-			set
-			{
-				if ((this._UserId != value))
-				{
-					if (this._User.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnUserIdChanging(value);
-					this.SendPropertyChanging();
-					this._UserId = value;
-					this.SendPropertyChanged("UserId");
-					this.OnUserIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_OrderDate", DbType="DateTime NOT NULL")]
-		public System.DateTime OrderDate
-		{
-			get
-			{
-				return this._OrderDate;
-			}
-			set
-			{
-				if ((this._OrderDate != value))
-				{
-					this.OnOrderDateChanging(value);
-					this.SendPropertyChanging();
-					this._OrderDate = value;
-					this.SendPropertyChanged("OrderDate");
-					this.OnOrderDateChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Basket_BasketItem", Storage="_BasketItems", OtherKey="BasketId")]
-		public EntitySet<BasketItem> BasketItems
-		{
-			get
-			{
-				return this._BasketItems;
-			}
-			set
-			{
-				this._BasketItems.Assign(value);
-			}
-		}
-		
-		[Association(Name="Basket_Order", Storage="_Orders", OtherKey="BasketId")]
-		public EntitySet<Order> Orders
-		{
-			get
-			{
-				return this._Orders;
-			}
-			set
-			{
-				this._Orders.Assign(value);
-			}
-		}
-		
-		[Association(Name="User_Basket", Storage="_User", ThisKey="UserId", IsForeignKey=true)]
-		public User User
-		{
-			get
-			{
-				return this._User.Entity;
-			}
-			set
-			{
-				User previousValue = this._User.Entity;
-				if (((previousValue != value) 
-							|| (this._User.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._User.Entity = null;
-						previousValue.Baskets.Remove(this);
-					}
-					this._User.Entity = value;
-					if ((value != null))
-					{
-						value.Baskets.Add(this);
-						this._UserId = value.UserId;
-					}
-					else
-					{
-						this._UserId = default(int);
-					}
-					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_BasketItems(BasketItem entity)
-		{
-			this.SendPropertyChanging();
-			entity.Basket = this;
-		}
-		
-		private void detach_BasketItems(BasketItem entity)
-		{
-			this.SendPropertyChanging();
-			entity.Basket = null;
-		}
-		
-		private void attach_Orders(Order entity)
-		{
-			this.SendPropertyChanging();
-			entity.Basket = this;
-		}
-		
-		private void detach_Orders(Order entity)
-		{
-			this.SendPropertyChanging();
-			entity.Basket = null;
-		}
-	}
-	
 	[Table(Name="dbo.BasketItem")]
 	public partial class BasketItem : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -910,9 +703,9 @@ namespace Suteki.Shop
 		
 		private int _Quantity;
 		
-		private EntityRef<Basket> _Basket;
-		
 		private EntityRef<Size> _Size;
+		
+		private EntityRef<Basket> _Basket;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -930,8 +723,8 @@ namespace Suteki.Shop
 		
 		public BasketItem()
 		{
-			this._Basket = default(EntityRef<Basket>);
 			this._Size = default(EntityRef<Size>);
+			this._Basket = default(EntityRef<Basket>);
 			OnCreated();
 		}
 		
@@ -1023,40 +816,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Association(Name="Basket_BasketItem", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
-		public Basket Basket
-		{
-			get
-			{
-				return this._Basket.Entity;
-			}
-			set
-			{
-				Basket previousValue = this._Basket.Entity;
-				if (((previousValue != value) 
-							|| (this._Basket.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Basket.Entity = null;
-						previousValue.BasketItems.Remove(this);
-					}
-					this._Basket.Entity = value;
-					if ((value != null))
-					{
-						value.BasketItems.Add(this);
-						this._BasketId = value.BasketId;
-					}
-					else
-					{
-						this._BasketId = default(int);
-					}
-					this.SendPropertyChanged("Basket");
-				}
-			}
-		}
-		
 		[Association(Name="Size_BasketItem", Storage="_Size", ThisKey="SizeId", IsForeignKey=true)]
 		public Size Size
 		{
@@ -1087,6 +846,40 @@ namespace Suteki.Shop
 						this._SizeId = default(int);
 					}
 					this.SendPropertyChanged("Size");
+				}
+			}
+		}
+		
+		[Association(Name="Basket_BasketItem", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
+		public Basket Basket
+		{
+			get
+			{
+				return this._Basket.Entity;
+			}
+			set
+			{
+				Basket previousValue = this._Basket.Entity;
+				if (((previousValue != value) 
+							|| (this._Basket.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Basket.Entity = null;
+						previousValue.BasketItems.Remove(this);
+					}
+					this._Basket.Entity = value;
+					if ((value != null))
+					{
+						value.BasketItems.Add(this);
+						this._BasketId = value.BasketId;
+					}
+					else
+					{
+						this._BasketId = default(int);
+					}
+					this.SendPropertyChanged("Basket");
 				}
 			}
 		}
@@ -2334,6 +2127,8 @@ namespace Suteki.Shop
 		
 		private EntitySet<Contact> _Contacts;
 		
+		private EntitySet<Basket> _Baskets;
+		
 		private EntityRef<PostZone> _PostZone;
 		
     #region Extensibility Method Definitions
@@ -2355,6 +2150,7 @@ namespace Suteki.Shop
 		public Country()
 		{
 			this._Contacts = new EntitySet<Contact>(new Action<Contact>(this.attach_Contacts), new Action<Contact>(this.detach_Contacts));
+			this._Baskets = new EntitySet<Basket>(new Action<Basket>(this.attach_Baskets), new Action<Basket>(this.detach_Baskets));
 			this._PostZone = default(EntityRef<PostZone>);
 			OnCreated();
 		}
@@ -2476,6 +2272,19 @@ namespace Suteki.Shop
 			}
 		}
 		
+		[Association(Name="Country_Basket", Storage="_Baskets", OtherKey="CountryId")]
+		public EntitySet<Basket> Baskets
+		{
+			get
+			{
+				return this._Baskets;
+			}
+			set
+			{
+				this._Baskets.Assign(value);
+			}
+		}
+		
 		[Association(Name="PostZone_Country", Storage="_PostZone", ThisKey="PostZoneId", IsForeignKey=true)]
 		public PostZone PostZone
 		{
@@ -2537,6 +2346,18 @@ namespace Suteki.Shop
 		}
 		
 		private void detach_Contacts(Contact entity)
+		{
+			this.SendPropertyChanging();
+			entity.Country = null;
+		}
+		
+		private void attach_Baskets(Basket entity)
+		{
+			this.SendPropertyChanging();
+			entity.Country = this;
+		}
+		
+		private void detach_Baskets(Basket entity)
 		{
 			this.SendPropertyChanging();
 			entity.Country = null;
@@ -2689,8 +2510,6 @@ namespace Suteki.Shop
 		
 		private System.Nullable<int> _UserId;
 		
-		private EntityRef<Basket> _Basket;
-		
 		private EntityRef<Card> _Card;
 		
 		private EntityRef<Contact> _Contact;
@@ -2700,6 +2519,8 @@ namespace Suteki.Shop
 		private EntityRef<OrderStatus> _OrderStatus;
 		
 		private EntityRef<User> _User;
+		
+		private EntityRef<Basket> _Basket;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2735,12 +2556,12 @@ namespace Suteki.Shop
 		
 		public Order()
 		{
-			this._Basket = default(EntityRef<Basket>);
 			this._Card = default(EntityRef<Card>);
 			this._Contact = default(EntityRef<Contact>);
 			this._Contact1 = default(EntityRef<Contact>);
 			this._OrderStatus = default(EntityRef<OrderStatus>);
 			this._User = default(EntityRef<User>);
+			this._Basket = default(EntityRef<Basket>);
 			OnCreated();
 		}
 		
@@ -3028,40 +2849,6 @@ namespace Suteki.Shop
 			}
 		}
 		
-		[Association(Name="Basket_Order", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
-		public Basket Basket
-		{
-			get
-			{
-				return this._Basket.Entity;
-			}
-			set
-			{
-				Basket previousValue = this._Basket.Entity;
-				if (((previousValue != value) 
-							|| (this._Basket.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Basket.Entity = null;
-						previousValue.Orders.Remove(this);
-					}
-					this._Basket.Entity = value;
-					if ((value != null))
-					{
-						value.Orders.Add(this);
-						this._BasketId = value.BasketId;
-					}
-					else
-					{
-						this._BasketId = default(int);
-					}
-					this.SendPropertyChanged("Basket");
-				}
-			}
-		}
-		
 		[Association(Name="Card_Order", Storage="_Card", ThisKey="CardId", IsForeignKey=true)]
 		public Card Card
 		{
@@ -3228,6 +3015,40 @@ namespace Suteki.Shop
 						this._UserId = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		[Association(Name="Basket_Order", Storage="_Basket", ThisKey="BasketId", IsForeignKey=true)]
+		public Basket Basket
+		{
+			get
+			{
+				return this._Basket.Entity;
+			}
+			set
+			{
+				Basket previousValue = this._Basket.Entity;
+				if (((previousValue != value) 
+							|| (this._Basket.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Basket.Entity = null;
+						previousValue.Orders.Remove(this);
+					}
+					this._Basket.Entity = value;
+					if ((value != null))
+					{
+						value.Orders.Add(this);
+						this._BasketId = value.BasketId;
+					}
+					else
+					{
+						this._BasketId = default(int);
+					}
+					this.SendPropertyChanged("Basket");
 				}
 			}
 		}
@@ -5124,6 +4945,278 @@ namespace Suteki.Shop
 		{
 			this.SendPropertyChanging();
 			entity.Product = null;
+		}
+	}
+	
+	[Table(Name="dbo.Basket")]
+	public partial class Basket : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _BasketId;
+		
+		private int _UserId;
+		
+		private System.DateTime _OrderDate;
+		
+		private int _CountryId;
+		
+		private EntitySet<BasketItem> _BasketItems;
+		
+		private EntitySet<Order> _Orders;
+		
+		private EntityRef<Country> _Country;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnBasketIdChanging(int value);
+    partial void OnBasketIdChanged();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    partial void OnOrderDateChanging(System.DateTime value);
+    partial void OnOrderDateChanged();
+    partial void OnCountryIdChanging(int value);
+    partial void OnCountryIdChanged();
+    #endregion
+		
+		public Basket()
+		{
+			this._BasketItems = new EntitySet<BasketItem>(new Action<BasketItem>(this.attach_BasketItems), new Action<BasketItem>(this.detach_BasketItems));
+			this._Orders = new EntitySet<Order>(new Action<Order>(this.attach_Orders), new Action<Order>(this.detach_Orders));
+			this._Country = default(EntityRef<Country>);
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_BasketId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int BasketId
+		{
+			get
+			{
+				return this._BasketId;
+			}
+			set
+			{
+				if ((this._BasketId != value))
+				{
+					this.OnBasketIdChanging(value);
+					this.SendPropertyChanging();
+					this._BasketId = value;
+					this.SendPropertyChanged("BasketId");
+					this.OnBasketIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UserId", DbType="Int NOT NULL")]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_OrderDate", DbType="DateTime NOT NULL")]
+		public System.DateTime OrderDate
+		{
+			get
+			{
+				return this._OrderDate;
+			}
+			set
+			{
+				if ((this._OrderDate != value))
+				{
+					this.OnOrderDateChanging(value);
+					this.SendPropertyChanging();
+					this._OrderDate = value;
+					this.SendPropertyChanged("OrderDate");
+					this.OnOrderDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CountryId", DbType="Int NOT NULL")]
+		public int CountryId
+		{
+			get
+			{
+				return this._CountryId;
+			}
+			set
+			{
+				if ((this._CountryId != value))
+				{
+					if (this._Country.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCountryIdChanging(value);
+					this.SendPropertyChanging();
+					this._CountryId = value;
+					this.SendPropertyChanged("CountryId");
+					this.OnCountryIdChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Basket_BasketItem", Storage="_BasketItems", OtherKey="BasketId")]
+		public EntitySet<BasketItem> BasketItems
+		{
+			get
+			{
+				return this._BasketItems;
+			}
+			set
+			{
+				this._BasketItems.Assign(value);
+			}
+		}
+		
+		[Association(Name="Basket_Order", Storage="_Orders", OtherKey="BasketId")]
+		public EntitySet<Order> Orders
+		{
+			get
+			{
+				return this._Orders;
+			}
+			set
+			{
+				this._Orders.Assign(value);
+			}
+		}
+		
+		[Association(Name="Country_Basket", Storage="_Country", ThisKey="CountryId", IsForeignKey=true)]
+		public Country Country
+		{
+			get
+			{
+				return this._Country.Entity;
+			}
+			set
+			{
+				Country previousValue = this._Country.Entity;
+				if (((previousValue != value) 
+							|| (this._Country.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Country.Entity = null;
+						previousValue.Baskets.Remove(this);
+					}
+					this._Country.Entity = value;
+					if ((value != null))
+					{
+						value.Baskets.Add(this);
+						this._CountryId = value.CountryId;
+					}
+					else
+					{
+						this._CountryId = default(int);
+					}
+					this.SendPropertyChanged("Country");
+				}
+			}
+		}
+		
+		[Association(Name="User_Basket", Storage="_User", ThisKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Baskets.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Baskets.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(int);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_BasketItems(BasketItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Basket = this;
+		}
+		
+		private void detach_BasketItems(BasketItem entity)
+		{
+			this.SendPropertyChanging();
+			entity.Basket = null;
+		}
+		
+		private void attach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.Basket = this;
+		}
+		
+		private void detach_Orders(Order entity)
+		{
+			this.SendPropertyChanging();
+			entity.Basket = null;
 		}
 	}
 }

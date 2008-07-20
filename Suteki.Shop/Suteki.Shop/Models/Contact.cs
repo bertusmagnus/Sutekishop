@@ -23,22 +23,22 @@ namespace Suteki.Shop
 
         partial void OnTownChanging(string value)
         {
-            value.Label("Town").IsRequired();
+//            value.Label("Town").IsRequired();
         }
 
         partial void OnCountyChanging(string value)
         {
-            value.Label("County").IsRequired();
+//            value.Label("County").IsRequired();
         }
 
         partial void OnPostcodeChanging(string value)
         {
-            value.Label("Postcode").IsRequired();
+//            value.Label("Postcode").IsRequired();
         }
 
         partial void OnTelephoneChanging(string value)
         {
-            value.Label("Telephone").IsRequired();
+//            value.Label("Telephone").IsRequired();
         }
 
         public string Fullname

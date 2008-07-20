@@ -33,6 +33,10 @@
                 <label for="isactive">Active</label>
                 <%= Html.CheckBox("isactive", "", "True", ViewData.Model.Product.IsActive)%>
             </div>
+            
+            <div class="contentRightColumn">
+                <br /><br /><br /><br /><br /><br /><br /><br /><br />
+            </div>
         </div>
         
         <label for="description">Description</label>
@@ -49,7 +53,7 @@
         </p>
         <div class="sizeInput">
         <% for(int i=0; i<10; i++) { %>
-            <%= Html.TextBox("size_" + i.ToString(), null, new { _class = "inline", size = "10" })%>
+            <%= Html.TextBox("size_" + i.ToString())%>
         <% } %>
         </div>
         

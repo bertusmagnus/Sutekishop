@@ -37,7 +37,7 @@ namespace Suteki.Shop.Tests.Services
 
             Product product = new Product();
 
-            sizeService.WithVaues(form).Update(product);
+            sizeService.WithValues(form).Update(product);
 
             Assert.AreEqual(3, product.Sizes.Count, "incorrect number of sizes on product");
             Assert.AreEqual("S", product.Sizes[0].Name);
@@ -46,7 +46,7 @@ namespace Suteki.Shop.Tests.Services
         }
 
         [Test]
-        public void Update_ShouldMarkExistingSizesInactiveWhenNewOnesAreGiven()
+        public void Update_ShouldNotMarkExistingSizesInactiveWhenNewOnesAreGiven()
         {
             NameValueCollection form = new NameValueCollection();
             form.Add("size_1", "New 1");
@@ -62,13 +62,13 @@ namespace Suteki.Shop.Tests.Services
                 }
             };
 
-            sizeService.WithVaues(form).Update(product);
+            sizeService.WithValues(form).Update(product);
 
             Assert.AreEqual(5, product.Sizes.Count, "incorrect number of sizes");
-            
-            Assert.IsFalse(product.Sizes[0].IsActive);
-            Assert.IsFalse(product.Sizes[1].IsActive);
-            Assert.IsFalse(product.Sizes[2].IsActive);
+
+            Assert.IsTrue(product.Sizes[0].IsActive);
+            Assert.IsTrue(product.Sizes[1].IsActive);
+            Assert.IsTrue(product.Sizes[2].IsActive);
 
             Assert.IsTrue(product.Sizes[3].IsActive);
             Assert.IsTrue(product.Sizes[4].IsActive);
@@ -89,7 +89,7 @@ namespace Suteki.Shop.Tests.Services
             Mock.Get(sizeRepository).Expect(sr => sr.DeleteOnSubmit(It.IsAny<Size>()))
                 .Throws(new Exception("Test should not call sizeRepository.DeleteOnSubmit"));
 
-            sizeService.WithVaues(form).Update(product);
+            sizeService.WithValues(form).Update(product);
 
             Assert.AreEqual(3, product.Sizes.Count, "incorrect number of sizes");
             Assert.IsTrue(product.Sizes[0].IsActive);

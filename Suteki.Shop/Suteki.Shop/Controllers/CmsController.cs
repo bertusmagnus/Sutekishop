@@ -67,9 +67,11 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Add(int id)
         {
+            Content parentContent = contentRepository.GetById(id);
+
             TextContent textContent = new TextContent
             {
-                ParentContentId = id,
+                Content1 = parentContent,
                 IsActive = true,
                 ContentTypeId = ContentType.TextContentId,
                 Position = contentOrderableService.NextPosition

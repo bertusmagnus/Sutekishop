@@ -163,6 +163,7 @@
     <Compile Include="Repositories\CategoryRepositoryExtensions.cs" />
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
+    <Compile Include="Repositories\CountryRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
     <Compile Include="Repositories\PostZoneRepositoryExtensions.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensions.cs" />
@@ -283,6 +284,13 @@
     </Compile>
     <Compile Include="Views\Order\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Order\Invoice.aspx.cs">
+      <DependentUpon>Invoice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Order\Invoice.aspx.designer.cs">
+      <DependentUpon>Invoice.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Order\Item.aspx.cs">
       <DependentUpon>Item.aspx</DependentUpon>
@@ -479,10 +487,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\basket.png" />
+    <Content Include="Content\Images\basket_hover.png" />
+    <Content Include="favicon.ico" />
     <Content Include="log4net.config" />
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Order\Invoice.aspx" />
     <Content Include="Views\Report\Index.aspx" />
     <Content Include="Views\Shared\Print.Master" />
     <Content Include="Content\Print.css" />
@@ -515,16 +527,18 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
+  <!--
   <Target Name="AfterBuild">
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(ProjectDir)" />
   </Target>
+  -->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>63638</DevelopmentServerPort>
+          <DevelopmentServerPort>49839</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

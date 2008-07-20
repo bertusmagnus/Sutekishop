@@ -12,7 +12,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return EnumerableExtensions.To(1, 12);
+                return 1.To(12);
             }
         }
 
@@ -20,7 +20,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return EnumerableExtensions.To(DateTime.Now.Year, DateTime.Now.Year + 8);
+                return DateTime.Now.Year.To(DateTime.Now.Year + 8);
             }
         }
 
@@ -28,7 +28,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return EnumerableExtensions.To((DateTime.Now.Year - 4), DateTime.Now.Year);
+                return (DateTime.Now.Year - 4).To(DateTime.Now.Year);
             }
         }
 

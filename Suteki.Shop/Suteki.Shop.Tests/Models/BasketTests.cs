@@ -9,6 +9,15 @@ namespace Suteki.Shop.Tests.Models
         {
             return new Basket
             {
+                Country = new Country
+                {
+                    PostZone = new PostZone
+                    {
+                        AskIfMaxWeight = false,
+                        Multiplier = 2.5M,
+                        FlatRate = 10.00M
+                    }
+                },
                 BasketItems = new System.Data.Linq.EntitySet<BasketItem>
                 {
                     new BasketItem

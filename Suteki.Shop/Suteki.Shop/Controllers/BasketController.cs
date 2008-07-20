@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
-using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Services;
 
@@ -16,19 +15,22 @@ namespace Suteki.Shop.Controllers
         readonly IRepository<Size> sizeRepository;
         readonly IUserService userService;
         readonly IPostageService postageService;
+        readonly IRepository<Country> countryRepository;
 
         public BasketController(
             IRepository<Basket> basketRepository,
             IRepository<BasketItem> basketItemRepository,
             IRepository<Size> sizeRepository,
             IUserService userService,
-            IPostageService postageService)
+            IPostageService postageService, 
+            IRepository<Country> countryRepository)
         {
             this.basketRepository = basketRepository;
             this.basketItemRepository = basketItemRepository;
             this.sizeRepository = sizeRepository;
             this.userService = userService;
             this.postageService = postageService;
+            this.countryRepository = countryRepository;
         }
 
         public ActionResult Index()
@@ -87,6 +89,10 @@ namespace Suteki.Shop.Controllers
 
         private ShopViewData IndexViewData(Basket basket)
         {
+            if (basket.Country == null)
+            {
+                basket.Country = countryRepository.GetById(basket.CountryId);
+            }
             return ShopView.Data.WithBasket(basket)
                 .WithTotalPostage(postageService.CalculatePostageFor(basket));
         }

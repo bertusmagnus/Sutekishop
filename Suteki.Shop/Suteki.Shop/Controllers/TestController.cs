@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Castle.Core.Logging;
 using Suteki.Common.Extensions;
 using Suteki.Common.Services;
@@ -33,6 +34,13 @@ namespace Suteki.Shop.Controllers
             string toAddress = BaseControllerService.EmailAddress;
             emailSender.Send(toAddress, "Hello from Suteki Shop", "The email body");
             return Content("Email sent to {0}".With(toAddress));
+        }
+
+        public ActionResult UriInfo()
+        {
+            var url = System.Web.HttpContext.Current.Request.Url;
+            var output = "AbsoluteUri: {0}, LocalPath: {1}".With(url.AbsoluteUri, url.LocalPath);
+            return Content(output);
         }
     }
 }

@@ -11,8 +11,7 @@
     <dt>Date</dt><dd><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></dd>
 
 <% if(User.IsInRole("Administrator")) { %>
-    <dt>Status</dt><dd><%= ViewData.Model.Order.OrderStatus.Name %></dd>
-    <dt>Dispatched</dt><dd><%= ViewData.Model.Order.DispatchedDateAsString %></dd>
+    <dt>Status</dt><dd><%= ViewData.Model.Order.OrderStatus.Name %> <%= ViewData.Model.Order.DispatchedDateAsString %></dd>
     <dt>Updated by</dt><dd><%= ViewData.Model.Order.UserAsString %></dd>
 <% } %>
     
@@ -22,6 +21,7 @@
 <div class="orderAction">
     <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
     <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Invoice(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
 </div>    
 <% } %>
 
@@ -61,6 +61,15 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
     </tr>
 
@@ -126,8 +135,9 @@
         
     </div>      
 </div>        
-         
-        <h3>Payment Details</h3>     
+<div class="clear"></div>         
+
+<h3>Payment Details</h3>     
         
 <div class="columnContainer">
     <div class="contentLeftColumn">
@@ -143,43 +153,101 @@
             <dt>Card Holder</dt><dd><%= ViewData.Model.Order.Card.Holder %>&nbsp;</dd>
         </dl>
         
-        <% } %>
-        
-        <% if(User.IsInRole("Administrator")) { %>
+            <% if(User.IsInRole("Administrator")) { %>
 
-            <%= Html.ErrorBox(ViewData.Model) %>
+                <%= Html.ErrorBox(ViewData.Model) %>
 
-            <% if (ViewData.Model.Card == null) { %>
+                <% if (ViewData.Model.Card == null) { %>
 
-                <% using (Html.Form("Order", "ShowCard")) { %>
-                    
-                    <%= Html.Hidden("orderId", ViewData.Model.Order.OrderId.ToString()) %>
-                    
-                    <label for="privateKey">Private Key</label>
-                    <%= Html.TextBox("privateKey")%>
-                    
-                    <%= Html.SubmitButton("cardDetailsSubmit", "Get Card Details")%>
+                    <% using (Html.Form("Order", "ShowCard", FormMethod.Post,
+                           new Dictionary<string, object> { { "onsubmit", "submitHandler();" } }))
+                       { %>
+                        
+                        <%= Html.Hidden("orderId", ViewData.Model.Order.OrderId.ToString()) %>
+                        
+                        <label for="privateKey">Private Key</label>
+                        <%= Html.TextBox("privateKey")%>
+                        
+                        <%= Html.SubmitButton("cardDetailsSubmit", "Get Card Details")%>
 
+                    <% } %>
+                
+                <% } else { %>
+                
+                    <dl>
+                        <dt>Card Number</dt><dd><%= ViewData.Model.Card.Number %></dd>
+                        <dt>Issue Number</dt><dd><%= ViewData.Model.Card.IssueNumber %></dd>
+                        <dt>Security Code</dt><dd><%= ViewData.Model.Card.SecurityCode %></dd>
+                        <dt>Start Date</dt><dd><%= ViewData.Model.Card.StartDateAsString %></dd>
+                        <dt>Expiry Date</dt><dd><%= ViewData.Model.Card.ExpiryDateAsString %></dd>
+                    </dl>
+                
                 <% } %>
-            
-            <% } else { %>
-            
-                <dl>
-                    <dt>Card Number</dt><dd><%= ViewData.Model.Card.Number %></dd>
-                    <dt>Issue Number</dt><dd><%= ViewData.Model.Card.IssueNumber %></dd>
-                    <dt>Security Code</dt><dd><%= ViewData.Model.Card.SecurityCode %></dd>
-                    <dt>Start Date</dt><dd><%= ViewData.Model.Card.StartDateAsString %></dd>
-                    <dt>Expiry Date</dt><dd><%= ViewData.Model.Card.ExpiryDateAsString %></dd>
-                </dl>
-            
-            <% } %>
 
-        <% } %>        
+            <% } %>        
+        
+        <% } %>
         
     </div>
     <div class="contentRightColumn">
 
     </div>
 </div>
+
+    <script type="text/javascript">
+    
+        init();
+    
+        function submitHandler()
+        {
+            var text = document.getElementById("privateKey");
+            setCookie("privateKey", text.value);
+        }
+        
+        function init()
+        {
+            var text = document.getElementById("privateKey");
+            if(text)
+            {
+                var value = getCookie("privateKey");
+                if(value)
+                {
+                    text.value = value;
+                }
+            }
+        }
+        
+        function setCookie(name, value, expires, path, domain, secure) 
+        {
+            var curCookie = name + "=" + escape(value) +
+                ((expires) ? "; expires=" + expires.toGMTString() : "") +
+                ((path) ? "; path=" + path : "") +
+                ((domain) ? "; domain=" + domain : "") +
+                ((secure) ? "; secure" : "");
+            document.cookie = curCookie;
+        }        
+        
+        function getCookie(name) 
+        {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) 
+            {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } 
+            else
+            {
+                begin += 2;
+            }
+            
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1)
+            end = dc.length;
+            return unescape(dc.substring(begin + prefix.length, end));
+        }        
+
+    </script>
 
 </asp:Content>

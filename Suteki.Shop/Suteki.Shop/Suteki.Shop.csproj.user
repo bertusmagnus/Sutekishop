@@ -14,7 +14,7 @@
           <NativeDebugging>False</NativeDebugging>
           <SQLDebugging>False</SQLDebugging>
           <PublishCopyOption>RunFiles</PublishCopyOption>
-          <PublishTargetLocation>G:\SharedFolderForVMs\Deploy\SutekiShop\</PublishTargetLocation>
+          <PublishTargetLocation>G:\SharedFolderForVMs\Deploy\JumpTheGun\</PublishTargetLocation>
           <PublishDeleteAllFiles>True</PublishDeleteAllFiles>
           <PublishCopyAppData>True</PublishCopyAppData>
           <ExternalProgram>

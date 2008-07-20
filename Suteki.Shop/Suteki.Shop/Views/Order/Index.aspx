@@ -30,10 +30,15 @@
             <option value="2">Dispatched</option>
             <option value="3">Rejected</option>
         </select>
+        
+        <br /><br /><br /><br />
     </div>
 
 <% } %>
+
 </div>
+
+<div class="clearRight">&nbsp;</div>
 
 <div class="columnContainer">
     <div class="pager">

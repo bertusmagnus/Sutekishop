@@ -8,6 +8,7 @@
     <link rel="EditURI" type="application/rsd+xml" title="RSD" href=<%= RsdUrl %> />
     <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
     <meta name="description" content=<%= ViewData["MetaDescription"] %>>
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
 </head>
 
 <body>

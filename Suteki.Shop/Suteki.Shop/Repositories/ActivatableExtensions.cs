@@ -7,6 +7,7 @@ namespace Suteki.Shop.Repositories
     {
         public static IQueryable<T> Active<T>(this IQueryable<T> items) where T : IActivatable
         {
+            if (items == null) return items;
             return items.Where(item => item.IsActive);
         }
 

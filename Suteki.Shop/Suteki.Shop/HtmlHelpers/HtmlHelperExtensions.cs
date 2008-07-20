@@ -26,10 +26,7 @@ namespace Suteki.Shop.HtmlHelpers
             {
                 return htmlHelper.ActionLink<LoginController>(c => c.Logout(), "Logout");
             }
-            else
-            {
-                return htmlHelper.ActionLink<LoginController>(c => c.Index(), "Login");
-            }
+            return htmlHelper.ActionLink<LoginController>(c => c.Index(), "Login").ToSslLink();
         }
 
         public static User CurrentUser(this HtmlHelper htmlHelper)

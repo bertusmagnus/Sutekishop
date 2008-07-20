@@ -160,7 +160,6 @@ namespace Suteki.Shop.ViewData
             this.Contents = contents;
             return this;
         }
-
     }
 
     /// <summary>

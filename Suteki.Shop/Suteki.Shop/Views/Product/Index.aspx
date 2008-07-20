@@ -11,14 +11,20 @@
 <% foreach (var category in ViewData.Model.Category.Categories.ActiveFor((User)this.User))
    { %>
 
+    <div class ="categoryBox">
     <h2><%= Html.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name) %></h2>
 
     <% if(category.HasProducts) { 
            if (category.Products[0].HasMainImage)
            { %>
+            <div onclick="location.href='<%= Url.Action("Index", "Product", new { Id = category.CategoryId }) %>'">
             <%= Html.Image("~/ProductPhotos/" + category.Products[0].MainImage.ThumbFileName)%>
+            </div>
         <% }
-       } 
+       }
+    %>
+    </div>
+    <% 
    } %>
 
 <% foreach (var product in ViewData.Model.Products)

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
-using Suteki.Shop.Repositories;
 using System.Web.Mvc;
 using Suteki.Shop.Services;
-using System.Collections.Generic;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -25,6 +21,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         IUserService userService;
         IPostageService postageService;
+        IRepository<Country> countryRepository;
 
         [SetUp]
         public void SetUp()
@@ -35,13 +32,16 @@ namespace Suteki.Shop.Tests.Controllers
 
             userService = new Mock<IUserService>().Object;
             postageService = new Mock<IPostageService>().Object;
+            countryRepository = new Mock<IRepository<Country>>().Object;
 
             basketController = new Mock<BasketController>(
                 basketRepository, 
                 basketItemRepository, 
                 sizeRepository,
                 userService,
-                postageService).Object;
+                postageService,
+                countryRepository).Object;
+
             testContext = new ControllerTestContext(basketController);
 
             Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Basket>()));

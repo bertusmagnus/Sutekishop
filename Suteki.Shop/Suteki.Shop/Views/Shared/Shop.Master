@@ -51,8 +51,8 @@
                     <div class="contentsContainer">
                         <div class="category">
                             <ul>                    
-                                <li>
-                                    <%= Html.ActionLink<BasketController>(c => c.Index(), "Basket") %>
+                                <li class="basket">
+                                    <%= Html.ActionLink<BasketController>(c => c.Index(), "Shopping Scooter") %>
                                 </li>
                             </ul>
                         </div>

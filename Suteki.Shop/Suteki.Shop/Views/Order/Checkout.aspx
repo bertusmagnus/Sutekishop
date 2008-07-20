@@ -3,11 +3,15 @@
 
 <script language="javascript">
 
+var first = true;
+
 function toggleCardHolderDetails()
 {
     var useCardholderContactCheck = document.getElementsByName("order.usecardholdercontact")[0];
     var deliveryAddress = document.getElementById("deliveryAddress");
     toggleVisibilityWithCheckbox(useCardholderContactCheck, deliveryAddress);
+    
+    updatePostageOnUseCardholderDetailsChange(useCardholderContactCheck);
 }
 
 function toggleCard()
@@ -29,15 +33,45 @@ function toggleVisibilityWithCheckbox(checkbox, div)
     }
 }
 
+function updatePostageOnUseCardholderDetailsChange(checkbox)
+{
+    if(first)
+    {
+        first = false;
+        return;
+    }
+
+    var select;
+    if(checkbox.checked)
+    {
+        select = document.getElementById("cardcontact.countryid");
+    }
+    else
+    {
+        select = document.getElementById("deliverycontact.countryid");
+    }
+    updateSelectedCountry(select);
+}
+
 function updateSelectedCountry(select)
 {
+    var useCardholderContactCheck = document.getElementsByName("order.usecardholdercontact")[0];
+    
+    if((!useCardholderContactCheck.checked && select.id) == "cardcontact.countryid") return;
+    
     for(var i = 0; i < select.options.length; i++)
     {
         if(select.options[i].selected)
         {
             alert("Postage will be updated for " + select.options[i].text);
-            window.location = <%= "\"" + Url.RouteUrl(new { Controller = "Order", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
+            
+            var form = document.getElementById("mainForm");
+            
+            var url = <%= "\"" + Url.RouteUrl(new { Controller = "Order", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
                  + "?countryId=" + select.options[i].value ;
+                 
+            form.action = url;
+            form.submit();
         }
     }
 }
@@ -103,6 +137,15 @@ function addHandlers()
         <td>&nbsp;</td>
     </tr>
 
+    <tr>
+        <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+
     <tr class="total">
         <td>Total With Postage</td>
         <td>&nbsp;</td>
@@ -121,8 +164,7 @@ function addHandlers()
 
 <h3>Customer Details</h3>
 
-    <% using (Html.Form("Order", "PlaceOrder"))
-       { %>
+    <form method="post" action="<%= Url.Action("PlaceOrder", "Order").ToSslUrl() %>" id="mainForm" name="mainForm">
 
         <%= Html.Hidden("order.orderid", ViewData.Model.Order.OrderId.ToString())%>
         <%= Html.Hidden("order.basketid", ViewData.Model.Order.BasketId.ToString()) %>
@@ -159,7 +201,7 @@ function addHandlers()
         <%= Html.TextBox("cardcontact.postcode", ViewData.Model.Order.Contact.Postcode)%>
  
         <label for="cardcontact.countryid">Country</label>
-        <%= Html.DropDownList("cardcontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.Contact.CountryId))%>
+        <%= Html.DropDownList("cardcontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.CardContactCountryId))%>
         
         <label for="cardcontact.telephone">Telephone</label>
         <%= Html.TextBox("cardcontact.telephone", ViewData.Model.Order.Contact.Telephone)%>
@@ -210,7 +252,7 @@ function addHandlers()
             <%= Html.TextBox("deliverycontact.postcode", ViewData.Model.Order.Contact1.Postcode)%>
      
             <label for="deliverycontact.countryid">Country</label>
-            <%= Html.DropDownList("deliverycontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.Contact1.CountryId))%>
+            <%= Html.DropDownList("deliverycontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.DeliveryContactCountryId))%>
             
             <label for="deliverycontact.telephone">Telephone</label>
             <%= Html.TextBox("deliverycontact.telephone", ViewData.Model.Order.Contact1.Telephone)%>
@@ -220,7 +262,7 @@ function addHandlers()
         <!-- additional information -->  
         
         <label for="order.additionalinformation">Additional Information</label>
-        <%= Html.TextArea("order.additionalinformation", ViewData.Model.Order.AdditionalInformation)%>
+        <span><%= Html.TextArea("order.additionalinformation", ViewData.Model.Order.AdditionalInformation)%></span>
         
     </div>      
 </div>        
@@ -232,33 +274,38 @@ function addHandlers()
         
         <div id="cardDetails">
         
-            <label for="card.cardtypeid">Country</label>
+            <label for="card.cardtypeid">Card Type</label>
             <%= Html.DropDownList("card.cardtypeid", new SelectList(ViewData.Model.CardTypes, "CardTypeId", "Name", ViewData.Model.Order.Card.CardTypeId))%>
             
             <label for="card.holder">Card Holder</label>
             <%= Html.TextBox("card.holder", ViewData.Model.Order.Card.Holder)%>
      
             <label for="card.number">Card Number</label>
-            <%= Html.TextBox("card.number", ViewData.Model.Order.Card.Number)%>
+            <%= Html.TextBox("card.number")%>
      
             <div class="cardDate">
                 <label for="card.expirymonth">Expire Date</label>
-                <%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%>
+                <%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%>
                 <%= Html.DropDownList("card.expiryyear", new SelectList(Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryYear))%>
             </div>
      
             <div class="cardDate">
-                <label for="card.startmonth">Start Data</label>
-                <%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%>
+                <label for="card.startmonth">Start Date</label>
+                <%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%>
                 <%= Html.DropDownList("card.startyear", new SelectList(Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartYear))%>
             </div>
      
-            <label for="card.issuenumber">Issue Number</label>
-            <%= Html.TextBox("card.issuenumber", ViewData.Model.Order.Card.IssueNumber)%>
+            <p>Only required for Switch/Solo/Maestro</p>
      
+            <label for="card.issuenumber">Issue Number</label>
+            <%= Html.TextBox("card.issuenumber", ViewData.Model.Order.Card.IssueNumber, new { maxlength = "1" })%>
+            
+            <p>Only required for Switch/Solo/Maestro</p>
+            
             <label for="card.securitycode">Security Code</label>
-            <%= Html.TextBox("card.securitycode", ViewData.Model.Order.Card.SecurityCode)%>
+            <%= Html.TextBox("card.securitycode", new { maxlength = "3" })%>
 
+            <p>On the back of your credit/debit card, you will see some numbers printed within the strip where you signed your card. These are known as 'signature digits', sometimes referred to by the credit card industry as 'CVV2'. Depending on your card type, there are between three and ten digits. We only require the last three.</p>
         </div>
     </div>
     <div class="contentRightColumn">
@@ -276,9 +323,9 @@ function addHandlers()
 </div> 
 <div class="clear" />       
 
-        <%= Html.SubmitButton("submit", "Place Order")%>
+        <%= Html.SubmitButton("submitButton", "Place Order")%>
 
-    <% } %>
+    </form>
 
 
 <script>

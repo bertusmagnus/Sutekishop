@@ -21,7 +21,10 @@ namespace Suteki.Shop.Tests.Controllers
             productRepository = new Mock<IRepository<Product>>().Object;
             contentRepository = new Mock<IRepository<Content>>().Object;
 
-            siteMapController = new SiteMapController(productRepository, contentRepository);
+            siteMapController = new Mock<SiteMapController>(productRepository, contentRepository).Object;
+
+            Mock.Get(siteMapController).ExpectGet(c => c.CurrentUser).Returns(new User());
+
         }
 
         [Test]

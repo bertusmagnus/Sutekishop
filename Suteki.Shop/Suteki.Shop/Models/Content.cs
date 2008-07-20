@@ -86,7 +86,7 @@ namespace Suteki.Shop
             get
             {
                 if (ContentId == Suteki.Shop.Menu.MainMenuId) return null;
-                Menu menu = Content1 as Menu;
+                var menu = Content1 as Menu;
                 if (menu == null)
                     throw new ApplicationException("Parent Content Should Always be a Menu");
                 return menu;
@@ -95,6 +95,7 @@ namespace Suteki.Shop
 
         public virtual string Link(HtmlHelper htmlHelper)
         {
+            if (ContentId == 0) return string.Empty;
             return htmlHelper.ActionLink<CmsController>(c => c.Index(UrlName), Name);
         }
 

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
@@ -60,7 +62,7 @@ namespace Suteki.Shop.Controllers
 
             AppendTitle(category.Name);
 
-            var products = OrderableExtensions.InOrder(category.Products);
+            var products = category.Products.InOrder();
 
             if (!CurrentUser.IsAdministrator)
             {
@@ -112,19 +114,31 @@ namespace Suteki.Shop.Controllers
             {
                 ValidatingBinder.UpdateFrom(product, Request.Form);
                 UpdateImages(product, Request);
-                sizeService.WithVaues(Request.Form).Update(product);
+                sizeService.WithValues(Request.Form).Update(product);
+
+                if (productId == 0)
+                {
+                    productRepository.InsertOnSubmit(product);
+                }
+
+                try
+                {
+                    productRepository.SubmitChanges();
+                }
+                catch (SqlException sqlException)
+                {
+                    if (sqlException.Message.StartsWith("Violation of UNIQUE KEY constraint 'product_name_unique'"))
+                    {
+                        throw new ValidationException("Product names must be unique and there is already a product called '{0}'".With(product.Name));
+                    }
+                    throw;
+                }
             }
             catch (ValidationException validationException)
             {
                 return View("Edit", EditViewData.WithProduct(product).WithErrorMessage(validationException.Message));
             }
 
-            if (productId == 0)
-            {
-                productRepository.InsertOnSubmit(product);
-            }
-            
-            productRepository.SubmitChanges();
 
             return View("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
         }

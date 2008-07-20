@@ -12,6 +12,11 @@ namespace Suteki.Shop.Tests.Services
     {
         ImageService imageService;
 
+        /// <summary>
+        /// This test fails when using the resharper test runner because the file can't be found in
+        /// _extectuing_assembly_path\TestImages
+        /// It works fine with TestDriven.NET which I prefer to use :P
+        /// </summary>
         [Test]
         public void CreateSizedImages_ShouldCreateImagesOfTheCorrectSize()
         {

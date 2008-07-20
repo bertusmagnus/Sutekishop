@@ -53,6 +53,15 @@
             <td>&nbsp;</td>
         </tr>
 
+        <tr>
+            <td>(for <%= ViewData.Model.Basket.Country.Name %>)</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+
         <tr class="total">
             <td>Total With Postage</td>
             <td>&nbsp;</td>
@@ -66,7 +75,7 @@
 
     <p>The default postage & package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
 
-    <%= Html.ActionLink<OrderController>(c => c.Checkout(ViewData.Model.Basket.BasketId), "Checkout", new { _class = "linkButton" })%>
+    <%= Html.ActionLink<OrderController>(c => c.Checkout(ViewData.Model.Basket.BasketId), "Checkout", new { _class = "linkButton" }).ToSslLink() %>
 
 <% } %>
 

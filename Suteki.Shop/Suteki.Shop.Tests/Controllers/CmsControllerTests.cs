@@ -84,6 +84,9 @@ namespace Suteki.Shop.Tests.Controllers
         {
             int menuId = 1;
 
+            Menu menu = new Menu {ContentId = menuId};
+            Mock.Get(contentRepository).Expect(cr => cr.GetById(menuId)).Returns(menu);
+
             var menus = new List<Content>().AsQueryable();
             Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
 

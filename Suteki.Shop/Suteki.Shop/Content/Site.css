@@ -16,6 +16,7 @@ body
 	text-align: center;
 	font-size:9pt;
 	background-image: url(Images/wallpaper.jpg);
+	margin: 0 0 0 0;
 }
 
 a img {border: none; }
@@ -32,7 +33,13 @@ a:hover
 .rightText
 {
 	float: right;
-	margin: 0 10px 0 0;
+	margin: 0 0 0 0;
+}
+
+.rightText p
+{
+	margin: 0;
+	padding: 0;
 }
 
 .page
@@ -43,6 +50,7 @@ a:hover
 	padding: 0;
 	background-color:#514E5C;
 	color: #CBC9CE;
+	border: solid 10px #514E5C;
 }
 
 .header
@@ -59,12 +67,14 @@ a:hover
 	padding: 0px;	
 	height: 80px;
 	background-image: url(Images/Logo_background.png);
+	background-repeat: no-repeat;
 }
 
 .logo h1
 {
 	margin: 0;
 	padding: 25px 0 0 20px;
+	visibility: hidden;
 }
 
 h1
@@ -92,6 +102,9 @@ h2 a
 	border-right-style:solid;
 	border-right-color:#C0C0C0;
 	border-right-width:1px;
+	border-left-style:solid;
+	border-left-color:#C0C0C0;
+	border-left-width:1px;
 }
 
 .contentsContainer
@@ -105,6 +118,11 @@ h2 a
 	width: 630px;
 	margin-left: 220px;
 	padding: 10px 10px 10px 10px;
+}
+
+.rightColumn img
+{
+	padding: 0 10px 0 0;
 }
 
 .footer
@@ -131,6 +149,11 @@ h2 a
 	clear: both;	
 }
 
+.clearRight
+{
+	clear: right;
+}
+
 .siteMap
 {
 }
@@ -140,13 +163,22 @@ h2 a
 	padding: 10px 20px;
 }
 
+.topContent p
+{
+}
+	
+.topContent img
+{
+	margin: 0 30px 30px 30px;
+}
+
 /* --------------------------- columns ------------------------ */
 
 .columnContainer
 {
 	margin: 0 0 20px 0;
 	padding: 20px 0 0 0;
-	overflow: hidden;
+	overflow: visible;
 	border-top: solid 2px #CBC9CE;
 }
 
@@ -156,7 +188,7 @@ h2 a
 	float: left;
 	margin: 5px 0 0 0;
 	padding: 0 0;
-	width: 140px;
+	width: 135px;
 }
 
 .columnContainer input[type=text]
@@ -224,7 +256,8 @@ dt
 dd
 {
 	display: block;
-	margin: 0 0 0 150px;
+	margin: 0 0 0 0;
+	padding: 0;
 	width: 190px;
 }
 
@@ -260,7 +293,7 @@ li.editMenuLink a
 	display: block;
 	float: left;
 	margin: 0;
-	padding: 5px 12px 5px 25px;
+	padding: 5px 12px 5px 30px;
 	text-decoration: none;
 	color: #000;
 	font-weight: bold;
@@ -310,11 +343,11 @@ li.editMenuLink a
 	color: #ccc;
 	display: block;
 	margin: 0;
-	padding: 5px 0px 5px 25px;
+	padding: 5px 0px 5px 30px;
 	text-decoration: none;
 	color: #FFF;
 	font-weight: bold;
-	width: 155px;
+	width: 150px;
 }
 
 .category a:hover 
@@ -339,6 +372,27 @@ div.category ul ul ul
 div.category ul ul li:hover ul
 {display: block;}
 
+/* basket */
+
+li.basket
+{
+}
+.basket a
+{
+	height: 130px;
+	background: #A5A0B0 url(Images/basket.png) no-repeat;
+}
+.basket a:hover
+{
+	background: #A5A0B0 url(Images/basket_hover.png) no-repeat;
+}
+
+.categoryBox
+{
+	float:left;
+	margin: 0 20px 20px 0;	
+}
+
 /* -------------------------- product ---------------------------*/
 
 .product
@@ -346,13 +400,14 @@ div.category ul ul li:hover ul
 	display: block;
 	float: left;
 	width: 120px;
-	height: 150px;
+	height: 135px;
 	border-width: 1px;
 	border-style: solid;
 	border-color: Black;
 	background-color: #B5B0C0;
 	color: Black;
 	font-weight: bold;
+	text-align: center;
 	margin: 0px 10px 10px 0px;	
 	padding: 5px 5px 5px 5px;
 }
@@ -360,7 +415,6 @@ div.category ul ul li:hover ul
 .product:hover
 {
 	cursor: pointer;
-	
 }
 
 .product a
@@ -372,6 +426,15 @@ div.category ul ul li:hover ul
 .product img
 {
 	margin: 5px 0 0 0;
+	padding: 0 0 0 0;
+	float: none;
+}
+
+.productImage
+{
+	text-align: center;
+	margin: 0;
+	padding: 0;	
 }
 
 .productDescription
@@ -421,6 +484,18 @@ div.category ul ul li:hover ul
 {
 	display: inline;
 	margin: 0px 5px;
+}
+
+div.sizeInput
+{
+	overflow: visible;
+}
+
+div.sizeInput input[type=text]
+{
+	display: inline;
+	width: 100px;
+	margin: 0 5px 5px 0;	
 }
 
 /* ------------------------- order ------------------------------ */
@@ -598,7 +673,7 @@ td.number
 	margin: 10px 0;
 }
 
-/*-------------------------------------- pager -------------------------------------------*/
+/*-------------------------------------- stock -------------------------------------------*/
 
 .stockItem
 {

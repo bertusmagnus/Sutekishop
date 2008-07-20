@@ -44,6 +44,7 @@
       <HintPath>..\Dependencies\MvcContrib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -75,6 +76,8 @@
     <Compile Include="Extensions\PagedList.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\UrlExtensions.cs" />
+    <Compile Include="Extensions\UrlExtensionsHelper.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="HtmlHelpers\Pager.cs" />
     <Compile Include="Models\IOrderable.cs" />

@@ -13,24 +13,14 @@ namespace Suteki.Shop.Tests.Services
     public class PostageServiceTests
     {
         private IPostageService postageService;
-        private IRepository<PostZone> postZoneRepository;
         private IRepository<Postage> postageRepository;
 
         [SetUp]
         public void SetUp()
         {
-            postZoneRepository = new Mock<IRepository<PostZone>>().Object;
             postageRepository = new Mock<IRepository<Postage>>().Object;
 
-            postageService = new PostageService(postZoneRepository, postageRepository);
-
-            PostZone postZone = new PostZone
-                {
-                    AskIfMaxWeight = false,
-                    Multiplier = 2.5M,
-                    FlatRate = 10.00M
-                };
-            Mock.Get(postZoneRepository).Expect(pzr => pzr.GetById(1)).Returns(postZone);
+            postageService = new PostageService(postageRepository);
 
             var postages = PostageTests.CreatePostages();
             Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages);
@@ -111,6 +101,7 @@ namespace Suteki.Shop.Tests.Services
                     PostZone = new PostZone { Multiplier = 2.5M, AskIfMaxWeight = true, FlatRate = 123.45M }
                 }
             };
+            order.UpdateBasket();
 
             Assert.That(postageService.CalculatePostageFor(order).Phone, Is.True, "phone is false");
         }

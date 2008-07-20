@@ -188,7 +188,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(httpFileService).Expect(h => h.GetUploadedImages(httpRequest)).Returns(images).Verifiable();
 
             // expect the size service to be called
-            Mock.Get(sizeService).Expect(s => s.WithVaues(form)).Returns(sizeService).Verifiable();
+            Mock.Get(sizeService).Expect(s => s.WithValues(form)).Returns(sizeService).Verifiable();
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
@@ -238,7 +238,7 @@ namespace Suteki.Shop.Tests.Controllers
             productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
 
             // expect the size service to be called
-            Mock.Get(sizeService).Expect(s => s.WithVaues(form)).Returns(sizeService).Verifiable();
+            Mock.Get(sizeService).Expect(s => s.WithValues(form)).Returns(sizeService).Verifiable();
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method

@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using System.Text;
 using Suteki.Common.Services;
 using Suteki.Common.Extensions;
@@ -12,6 +13,9 @@ namespace Suteki.Common.Services
 
         public EmailSender(string smtpServer, string fromAddress)
         {
+            if (smtpServer == null) throw new ArgumentNullException("smtpServer");
+            if (fromAddress == null) throw new ArgumentNullException("fromAddress");
+
             this.smtpServer = smtpServer;
             this.fromAddress = fromAddress;
         }
@@ -36,6 +40,7 @@ namespace Suteki.Common.Services
             toAddress.ForEach(a => message.To.Add(a));
 
             var smtpClient = new SmtpClient(smtpServer);
+            smtpClient.UseDefaultCredentials = true;
             smtpClient.Send(message);
         }
     }

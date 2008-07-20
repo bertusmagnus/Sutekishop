@@ -41,10 +41,12 @@ namespace Suteki.Shop
 
         public Basket CreateNewBasket()
         {
+            // HACK, we're relying on the static data for the default country to be 1 (UK)
             return new Basket
                        {
                            User = this,
-                           OrderDate = DateTime.Now
+                           OrderDate = DateTime.Now,
+                           CountryId = 1
                        };
         }
 
