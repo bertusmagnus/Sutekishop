@@ -67,14 +67,12 @@ a:hover
 	padding: 0px;	
 	height: 80px;
 	background-image: url(Images/Logo_background.png);
-	background-repeat: no-repeat;
 }
 
 .logo h1
 {
 	margin: 0;
 	padding: 25px 0 0 20px;
-	visibility: hidden;
 }
 
 h1
