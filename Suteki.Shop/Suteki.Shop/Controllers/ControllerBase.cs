@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Web.Mvc;
 using Castle.Core.Logging;
+using MvcContrib.Filters;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Services;
 using System.Web.Security;
 using MvcContrib;
-using MvcContrib.Attributes;
 using System.Collections.Specialized;
 
 namespace Suteki.Shop.Controllers

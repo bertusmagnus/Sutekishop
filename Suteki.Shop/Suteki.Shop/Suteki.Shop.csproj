@@ -62,6 +62,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MvcContrib.dll</HintPath>
@@ -186,9 +190,6 @@
     <Compile Include="Services\PostageService.cs" />
     <Compile Include="Services\SizeService.cs" />
     <Compile Include="Services\UserService.cs" />
-    <Compile Include="Shop.cs">
-      <DependentUpon>Shop.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Shop.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -530,11 +531,9 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
-  <!--
   <Target Name="AfterBuild">
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(ProjectDir)" />
   </Target>
-  -->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

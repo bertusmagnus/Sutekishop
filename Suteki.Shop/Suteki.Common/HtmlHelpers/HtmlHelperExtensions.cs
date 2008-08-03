@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Suteki.Common.Extensions;
 using Suteki.Common.ViewData;
+using Microsoft.Web.Mvc;
 
 namespace Suteki.Common.HtmlHelpers
 {
