@@ -1,8 +1,32 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Print.Master" AutoEventWireup="true" CodeBehind="Invoice.aspx.cs" Inherits="Suteki.Shop.Views.Order.Invoice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<h1>Invoice</h1>
+<div class="invoiceHeader">
+    <%= Html.Image("~/Content/Images/invoice_header.png") %>
+</div>
 
+<table class="invoiceTable">
+    <tr>
+        <td>
+            LB International Ltd,<br />
+            28a North Road,<br />
+            Brighton,<br />
+            BN1 1YB,<br />
+            UK.<br />
+            Tel: 01273 626 333,<br />  
+            info@jumpthegun.co.uk<br />
+        </td>
+        <td>  
+            <strong>Invoice No. <%= ViewData.Model.Order.OrderId.ToString() %></strong> <br />
+            <%= DateTime.Now.ToLongDateString() %><br />
+            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
+                <%= line %><br />
+            <% } %>
+        </td>
+    </tr>
+</table>
+
+<div class="invoiceBasket">
 <table>
     <tr>
         <th class="wide">Product</th>
@@ -61,19 +85,21 @@
     </tr>
     
 </table>
+<div class="invoiceThanks">Paid with Thanks</div>
+</div>
 
+<p>Registered in England No. 2341339 Vat No: 505 0466 78</p>
+
+<p>Please use the sticker below if you need to send us anything. (stamps are neccessary).</p>
 
 <div class="invoiceLabelLeft">
 
     <ul>
-        <li><%= ViewData.Model.Order.PostalContact.Fullname %>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address1%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address2%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address3%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Town%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.County%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Postcode%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Country.Name%>&nbsp;</li>
+        <td>            
+            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
+                <li><%= line %>&nbsp;</li>
+            <% } %>
+        </td>
     </ul>
 
 </div>
@@ -81,14 +107,11 @@
 <div class="invoiceLabelRight">
 
     <ul>
-        <li><%= ViewData.Model.Order.PostalContact.Fullname %>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address1%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address2%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Address3%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Town%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.County%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Postcode%>&nbsp;</li>
-        <li><%= ViewData.Model.Order.PostalContact.Country.Name%>&nbsp;</li>
+        <li>Jump the Gun</li>
+        <li>28a North Road,</li>
+        <li>Brighton,</li>
+        <li>BN1 1YB,</li>
+        <li>UK.</li>
     </ul>
 
 </div>

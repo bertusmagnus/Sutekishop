@@ -159,12 +159,9 @@ namespace Suteki.Shop.Controllers
         public ActionResult Checkout(int id)
         {
             // create a default order
-            Order order = new Order();
+            Order order = new Order { UseCardHolderContact = true };
             Basket basket = basketRepository.GetById(id);
             PopulateOrderForView(order, basket);
-
-            // TODO; rethink order submission to allow updating order country before final checkout
-            //orderRepository.SubmitChanges();
 
             return View("Checkout", CheckoutViewData(order));
         }
@@ -345,6 +342,10 @@ namespace Suteki.Shop.Controllers
         public ActionResult Invoice(int id)
         {
             Order order = orderRepository.GetById(id);
+            postageService.CalculatePostageFor(order);
+
+            AppendTitle("Invoice {0}".With(order.OrderId));
+
             return View("Invoice", ShopView.Data.WithOrder(order));
         }
     }

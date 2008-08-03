@@ -44,6 +44,32 @@ li
 
 /*-------------------------------------- invoice -------------------------------------------*/
 
+.invoiceHeader
+{
+	width: 700px;
+	height: 120px;
+}
+
+.invoiceTable td
+{
+	width: 400px;
+	vertical-align: top;
+	font-size: 12pt;
+}
+
+.invoiceBasket
+{
+	border: solid 1px #000000;
+	margin: 20px 0;
+}
+
+.invoiceThanks
+{
+	font-size: 12pt;
+	text-align: right;
+	padding: 10px;
+}
+
 .invoiceLabelLeft
 {
 	font-size: 12pt;

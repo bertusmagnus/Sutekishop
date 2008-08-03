@@ -91,8 +91,8 @@ function addHandlers()
     
     <p>Welcome to our secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
     
-    <%= Html.ErrorBox(ViewData.Model) %>
-    <%= Html.MessageBox(ViewData.Model) %>
+    <%= Html.ErrorBox(ViewData.Model)%>
+    <%= Html.MessageBox(ViewData.Model)%>
 
 <!-- basket view -->
 
@@ -138,7 +138,7 @@ function addHandlers()
     </tr>
 
     <tr>
-        <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
+        <td>(for <%= ViewData.Model.Order.Basket.Country.Name%>)</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -167,7 +167,7 @@ function addHandlers()
     <form method="post" action="<%= Url.Action("PlaceOrder", "Order").ToSslUrl() %>" id="mainForm" name="mainForm">
 
         <%= Html.Hidden("order.orderid", ViewData.Model.Order.OrderId.ToString())%>
-        <%= Html.Hidden("order.basketid", ViewData.Model.Order.BasketId.ToString()) %>
+        <%= Html.Hidden("order.basketid", ViewData.Model.Order.BasketId.ToString())%>
         
         <!-- card contact -->
 
@@ -176,44 +176,57 @@ function addHandlers()
         
         <h3>Card Holder</h3>
         
-        <label for="cardcontact.firstname">First Name</label>
-        <%= Html.TextBox("cardcontact.firstname", ViewData.Model.Order.Contact.Firstname)%>
+        <table>
+            <tr>
+                <td class="label"><label for="cardcontact.firstname">First Name</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.firstname", ViewData.Model.Order.Contact.Firstname)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.lastname">Last Name</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.lastname", ViewData.Model.Order.Contact.Lastname)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.address1">Address</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.address1", ViewData.Model.Order.Contact.Address1)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.address2">&nbsp;</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.address2", ViewData.Model.Order.Contact.Address2)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.address3">&nbsp;</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.address3", ViewData.Model.Order.Contact.Address3)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.town">Town / City</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.town", ViewData.Model.Order.Contact.Town)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.county">County</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.county", ViewData.Model.Order.Contact.County)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.postcode">Postcode</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.postcode", ViewData.Model.Order.Contact.Postcode)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.countryid">Country</label></td>
+                <td class="field"><%= Html.DropDownList("cardcontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.CardContactCountryId))%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="cardcontact.telephone">Telephone</label></td>
+                <td class="field"><%= Html.TextBox("cardcontact.telephone", ViewData.Model.Order.Contact.Telephone)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="order.email">Email</label></td>
+                <td class="field"><%= Html.TextBox("order.email", ViewData.Model.Order.Email)%></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="emailconfirm">Confirm Email</label></td>
+                <td class="field"><%= Html.TextBox("emailconfirm", ViewData.Model.Order.Email)%></td>
+            </tr>
+        </table>
         
-        <label for="cardcontact.lastname">Last Name</label>
-        <%= Html.TextBox("cardcontact.lastname", ViewData.Model.Order.Contact.Lastname)%>
-        
-        <label for="cardcontact.address1">Address</label>
-        <%= Html.TextBox("cardcontact.address1", ViewData.Model.Order.Contact.Address1)%>
-        
-        <label for="cardcontact.address2">&nbsp;</label>
-        <%= Html.TextBox("cardcontact.address2", ViewData.Model.Order.Contact.Address2)%>
-        
-        <label for="cardcontact.address3">&nbsp;</label>
-        <%= Html.TextBox("cardcontact.address3", ViewData.Model.Order.Contact.Address3)%>
-        
-        <label for="cardcontact.town">Town / City</label>
-        <%= Html.TextBox("cardcontact.town", ViewData.Model.Order.Contact.Town)%>
-
-        <label for="cardcontact.county">County</label>
-        <%= Html.TextBox("cardcontact.county", ViewData.Model.Order.Contact.County)%>
- 
-        <label for="cardcontact.postcode">Postcode</label>
-        <%= Html.TextBox("cardcontact.postcode", ViewData.Model.Order.Contact.Postcode)%>
- 
-        <label for="cardcontact.countryid">Country</label>
-        <%= Html.DropDownList("cardcontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.CardContactCountryId))%>
-        
-        <label for="cardcontact.telephone">Telephone</label>
-        <%= Html.TextBox("cardcontact.telephone", ViewData.Model.Order.Contact.Telephone)%>
- 
-        <!-- email details -->
-        
-        <label for="order.email">Email</label>
-        <%= Html.TextBox("order.email", ViewData.Model.Order.Email)%>
- 
-        <label for="emailconfirm">Confirm Email</label>
-        <%= Html.TextBox("emailconfirm", ViewData.Model.Order.Email)%>
- 
     </div>
     <div class="contentRightColumn">
  
@@ -221,48 +234,69 @@ function addHandlers()
         
         <h3>Delivery Address</h3>
         
-        <label for="order.usecardholdercontact">Use Cardholder Details</label>
-        <%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Model.Order.UseCardHolderContact,
-                        new { onclick = "javascript:toggleCardHolderDetails();" })%>
+        <table>
+            <tr>
+                <td class="label"><label for="order.usecardholdercontact">Use Cardholder Details</label></td>
+                <td class="field"><%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Model.Order.UseCardHolderContact,
+                        new { onclick = "javascript:toggleCardHolderDetails();" })%></td>
+            </tr>
+        </table>
         
         <div id="deliveryAddress">
+
+            <table>
+                <tr>
+                    <td class="label"><label for="deliverycontact.firstname">First Name</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.firstname", ViewData.Model.Order.Contact1.Firstname)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.lastname">Last Name</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.lastname", ViewData.Model.Order.Contact1.Lastname)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.address1">Address</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.address1", ViewData.Model.Order.Contact1.Address1)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.address2">&nbsp;</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.address2", ViewData.Model.Order.Contact1.Address2)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.address3">&nbsp;</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.address3", ViewData.Model.Order.Contact1.Address3)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.town">Town / City</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.town", ViewData.Model.Order.Contact1.Town)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.county">County</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.county", ViewData.Model.Order.Contact1.County)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.postcode">Postcode</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.postcode", ViewData.Model.Order.Contact1.Postcode)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.countryid">Country</label></td>
+                    <td class="field"><%= Html.DropDownList("deliverycontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.DeliveryContactCountryId))%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="deliverycontact.telephone">Telephone</label></td>
+                    <td class="field"><%= Html.TextBox("deliverycontact.telephone", ViewData.Model.Order.Contact1.Telephone)%></td>
+                </tr>
+            </table>
         
-            <label for="deliverycontact.firstname">First Name</label>
-            <%= Html.TextBox("deliverycontact.firstname", ViewData.Model.Order.Contact1.Firstname)%>
-            
-            <label for="deliverycontact.lastname">Last Name</label>
-            <%= Html.TextBox("deliverycontact.lastname", ViewData.Model.Order.Contact1.Lastname)%>
-            
-            <label for="deliverycontact.address1">Address</label>
-            <%= Html.TextBox("deliverycontact.address1", ViewData.Model.Order.Contact1.Address1)%>
-            
-            <label for="deliverycontact.address2">&nbsp;</label>
-            <%= Html.TextBox("deliverycontact.address2", ViewData.Model.Order.Contact1.Address2)%>
-            
-            <label for="deliverycontact.address3">&nbsp;</label>
-            <%= Html.TextBox("deliverycontact.address3", ViewData.Model.Order.Contact1.Address3)%>
-            
-            <label for="deliverycontact.town">Town / City</label>
-            <%= Html.TextBox("deliverycontact.town", ViewData.Model.Order.Contact1.Town)%>
-
-            <label for="deliverycontact.county">County</label>
-            <%= Html.TextBox("deliverycontact.county", ViewData.Model.Order.Contact1.County)%>
-     
-            <label for="deliverycontact.postcode">Postcode</label>
-            <%= Html.TextBox("deliverycontact.postcode", ViewData.Model.Order.Contact1.Postcode)%>
-     
-            <label for="deliverycontact.countryid">Country</label>
-            <%= Html.DropDownList("deliverycontact.countryid", new SelectList(ViewData.Model.Countries, "CountryId", "Name", ViewData.Model.Order.DeliveryContactCountryId))%>
-            
-            <label for="deliverycontact.telephone">Telephone</label>
-            <%= Html.TextBox("deliverycontact.telephone", ViewData.Model.Order.Contact1.Telephone)%>
-
         </div>
         
         <!-- additional information -->  
         
-        <label for="order.additionalinformation">Additional Information</label>
-        <span><%= Html.TextArea("order.additionalinformation", ViewData.Model.Order.AdditionalInformation)%></span>
+        <table>
+            <tr>
+                <td class="label"><label for="order.additionalinformation">Additional Information</label></td>
+                <td class="field"><span><%= Html.TextArea("order.additionalinformation", ViewData.Model.Order.AdditionalInformation)%></span></td>
+            </tr>
+        </table>
         
     </div>      
 </div>        
@@ -274,38 +308,41 @@ function addHandlers()
         
         <div id="cardDetails">
         
-            <label for="card.cardtypeid">Card Type</label>
-            <%= Html.DropDownList("card.cardtypeid", new SelectList(ViewData.Model.CardTypes, "CardTypeId", "Name", ViewData.Model.Order.Card.CardTypeId))%>
-            
-            <label for="card.holder">Card Holder</label>
-            <%= Html.TextBox("card.holder", ViewData.Model.Order.Card.Holder)%>
-     
-            <label for="card.number">Card Number</label>
-            <%= Html.TextBox("card.number")%>
-     
-            <div class="cardDate">
-                <label for="card.expirymonth">Expire Date</label>
-                <%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%>
-                <%= Html.DropDownList("card.expiryyear", new SelectList(Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryYear))%>
-            </div>
-     
-            <div class="cardDate">
-                <label for="card.startmonth">Start Date</label>
-                <%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%>
-                <%= Html.DropDownList("card.startyear", new SelectList(Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartYear))%>
-            </div>
-     
-            <p>Only required for Switch/Solo/Maestro</p>
-     
-            <label for="card.issuenumber">Issue Number</label>
-            <%= Html.TextBox("card.issuenumber", ViewData.Model.Order.Card.IssueNumber, new { maxlength = "1" })%>
-            
-            <p>Only required for Switch/Solo/Maestro</p>
-            
-            <label for="card.securitycode">Security Code</label>
-            <%= Html.TextBox("card.securitycode", new { maxlength = "3" })%>
-
-            <p>On the back of your credit/debit card, you will see some numbers printed within the strip where you signed your card. These are known as 'signature digits', sometimes referred to by the credit card industry as 'CVV2'. Depending on your card type, there are between three and ten digits. We only require the last three.</p>
+            <table>
+                <tr>
+                    <td class="label"><label for="card.cardtypeid">Card Type</label></td>
+                    <td colspan="2" class="field"><%= Html.DropDownList("card.cardtypeid", new SelectList(ViewData.Model.CardTypes, "CardTypeId", "Name", ViewData.Model.Order.Card.CardTypeId))%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.holder">Card Holder</label></td>
+                    <td colspan="2" class="field"><%= Html.TextBox("card.holder", ViewData.Model.Order.Card.Holder)%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.number">Card Number</label></td>
+                    <td colspan="2" class="field"><%= Html.TextBox("card.number")%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.expirymonth">Expire Date</label></td>
+                    <td class="field small"><%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.expiryyear", new SelectList(Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryYear))%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.startmonth">Start Date</label><br />If present on your card</td>
+                    <td class="field small"><%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.startyear", new SelectList(Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartYear))%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.issuenumber">Issue Number</label><br />If present on your card</td>
+                    <td colspan="2" class="field small"><%= Html.TextBox("card.issuenumber", ViewData.Model.Order.Card.IssueNumber, new { maxlength = "1" })%></td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="card.securitycode">Security Code</label></td>
+                    <td colspan="2" class="field small"><%= Html.TextBox("card.securitycode", new { maxlength = "3" })%></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><p>On the back of your credit/debit card, you will see some numbers printed within the strip where you signed your card. These are known as 'signature digits', sometimes referred to by the credit card industry as 'CVV2'. Depending on your card type, there are between three and ten digits. We only require the last three.</p></td>
+                </tr>
+            </table>
         </div>
     </div>
     <div class="contentRightColumn">

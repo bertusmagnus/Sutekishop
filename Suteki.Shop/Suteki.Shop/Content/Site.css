@@ -196,6 +196,11 @@ h2 a
 	width: 150px;
 }
 
+.columnContainer .small input[type=text]
+{
+	width: 70px;
+}
+
 .columnContainer input[type=checkbox]
 {
 	display: block;
@@ -254,10 +259,33 @@ dt
 dd
 {
 	display: block;
-	margin: 0 0 0 0;
+	margin: 0 0 0 100px;
 	padding: 0;
 	width: 190px;
 }
+
+/* --------------------------- table forms ------------------------ */
+
+.columnContainer .field input[type=text]
+{
+	margin: 0 0 0 0;
+}
+
+.columnContainer .field input[type=checkbox]
+{
+	margin: 0 0 0 0;
+}
+
+.columnContainer .field select
+{
+	margin: 0 0 0 0;
+}
+
+.columnContainer .field textarea
+{
+	margin: 0 0 0 0;
+}
+
 
 /* --------------------------- main menu ------------------------ */
 
@@ -587,6 +615,11 @@ select
 	margin: 10px 0px 0px 0px;
 }
 
+.small select
+{
+	width: 70px;
+}
+
 textarea
 {
 	margin: 10px 10px 0px 0px;
@@ -656,6 +689,7 @@ th.number
 td
 {
 	margin: 0px 20px 0px 0px;
+	vertical-align: top;
 }
 
 td.number

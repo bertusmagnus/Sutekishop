@@ -186,6 +186,9 @@
     <Compile Include="Services\PostageService.cs" />
     <Compile Include="Services\SizeService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Shop.cs">
+      <DependentUpon>Shop.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Shop.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
