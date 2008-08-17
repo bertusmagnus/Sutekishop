@@ -14,11 +14,11 @@
     <div class ="categoryBox">
     <h2><%= Html.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name) %></h2>
 
-    <% if(category.HasProducts) { 
-           if (category.Products[0].HasMainImage)
+    <% if(category.HasProducts) {
+           if (category.HasMainImage)
            { %>
             <div onclick="location.href='<%= Url.Action("Index", "Product", new { Id = category.CategoryId }) %>'">
-            <%= Html.Image("~/ProductPhotos/" + category.Products[0].MainImage.ThumbFileName)%>
+            <%= Html.Image("~/ProductPhotos/" + category.MainImage.ThumbFileName)%>
             </div>
         <% }
        }
