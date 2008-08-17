@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using Suteki.Common.Services;
@@ -8,8 +9,10 @@ namespace Suteki.Common.Services
 {
     public class EmailSender : IEmailSender
     {
-        readonly string smtpServer;
-        readonly string fromAddress;
+        private readonly string smtpServer;
+        private readonly string fromAddress;
+        private readonly string username;
+        private readonly string password;
 
         public EmailSender(string smtpServer, string fromAddress)
         {
@@ -18,6 +21,19 @@ namespace Suteki.Common.Services
 
             this.smtpServer = smtpServer;
             this.fromAddress = fromAddress;
+        }
+
+        public EmailSender(string smtpServer, string fromAddress, string username, string password)
+        {
+            if (smtpServer == null) throw new ArgumentNullException("smtpServer");
+            if (fromAddress == null) throw new ArgumentNullException("fromAddress");
+            if (username == null) throw new ArgumentNullException("username");
+            if (password == null) throw new ArgumentNullException("password");
+
+            this.smtpServer = smtpServer;
+            this.fromAddress = fromAddress;
+            this.username = username;
+            this.password = password;
         }
 
         public void Send(string toAddress, string subject, string body)
@@ -40,7 +56,18 @@ namespace Suteki.Common.Services
             toAddress.ForEach(a => message.To.Add(a));
 
             var smtpClient = new SmtpClient(smtpServer);
-            smtpClient.UseDefaultCredentials = true;
+
+            if (username == null || password == null)
+            {
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = true;
+            }
+            else
+            {
+                smtpClient.EnableSsl = true;
+                smtpClient.Credentials = new NetworkCredential(username, password);
+            }
+
             smtpClient.Send(message);
         }
     }
