@@ -340,7 +340,7 @@ function addHandlers()
                     <td colspan="2" class="field small"><%= Html.TextBox("card.securitycode", new { maxlength = "3" })%></td>
                 </tr>
                 <tr>
-                    <td colspan="3"><p>On the back of your credit/debit card, you will see some numbers printed within the strip where you signed your card. These are known as 'signature digits', sometimes referred to by the credit card industry as 'CVV2'. Depending on your card type, there are between three and ten digits. We only require the last three.</p></td>
+                    <td colspan="3"><p>The last three digits printed on the signature strip of your credit/debit card. Or for Amex. the four digits printed on the front of the card above the embossed card number.</p></td>
                 </tr>
             </table>
         </div>
@@ -351,10 +351,7 @@ function addHandlers()
         <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Model.Order.PayByTelephone,
                         new { onclick = "javascript:toggleCard();" })%>
     
-        <p>If you tick this option you will receive an order number.</p>
-        <p>You should quote this number when you contact us with your payment. We accept most major credit and debit cards including Amex.</p>
-        <p>We also accept cheques( in pounds sterling from a UK bank only) and postal orders made payable to ‘Jump the Gun’ Please note that cheques will have to await clearance before we can dispatch goods- this can take six working days.</p>
-        <p>Unfortunately we are unable to accept credit card orders from Indonesia due to high levels of fraud- apologies to our customers in that part of the world.</p>
+        <p>If you tick this option you will receive an order number. You should quote this number when you contact us with your payment. We accept most major credit and debit cards including Amex. We also accept cheques( in pounds sterling from a UK bank only) and postal orders made payable to ‘Jump the Gun’ Please note that cheques will have to await clearance before we can dispatch goods- this can take six working days.</p>
         <p>All credit card details are collected using an SSL secure server which means that any sensitive information is securely encrypted and cannot be read by any unauthorised party. We do not store any of your credit card details once payment has been taken. We will not take payment until your goods are ready for dispatch.</p>
     </div>
 </div> 
