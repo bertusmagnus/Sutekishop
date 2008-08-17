@@ -94,12 +94,14 @@ namespace Suteki.Common.Validation
 
         public ValidationProperty IsCreditCard()
         {
-            value.Label(label).IsNumeric().WithLengthRange(EnumerableExtensions.To(13, 18));
+            var trimmedValue = Regex.Replace(value, "[^0-9]", "");
 
-            var numbers = value.Trim().Reverse().Select(c => int.Parse(c.ToString()));
+            trimmedValue.Label(label).IsNumeric().WithLengthRange(13.To(18));
 
-            int oddSum = EnumerableExtensions.AtOddPositions(numbers).Sum();
-            int doubleEvenSum = EnumerableExtensions.AtEvenPositions(numbers).SelectMany(i => new int[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
+            var numbers = trimmedValue.Trim().Reverse().Select(c => int.Parse(c.ToString()));
+
+            int oddSum = numbers.AtOddPositions().Sum();
+            int doubleEvenSum = numbers.AtEvenPositions().SelectMany(i => new int[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
 
             if ((oddSum + doubleEvenSum) % 10 != 0)
             {

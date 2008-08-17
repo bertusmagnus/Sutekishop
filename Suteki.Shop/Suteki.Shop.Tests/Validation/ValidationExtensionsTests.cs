@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Validation;
 
 namespace Suteki.Shop.Tests.Validation
@@ -45,6 +47,29 @@ namespace Suteki.Shop.Tests.Validation
             string validCardNumber = "1111111111211117";
 
             validCardNumber.Label("Card Number").IsCreditCard();
+        }
+
+        [Test]
+        public void IsCreditCard_ShouldSuccessfullyValidateACreditCardWithSpaces()
+        {
+            string validCardNumber = "1111 1111 1111 1117";
+            validCardNumber.Label("Card Number").IsCreditCard();
+        }
+
+        [Test]
+        public void IsCreditCard_ShouldSuccessfullyValidateACreditCardWithDashes()
+        {
+            string validCardNumber = "1111-1111-1111-1117";
+            validCardNumber.Label("Card Number").IsCreditCard();
+        }
+
+        [Test]
+        public void RegexNumberOnlySpike()
+        {
+            var value = "111 222-333abc";
+            var expected = "111222333";
+            var result = Regex.Replace(value, "[^0-9]", "");
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }
