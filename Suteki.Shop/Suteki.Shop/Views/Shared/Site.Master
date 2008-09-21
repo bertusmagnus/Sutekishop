@@ -10,6 +10,7 @@
     <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
     <meta name="description" content=<%= ViewData["MetaDescription"] %>>
     <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+    <script type="text/javascript" src=<%= JQueryUrl %>></script>
 </head>
 
 <body>
@@ -41,7 +42,7 @@
         </asp:ContentPlaceHolder>
 
         <div class="footer">
-            <div class="rightText">
+            <div class="rightText login">
                 <p>
                     <%= Html.LoginLink() %> |
                     <%= Html.LoginStatus() %>
@@ -49,7 +50,7 @@
             </div>
                 
             <p>
-                Suteki Limited &copy; Copyright 2008 |
+                <%= Copyright %> |
                 <%= Html.ActionLink<SiteMapController>(c => c.Index(), "Site Map") %>
             </p>
         </div><!--/footer-->

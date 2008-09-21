@@ -493,6 +493,7 @@
   <ItemGroup>
     <Content Include="Content\Images\basket.png" />
     <Content Include="Content\Images\basket_hover.png" />
+    <Content Include="Content\Script\jquery-1.2.6.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="log4net.config" />
     <None Include="Shop.dbml.layout">

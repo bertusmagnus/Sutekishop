@@ -14,6 +14,7 @@ namespace Suteki.Shop.Services
         public string MetaDescription { get; set; }
         private string shopName;
         private string emailAddress;
+        private string copyright;
 
         public BaseControllerService(
             IRepository<Category> categoryRepository,
@@ -71,5 +72,14 @@ namespace Suteki.Shop.Services
             }
         }
 
+        public virtual string Copyright
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(copyright)) return "Suteki Limited &copy; Copyright 2008";
+                return copyright;
+            }
+            set { copyright = value; }
+        }
     }
 }

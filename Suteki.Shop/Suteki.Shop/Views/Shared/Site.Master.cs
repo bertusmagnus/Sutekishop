@@ -63,6 +63,14 @@ namespace Suteki.Shop.Views.Shared
             }
         }
 
+        protected string Copyright
+        {
+            get
+            {
+                return GetController().BaseControllerService.Copyright;
+            }
+        }
+
         protected string RsdUrl
         {
             get
@@ -76,6 +84,14 @@ namespace Suteki.Shop.Views.Shared
             get
             {
                 return "\"{0}wlwmanifest.xml\"".With(SiteUrl);
+            }
+        }
+
+        protected string JQueryUrl
+        {
+            get
+            {
+                return "\"{0}Content/Script/jquery-1.2.6.min.js\"".With(SiteUrl);
             }
         }
 

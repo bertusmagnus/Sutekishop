@@ -13,5 +13,6 @@ namespace Suteki.Shop.Services
         string EmailAddress { get; set; }
         string SiteUrl { get; }
         string MetaDescription { get; set; }
+        string Copyright { get; set; }
     }
 }
