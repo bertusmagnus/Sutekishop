@@ -160,6 +160,7 @@ namespace Suteki.Shop.Controllers
         {
             // create a default order
             Order order = new Order { UseCardHolderContact = true };
+
             Basket basket = basketRepository.GetById(id);
             PopulateOrderForView(order, basket);
 
@@ -176,6 +177,8 @@ namespace Suteki.Shop.Controllers
 
         private ShopViewData CheckoutViewData(Order order)
         {
+            CheckCurrentUserCanViewOrder(order);
+
             postageService.CalculatePostageFor(order);
 
             return ShopView.Data
@@ -288,6 +291,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Dispatch(int id)
         {
             Order order = orderRepository.GetById(id);
@@ -303,6 +307,7 @@ namespace Suteki.Shop.Controllers
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Reject(int id)
         {
             Order order = orderRepository.GetById(id);

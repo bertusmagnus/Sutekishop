@@ -88,6 +88,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .Returns(cardTypes)
                 .Verifiable();
 
+            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
 
             // exercise Checkout action
             orderController.Checkout(basketId)
@@ -316,6 +317,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             Mock.Get(encryptionService).ExpectSet(es => es.PrivateKey).Verifiable();
             Mock.Get(encryptionService).Expect(es => es.DecryptCard(It.IsAny<Card>())).Verifiable();
+
+            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
 
             orderController.ShowCard(orderId, privateKey)
                 .ReturnsViewResult()
