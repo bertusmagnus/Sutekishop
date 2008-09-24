@@ -3,7 +3,8 @@
 
     <%= ViewData.Model.TextContent.Text %>
 
-    <% if(User.IsInRole("Administrator")) { %>
+    <% if (ViewData.Model.Content.CanEdit((User)User))
+       { %>
         <p><%= Html.ActionLink<CmsController>(c => c.Edit(ViewData.Model.Content.ContentId), "Edit")%></p>
     <% } %>
 

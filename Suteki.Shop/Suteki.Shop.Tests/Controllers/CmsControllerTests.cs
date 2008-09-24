@@ -79,6 +79,18 @@ namespace Suteki.Shop.Tests.Controllers
 
         }
 
+
+        [Test]
+        public void Index_ShouldRenderBlankViewWhenMenuHasNoContent()
+        {
+            string urlName = "no_content_menu";
+
+            var contents = new List<Content>
+            {
+                
+            };
+        }
+
         [Test]
         public void Add_ShouldShowContentEditViewWithDefaultContent()
         {

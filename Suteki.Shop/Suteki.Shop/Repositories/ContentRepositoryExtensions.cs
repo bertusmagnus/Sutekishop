@@ -28,7 +28,7 @@ namespace Suteki.Shop.Repositories
             return contents.Where(c => c.ParentContentId == parentContentId);
         }
 
-        public static Content DefaultText(this IQueryable<Content> contents)
+        public static Content DefaultText(this IQueryable<Content> contents, Menu menu)
         {
             Content text = contents.InOrder().Where(c => c is ITextContent).FirstOrDefault();
 
@@ -39,7 +39,8 @@ namespace Suteki.Shop.Repositories
                     ContentTypeId = ContentType.TextContentId,
                     Name = "Default",
                     Text = "No content has been created yet",
-                    IsActive = true
+                    IsActive = true,
+                    Content1 = menu
                 };
             }
 

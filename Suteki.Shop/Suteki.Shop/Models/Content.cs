@@ -103,5 +103,11 @@ namespace Suteki.Shop
         {
             return "&nbsp;";
         }
+
+        public bool CanEdit(User user)
+        {
+            if (ContentId == 0) return false;
+            return user.IsAdministrator;
+        }
     }
 }
