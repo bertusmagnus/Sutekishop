@@ -109,6 +109,13 @@ namespace Suteki.Shop.Controllers
             try
             {
                 ValidatingBinder.UpdateFrom(content, Form);
+                // we spefically want HTML in textContent
+                var textContent = content as ITextContent;
+                if(textContent != null)
+                {
+                    textContent.Text = System.Web.HttpUtility.HtmlDecode(textContent.Text);
+                }
+                
             }
             catch (ValidationException validationException)
             {

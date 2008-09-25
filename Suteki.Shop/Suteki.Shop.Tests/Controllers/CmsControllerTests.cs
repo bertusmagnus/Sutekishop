@@ -154,6 +154,31 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
         [Test]
+        public void Update_ShouldAllowHtmlText()
+        {
+            int contentId = 0;
+            int menuId = 1;
+
+            NameValueCollection form = CreateContentEditForm(menuId).ForTextContent();
+            form["text"] = "<script></script>";
+
+            TextContent textContent = null;
+
+            Mock.Get(contentRepository).Expect(cr => cr.InsertOnSubmit(It.IsAny<Content>()))
+                .Callback<Content>(content => textContent = content as TextContent).Verifiable();
+            Mock.Get(contentRepository).Expect(cr => cr.SubmitChanges()).Verifiable();
+
+            TestUpdateAction(contentId, menuId, form).ForText(form);
+
+            Assert.That(textContent, Is.Not.Null, "textContent is null");
+            Assert.That(menuId, Is.EqualTo(menuId));
+            Assert.That(textContent.Name, Is.EqualTo(form["name"]));
+            Assert.That(textContent.Text, Is.EqualTo(form["text"]));
+            Console.WriteLine(textContent.Text);
+            Mock.Get(contentRepository).Verify();
+        }
+
+        [Test]
         public void Update_ShouldAddNewMenu()
         {
             int contentId = 0;
