@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Web;
 using System.Web.Mvc;
 using System.ComponentModel;
 using System.Text;
@@ -41,7 +42,7 @@ namespace Suteki.Common.Validation
                 if (values[propertyName] != null)
                 {
                     TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
-                    string stringValue = values[propertyName];
+                    string stringValue = HttpUtility.HtmlEncode(values[propertyName]);
                     if (!converter.CanConvertFrom(typeof(string)))
                     {
                         throw new FormatException("No type converter available for type: " + property.PropertyType);

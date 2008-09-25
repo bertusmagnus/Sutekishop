@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DF5362C9-C088-46DD-9678-0767DA6F6AC2}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Extensions\UrlExtensionsHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\ValidatingBinderTests.cs" />
+    <Compile Include="Validation\ValidationExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Suteki.Common\Suteki.Common.csproj">
