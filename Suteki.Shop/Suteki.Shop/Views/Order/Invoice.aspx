@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <div class="invoiceHeader">
-    <%= Html.Image("~/Content/Images/invoice_header.png") %>
+    <img src="http://static.jumpthegun.co.uk.s3.amazonaws.com/invoice_header.png" />
 </div>
 
 <table class="invoiceTable">

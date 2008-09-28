@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title><%= ViewData["Title"] %></title>
-    <link href="../../Content/Site.css" rel="stylesheet" type="text/css" />
-    <link href="../../Content/Print.css" rel="stylesheet" type="text/css" />
+    <link href="http://static.jumpthegun.co.uk.s3.amazonaws.com/Site.css" rel="stylesheet" type="text/css" />
+    <link href="http://static.jumpthegun.co.uk.s3.amazonaws.com/Print.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="print">

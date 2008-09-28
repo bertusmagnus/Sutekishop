@@ -9,6 +9,7 @@
     <link rel="EditURI" type="application/rsd+xml" title="RSD" href=<%= RsdUrl %> />
     <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
     <meta name="description" content=<%= ViewData["MetaDescription"] %>>
+    <meta name="verify-v1" content="yT3b2nHIk4a8/T+tW3p8zQ30vgio2ELuZc/9qk//JBw=" />
     <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
     <script type="text/javascript" src=<%= JQueryUrl %>></script>
 </head>

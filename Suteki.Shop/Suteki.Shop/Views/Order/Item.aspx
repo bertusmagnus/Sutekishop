@@ -128,10 +128,13 @@
             <dt>Postcode</dt><dd><%= ViewData.Model.Order.Contact1.Postcode %>&nbsp;</dd>
             <dt>Country</dt><dd><%= ViewData.Model.Order.Contact1.Country.Name %>&nbsp;</dd>
             <dt>Telephone</dt><dd><%= ViewData.Model.Order.Contact1.Telephone %>&nbsp;</dd>
-            <dt>Additional Information</dt><dd><%= ViewData.Model.Order.AdditionalInformation %>&nbsp;</dd>
         </dl>
         
         <% } %>
+        
+        <dl>
+            <dt>Additional Information</dt><dd><%= ViewData.Model.Order.AdditionalInformation %>&nbsp;</dd>
+        </dl>
         
     </div>      
 </div>        
