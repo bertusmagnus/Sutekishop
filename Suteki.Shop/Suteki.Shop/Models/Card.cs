@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Suteki.Common.Extensions;
 using Suteki.Common.Validation;
-using EnumerableExtensions=Suteki.Common.Extensions.EnumerableExtensions;
 
 namespace Suteki.Shop
 {
@@ -52,7 +51,7 @@ namespace Suteki.Shop
 
         partial void OnHolderChanging(string value)
         {
-            value.Label("Card Holder").IsRequired();
+            value.Label("Card Holder").IsRequired().WithMaxLength(50);
         }
 
         partial void OnNumberChanging(string value)

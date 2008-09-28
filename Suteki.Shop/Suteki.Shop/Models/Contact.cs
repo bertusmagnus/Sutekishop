@@ -9,37 +9,47 @@ namespace Suteki.Shop
     {
         partial void OnFirstnameChanging(string value)
         {
-            value.Label("First Name").IsRequired();
+            value.Label("First Name").IsRequired().WithMaxLength(50);
         }
 
         partial void OnLastnameChanging(string value)
         {
-            value.Label("Last Name").IsRequired();
+            value.Label("Last Name").IsRequired().WithMaxLength(50);
         }
 
         partial void OnAddress1Changing(string value)
         {
-            value.Label("Address Line 1").IsRequired();
+            value.Label("Address Line 1").IsRequired().WithMaxLength(100);
+        }
+
+        partial void OnAddress2Changing(string value)
+        {
+            value.Label("Address Line 2").WithMaxLength(100); // optional
+        }
+
+        partial void OnAddress3Changing(string value)
+        {
+            value.Label("Address Line 3").WithMaxLength(100); // optional
         }
 
         partial void OnTownChanging(string value)
         {
-//            value.Label("Town").IsRequired();
+            value.Label("Town").WithMaxLength(50);
         }
 
         partial void OnCountyChanging(string value)
         {
-//            value.Label("County").IsRequired();
+            value.Label("County").WithMaxLength(50);
         }
 
         partial void OnPostcodeChanging(string value)
         {
-//            value.Label("Postcode").IsRequired();
+            value.Label("Postcode").WithMaxLength(50);
         }
 
         partial void OnTelephoneChanging(string value)
         {
-//            value.Label("Telephone").IsRequired();
+            value.Label("Telephone").WithMaxLength(50);
         }
 
         public string Fullname

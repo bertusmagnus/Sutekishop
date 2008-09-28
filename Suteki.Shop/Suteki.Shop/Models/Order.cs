@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Suteki.Common.Validation;
+﻿using Suteki.Common.Validation;
 
 namespace Suteki.Shop
 {
@@ -8,7 +6,7 @@ namespace Suteki.Shop
     {
         partial void OnEmailChanging(string value)
         {
-            value.Label("Email").IsRequired().IsEmail();
+            value.Label("Email").IsRequired().IsEmail().WithMaxLength(250);
         }
 
         public Contact PostalContact
