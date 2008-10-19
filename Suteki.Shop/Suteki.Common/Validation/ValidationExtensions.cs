@@ -41,7 +41,7 @@ namespace Suteki.Common.Validation
         {
             if (value.Trim().Any(c => !char.IsDigit(c)))
             {
-                throw new ValidationException("{0} must be a number e.g. 240".With(label));
+                throw new ValidationException("{0} must be a number".With(label));
             }
 
             return this;

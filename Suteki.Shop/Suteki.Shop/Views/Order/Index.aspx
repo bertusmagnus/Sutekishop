@@ -60,7 +60,7 @@
 
         <tr class="<%= order.OrderStatus.Name %>">
             <td><%= Html.ActionLink<OrderController>(c => c.Item(order.OrderId), order.OrderId.ToString()) %></td>
-            <td><%= order.PostalContact.Fullname %></td>
+            <td><%= order.Contact.Fullname %></td>
             <td><%= order.CreatedDate.ToShortDateString() %></td>
             <td><%= order.DispatchedDateAsString %></td>
             <td><%= order.OrderStatus.Name %></td>

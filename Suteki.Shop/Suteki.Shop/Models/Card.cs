@@ -61,16 +61,12 @@ namespace Suteki.Shop
 
         partial void OnIssueNumberChanging(string value)
         {
-            // we only need Issue Number with Maestro
-            if (CardTypeId == Suteki.Shop.CardType.SwitchSoloMaestro)
-            {
-                value.Label("Issue Number").IsRequired().IsNumeric().WithMaxLength(1);
-            }
+            value.Label("Issue Number").IsNumeric().WithMaxLength(1);
         }
 
         partial void OnSecurityCodeChanging(string value)
         {
-            value.Label("Security Code").IsRequired().IsNumeric().WithMaxLength(3);
+            value.Label("Security Code").IsRequired().IsNumeric().WithMaxLength(4);
         }
 
         // encrypted value setters
@@ -91,7 +87,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return StringExtensions.With("{0:00} / {1:0000}", StartMonth, StartYear);
+                return "{0:00} / {1:0000}".With(StartMonth, StartYear);
             }
         }
 
