@@ -10,6 +10,7 @@ using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.Models;
+using Suteki.Shop.Tests.TestHelpers;
 
 namespace Suteki.Shop.Tests.Controllers
 {

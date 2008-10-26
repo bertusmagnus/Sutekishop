@@ -8,6 +8,7 @@ using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc;
+using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Collections.Generic;
 using System.Linq;

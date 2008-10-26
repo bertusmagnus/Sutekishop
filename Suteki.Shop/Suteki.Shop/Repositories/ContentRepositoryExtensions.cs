@@ -28,6 +28,11 @@ namespace Suteki.Shop.Repositories
             return contents.Where(c => c.ParentContentId == parentContentId);
         }
 
+        public static IQueryable<Content> WithAnyParent(this IQueryable<Content> contents)
+        {
+            return contents.Where(c => c.ParentContentId != null);
+        }
+
         public static Content DefaultText(this IQueryable<Content> contents, Menu menu)
         {
             Content text = contents.InOrder().Where(c => c is ITextContent).FirstOrDefault();

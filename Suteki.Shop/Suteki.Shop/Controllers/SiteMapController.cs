@@ -19,7 +19,7 @@ namespace Suteki.Shop.Controllers
         public ActionResult Index()
         {
             var products = productRepository.GetAll().ActiveFor(CurrentUser);
-            var contents = contentRepository.GetAll().ActiveFor(CurrentUser);
+            var contents = contentRepository.GetAll().WithAnyParent().ActiveFor(CurrentUser);
 
             return View("Index", ShopView.Data
                 .WithProducts(products)

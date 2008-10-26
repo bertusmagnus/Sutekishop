@@ -2,6 +2,6 @@
 
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     
-    <h1>Welcome to our online shop</h1>
+    <%= ViewData.Model.TextContent.Text %>
 
 </asp:Content>

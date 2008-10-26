@@ -1,6 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Moq;
+using NUnit.Framework;
+using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
-using System.Web.Mvc;
+using Suteki.Shop.Tests.TestHelpers;
+using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -8,21 +13,32 @@ namespace Suteki.Shop.Tests.Controllers
     public class HomeControllerTests
     {
         HomeController homeController;
+        IRepository<Content> contentRepository;
 
         [SetUp]
         public void SetUp()
         {
-            homeController = new HomeController();
+            contentRepository = new Mock<IRepository<Content>>().Object;
+            homeController = new HomeController(contentRepository);
         }
 
         [Test]
         public void IndexShouldRenderViewIndex()
         {
-            string view = "Index";
+            var contents = new List<Content>
+                {
+                    new TextContent { UrlName = HomeController.Shopfront }
+                }.AsQueryable();
 
-            ViewResult result = homeController.Index() as ViewResult;
+            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
 
-            Assert.AreEqual(view, result.ViewName);
+            homeController.Index()
+                .ReturnsViewResult()
+                .ForView("Index")
+                .AssertAreSame<CmsViewData, ITextContent>(
+                    contents.OfType<ITextContent>().First(), 
+                    vd => vd.TextContent);
+
         }
     }
 }

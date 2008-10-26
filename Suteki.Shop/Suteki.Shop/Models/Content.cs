@@ -3,6 +3,7 @@ using Suteki.Common;
 using Suteki.Common.Validation;
 using System.Web.Mvc;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Models.Exceptions;
 using Suteki.Shop.Models.ModelHelpers;
 
 namespace Suteki.Shop
@@ -88,7 +89,7 @@ namespace Suteki.Shop
                 if (ContentId == Suteki.Shop.Menu.MainMenuId) return null;
                 var menu = Content1 as Menu;
                 if (menu == null)
-                    throw new ApplicationException("Parent Content Should Always be a Menu");
+                    throw new NoMenuException("Parent Content Should Always be a Menu");
                 return menu;
             }
         }

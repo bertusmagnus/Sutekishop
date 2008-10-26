@@ -2,6 +2,7 @@
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using System.Web.Mvc;

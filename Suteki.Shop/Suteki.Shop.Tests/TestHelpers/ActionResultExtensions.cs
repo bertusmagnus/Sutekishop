@@ -3,9 +3,8 @@ using System.Web.Mvc;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Extensions;
-using Suteki.Shop.ViewData;
 
-namespace Suteki.Shop.Tests
+namespace Suteki.Shop.Tests.TestHelpers
 {
     public static class ActionResultExtensions
     {

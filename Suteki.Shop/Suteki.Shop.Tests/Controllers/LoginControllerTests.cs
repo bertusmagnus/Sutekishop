@@ -6,6 +6,7 @@ using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.Repositories;
+using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Web.Mvc;
 

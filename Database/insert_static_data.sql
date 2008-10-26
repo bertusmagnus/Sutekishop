@@ -38,6 +38,9 @@ values(2, 1, 4, 'Home', 'Home', 'Homepage Content', null, null, 2, 1)
 insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
 values(3, 1, 3, 'Online Shop', 'Online_Shop', null, 'Home', 'Index', 3, 1)
 
+insert [content](contentId, parentContentId, contentTypeId, [name], UrlName, [text], controller, [action], position, isActive)
+values(4, null, 2, 'Shopfront', 'Shopfront', '<h1>Wecome to our online shop</h1>', null, null, 4, 1)
+
 set identity_insert [content] off
 
 set identity_insert PostZone on

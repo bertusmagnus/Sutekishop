@@ -7,6 +7,7 @@ using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Suteki.Shop.Tests.TestHelpers;
 
 namespace Suteki.Shop.Tests.Controllers
 {

@@ -9,6 +9,7 @@ using Suteki.Shop.Services;
 using System.Collections.Specialized;
 using NUnit.Framework.SyntaxHelpers;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers

@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
