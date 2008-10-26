@@ -50,7 +50,7 @@ a:hover
 	padding: 0;
 	background-color:#514E5C;
 	color: #CBC9CE;
-	/* border: solid 10px #514E5C; */
+	border: solid 10px #514E5C;
 }
 
 .header
@@ -67,12 +67,14 @@ a:hover
 	padding: 0px;	
 	height: 80px;
 	background-image: url(Images/Logo_background.png);
+	background-repeat: no-repeat;
 }
 
 .logo h1
 {
 	margin: 0;
 	padding: 25px 0 0 20px;
+	visibility: hidden;
 }
 
 h1
@@ -128,6 +130,11 @@ h2 a
 	border-style: dotted;
 	border-width: 1px;
 	padding: 0px 10px;
+}
+
+.login
+{
+	visibility: hidden;
 }
 
 .error
@@ -537,11 +544,11 @@ tr.Created
 }
 tr.Dispatched
 {
-	color: Green;
+	color: #00FF00;
 }
 tr.Rejected
 {
-	color: Red;
+	color: #FF0000;
 }
 
 /* ------------------------- form ------------------------------ */

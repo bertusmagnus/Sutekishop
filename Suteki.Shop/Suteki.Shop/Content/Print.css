@@ -2,6 +2,7 @@
 {
 	background-image: none;
 	text-align: left;
+	font-size: 12pt;
 }
 
 a
@@ -50,6 +51,12 @@ li
 	height: 120px;
 }
 
+.invoiceNumber
+{
+	font-size: 16pt;
+	font-weight: bold;
+}
+
 .invoiceTable td
 {
 	width: 400px;
@@ -61,6 +68,8 @@ li
 {
 	border: solid 1px #000000;
 	margin: 20px 0;
+	padding: 20px;
+	font-size: 12pt;
 }
 
 .invoiceThanks
@@ -72,7 +81,7 @@ li
 
 .invoiceLabelLeft
 {
-	font-size: 12pt;
+	font-size: 14pt;
 	position: absolute;
 	top: 1067px;
 	left: 0px;
@@ -80,7 +89,7 @@ li
 
 .invoiceLabelRight
 {
-	font-size: 12pt;
+	font-size: 14pt;
 	position: absolute;
 	top: 1067px;
 	left: 495px;

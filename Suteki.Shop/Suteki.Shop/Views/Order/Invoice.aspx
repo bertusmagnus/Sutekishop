@@ -12,13 +12,13 @@
             28a North Road,<br />
             Brighton,<br />
             BN1 1YB,<br />
-            UK.<br />
-            Tel: 01273 626 333,<br />  
+            UK.<br /><br />
+            Tel: 01273 626 333,<br /><br />  
             info@jumpthegun.co.uk<br />
         </td>
         <td>  
-            <strong>Invoice No. <%= ViewData.Model.Order.OrderId.ToString() %></strong> <br />
-            <%= DateTime.Now.ToLongDateString() %><br />
+            <span class="invoiceNumber">Invoice No. <%= ViewData.Model.Order.OrderId.ToString() %></span> <br /><br />
+            <%= DateTime.Now.ToLongDateString() %><br /><br />
             <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
                 <%= line %><br />
             <% } %>
@@ -30,18 +30,20 @@
 <table>
     <tr>
         <th class="wide">Product</th>
-        <th class="thin">Size</th>
-        <th class="thin number">Quantity</th>
-        <th class="thin number">Unit Price</th>
-        <th class="thin number">Total Price</th>
+        <th class="wide number">Size</th>
+        <th class="wide number">Quantity</th>
+        <th class="wide number">Unit Price</th>
+        <th class="wide number">Total Price</th>
     </tr>
+    
+    <tr></tr>
     
     <% foreach (var basketItem in ViewData.Model.Order.Basket.BasketItems)
        { %>
     
     <tr>
         <td><%= Html.ActionLink<ProductController>(c => c.Item(basketItem.Size.Product.UrlName), basketItem.Size.Product.Name)%></td>
-        <td><%= basketItem.Size.Name%></td>
+        <td class="number"><%= basketItem.Size.Name%></td>
         <td class="number"><%= basketItem.Quantity%></td>
         <td class="number"><%= basketItem.Size.Product.Price.ToString("£0.00")%></td>
         <td class="number"><%= basketItem.Total.ToString("£0.00")%></td>
@@ -96,7 +98,7 @@
 
     <ul>
         <td>            
-            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
+            <% foreach(var line in ViewData.Model.Order.Contact.GetAddressLines()) { %>
                 <li><%= line %>&nbsp;</li>
             <% } %>
         </td>
