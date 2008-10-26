@@ -17,13 +17,15 @@
     
 </dl>
 
-<% if(User.IsInRole("Administrator") && ViewData.Model.Order.IsCreated) { %>
 <div class="orderAction">
-    <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
-    <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+<% if(User.IsInRole("Administrator")) { %>
+    <% if(ViewData.Model.Order.IsCreated) { %>
+        <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
+        <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+    <% } %>
     <%= Html.ActionLink<OrderController>(c => c.Invoice(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
-</div>    
 <% } %>
+</div>    
 
 <table>
     <tr>
