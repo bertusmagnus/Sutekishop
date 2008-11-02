@@ -199,6 +199,9 @@
     </div>
 </div>
 
+<% if (User.IsInRole("Administrator"))
+   { %>
+
     <script type="text/javascript">
     
         init();
@@ -254,5 +257,7 @@
         }        
 
     </script>
+
+<% } %>
 
 </asp:Content>
