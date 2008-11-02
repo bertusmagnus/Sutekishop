@@ -270,6 +270,26 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
         [Test]
+        public void UndoStatus_ShouldChangeOrderStatusToCreated()
+        {
+            int orderId = 44;
+            Order order = new Order
+            {
+                OrderId = orderId,
+                OrderStatusId = OrderStatus.DispatchedId,
+                DispatchedDate = DateTime.Now,
+                Basket = new Basket()
+            };
+
+            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+            Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
+
+            orderController.UndoStatus(orderId);
+
+            Assert.IsTrue(order.IsCreated, "order status has not been reset");
+        }
+
+        [Test]
         public void Index_ShouldBuildCriteriaAndExecuteSearch()
         {
             NameValueCollection form = new NameValueCollection();

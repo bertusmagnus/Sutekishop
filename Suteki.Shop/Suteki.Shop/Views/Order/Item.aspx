@@ -22,6 +22,8 @@
     <% if(ViewData.Model.Order.IsCreated) { %>
         <%= Html.ActionLink<OrderController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
         <%= Html.ActionLink<OrderController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
+    <% } else { %>
+        <%= Html.ActionLink<OrderController>(c => c.UndoStatus(ViewData.Model.Order.OrderId), "Reset Status", new { _class = "linkButton" })%>
     <% } %>
     <%= Html.ActionLink<OrderController>(c => c.Invoice(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
 <% } %>

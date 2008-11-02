@@ -322,6 +322,21 @@ namespace Suteki.Shop.Controllers
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        public ActionResult UndoStatus(int id)
+        {
+            Order order = orderRepository.GetById(id);
+
+            if (order.IsDispatched || order.IsRejected)
+            {
+                order.OrderStatusId = OrderStatus.CreatedId;
+                order.UserId = null;
+                orderRepository.SubmitChanges();
+            }
+
+            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
+        }
+
         public ActionResult UpdateCountry(int id, int countryId)
         {
             Basket basket = basketRepository.GetById(id);
