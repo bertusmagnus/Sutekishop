@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Checkout.aspx.cs" Inherits="Suteki.Shop.Views.Order.Checkout" %>
+<%@ Import Namespace="Suteki.Common.Models"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <script language="javascript">
@@ -323,13 +324,13 @@ function addHandlers()
                 </tr>
                 <tr>
                     <td class="label"><label for="card.expirymonth">Expire Date</label></td>
-                    <td class="field small"><%= Html.DropDownList("card.expirymonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.ExpiryMonth))%></td>
-                    <td class="field small"><%= Html.DropDownList("card.expiryyear", new SelectList(Card.ExpiryYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.ExpiryYear))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.expirymonth", Card.Months.ToStringValues().AsSelectList(ViewData.Model.Order.Card.ExpiryMonth))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.expiryyear", Card.ExpiryYears.ToStringValues().AsSelectList(ViewData.Model.Order.Card.ExpiryYear))%></td>
                 </tr>
                 <tr>
                     <td class="label"><label for="card.startmonth">Start Date</label><br />If present on your card</td>
-                    <td class="field small"><%= Html.DropDownList("card.startmonth", new SelectList(Card.Months.Select(m => new { Value = m.ToString("00") }), "Value", "Value", ViewData.Model.Order.Card.StartMonth))%></td>
-                    <td class="field small"><%= Html.DropDownList("card.startyear", new SelectList(Card.StartYears.Select(m => new { Value = m }), "Value", "Value", ViewData.Model.Order.Card.StartYear))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.startmonth", Card.Months.ToStringValues().AddBlankFirstValue().AsSelectList(ViewData.Model.Order.Card.StartMonth))%></td>
+                    <td class="field small"><%= Html.DropDownList("card.startyear", Card.StartYears.ToStringValues().AddBlankFirstValue().AsSelectList(ViewData.Model.Order.Card.StartYear))%></td>
                 </tr>
                 <tr>
                     <td class="label"><label for="card.issuenumber">Issue Number</label><br />If present on your card</td>

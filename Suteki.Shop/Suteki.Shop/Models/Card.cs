@@ -87,6 +87,10 @@ namespace Suteki.Shop
         {
             get
             {
+                if(StartMonth == 0 || StartYear == 0)
+                {
+                    return "&nbsp;";
+                }
                 return "{0:00} / {1:0000}".With(StartMonth, StartYear);
             }
         }
