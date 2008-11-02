@@ -47,6 +47,11 @@ namespace Suteki.Shop.Controllers
             ViewData["Title"] = "{0} - {1}".With(ViewData["Title"], text);
         }
 
+        public virtual void AppendMetaDescription(string text)
+        {
+            ViewData["MetaDescription"] = text;
+        }
+
         public virtual User CurrentUser
         {
             get
