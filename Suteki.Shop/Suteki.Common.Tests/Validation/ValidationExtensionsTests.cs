@@ -63,6 +63,13 @@ namespace Suteki.Common.Tests.Validation
         }
 
         [Test]
+        public void IsCreditCard_ShouldSuccessfullyValidatate19DigitCreditCardNumbers()
+        {
+            string validCardNumber = "1111 1111 1111 1111 113";
+            validCardNumber.Label("Card Number").IsCreditCard();
+        }
+
+        [Test]
         public void RegexNumberOnlySpike()
         {
             var value = "111 222-333abc";

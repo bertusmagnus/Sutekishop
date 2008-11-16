@@ -96,7 +96,7 @@ namespace Suteki.Common.Validation
         {
             var trimmedValue = Regex.Replace(value, "[^0-9]", "");
 
-            trimmedValue.Label(label).IsNumeric().WithLengthRange(13.To(18));
+            trimmedValue.Label(label).IsNumeric().WithLengthRange(13.To(19));
 
             var numbers = trimmedValue.Trim().Reverse().Select(c => int.Parse(c.ToString()));
 
