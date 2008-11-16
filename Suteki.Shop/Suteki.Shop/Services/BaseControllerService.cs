@@ -15,6 +15,7 @@ namespace Suteki.Shop.Services
         private string shopName;
         private string emailAddress;
         private string copyright;
+        private string phoneNumber;
 
         public BaseControllerService(
             IRepository<Category> categoryRepository,
@@ -80,6 +81,16 @@ namespace Suteki.Shop.Services
                 return copyright;
             }
             set { copyright = value; }
+        }
+
+        public string PhoneNumber
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(phoneNumber)) return "";
+                return phoneNumber;
+            }
+            set { phoneNumber = value; }
         }
     }
 }

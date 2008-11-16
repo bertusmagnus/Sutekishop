@@ -23,7 +23,7 @@
 
                 <div class="rightText">
                     <p>
-                        <%= Html.Mailto(Email, Email) %>
+                        <%= Html.Mailto(Email, Email) %><br /><%= PhoneNumber %>
                     </p>                
                 </div>
                 

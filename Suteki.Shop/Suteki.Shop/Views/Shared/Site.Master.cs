@@ -71,6 +71,14 @@ namespace Suteki.Shop.Views.Shared
             }
         }
 
+        protected string PhoneNumber
+        {
+            get
+            {
+                return GetController().BaseControllerService.PhoneNumber;
+            }
+        }
+
         protected string RsdUrl
         {
             get
