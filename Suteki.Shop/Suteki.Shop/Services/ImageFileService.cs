@@ -1,15 +1,26 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Services
 {
-    public class ImageFileService : Suteki.Shop.Services.IImageFileService
+    public class ImageFileService : IImageFileService
     {
+        private readonly string imageFolder;
+
+        public ImageFileService(string imageFolder)
+        {
+            this.imageFolder = imageFolder;
+        }
+
+        public ImageFileService()
+            : this("/ProductPhotos/")
+        {
+        }
+
         public virtual string GetImageFolderPath()
         {
-            return HttpContext.Current.Server.MapPath("/ProductPhotos/");
+            return HttpContext.Current.Server.MapPath(imageFolder);
         }
 
         public string GetFullPath(string filename)

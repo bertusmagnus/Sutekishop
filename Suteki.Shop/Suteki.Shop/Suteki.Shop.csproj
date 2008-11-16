@@ -94,6 +94,7 @@
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -132,6 +133,7 @@
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="HtmlHelpers\MenuWriter.cs" />
     <Compile Include="HtmlHelpers\StockWriter.cs" />
+    <Compile Include="IoC\UrlBasedComponentSelector.cs" />
     <Compile Include="Models\ActionContent.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardType.cs" />
@@ -492,6 +494,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Zanywear.css" />
     <Content Include="Content\Images\basket.png" />
     <Content Include="Content\Images\basket_hover.png" />
     <Content Include="Content\Script\jquery-1.2.6.min.js" />
@@ -544,8 +547,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49839</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/Suteki.Shop</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

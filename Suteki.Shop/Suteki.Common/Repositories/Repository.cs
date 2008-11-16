@@ -3,17 +3,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Data.Linq;
 using Suteki.Common.Extensions;
-using Suteki.Common.Repositories;
 
 namespace Suteki.Common.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        DataContext dataContext;
+        readonly DataContext dataContext;
 
-        public Repository(DataContext dataContext)
+        public Repository(IDataContextProvider dataContextProvider)
         {
-            this.dataContext = dataContext;
+            this.dataContext = dataContextProvider.DataContext;
         }
 
         public virtual T GetById(int id)
@@ -25,11 +24,11 @@ namespace Suteki.Common.Repositories
                 Expression.Equal(
                     Expression.Property(
                         itemParameter,
-                        TypeExtensions.GetPrimaryKey(typeof(T)).Name
+                        typeof(T).GetPrimaryKey().Name
                         ),
                     Expression.Constant(id)
                     ),
-                new ParameterExpression[] { itemParameter }
+                new[] { itemParameter }
                 );
 
             return GetAll().Where(whereExpression).Single();

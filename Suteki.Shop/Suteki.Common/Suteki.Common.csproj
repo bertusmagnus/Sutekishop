@@ -87,6 +87,10 @@
     <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\StringValueExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ConnectionStringProvider.cs" />
+    <Compile Include="Repositories\DataContextProvider.cs" />
+    <Compile Include="Repositories\IDataContextProvider.cs" />
+    <Compile Include="Repositories\IConnectionStringProvider.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\QueriableExtensions.cs" />

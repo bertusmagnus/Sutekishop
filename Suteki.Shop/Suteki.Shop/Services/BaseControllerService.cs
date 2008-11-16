@@ -16,6 +16,7 @@ namespace Suteki.Shop.Services
         private string emailAddress;
         private string copyright;
         private string phoneNumber;
+        private string siteCss;
 
         public BaseControllerService(
             IRepository<Category> categoryRepository,
@@ -91,6 +92,16 @@ namespace Suteki.Shop.Services
                 return phoneNumber;
             }
             set { phoneNumber = value; }
+        }
+
+        public string SiteCss
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(siteCss)) return "Site.css";
+                return siteCss;
+            }
+            set { siteCss = value; }
         }
     }
 }

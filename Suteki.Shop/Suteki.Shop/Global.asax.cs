@@ -6,10 +6,12 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using MvcContrib.Castle;
 using Suteki.Common.Repositories;
+using Suteki.Shop.IoC;
 using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
 using Castle.MicroKernel.Registration;
 using System.Web.Security;
+using Suteki.Shop.Services;
 
 namespace Suteki.Shop
 {
@@ -48,6 +50,13 @@ namespace Suteki.Shop
             {
                 // create a new Windsor Container
                 container = new WindsorContainer(new XmlInterpreter("Configuration\\Windsor.config"));
+
+                // register handler selectors
+                container.Kernel.AddHandlerSelector(new UrlBasedComponentSelector(
+                    typeof(IBaseControllerService),
+                    typeof(IImageFileService),
+                    typeof(IConnectionStringProvider)
+                    ));
 
                 // automatically register controllers
                 container.Register(AllTypes

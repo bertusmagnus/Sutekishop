@@ -15,5 +15,6 @@ namespace Suteki.Shop.Services
         string MetaDescription { get; set; }
         string Copyright { get; set; }
         string PhoneNumber { get; set; }
+        string SiteCss { get; set; }
     }
 }

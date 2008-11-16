@@ -56,10 +56,11 @@ namespace Suteki.Shop.XmlRpc
 
         private void CreateServices()
         {
-            var dataContext = new ShopDataContext();
-            this.contentRepository = new Repository<Content>(dataContext);
-            this.userRepository = new Repository<User>(dataContext);
-            var categoryRepository = new Repository<Suteki.Shop.Category>(dataContext);
+            var connectionStringProvider = new ConnectionStringProvider("Data Source=.\\SQLEXPRESS;Initial Catalog=JumpTheGun;Integrated Security=True");
+            var dataContextProvider = new DataContextProvider(connectionStringProvider);
+            this.contentRepository = new Repository<Content>(dataContextProvider);
+            this.userRepository = new Repository<User>(dataContextProvider);
+            var categoryRepository = new Repository<Suteki.Shop.Category>(dataContextProvider);
             this.contentOrderableService = new OrderableService<Content>(contentRepository);
             this.baseControllerService = new BaseControllerService(categoryRepository, contentRepository);
             this.imageFileService = new ImageFileService();

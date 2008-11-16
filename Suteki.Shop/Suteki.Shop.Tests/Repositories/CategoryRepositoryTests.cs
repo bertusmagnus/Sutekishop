@@ -21,8 +21,11 @@ namespace Suteki.Shop.Tests.Repositories
         {
             using (new TransactionScope())
             {
+                var connectionStringProvider = new ConnectionStringProvider("<my connection string>");
+                var dataContextProvider = new DataContextProvider(connectionStringProvider);
+
                 // first insert a new graph into the database
-                Repository<Category> categoryRepository = new Repository<Category>(new ShopDataContext());
+                Repository<Category> categoryRepository = new Repository<Category>(dataContextProvider);
 
                 // use the object graph created by the mock category repository
                 Category root = MockRepositoryBuilder.CreateCategoryRepository().Object.GetRootCategory();

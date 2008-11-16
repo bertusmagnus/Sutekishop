@@ -1,9 +1,9 @@
 ﻿/*
 colors
 
-Main:		#514E5C
-Highlight:	#CBC9CE (most text)
-Menu:		#A5A0B0
+Main:		#FFFFFF
+Highlight:	#000000 (most text)
+Menu:		#C0C0C0
 Menuborder:	#C0C0C0
 MenuLight:	#B5B0C0
 
@@ -15,7 +15,7 @@ body
 	min-width: 900px;
 	text-align: center;
 	font-size:9pt;
-	background-image: url(Images/wallpaper.jpg);
+	background-color: White;
 	margin: 0 0 0 0;
 }
 
@@ -23,7 +23,7 @@ a img {border: none; }
 
 a
 {
-	color: #CBC9CE;
+	color: #000000;
 }
 a:hover
 {
@@ -48,9 +48,9 @@ a:hover
 	width:900px;
 	text-align: left;
 	padding: 0;
-	background-color:#514E5C;
-	color: #CBC9CE;
-	border: solid 10px #514E5C;
+	background-color:#FFFFFF;
+	color: #000000;
+	border: 0px;
 }
 
 .header
@@ -66,7 +66,8 @@ a:hover
 	margin: 0 0 0 0px;
 	padding: 0px;	
 	height: 80px;
-	background-image: url(Images/Logo_background.png);
+	background-color: White;
+	/* background-image: url(Images/Logo_background.png); */
 	/* background-repeat: no-repeat; */
 }
 
@@ -94,7 +95,7 @@ h2 a
 
 .leftColumn
 {
-	background-color: #A5A0B0;
+	background-color: #C0C0C0;
 	width: 180px;
 	height: 100%;
 	float: left;
@@ -184,7 +185,7 @@ h2 a
 	margin: 0 0 20px 0;
 	padding: 20px 0 0 0;
 	overflow: visible;
-	border-top: solid 2px #CBC9CE;
+	border-top: solid 2px #000000;
 }
 
 .columnContainer label
@@ -298,7 +299,7 @@ dd
 
 .mainMenu
 {
-	background-color: #A5A0B0;
+	background-color: #C0C0C0;
 	float: left;
 	list-style: none;
 	margin: 0;
@@ -322,7 +323,7 @@ li.editMenuLink a
 
 .mainMenu a
 {
-	background: #A5A0B0 url(Images/menu_item.png) center left no-repeat;
+	background: #C0C0C0 url(Images/menu_item.png) center left no-repeat;
 	display: block;
 	float: left;
 	margin: 0;
@@ -371,7 +372,7 @@ li.editMenuLink a
 
 .category a 
 {
-	background: #A5A0B0 url(Images/menu_item.png) left center no-repeat;
+	background: #C0C0C0 url(Images/menu_item.png) left center no-repeat;
 	border-bottom: 1px solid #C0C0C0;
 	color: #ccc;
 	display: block;
@@ -413,11 +414,11 @@ li.basket
 .basket a
 {
 	height: 130px;
-	background: #A5A0B0 url(Images/basket.png) no-repeat;
+	background: #C0C0C0 url(Images/basket.png) no-repeat;
 }
 .basket a:hover
 {
-	background: #A5A0B0 url(Images/basket_hover.png) no-repeat;
+	background: #C0C0C0 url(Images/basket_hover.png) no-repeat;
 }
 
 .categoryBox
@@ -540,7 +541,7 @@ div.sizeInput input[type=text]
 
 tr.Created
 {
-	color: #CBC9CE;	
+	color: #000000;	
 }
 tr.Dispatched
 {
@@ -579,9 +580,9 @@ input[type=submit]
 	display: block;
 	width: 150px;
 	margin: 10px 10px 10px 0px;
-	border: outset 2px #A5A0B0;
-	color: #514E5C;
-	background: #CBC9CE;
+	border: outset 2px #C0C0C0;
+	color: #FFFFFF;
+	background: #000000;
 }
 
 input[type=checkbox]
@@ -608,13 +609,13 @@ input[type=button]
 	display: inline;
 	padding: 2px 5px 2px 5px;
 	width: auto;
-	color: #514E5C;
-	background: #CBC9CE;
-	border: outset 2px #A5A0B0;
+	color: #FFFFFF;
+	background: #000000;
+	border: outset 2px #C0C0C0;
 }
 .lineButton:hover
 {
-	color: #514E5C;
+	color: #FFFFFF;
 }
 
 select

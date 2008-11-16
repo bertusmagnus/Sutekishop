@@ -110,5 +110,14 @@ namespace Suteki.Shop.Views.Shared
                 return "\"{0}\"".With(GetController().BaseControllerService.GoogleTrackingCode);
             }
         }
+
+        protected string SiteCss
+        {
+            get
+            {
+                return "\"{0}/Content/{1}\"".With(SiteUrl, GetController().BaseControllerService.SiteCss);
+            }
+        }
+
     }
 }
