@@ -19,7 +19,7 @@
         <td>  
             <span class="invoiceNumber">Invoice No. <%= ViewData.Model.Order.OrderId.ToString() %></span> <br /><br />
             <%= DateTime.Now.ToLongDateString() %><br /><br />
-            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
+            <% foreach(var line in ViewData.Model.Order.Contact.GetAddressLines()) { %>
                 <%= line %><br />
             <% } %>
         </td>
@@ -98,7 +98,7 @@
 
     <ul>
         <td>            
-            <% foreach(var line in ViewData.Model.Order.Contact.GetAddressLines()) { %>
+            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
                 <li><%= line %>&nbsp;</li>
             <% } %>
         </td>
