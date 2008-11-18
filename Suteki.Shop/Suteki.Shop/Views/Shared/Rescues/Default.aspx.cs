@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Web.Mvc;
 using Castle.Core.Logging;
-using Suteki.Common.Extensions;
-using Suteki.Shop.Controllers;
 
 namespace Suteki.Shop.Views.Shared.Rescues
 {
-    public partial class Default : ViewPage<Exception>
+    public partial class Default : ViewPage<HandleErrorInfo>
     {
         protected override void OnLoad(EventArgs e)
         {
-            LogException(ViewData.Model);
+            LogException(ViewData.Model.Exception);
         }
 
         public void LogException(Exception exception)
         {
-            var controller = this.ViewContext.Controller as ControllerBase;
+            var controller = this.ViewContext.Controller as Controllers.ControllerBase;
             if (controller == null)
             {
                 return;

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using System.Web.UI;
 using System.IO;
 using Suteki.Common.Extensions;
@@ -78,7 +77,7 @@ namespace Suteki.Shop.HtmlHelpers
         {
             writer.AddAttribute(HtmlTextWriterAttribute.Class, "stockCheckbox");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
-            writer.Write(htmlHelper.CheckBox("stockitem_{0}".With(size.SizeId), size.Name, "True", size.IsInStock));
+            writer.Write(htmlHelper.CheckBox("stockitem_{0}".With(size.SizeId), size.IsInStock));
             writer.RenderEndTag();
         }
     }

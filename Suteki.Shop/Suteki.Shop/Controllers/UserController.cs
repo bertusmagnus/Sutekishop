@@ -11,8 +11,8 @@ namespace Suteki.Shop.Controllers
     [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
     public class UserController : ControllerBase
     {
-        IRepository<User> userRepository;
-        IRepository<Role> roleRepository;
+        readonly IRepository<User> userRepository;
+        readonly IRepository<Role> roleRepository;
 
         public UserController(IRepository<User> userRepository, IRepository<Role> roleRepository)
         {

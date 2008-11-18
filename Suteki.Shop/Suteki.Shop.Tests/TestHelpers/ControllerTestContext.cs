@@ -1,7 +1,5 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Moq;
 
 namespace Suteki.Shop.Tests
 {
@@ -13,7 +11,7 @@ namespace Suteki.Shop.Tests
         public ControllerTestContext(Controller controller)
         {
             ViewEngine = new MockViewEngine();
-            controller.ViewEngine = ViewEngine;
+//            controller.ViewEngine = ViewEngine;
 
             TestContext = new HttpContextTestContext();
 

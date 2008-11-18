@@ -1,9 +1,8 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using System.IO;
 using System.Collections.Generic;
-using System.Security.Principal;
 using System.Web.Mvc;
+using Microsoft.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.HtmlHelpers;
 using Suteki.Common.Repositories;
@@ -20,9 +19,9 @@ namespace Suteki.Shop.HtmlHelpers
 
     public class CategoryWriter
     {
-        Category rootCategory;
-        HtmlHelper htmlHelper;
-        CategoryDisplay display;
+        readonly Category rootCategory;
+        readonly HtmlHelper htmlHelper;
+        readonly CategoryDisplay display;
 
         public CategoryWriter(Category rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
         {
@@ -33,7 +32,7 @@ namespace Suteki.Shop.HtmlHelpers
 
         public string Write()
         {
-            HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
+            var writer = new HtmlTextWriter(new StringWriter());
 
             if (display == CategoryDisplay.View)
             {
@@ -83,10 +82,8 @@ namespace Suteki.Shop.HtmlHelpers
                     htmlHelper.DownArrowLink<CategoryController>(c => c.MoveDown(category.CategoryId))
                     );
             }
-            else
-            {
-                return WriteCategoryLink(category);
-            }
+
+            return WriteCategoryLink(category);
         }
 
         private string WriteCategoryLink(Category category)

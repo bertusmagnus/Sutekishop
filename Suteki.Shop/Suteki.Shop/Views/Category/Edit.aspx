@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model)%>
     <%= Html.MessageBox(ViewData.Model)%>
 
-    <% using(Html.Form("Category", "Update")) { %>
+    <% using(Html.BeginForm("Category", "Update")) { %>
 
         <%= Html.Hidden("categoryId", ViewData.Model.Category.CategoryId.ToString())%>
         <%= Html.Hidden("position", ViewData.Model.Category.Position.ToString())%>
@@ -18,7 +18,7 @@
         <%= Html.DropDownList("parentid", new SelectList(ViewData.Model.Categories, "CategoryId", "Name", ViewData.Model.Category.ParentId))%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "True", ViewData.Model.Category.IsActive)%>
+        <%= Html.CheckBox("isactive", ViewData.Model.Category.IsActive)%>
         
         <%= Html.SubmitButton() %>
 

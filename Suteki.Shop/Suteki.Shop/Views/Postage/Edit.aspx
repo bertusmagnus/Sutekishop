@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.Form("Postage", "Update"))
+    <% using (Html.BeginForm("Postage", "Update"))
        { %>
 
         <%= Html.Hidden("postageid", ViewData.Model.Item.PostageId.ToString())%>
@@ -22,7 +22,7 @@
         <%= Html.TextBox("price", ViewData.Model.Item.Price)%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "true", ViewData.Model.Item.IsActive)%>
+        <%= Html.CheckBox("isactive", ViewData.Model.Item.IsActive)%>
         
         <%= Html.SubmitButton()%>
         

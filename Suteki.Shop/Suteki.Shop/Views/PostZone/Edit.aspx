@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.Form("PostZone", "Update"))
+    <% using (Html.BeginForm("PostZone", "Update"))
        { %>
 
         <%= Html.Hidden("postzoneid", ViewData.Model.Item.PostZoneId.ToString())%>
@@ -19,13 +19,13 @@
         <%= Html.TextBox("multiplier", ViewData.Model.Item.Multiplier.ToString())%>
         
         <label for="askifmaxweight">Ask If Max Weight</label>
-        <%= Html.CheckBox("askifmaxweight", "", "true", ViewData.Model.Item.AskIfMaxWeight)%>
+        <%= Html.CheckBox("askifmaxweight", ViewData.Model.Item.AskIfMaxWeight)%>
         
         <label for="flatrate">Flat Rate</label>
         <%= Html.TextBox("flatrate", ViewData.Model.Item.FlatRate.ToString("0.00"))%>
         
         <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", "", "true", ViewData.Model.Item.IsActive)%>
+        <%= Html.CheckBox("isactive", ViewData.Model.Item.IsActive)%>
         
         <%= Html.SubmitButton()%>
         

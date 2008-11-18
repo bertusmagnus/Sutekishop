@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
-using System.Web.UI;
-using System.IO;
+using Microsoft.Web.Mvc;
 using Suteki.Common.Extensions;
-using Suteki.Common.HtmlHelpers;
-using Suteki.Common.ViewData;
-using Suteki.Shop.ViewData;
 using Suteki.Shop.Controllers;
-using System.Security.Principal;
-using System.Linq.Expressions;
-using IPagedList=Suteki.Common.Extensions.IPagedList;
 
 namespace Suteki.Shop.HtmlHelpers
 {
@@ -31,44 +24,44 @@ namespace Suteki.Shop.HtmlHelpers
 
         public static User CurrentUser(this HtmlHelper htmlHelper)
         {
-            User user = htmlHelper.ViewContext.HttpContext.User as User;
+            var user = htmlHelper.ViewContext.HttpContext.User as User;
             if (user == null) throw new ApplicationException("Current context user cannot be cast to Suteki.Shop.User");
             return user;
         }
 
         public static string WriteCategories(this HtmlHelper htmlHelper, Category rootCategory, CategoryDisplay display)
         {
-            CategoryWriter categoryWriter = new CategoryWriter(rootCategory, htmlHelper, display);
+            var categoryWriter = new CategoryWriter(rootCategory, htmlHelper, display);
             return categoryWriter.Write();
         }
 
         public static string WriteStock(this HtmlHelper htmlHelper, Category rootCategory)
         {
-            StockWriter stockWriter = new StockWriter(htmlHelper, rootCategory);
+            var stockWriter = new StockWriter(htmlHelper, rootCategory);
             return stockWriter.Write();
         }
 
         public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu)
         {
-            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu);
+            var menuWriter = new MenuWriter(htmlHelper, menu);
             return menuWriter.Write();
         }
 
         public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, object attributes)
         {
-            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, attributes);
+            var menuWriter = new MenuWriter(htmlHelper, menu, attributes);
             return menuWriter.Write();
         }
 
         public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, bool nest)
         {
-            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, nest, false);
+            var menuWriter = new MenuWriter(htmlHelper, menu, nest, false);
             return menuWriter.Write();
         }
 
         public static string WriteMenu(this HtmlHelper htmlHelper, Menu menu, bool nest, object attributes)
         {
-            MenuWriter menuWriter = new MenuWriter(htmlHelper, menu, nest, attributes);
+            var menuWriter = new MenuWriter(htmlHelper, menu, nest, attributes);
             return menuWriter.Write();
         }
     }

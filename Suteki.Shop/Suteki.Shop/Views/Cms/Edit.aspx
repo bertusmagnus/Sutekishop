@@ -8,7 +8,7 @@
 <%= Html.MessageBox(ViewData.Model)%>
 <%= Html.ErrorBox(ViewData.Model)%>
 
-<% using (Html.Form<CmsController>(c => c.Update(ViewData.Model.Content.ContentId)))
+<% using (Html.BeginForm<CmsController>(c => c.Update(ViewData.Model.Content.ContentId)))
    { %>
 
     <%= Html.Hidden("contenttypeid", ViewData.Model.Content.ContentTypeId.ToString())%>
@@ -29,7 +29,7 @@
     <%= Html.DropDownList("parentcontentid", new SelectList(ViewData.Model.Menus, "ContentId", "Name", ViewData.Model.Content.ParentContentId))%>
 
     <label for="isactive">Active</label>
-    <%= Html.CheckBox("isactive", "", "True", ViewData.Model.Content.IsActive)%>
+    <%= Html.CheckBox("isactive", ViewData.Model.Content.IsActive)%>
 
     <%= Html.SubmitButton() %>
 

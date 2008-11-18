@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using Castle.MicroKernel;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.IoC
 {
@@ -26,13 +27,18 @@ namespace Suteki.Shop.IoC
         public IHandler SelectHandler(string key, Type service, IHandler[] handlers)
         {
             var id = string.Format("{0}:{1}", service.Name, GetHostname());
-            var selectedHandler = handlers.Where(h => h.ComponentModel.Name == id).FirstOrDefault();
-            if (selectedHandler == null)
-            {
-                throw new ApplicationException(string.Format(
-                    "Cannot find component with id: {0}", id));
-            }
+            var selectedHandler = handlers.Where(h => h.ComponentModel.Name == id).FirstOrDefault() ??
+                                  GetDefaultHandler(service, handlers);
             return selectedHandler;
+        }
+
+        private IHandler GetDefaultHandler(Type service, IHandler[] handlers)
+        {
+            if (handlers.Length == 0)
+            {
+                throw new ApplicationException("No components registered for service {0}".With(service.Name));
+            }
+            return handlers[0];
         }
 
         protected string GetHostname()

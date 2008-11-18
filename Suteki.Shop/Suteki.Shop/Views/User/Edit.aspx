@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using(Html.Form("User", "Update")) { %>
+    <% using(Html.BeginForm("User", "Update")) { %>
 
         <%= Html.Hidden("userid", ViewData.Model.User.UserId.ToString()) %>
 
@@ -20,7 +20,7 @@
         <%= Html.DropDownList("roleid", new SelectList(ViewData.Model.Roles, "RoleId", "Name", ViewData.Model.User.RoleId))%>
         
         <label for="isenabled">User can log on</label>
-        <%= Html.CheckBox("isenabled", "", "True", ViewData.Model.User.IsEnabled) %>
+        <%= Html.CheckBox("isenabled", ViewData.Model.User.IsEnabled) %>
 
         <%= Html.SubmitButton() %>
 

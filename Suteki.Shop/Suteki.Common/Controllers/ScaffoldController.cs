@@ -137,5 +137,11 @@ namespace Suteki.Common.Controllers
             // add the items to the viewData
             viewData.WithLookupList(property.PropertyType, items);
         }
+
+        [NonAction]
+        public string ReadFromRequest(string key)
+        {
+            return Request.QueryString[key] ?? Request.Form[key];
+        }
     }
 }

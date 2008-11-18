@@ -238,7 +238,7 @@ function addHandlers()
         <table>
             <tr>
                 <td class="label"><label for="order.usecardholdercontact">Use Cardholder Details</label></td>
-                <td class="field"><%= Html.CheckBox("order.usecardholdercontact", "", "True", ViewData.Model.Order.UseCardHolderContact,
+                <td class="field"><%= Html.CheckBox("order.usecardholdercontact", ViewData.Model.Order.UseCardHolderContact,
                         new { onclick = "javascript:toggleCardHolderDetails();" })%></td>
             </tr>
         </table>
@@ -349,7 +349,7 @@ function addHandlers()
     <div class="contentRightColumn">
     
         <label for="order.paybytelephone"><strong>I prefer to pay by cheque or telephone</strong></label>
-        <%= Html.CheckBox("order.paybytelephone", "", "True", ViewData.Model.Order.PayByTelephone,
+        <%= Html.CheckBox("order.paybytelephone", ViewData.Model.Order.PayByTelephone,
                         new { onclick = "javascript:toggleCard();" })%>
     
         <p>If you tick this option you will receive an order number. You should quote this number when you contact us with your payment. We accept most major credit and debit cards including Amex. We also accept cheques( in pounds sterling from a UK bank only) and postal orders made payable to ‘Jump the Gun’ Please note that cheques will have to await clearance before we can dispatch goods- this can take six working days.</p>

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.UI;
 using System.IO;
+using Microsoft.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
@@ -12,10 +11,10 @@ namespace Suteki.Shop.HtmlHelpers
 {
     public class MenuWriter
     {
-        HtmlHelper htmlHelper;
-        Menu menu;
-        object attributes;
-        bool nest;
+        readonly HtmlHelper htmlHelper;
+        readonly Menu menu;
+        readonly object attributes;
+        readonly bool nest;
 
         public MenuWriter(HtmlHelper htmlHelper, Menu menu)
             : this(htmlHelper, menu, false, null)
@@ -35,7 +34,7 @@ namespace Suteki.Shop.HtmlHelpers
 
         public string Write()
         {
-            HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
+            var writer = new HtmlTextWriter(new StringWriter());
 
             WriteMenu(writer, menu);
 
@@ -49,7 +48,7 @@ namespace Suteki.Shop.HtmlHelpers
             WriteAttributes(writer);
             writer.RenderBeginTag(HtmlTextWriterTag.Ul);
 
-            foreach (Content content in menu.Contents.InOrder().ActiveFor(htmlHelper.CurrentUser()))
+            foreach (var content in menu.Contents.InOrder().ActiveFor(htmlHelper.CurrentUser()))
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 writer.Write(content.Link(htmlHelper));

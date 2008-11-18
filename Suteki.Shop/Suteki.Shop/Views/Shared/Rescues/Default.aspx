@@ -2,7 +2,7 @@
 <%@ Import Namespace="System.Security"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<% if (ViewData.Model.InnerException != null && ViewData.Model.InnerException.GetType() == typeof(SecurityException))
+<% if (ViewData.Model.Exception.InnerException != null && ViewData.Model.Exception.InnerException.GetType() == typeof(SecurityException))
    { %>
 
 <h1>You do not have permission to view this page</h1>
@@ -22,27 +22,27 @@
 
 <%= ViewData.Model.GetType().Name %>
 
-<%= ViewData.Model.Message %>
+<%= ViewData.Model.Exception.Message %>
 
-<%= ViewData.Model.StackTrace %>
+<%= ViewData.Model.Exception.StackTrace %>
 
-<% if (ViewData.Model.InnerException != null)
+<% if (ViewData.Model.Exception.InnerException != null)
    { %>
 
-    <%= ViewData.Model.InnerException.GetType().Name %>
+    <%= ViewData.Model.Exception.InnerException.GetType().Name %>
 
-    <%= ViewData.Model.InnerException.Message %>
+    <%= ViewData.Model.Exception.InnerException.Message %>
 
-    <%= ViewData.Model.InnerException.StackTrace %>
+    <%= ViewData.Model.Exception.InnerException.StackTrace %>
 
-    <% if (ViewData.Model.InnerException.InnerException != null)
+    <% if (ViewData.Model.Exception.InnerException.InnerException != null)
        { %>
 
-        <%= ViewData.Model.InnerException.InnerException.GetType().Name %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.GetType().Name %>
 
-        <%= ViewData.Model.InnerException.InnerException.Message %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.Message %>
 
-        <%= ViewData.Model.InnerException.InnerException.StackTrace %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.StackTrace %>
 
     <% } %>
 

@@ -10,7 +10,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.Form("Product", "Update", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } } ))
+    <% using (Html.BeginForm("Product", "Update", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } } ))
        { %>
 
         <%= Html.Hidden("productId", ViewData.Model.Product.ProductId.ToString())%>
@@ -31,7 +31,7 @@
                 <%= Html.TextBox("price", ViewData.Model.Product.Price.ToString("0.00"))%>
                 
                 <label for="isactive">Active</label>
-                <%= Html.CheckBox("isactive", "", "True", ViewData.Model.Product.IsActive)%>
+                <%= Html.CheckBox("isactive", ViewData.Model.Product.IsActive)%>
             </div>
             
             <div class="contentRightColumn">

@@ -41,7 +41,7 @@ function onThumbnailClick(img)
 
 
 <div class="productOptions">
-<% using (Html.Form("Basket", "Update"))
+<% using (Html.BeginForm("Basket", "Update"))
    { %>
 
     <%= Html.ErrorBox(ViewData.Model)%>
@@ -63,8 +63,8 @@ function onThumbnailClick(img)
 </div>
 
 <p>If an item is out of stock, please email us at 
-<a href="mailto:<%= ((ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress %>">
-<%= ((ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress %>
+<a href="mailto:<%= ((Suteki.Shop.Controllers.ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress %>">
+<%= ((Suteki.Shop.Controllers.ControllerBase)this.ViewContext.Controller).BaseControllerService.EmailAddress%>
 </a>
  so that we can let you know when it will be available.</p>
 

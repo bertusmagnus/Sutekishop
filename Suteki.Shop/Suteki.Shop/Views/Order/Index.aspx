@@ -4,7 +4,7 @@
 <h1>Orders</h1>
 
 <div class="columnContainer">
-<% using(Html.Form<OrderController>(c => c.Index())) { %>
+<% using(Html.BeginForm<OrderController>(c => c.Index())) { %>
 
     <div class="contentLeftColumn">
         <label for="orderid">Order Number</label>

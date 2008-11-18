@@ -91,5 +91,11 @@ namespace Suteki.Shop.Controllers
         {
             FormsAuthentication.SignOut();
         }
+
+        [NonAction]
+        public string ReadFromRequest(string key)
+        {
+            return Request.QueryString[key] ?? Request.Form[key];
+        }
     }
 }

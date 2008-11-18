@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{34A080EA-6A03-4F1A-9558-89148F6C4DDF}"
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\Castle.Core.dll = Dependencies\Castle.Core.dll
-		Dependencies\Castle.DynamicProxy.dll = Dependencies\Castle.DynamicProxy.dll
 		Dependencies\Castle.DynamicProxy2.dll = Dependencies\Castle.DynamicProxy2.dll
 		Dependencies\Castle.Facilities.Logging.dll = Dependencies\Castle.Facilities.Logging.dll
 		Dependencies\Castle.MicroKernel.dll = Dependencies\Castle.MicroKernel.dll
@@ -21,7 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll
 		Dependencies\NVelocity.dll = Dependencies\NVelocity.dll
 		Dependencies\System.Web.Abstractions.dll = Dependencies\System.Web.Abstractions.dll
-		Dependencies\System.Web.Mvc.dll = Dependencies\System.Web.Mvc.dll
 		Dependencies\System.Web.Routing.dll = Dependencies\System.Web.Routing.dll
 	EndProjectSection
 EndProject
