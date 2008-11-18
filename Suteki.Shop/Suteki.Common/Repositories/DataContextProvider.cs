@@ -21,5 +21,10 @@ namespace Suteki.Common.Repositories
                 return dataContext;
             }
         }
+
+        public void Dispose()
+        {
+            dataContext.Dispose();
+        }
     }
 }
