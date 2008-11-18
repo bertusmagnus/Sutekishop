@@ -115,7 +115,7 @@ namespace Suteki.Shop.Views.Shared
         {
             get
             {
-                return "\"{0}/Content/{1}\"".With(SiteUrl, GetController().BaseControllerService.SiteCss);
+                return "\"{0}Content/{1}\"".With(SiteUrl, GetController().BaseControllerService.SiteCss);
             }
         }
 
