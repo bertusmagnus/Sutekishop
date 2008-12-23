@@ -134,7 +134,7 @@ h2 a
 
 .login
 {
-	visibility: hidden;
+	/* visibility: hidden; */
 }
 
 .error
