@@ -40,6 +40,9 @@ namespace Suteki.Shop.Tests.Controllers
             // don't worry about encrypting passwords here, just stub out this call so that it has no effect
             // on the user
             userControllerMock.Expect(c => c.EncryptPassword(It.IsAny<User>()));
+
+            // setup the querystring to return an empty name value collection by default
+            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(() => new NameValueCollection());
         }
 
         [Test]

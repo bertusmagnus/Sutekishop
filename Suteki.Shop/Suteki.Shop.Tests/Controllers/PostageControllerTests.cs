@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Security.Principal;
+using System.Threading;
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
@@ -23,6 +25,9 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
+            // you have to be an administrator to access the CMS controller
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+
             postageRepository = new Mock<IRepository<Postage>>().Object;
             orderableService = new Mock<IOrderableService<Postage>>().Object;
 
@@ -94,10 +99,14 @@ namespace Suteki.Shop.Tests.Controllers
 
         private NameValueCollection BuildMockPostageForm()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("name", "A");
-            form.Add("maxWeight", "250");
-            form.Add("price", "5.25");
+            var form = new NameValueCollection
+            {
+                {"name", "A"}, 
+                {"maxWeight", "250"}, 
+                {"price", "5.25"}
+            };
+
+            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(() => new NameValueCollection());
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
             return form;
         }

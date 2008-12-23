@@ -10,10 +10,10 @@ namespace Suteki.Shop.Tests.Repositories
     {
         public static Mock<Repository<User>> CreateUserRepository()
         {
-            Mock<ShopDataContext> dataContextMock = new Mock<ShopDataContext>();
-            Mock<Repository<User>> userRepositoryMock = new Mock<Repository<User>>(dataContextMock.Object);
+            var dataContextProviderMock = new Mock<IDataContextProvider>();
+            var userRepositoryMock = new Mock<Repository<User>>(dataContextProviderMock.Object);
 
-            List<User> users = new List<User>()
+            var users = new List<User>()
             {
                 new User { UserId = 1, Email = "Henry@suteki.co.uk", 
                     Password = "6C80B78681161C8349552872CFA0739CF823E87B", IsEnabled = true }, // henry1
@@ -32,10 +32,10 @@ namespace Suteki.Shop.Tests.Repositories
 
         public static Mock<Repository<Role>> CreateRoleRepository()
         {
-            Mock<ShopDataContext> dataContextMock = new Mock<ShopDataContext>();
-            Mock<Repository<Role>> roleRepositoryMock = new Mock<Repository<Role>>(dataContextMock.Object);
+            var dataContextProviderMock = new Mock<IDataContextProvider>();
+            var roleRepositoryMock = new Mock<Repository<Role>>(dataContextProviderMock.Object);
 
-            List<Role> roles = new List<Role>
+            var roles = new List<Role>
             {
                 new Role { RoleId = 1, Name = "Administrator" },
                 new Role { RoleId = 2, Name = "Order Processor" },
@@ -50,21 +50,21 @@ namespace Suteki.Shop.Tests.Repositories
 
         public static Mock<Repository<Category>> CreateCategoryRepository()
         {
-            Mock<ShopDataContext> dataContextMock = new Mock<ShopDataContext>();
-            Mock<Repository<Category>> categoryRepositoryMock = new Mock<Repository<Category>>(dataContextMock.Object);
+            var dataContextProviderMock = new Mock<IDataContextProvider>();
+            var categoryRepositoryMock = new Mock<Repository<Category>>(dataContextProviderMock.Object);
 
-            Category root = new Category { Name = "root" };
+            var root = new Category { Name = "root" };
 
-            Category one = new Category { Name = "one" };
-            Category two = new Category { Name = "two" };
+            var one = new Category { Name = "one" };
+            var two = new Category { Name = "two" };
             root.Categories.AddRange(new Category[] { one, two });
 
-            Category oneOne = new Category { Name = "oneOne" };
-            Category oneTwo = new Category { Name = "oneTwo" };
+            var oneOne = new Category { Name = "oneOne" };
+            var oneTwo = new Category { Name = "oneTwo" };
             one.Categories.AddRange(new Category[] { oneOne, oneTwo });
 
-            Category oneTwoOne = new Category { Name = "oneTwoOne" };
-            Category oneTwoTwo = new Category { Name = "oneTwoTwo" };
+            var oneTwoOne = new Category { Name = "oneTwoOne" };
+            var oneTwoTwo = new Category { Name = "oneTwoTwo" };
             oneTwo.Categories.AddRange(new Category[] { oneTwoOne, oneTwoTwo });
 
             Category[] categories = 
@@ -106,10 +106,10 @@ namespace Suteki.Shop.Tests.Repositories
 
         public static Mock<Repository<Product>> CreateProductRepository()
         {
-            Mock<ShopDataContext> dataContextMock = new Mock<ShopDataContext>();
-            Mock<Repository<Product>> productRepositoryMock = new Mock<Repository<Product>>(dataContextMock.Object);
+            var dataContextProviderMock = new Mock<IDataContextProvider>();
+            var productRepositoryMock = new Mock<Repository<Product>>(dataContextProviderMock.Object);
 
-            List<Product> products = new List<Product>
+            var products = new List<Product>
             {
                 new Product { ProductId = 1, CategoryId = 2, Name = "Product 1", Description = "Description 1" },
                 new Product { ProductId = 2, CategoryId = 2, Name = "Product 2", Description = "Description 2" },
