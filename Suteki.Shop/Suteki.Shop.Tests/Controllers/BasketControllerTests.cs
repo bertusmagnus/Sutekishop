@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
@@ -19,13 +18,14 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            basketRepository = new Mock<IRepository<Basket>>().Object;
-            basketItemRepository = new Mock<IRepository<BasketItem>>().Object;
-            sizeRepository = new Mock<IRepository<Size>>().Object;
+            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
+            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
+            basketItemRepository = MockRepository.GenerateStub<IRepository<BasketItem>>();
+            sizeRepository = MockRepository.GenerateStub<IRepository<Size>>();
 
-            userService = new Mock<IUserService>().Object;
-            postageService = new Mock<IPostageService>().Object;
-            countryRepository = new Mock<IRepository<Country>>().Object;
+            userService = MockRepository.GenerateStub<IUserService>();
+            postageService = MockRepository.GenerateStub<IPostageService>();
+            countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
 
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
@@ -39,8 +39,6 @@ namespace Suteki.Shop.Tests.Controllers
                 validatingBinder);
 
             testContext = new ControllerTestContext(basketController);
-
-            Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Basket>()));
         }
 
         #endregion
@@ -67,7 +65,7 @@ namespace Suteki.Shop.Tests.Controllers
                         new Basket()
                     }
             };
-            Mock.Get(userService).Expect(bc => bc.CurrentUser).Returns(user);
+            userService.Expect(bc => bc.CurrentUser).Return(user);
             return user;
         }
 
@@ -115,13 +113,13 @@ namespace Suteki.Shop.Tests.Controllers
             testContext.TestContext.Context.User = user;
 
             // expect 
-            Mock.Get(basketItemRepository).Expect(ir => ir.DeleteOnSubmit(basketItem)).Verifiable();
-            Mock.Get(basketItemRepository).Expect(ir => ir.SubmitChanges());
+            basketItemRepository.Expect(ir => ir.DeleteOnSubmit(basketItem));
+            basketItemRepository.Expect(ir => ir.SubmitChanges());
 
             var result = basketController.Remove(basketItemIdToRemove) as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
-            Mock.Get(basketItemRepository).Verify();
+            basketItemRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -131,10 +129,10 @@ namespace Suteki.Shop.Tests.Controllers
             var user = CreateUserWithBasket();
 
             // expect 
-            Mock.Get(basketRepository).Expect(or => or.SubmitChanges()).Verifiable();
-            Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user).Verifiable();
-            Mock.Get(userService).Expect(bc => bc.SetAuthenticationCookie(user.Email)).Verifiable();
-            Mock.Get(userService).Expect(bc => bc.SetContextUserTo(user)).Verifiable();
+            basketRepository.Expect(or => or.SubmitChanges());
+            userService.Expect(us => us.CreateNewCustomer()).Return(user);
+            userService.Expect(bc => bc.SetAuthenticationCookie(user.Email));
+            userService.Expect(bc => bc.SetContextUserTo(user));
 
             var size = new Size
             {
@@ -144,7 +142,7 @@ namespace Suteki.Shop.Tests.Controllers
                     Weight = 10
                 }
             };
-            Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
+            sizeRepository.Expect(sr => sr.GetById(5)).Return(size);
 
             basketController.Update(form);
 
@@ -152,8 +150,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
             Assert.AreEqual(2, user.Baskets[0].BasketItems[0].Quantity);
 
-            Mock.Get(basketRepository).Verify();
-            Mock.Get(userService).Verify();
+            basketRepository.VerifyAllExpectations();
+            userService.VerifyAllExpectations();
         }
 
         [Test]
@@ -163,10 +161,10 @@ namespace Suteki.Shop.Tests.Controllers
             var user = CreateUserWithBasket();
 
             // expect 
-            Mock.Get(basketRepository).Expect(or => or.SubmitChanges());
-            Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user);
-            Mock.Get(userService).Expect(bc => bc.SetAuthenticationCookie(user.Email));
-            Mock.Get(userService).Expect(bc => bc.SetContextUserTo(user));
+            basketRepository.Expect(or => or.SubmitChanges());
+            userService.Expect(us => us.CreateNewCustomer()).Return(user);
+            userService.Expect(bc => bc.SetAuthenticationCookie(user.Email));
+            userService.Expect(bc => bc.SetContextUserTo(user));
 
             var size = new Size
             {
@@ -175,7 +173,7 @@ namespace Suteki.Shop.Tests.Controllers
                 IsActive = true,
                 Product = new Product {Name = "Denim Jacket"}
             };
-            Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
+            sizeRepository.Expect(sr => sr.GetById(5)).Return(size);
 
             const string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
