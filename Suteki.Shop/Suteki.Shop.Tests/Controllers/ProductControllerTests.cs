@@ -256,5 +256,38 @@ namespace Suteki.Shop.Tests.Controllers
 
             productRepositoryMock.Verify();
         }
+
+        [Test]
+        public void UpdateImages_ShouldAddUploadedImagesToProduct()
+        {
+            const int nextPosition = 23;
+            var product = new Product();
+            var request = new Mock<HttpRequestBase>().Object;
+
+            var image1 = new Image();
+            var image2 = new Image();
+            var image3 = new Image();
+
+            var images = new List<Image>{image1, image2, image3};
+
+            Mock.Get(httpFileService).Expect(fs => fs.GetUploadedImages(request)).Returns(images);
+            Mock.Get(productImageOrderableService).ExpectGet(os => os.NextPosition).Returns(nextPosition);
+
+            productController.UpdateImages(product, request);
+
+            // UpdateImages should add the three images to the product with the correct
+            // positions
+
+            Assert.That(product.ProductImages.Count, Is.EqualTo(3), "Wrong number of images");
+
+            Assert.That(product.ProductImages[0].Image, Is.SameAs(image1), "Incorect first image");
+            Assert.That(product.ProductImages[0].Position, Is.EqualTo(nextPosition), "Incorect first position");
+
+            Assert.That(product.ProductImages[1].Image, Is.SameAs(image2), "Incorect second image");
+            Assert.That(product.ProductImages[1].Position, Is.EqualTo(nextPosition + 1), "Incorect second position");
+            
+            Assert.That(product.ProductImages[2].Image, Is.SameAs(image3), "Incorect third image");
+            Assert.That(product.ProductImages[2].Position, Is.EqualTo(nextPosition + 2), "Incorect third position");
+        }
     }
 }

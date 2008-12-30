@@ -148,16 +148,19 @@ namespace Suteki.Shop.Controllers
             };
         }
 
-        private void UpdateImages(Product product, HttpRequestBase request)
+        [NonAction]
+        public virtual void UpdateImages(Product product, HttpRequestBase request)
         {
             var images = httpFileService.GetUploadedImages(request);
+            var position = productImageOrderableService.NextPosition;
             foreach (var image in images)
             {
                 product.ProductImages.Add(new ProductImage 
                 {
                     Image = image,
-                    Position = productImageOrderableService.NextPosition
+                    Position = position
                 });
+                position++;
             }
         }
 
