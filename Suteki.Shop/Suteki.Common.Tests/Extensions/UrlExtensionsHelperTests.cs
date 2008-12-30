@@ -1,9 +1,7 @@
 using System;
-using System.Web;
-using Moq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Extensions;
+using Rhino.Mocks;
 
 namespace Suteki.Common.Tests.Extensions
 {
@@ -11,23 +9,26 @@ namespace Suteki.Common.Tests.Extensions
     public class UrlExtensionsHelperTests
     {
         private UrlExtensionsHelper urlExtensionsHelper;
+        private MockRepository mocks;
 
         [SetUp]
         public void SetUp()
         {
-            urlExtensionsHelper = new Mock<UrlExtensionsHelper>().Object;
-
-            Mock.Get(urlExtensionsHelper).Expect(eh => eh.UseSsl()).Returns(true);
+            mocks = new MockRepository();
+            urlExtensionsHelper = mocks.PartialMock<UrlExtensionsHelper>();
+            urlExtensionsHelper.Stub(eh => eh.UseSsl()).Return(true).Repeat.Any();
         }
 
         [Test]
         public void ToSslUrl_ShouldAddHttpsToExistingUrlWithQueryString()
         {
             const string currentUrl = "http://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66?countryId=1";
-            Mock.Get(urlExtensionsHelper).Expect(eh => eh.GetRequestUri()).Returns(new Uri(currentUrl));
+            urlExtensionsHelper.Stub(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
             var existingUrl = "/shop/Order/PlaceOrder";
             var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+
+            mocks.ReplayAll();
 
             Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
         }
@@ -36,10 +37,12 @@ namespace Suteki.Common.Tests.Extensions
         public void ToSslUrl_ShouldAddHttpsToExistingUrlWithoutQueryString()
         {
             const string currentUrl = "http://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66";
-            Mock.Get(urlExtensionsHelper).Expect(eh => eh.GetRequestUri()).Returns(new Uri(currentUrl));
+            urlExtensionsHelper.Expect(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
             var existingUrl = "/shop/Order/PlaceOrder";
             var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+
+            mocks.ReplayAll();
 
             Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
         }
@@ -48,10 +51,12 @@ namespace Suteki.Common.Tests.Extensions
         public void ToSslUrl_ShouldAddHttpsToExistingUrlWithHttps()
         {
             const string currentUrl = "https://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66";
-            Mock.Get(urlExtensionsHelper).Expect(eh => eh.GetRequestUri()).Returns(new Uri(currentUrl));
+            urlExtensionsHelper.Expect(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
             var existingUrl = "/shop/Order/PlaceOrder";
             var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+
+            mocks.ReplayAll();
 
             Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
         }

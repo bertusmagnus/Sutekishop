@@ -1,6 +1,6 @@
-﻿using System;
+using System;
+using System.Web.Mvc;
 using NUnit.Framework;
-using System.Collections.Specialized;
 using Suteki.Common.Validation;
 
 namespace Suteki.Common.Tests.Validation
@@ -8,107 +8,102 @@ namespace Suteki.Common.Tests.Validation
     [TestFixture]
     public class ValidatingBinderTests
     {
-        [Test]
-        public void UpdateFrom_ShouldUpdateObjectWithValues()
+        private ValidatingBinder validatingBinder;
+
+        [SetUp]
+        public void SetUp()
         {
-            var values = new NameValueCollection
-                             {
-                                 {"userId", "4"},
-                                 {"email", "mike@mike.com"},
-                                 {"thedate", "24/3/2008"},
-                                 {"name", "mike"}
-                             };
-
-            var testThing = new TestThing();
-
-            ValidatingBinder.UpdateFrom(testThing, values);
-
-            Assert.AreEqual(4, testThing.UserId);
-            Assert.AreEqual("mike@mike.com", testThing.Email);
-            Assert.AreEqual(new DateTime(2008, 3, 24), testThing.TheDate);
-            Assert.AreEqual("mike", testThing.Name);
+            validatingBinder = new ValidatingBinder(
+                new SimplePropertyBinder(),
+                new BooleanPropertyBinder());
         }
 
         [Test]
-        public void UpdateFrom_MissingValuesShouldNotBeUpdated()
+        public void ShouldBindCorrectValues()
         {
-            // no values
-            var values = new NameValueCollection();
-
-            var testThing = new TestThing
-                                      {
-                                          UserId = 5,
-                                          Email = "mike@mike.com",
-                                          TheDate = new DateTime(2008, 1, 1),
-                                          Name = "mike"
-                                      };
-
-            ValidatingBinder.UpdateFrom(testThing, values);
-
-            Assert.AreEqual(5, testThing.UserId);
-            Assert.AreEqual("mike@mike.com", testThing.Email);
-            Assert.AreEqual(new DateTime(2008, 1, 1), testThing.TheDate);
-            Assert.AreEqual("mike", testThing.Name);
-        }
-
-        [Test]
-        public void UpdateFrom_ShouldNotAllowHtmlInjection()
-        {
-            var values = new NameValueCollection
-                             {
-                                 {"name", "<script></script>"}
-                             };
-
-            var testThing = new TestThing();
-
-            ValidatingBinder.UpdateFrom(testThing, values);
-
-            Assert.AreEqual("&lt;script&gt;&lt;/script&gt;", testThing.Name);
-        }
-
-        [Test] 
-        [ExpectedException(
-            typeof(ValidationException), 
-            ExpectedMessage = "'not a number' is not a valid value for UserId<br />")]
-        public void UpdateFrom_TypeConversionErrorsShouldBeProperlyReported()
-        {
-            var values = new NameValueCollection {{"userid", "not a number"}};
-
-            var testThing = new TestThing();
-
-            ValidatingBinder.UpdateFrom(testThing, values);
-        }
-
-        [Test]
-        [ExpectedException(typeof(ValidationException), ExpectedMessage = "You must enter a value for Name<br />")]
-        public void UpdateFrom_ValidationErrorsShouldBeProperlyDisplayed()
-        {
-            var values = new NameValueCollection {{"name", ""}};
-
-            var testThing = new TestThing();
-
-            ValidatingBinder.UpdateFrom(testThing, values);
-        }
-    }
-
-    public class TestThing
-    {
-        public int UserId { get; set; }
-        public string Email { get; set; }
-        public DateTime TheDate { get; set; }
-
-        string name;
-
-        public string Name
-        {
-            get
+            var thing = new Thing
             {
-                return name;
-            }
-            set
+                Id = 4,
+                Name = "Henry",
+                Date = new DateTime(2008, 09, 04),
+                Price = 10.42M,
+                IsValid = false, 
+                Age = 1
+            };
+
+            var form = new FormCollection
             {
-                value.Label("Name").IsRequired();
-                name = value;
+                { "Id", "4" },
+                { "Name", "Joe" },
+                { "Date", "2007-01-01" },
+                { "Price", "2.45" },
+                { "IsValid", "True,False" },
+                { "Age", "34" }
+            };
+
+            validatingBinder.UpdateFrom(thing, form);
+
+            Assert.That(thing.Id, Is.EqualTo(4));
+            Assert.That(thing.Name, Is.EqualTo("Joe"));
+            Assert.That(thing.Date, Is.EqualTo(new DateTime(2007, 01, 01)));
+            Assert.That(thing.Price, Is.EqualTo(2.45M));
+            Assert.That(thing.IsValid, Is.True);
+            Assert.That(thing.Age, Is.EqualTo(34));
+        }
+
+        [Test, ExpectedException(typeof(ValidationException))]
+        public void ShouldThrowValidationExceptions()
+        {
+            var thing = new Thing();
+
+            var form = new FormCollection
+            {
+                { "Age", "0" }
+            };
+
+            validatingBinder.UpdateFrom(thing, form);
+        }
+
+        [Test, ExpectedException(typeof(ValidationException))]
+        public void ShouldThrowTypeConversionExceptions()
+        {
+            var thing = new Thing();
+
+            var form = new FormCollection
+            {
+                { "Age", "not a number" }
+            };
+
+            validatingBinder.UpdateFrom(thing, form);
+        }
+
+        [Test]
+        public void ShouldSetNonPresentBoolValueToFalse()
+        {
+            var thing = new Thing {IsValid = true};
+            var form = new FormCollection();
+
+            validatingBinder.UpdateFrom(thing, form);
+
+            Assert.That(thing.IsValid, Is.False);
+        }
+
+        public class Thing
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public DateTime Date { get; set; }
+            public decimal Price { get; set; }
+            public bool IsValid { get; set; }
+
+            private int age;
+            public int Age
+            {
+                get { return age; }
+                set
+                {
+                    age = value.Label("Age").IsNonZero().Value;
+                }
             }
         }
     }

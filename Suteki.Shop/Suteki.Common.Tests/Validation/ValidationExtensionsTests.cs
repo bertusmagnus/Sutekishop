@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Validation;
 
 namespace Suteki.Common.Tests.Validation
@@ -13,16 +12,16 @@ namespace Suteki.Common.Tests.Validation
         [Test, ExpectedException(typeof(ValidationException), ExpectedMessage = "You must enter a value for My Property")]
         public void IsRequired_ShouldNotValidateAnEmptyString()
         {
-            string property = "";
+            const string property = "";
             property.Label("My Property").IsRequired();
         }
 
         [Test, ExpectedException(typeof(ValidationException), ExpectedMessage = validationMessage)]
         public void CollectingExceptionsSpike()
         {
-            string property = "";
+            const string property = "";
 
-            Validator validator = new Validator
+            var validator = new Validator
                                       {
                                           () => property.Label("Property 1").IsRequired(),
                                           () => property.Label("Property 2").IsRequired(),
@@ -35,7 +34,7 @@ namespace Suteki.Common.Tests.Validation
         [Test]
         public void IsCreditCard_ShouldSuccessfullyValidateACreditCard()
         {
-            string validCardNumber = "1111111111111117";
+            const string validCardNumber = "1111111111111117";
 
             validCardNumber.Label("Card Number").IsCreditCard();
         }
@@ -43,7 +42,7 @@ namespace Suteki.Common.Tests.Validation
         [Test, ExpectedException(typeof(ValidationException))]
         public void IsCreditCard_ShouldNotValidateAnInvalidCreditCard()
         {
-            string validCardNumber = "1111111111211117";
+            const string validCardNumber = "1111111111211117";
 
             validCardNumber.Label("Card Number").IsCreditCard();
         }
@@ -51,21 +50,21 @@ namespace Suteki.Common.Tests.Validation
         [Test]
         public void IsCreditCard_ShouldSuccessfullyValidateACreditCardWithSpaces()
         {
-            string validCardNumber = "1111 1111 1111 1117";
+            const string validCardNumber = "1111 1111 1111 1117";
             validCardNumber.Label("Card Number").IsCreditCard();
         }
 
         [Test]
         public void IsCreditCard_ShouldSuccessfullyValidateACreditCardWithDashes()
         {
-            string validCardNumber = "1111-1111-1111-1117";
+            const string validCardNumber = "1111-1111-1111-1117";
             validCardNumber.Label("Card Number").IsCreditCard();
         }
 
         [Test]
         public void IsCreditCard_ShouldSuccessfullyValidatate19DigitCreditCardNumbers()
         {
-            string validCardNumber = "1111 1111 1111 1111 113";
+            const string validCardNumber = "1111 1111 1111 1111 113";
             validCardNumber.Label("Card Number").IsCreditCard();
         }
 
