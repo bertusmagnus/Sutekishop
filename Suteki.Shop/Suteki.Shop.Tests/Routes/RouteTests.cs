@@ -1,7 +1,6 @@
-﻿using System;
-using System.Web.Routing;
-using Moq;
+﻿using System.Web.Routing;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Routes;
 
@@ -78,16 +77,17 @@ namespace Suteki.Shop.Tests.Routes
         /// </summary>
         /// <param name="routes"></param>
         /// <param name="relativeUrl"></param>
+        /// <param name="propertyBag"></param>
         private static void AssertRoutes(RouteCollection routes, string relativeUrl, object propertyBag)
         {
-            HttpContextTestContext testContext = new HttpContextTestContext();
+            var testContext = new HttpContextTestContext();
 
-            testContext.RequestMock.ExpectGet(request => request.AppRelativeCurrentExecutionFilePath)
-                .Returns(relativeUrl);
+            testContext.Request.Expect(request => request.AppRelativeCurrentExecutionFilePath)
+                .Return(relativeUrl);
 
-            testContext.RequestMock.ExpectGet(request => request.PathInfo).Returns(string.Empty);
+            testContext.Request.Expect(request => request.PathInfo).Return(string.Empty);
 
-            RouteData routeData = routes.GetRouteData(testContext.Context);
+            var routeData = routes.GetRouteData(testContext.Context);
 
             foreach (var property in propertyBag.GetProperties())
             {

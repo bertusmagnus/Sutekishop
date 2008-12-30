@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
 using Moq;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
@@ -72,10 +73,10 @@ namespace Suteki.Shop.Tests.Controllers
 
             Mock.Get(userService).Expect(us => us.CurrentUser).Returns(new User {UserId = 4});
 
-            testContext.TestContext.ContextMock.ExpectGet(h => h.User).Returns(new User { UserId = 4 });
-            testContext.TestContext.RequestMock.ExpectGet(r => r.RequestType).Returns("GET");
-            testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(new NameValueCollection());
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(new NameValueCollection());
+            testContext.TestContext.Context.User = new User { UserId = 4 };
+            testContext.TestContext.Request.RequestType = "GET";
+            testContext.TestContext.Request.Stub(r => r.QueryString).Return(new NameValueCollection());
+            testContext.TestContext.Request.Stub(r => r.Form).Return(new NameValueCollection());
         }
 
         [Test]
@@ -123,7 +124,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             // mock the request form
             var form = BuildPlaceOrderRequest();
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.Request.Stub(r => r.Form).Return(form);
 
             // expectations
             var basket = new Basket();
@@ -137,9 +138,10 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
 
             Mock.Get(orderController).Expect(c => c.EmailOrder(It.IsAny<Order>())).Verifiable();
+            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
 
             // exercise PlaceOrder action
-            var result = orderController.PlaceOrder() as RedirectToRouteResult;
+            var result = orderController.PlaceOrder(form) as RedirectToRouteResult;
 
             // Assertions
             Assert.IsNotNull(result, "result is not a RedirectToRouteResult");
@@ -197,9 +199,9 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form[prefix + ".telephone"], contact.Telephone, prefix + " Telephone is incorrect");
         }
 
-        private static NameValueCollection BuildPlaceOrderRequest()
+        private static FormCollection BuildPlaceOrderRequest()
         {
-            var form = new NameValueCollection
+            var form = new FormCollection
             {
                 {"order.orderid", "10"},
                 {"order.basketid", "22"},
@@ -300,7 +302,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void Index_ShouldBuildCriteriaAndExecuteSearch()
         {
             var form = new NameValueCollection {{"orderid", "3"}};
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(form);
+            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             var orders = new List<Order>
             {

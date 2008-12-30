@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
 using Moq;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Tests.Repositories;
-using Suteki.Shop.Repositories;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
@@ -50,13 +49,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfCategories()
         {
-            ViewResult result = categoryController.Index() as ViewResult;
+            var result = categoryController.Index() as ViewResult;
 
             Assert.IsNotNull(result, "expected a ViewResult");
 
             Assert.AreEqual("Index", result.ViewName, "ViewName is incorrect");
 
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
+            var viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
@@ -65,16 +64,16 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayCategoryEditView()
         {
-            ViewResult result = categoryController.New(1) as ViewResult;
+            var result = categoryController.New(1) as ViewResult;
 
             AssertEditViewIsCorrectlyShown(result);
         }
 
-        private void AssertEditViewIsCorrectlyShown(ViewResult result)
+        private static void AssertEditViewIsCorrectlyShown(ViewResultBase result)
         {
             Assert.AreEqual("Edit", result.ViewName, "ViewName is incorrect");
 
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
+            var viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.IsNotNull(viewData.Category, "Category is null");
@@ -85,9 +84,9 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Edit_ShouldDisplayCategoryEditViewWithCorrectCategory()
         {
-            int categoryId = 3;
+            const int categoryId = 3;
 
-            Category category = new Category
+            var category = new Category
             {
                 CategoryId = categoryId,
                 Name = "My Category",
@@ -96,7 +95,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category);
 
-            ViewResult result = categoryController.Edit(categoryId) as ViewResult;
+            var result = categoryController.Edit(categoryId) as ViewResult;
 
             AssertEditViewIsCorrectlyShown(result);
             categoryRepositoryMock.Verify();
@@ -105,16 +104,16 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldInsertNewCategory()
         {
-            int categoryId = 0;
-            string name = "My Category";
-            int parentid = 78;
+            const int categoryId = 0;
+            const string name = "My Category";
+            const int parentid = 78;
 
             // set up the request form
-            NameValueCollection form = new NameValueCollection();
+            var form = new NameValueCollection();
             form.Add("categoryid", categoryId.ToString());
             form.Add("name", name);
             form.Add("parentid", parentid.ToString());
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             // set up expectations on the repository
             Category category = null;
@@ -124,7 +123,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            ViewResult result = categoryController.Update(categoryId) as ViewResult;
+            var result = categoryController.Update(categoryId) as ViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");
@@ -139,18 +138,20 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldUpdateAnExistingCategory()
         {
-            int categoryId = 12;
-            string name = "My Category";
-            int parentid = 78;
+            const int categoryId = 12;
+            const string name = "My Category";
+            const int parentid = 78;
 
             // set up the request form
-            NameValueCollection form = new NameValueCollection();
-            form.Add("categoryid", categoryId.ToString());
-            form.Add("name", name);
-            form.Add("parentid", parentid.ToString());
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            var form = new NameValueCollection
+            {
+                {"categoryid", categoryId.ToString()},
+                {"name", name},
+                {"parentid", parentid.ToString()}
+            };
+            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
-            Category category = new Category
+            var category = new Category
             {
                 CategoryId = 12,
                 Name = "Old Name",
@@ -160,7 +161,7 @@ namespace Suteki.Shop.Tests.Controllers
             categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category).Verifiable();
             categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
 
-            ViewResult result = categoryController.Update(categoryId) as ViewResult;
+            var result = categoryController.Update(categoryId) as ViewResult;
 
             // assert that the category has the correct values from the form
             Assert.IsNotNull(category, "category is null");

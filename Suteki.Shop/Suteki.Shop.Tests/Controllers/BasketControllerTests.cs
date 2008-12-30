@@ -1,29 +1,20 @@
-﻿using NUnit.Framework;
+﻿using System.Web.Mvc;
 using Moq;
+using NUnit.Framework;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Services;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
-using System.Web.Mvc;
-using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Tests.Controllers
 {
     [TestFixture]
     public class BasketControllerTests
     {
-        BasketController basketController;
-        ControllerTestContext testContext;
-        
-        IRepository<Basket> basketRepository;
-        IRepository<BasketItem> basketItemRepository;
-        IRepository<Size> sizeRepository;
-
-        IUserService userService;
-        IPostageService postageService;
-        IRepository<Country> countryRepository;
-        IValidatingBinder validatingBinder;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -39,8 +30,8 @@ namespace Suteki.Shop.Tests.Controllers
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
             basketController = new BasketController(
-                basketRepository, 
-                basketItemRepository, 
+                basketRepository,
+                basketItemRepository,
                 sizeRepository,
                 userService,
                 postageService,
@@ -52,11 +43,49 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Basket>()));
         }
 
+        #endregion
+
+        private BasketController basketController;
+        private ControllerTestContext testContext;
+
+        private IRepository<Basket> basketRepository;
+        private IRepository<BasketItem> basketItemRepository;
+        private IRepository<Size> sizeRepository;
+
+        private IUserService userService;
+        private IPostageService postageService;
+        private IRepository<Country> countryRepository;
+        private IValidatingBinder validatingBinder;
+
+        private User CreateUserWithBasket()
+        {
+            var user = new User
+            {
+                RoleId = Role.GuestId,
+                Baskets =
+                    {
+                        new Basket()
+                    }
+            };
+            Mock.Get(userService).Expect(bc => bc.CurrentUser).Returns(user);
+            return user;
+        }
+
+        private static FormCollection CreateUpdateForm()
+        {
+            var form = new FormCollection
+            {
+                {"sizeid", "5"},
+                {"quantity", "2"}
+            };
+            return form;
+        }
+
         [Test]
         public void Index_ShouldShowIndexViewWithCurrentBasket()
         {
             var user = CreateUserWithBasket();
-            testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
+            testContext.TestContext.Context.User = user;
 
             var result = basketController.Index() as ViewResult;
 
@@ -67,18 +96,32 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreSame(user.Baskets[0], viewData.Basket, "The user's basket has not been shown");
         }
 
-        private User CreateUserWithBasket()
+        [Test]
+        public void Remove_ShouldRemoveItemFromBasket()
         {
-            var user = new User
+            const int basketItemIdToRemove = 3;
+
+            var user = CreateUserWithBasket();
+            var basketItem = new BasketItem
             {
-                RoleId = Role.GuestId,
-                Baskets =
+                BasketItemId = basketItemIdToRemove,
+                Quantity = 1,
+                Size = new Size
                 {
-                    new Basket()
+                    Product = new Product {Weight = 100}
                 }
             };
-            Mock.Get(userService).Expect(bc => bc.CurrentUser).Returns(user);
-            return user;
+            user.Baskets[0].BasketItems.Add(basketItem);
+            testContext.TestContext.Context.User = user;
+
+            // expect 
+            Mock.Get(basketItemRepository).Expect(ir => ir.DeleteOnSubmit(basketItem)).Verifiable();
+            Mock.Get(basketItemRepository).Expect(ir => ir.SubmitChanges());
+
+            var result = basketController.Remove(basketItemIdToRemove) as ViewResult;
+
+            Assert.AreEqual("Index", result.ViewName);
+            Mock.Get(basketItemRepository).Verify();
         }
 
         [Test]
@@ -97,9 +140,9 @@ namespace Suteki.Shop.Tests.Controllers
             {
                 IsInStock = true,
                 Product = new Product
-                              {
-                                  Weight = 10
-                              }
+                {
+                    Weight = 10
+                }
             };
             Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
@@ -108,19 +151,9 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(1, user.Baskets[0].BasketItems.Count, "expected BasketItem is missing");
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
             Assert.AreEqual(2, user.Baskets[0].BasketItems[0].Quantity);
-            
+
             Mock.Get(basketRepository).Verify();
             Mock.Get(userService).Verify();
-        }
-
-        private static FormCollection CreateUpdateForm()
-        {
-            var form = new FormCollection
-            {
-                {"sizeid", "5"}, 
-                {"quantity", "2"}
-            };
-            return form;
         }
 
         [Test]
@@ -140,11 +173,11 @@ namespace Suteki.Shop.Tests.Controllers
                 Name = "S",
                 IsInStock = false,
                 IsActive = true,
-                Product = new Product { Name = "Denim Jacket" }
+                Product = new Product {Name = "Denim Jacket"}
             };
             Mock.Get(sizeRepository).Expect(sr => sr.GetById(5)).Returns(size);
 
-            var expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
+            const string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
             basketController.Update(form)
                 .ReturnsViewResult()
@@ -152,35 +185,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual<ShopViewData, string>(expectedMessage, vd => vd.ErrorMessage);
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
-
-        }
-
-        [Test]
-        public void Remove_ShouldRemoveItemFromBasket()
-        {
-            const int basketItemIdToRemove = 3;
-
-            var user = CreateUserWithBasket();
-            var basketItem = new BasketItem 
-            { 
-                BasketItemId = basketItemIdToRemove,
-                Quantity = 1,
-                Size = new Size
-                           {
-                               Product = new Product { Weight = 100 }
-                           }
-            };
-            user.Baskets[0].BasketItems.Add(basketItem);
-            testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
-
-            // expect 
-            Mock.Get(basketItemRepository).Expect(ir => ir.DeleteOnSubmit(basketItem)).Verifiable();
-            Mock.Get(basketItemRepository).Expect(ir => ir.SubmitChanges());
-
-            var result = basketController.Remove(basketItemIdToRemove) as ViewResult;
-
-            Assert.AreEqual("Index", result.ViewName);
-            Mock.Get(basketItemRepository).Verify();
         }
     }
 }

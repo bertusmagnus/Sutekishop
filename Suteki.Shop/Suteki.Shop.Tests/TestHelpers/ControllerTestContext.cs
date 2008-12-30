@@ -8,14 +8,14 @@ namespace Suteki.Shop.Tests
         public MockViewEngine ViewEngine { get; private set; }
         public HttpContextTestContext TestContext { get; private set; }
 
-        public ControllerTestContext(Controller controller)
+        public ControllerTestContext(ControllerBase controller)
         {
             ViewEngine = new MockViewEngine();
 //            controller.ViewEngine = ViewEngine;
 
             TestContext = new HttpContextTestContext();
 
-            ControllerContext controllerContext = new ControllerContext(
+            var controllerContext = new ControllerContext(
                 new RequestContext(TestContext.Context, new RouteData()),
                 controller);
 

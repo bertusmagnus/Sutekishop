@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
@@ -205,12 +206,12 @@ namespace Suteki.Shop.Controllers
                 .WithOrder(order);
         }
 
-        public ActionResult PlaceOrder()
+        public ActionResult PlaceOrder(FormCollection form)
         {
             var order = new Order();
             try
             {
-                UpdateOrderFromForm(order);
+                UpdateOrderFromForm(order, form);
                 orderRepository.InsertOnSubmit(order);
                 userService.CurrentUser.CreateNewBasket();
                 orderRepository.SubmitChanges();
@@ -228,7 +229,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        private void UpdateOrderFromForm(Order order)
+        private void UpdateOrderFromForm(Order order, NameValueCollection form)
         {
             order.OrderStatusId = OrderStatus.CreatedId;
             order.CreatedDate = DateTime.Now;
@@ -236,10 +237,10 @@ namespace Suteki.Shop.Controllers
 
             var validator = new Validator
                                   {
-                                      () => UpdateOrder(order),
-                                      () => UpdateCardContact(order),
-                                      () => UpdateDeliveryContact(order),
-                                      () => UpdateCard(order)
+                                      () => UpdateOrder(order, form),
+                                      () => UpdateCardContact(order, form),
+                                      () => UpdateDeliveryContact(order, form),
+                                      () => UpdateCard(order, form)
                                   };
 
             validator.Validate();
@@ -258,27 +259,27 @@ namespace Suteki.Shop.Controllers
             emailSender.Send(toAddresses, subject, message);
         }
 
-        private void UpdateCardContact(Order order)
+        private void UpdateCardContact(Order order, NameValueCollection form)
         {
             var cardContact = new Contact();
             order.Contact = cardContact;
-            UpdateContact(cardContact, "cardcontact");
+            UpdateContact(cardContact, "cardcontact", form);
         }
 
-        private void UpdateDeliveryContact(Order order)
+        private void UpdateDeliveryContact(Order order, NameValueCollection form)
         {
             if (order.UseCardHolderContact) return;
 
             var deliveryContact = new Contact();
             order.Contact1 = deliveryContact;
-            UpdateContact(deliveryContact, "deliverycontact");
+            UpdateContact(deliveryContact, "deliverycontact", form);
         }
 
-        private void UpdateContact(Contact contact, string prefix)
+        private void UpdateContact(Contact contact, string prefix, NameValueCollection form)
         {
             try
             {
-                validatingBinder.UpdateFrom(contact, Request.Form, prefix);
+                validatingBinder.UpdateFrom(contact, form, prefix);
             }
             finally
             {
@@ -289,20 +290,20 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        private void UpdateCard(Order order)
+        private void UpdateCard(Order order, NameValueCollection form)
         {
             if (order.PayByTelephone) return;
 
             var card = new Card();
             order.Card = card;
-            validatingBinder.UpdateFrom(card, Request.Form, "card");
+            validatingBinder.UpdateFrom(card, form, "card");
             encryptionService.EncryptCard(card);
         }
 
-        private void UpdateOrder(Order order)
+        private void UpdateOrder(Order order, NameValueCollection form)
         {
-            validatingBinder.UpdateFrom(order, Request.Form, "order");
-            var confirmEmail = ReadFromRequest("emailconfirm");
+            validatingBinder.UpdateFrom(order, form, "order");
+            var confirmEmail = form["emailconfirm"];
             if (order.Email != confirmEmail)
             {
                 throw new ValidationException("Email and Confirm Email do not match");
@@ -355,7 +356,7 @@ namespace Suteki.Shop.Controllers
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
-        public ActionResult UpdateCountry(int id, int countryId)
+        public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
         {
             var basket = basketRepository.GetById(id);
             basket.CountryId = countryId;
@@ -365,7 +366,7 @@ namespace Suteki.Shop.Controllers
 
             try
             {
-                UpdateOrderFromForm(order);
+                UpdateOrderFromForm(order, form);
             }
             catch (ValidationException)
             {

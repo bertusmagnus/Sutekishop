@@ -1,34 +1,28 @@
-﻿using Moq;
+﻿using Rhino.Mocks;
 using System.Web;
 
 namespace Suteki.Shop.Tests
 {
     public class HttpContextTestContext
     {
-        public Mock<HttpContextBase> ContextMock { get; private set; }
-        public Mock<HttpRequestBase> RequestMock { get; private set; }
-        public Mock<HttpResponseBase> ResponseMock { get; private set; }
-        public Mock<HttpSessionStateBase> SessionMock { get; private set; }
-        public Mock<HttpServerUtilityBase> ServerMock { get; private set; }
-
-        public HttpContextBase Context { get { return ContextMock.Object; } }
-        public HttpRequestBase Request { get { return RequestMock.Object; } }
-        public HttpResponseBase Response { get { return ResponseMock.Object; } }
-        public HttpSessionStateBase Session { get { return SessionMock.Object; } }
-        public HttpServerUtilityBase Server { get { return ServerMock.Object; } }
+        public HttpContextBase Context { get; private set; }
+        public HttpRequestBase Request { get; private set; }
+        public HttpResponseBase Response { get; private set; }
+        public HttpSessionStateBase Session { get; private set; }
+        public HttpServerUtilityBase Server { get; private set; }
 
         public HttpContextTestContext()
         {
-            ContextMock = new Mock<HttpContextBase>();
-            RequestMock = new Mock<HttpRequestBase>();
-            ResponseMock = new Mock<HttpResponseBase>();
-            SessionMock = new Mock<HttpSessionStateBase>();
-            ServerMock = new Mock<HttpServerUtilityBase>();
+            Context = MockRepository.GenerateStub<HttpContextBase>();
+            Request = MockRepository.GenerateStub<HttpRequestBase>();
+            Response = MockRepository.GenerateStub<HttpResponseBase>();
+            Session = MockRepository.GenerateStub<HttpSessionStateBase>();
+            Server = MockRepository.GenerateStub<HttpServerUtilityBase>();
 
-            ContextMock.ExpectGet(c => c.Request).Returns(RequestMock.Object);
-            ContextMock.ExpectGet(c => c.Response).Returns(ResponseMock.Object);
-            ContextMock.ExpectGet(c => c.Session).Returns(SessionMock.Object);
-            ContextMock.ExpectGet(c => c.Server).Returns(ServerMock.Object);
+            Context.Expect(c => c.Request).Return(Request);
+            Context.Expect(c => c.Response).Return(Response);
+            Context.Expect(c => c.Session).Return(Session);
+            Context.Expect(c => c.Server).Return(Server);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Moq;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
@@ -43,7 +44,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void SetUp()
         {
             // you have to be an administrator to access the product controller
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
             categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
             categoryRepository = categoryRepositoryMock.Object;
@@ -176,7 +177,7 @@ namespace Suteki.Shop.Tests.Controllers
                 {"description", description}
             };
 
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             // add expectations for product repository insertion
             Product product = null;
@@ -235,7 +236,7 @@ namespace Suteki.Shop.Tests.Controllers
                 {"name", name},
                 {"description", description}
             };
-            testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
+            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             var product = new Product
             {
