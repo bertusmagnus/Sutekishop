@@ -3,8 +3,8 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -35,7 +35,8 @@ namespace Suteki.Shop.Tests.Controllers
             homeController.Index()
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertAreSame<CmsViewData, ITextContent>(
+                .WithModel<CmsViewData>()
+                .AssertAreSame(
                     contents.OfType<ITextContent>().First(), 
                     vd => vd.TextContent);
 

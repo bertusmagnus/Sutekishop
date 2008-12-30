@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.Models;
-using Suteki.Shop.Tests.TestHelpers;
 
 namespace Suteki.Shop.Tests.Controllers
 {

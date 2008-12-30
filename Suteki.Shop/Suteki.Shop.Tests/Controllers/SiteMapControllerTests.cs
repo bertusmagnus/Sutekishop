@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
-using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -43,8 +43,9 @@ namespace Suteki.Shop.Tests.Controllers
             siteMapController.Index()
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertNotNull<ShopViewData, IEnumerable<Product>>(vd => vd.Products)
-                .AssertNotNull<ShopViewData, IEnumerable<Content>>(vd => vd.Contents);
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Products)
+                .AssertNotNull(vd => vd.Contents);
         }
     }
 }

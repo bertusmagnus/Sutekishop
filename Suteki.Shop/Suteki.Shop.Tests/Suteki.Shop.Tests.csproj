@@ -130,7 +130,6 @@
     <Compile Include="Services\SizeServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="Spikes\UriSpike.cs" />
-    <Compile Include="TestHelpers\ActionResultExtensions.cs" />
     <Compile Include="TestHelpers\ControllerTestContext.cs" />
     <Compile Include="TestHelpers\HttpContextTestContext.cs" />
     <Compile Include="TestHelpers\MockViewEngine.cs" />

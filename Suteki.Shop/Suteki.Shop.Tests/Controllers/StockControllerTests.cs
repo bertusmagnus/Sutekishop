@@ -4,9 +4,8 @@ using System.Web.Mvc;
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
-using System.Collections.Specialized;
-using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -39,7 +38,8 @@ namespace Suteki.Shop.Tests.Controllers
             stockController.Index()
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertAreSame<ShopViewData, Category>(root, vd => vd.Category);
+                .WithModel<ShopViewData>()
+                .AssertAreSame(root, vd => vd.Category);
         }
 
         private static Category BuildCategories()
@@ -69,7 +69,8 @@ namespace Suteki.Shop.Tests.Controllers
             stockController.Update(form)
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertNotNull<ShopViewData, Category>(vd => vd.Category);
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Category);
 
             Assert.That(sizes.First().IsInStock, Is.True);
             Assert.That(sizes.Last().IsInStock, Is.False);

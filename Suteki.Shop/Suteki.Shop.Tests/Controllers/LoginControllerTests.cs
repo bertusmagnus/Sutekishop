@@ -2,11 +2,11 @@
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using Suteki.Shop.Tests.Repositories;
-using Suteki.Shop.Tests.TestHelpers;
 using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -33,9 +33,9 @@ namespace Suteki.Shop.Tests.Controllers
         {
             const string view = "Index";
 
-            var result = loginController.Index() as ViewResult;
-
-            Assert.AreEqual(view, result.ViewName);
+            loginController.Index()
+                .ReturnsViewResult()
+                .ForView(view);
         }
 
         [Test]
@@ -47,10 +47,10 @@ namespace Suteki.Shop.Tests.Controllers
             // should set cookie
             Mock.Get(userService).Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
 
-            var result = loginController.Authenticate(email, password) as RedirectToRouteResult;
-
-            Assert.AreEqual("Index", result.Values["action"]);
-            Assert.AreEqual("Home", result.Values["controller"]);
+            loginController.Authenticate(email, password)
+                .ReturnRedirectToRouteResult()
+                .ToAction("Index")
+                .ToController("Home");
 
             Mock.Get(userService).Verify();
         }
@@ -68,7 +68,8 @@ namespace Suteki.Shop.Tests.Controllers
             loginController.Authenticate(email, password)
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertAreEqual<IErrorViewData, string>("Unknown email or password", vd => vd.ErrorMessage);
+                .WithModel<IErrorViewData>()
+                .AssertAreEqual("Unknown email or password", vd => vd.ErrorMessage);
         }
 
         [Test]
@@ -76,10 +77,10 @@ namespace Suteki.Shop.Tests.Controllers
         {
             Mock.Get(userService).Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
 
-            var result = loginController.Logout() as RedirectToRouteResult;
-
-            Assert.AreEqual("Index", result.Values["action"]);
-            Assert.AreEqual("Home", result.Values["controller"]);
+            loginController.Logout()
+                .ReturnRedirectToRouteResult()
+                .ToAction("Index")
+                .ToController("Home");
 
             Mock.Get(userService).Verify();
         }

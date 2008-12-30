@@ -2,10 +2,10 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
-using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -180,7 +180,8 @@ namespace Suteki.Shop.Tests.Controllers
             basketController.Update(form)
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertAreEqual<ShopViewData, string>(expectedMessage, vd => vd.ErrorMessage);
+                .WithModel<ShopViewData>()
+                .AssertAreEqual(expectedMessage, vd => vd.ErrorMessage);
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
         }

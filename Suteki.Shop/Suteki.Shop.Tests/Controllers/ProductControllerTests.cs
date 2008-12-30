@@ -3,9 +3,9 @@ using Moq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.TestHelpers;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Collections.Generic;
 using Suteki.Shop.Tests.Repositories;
@@ -123,8 +123,9 @@ namespace Suteki.Shop.Tests.Controllers
             productController.Item(urlName)
                 .ReturnsViewResult()
                 .ForView("Item")
-                .AssertNotNull<ShopViewData, Product>(vd => vd.Product)
-                .AssertAreEqual<ShopViewData, string>(urlName, vd => vd.Product.UrlName);
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Product)
+                .AssertAreEqual(urlName, vd => vd.Product.UrlName);
         }
 
         [Test]
