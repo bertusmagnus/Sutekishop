@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
@@ -20,10 +19,11 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class CmsControllerTests
     {
-        CmsController cmsController;
+        private CmsController cmsController;
 
-        IRepository<Content> contentRepository;
-        IOrderableService<Content> contentOrderableService;
+        private IRepository<Content> contentRepository;
+        private IOrderableService<Content> contentOrderableService;
+        private IValidatingBinder validatingBinder;
 
         [SetUp]
         public void SetUp()
@@ -33,16 +33,18 @@ namespace Suteki.Shop.Tests.Controllers
 
             contentRepository = new Mock<IRepository<Content>>().Object;
             contentOrderableService = new Mock<IOrderableService<Content>>().Object;
+            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
             cmsController = new Mock<CmsController>(
                 contentRepository, 
-                contentOrderableService).Object;
+                contentOrderableService,
+                validatingBinder).Object;
         }
 
         [Test]
         public void Index_ShouldRenderIndexViewWithContent()
         {
-            string urlName = "home";
+            const string urlName = "home";
 
             var contents = new List<Content>
             {
@@ -63,7 +65,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldRenderTopContentWithTopPageView()
         {
-            string urlName = "home_page";
+            const string urlName = "home_page";
 
             var contents = new List<Content>
             {
@@ -80,24 +82,12 @@ namespace Suteki.Shop.Tests.Controllers
 
         }
 
-
-        [Test]
-        public void Index_ShouldRenderBlankViewWhenMenuHasNoContent()
-        {
-            string urlName = "no_content_menu";
-
-            var contents = new List<Content>
-            {
-                
-            };
-        }
-
         [Test]
         public void Add_ShouldShowContentEditViewWithDefaultContent()
         {
-            int menuId = 1;
+            const int menuId = 1;
 
-            Menu menu = new Menu {ContentId = menuId};
+            var menu = new Menu {ContentId = menuId};
             Mock.Get(contentRepository).Expect(cr => cr.GetById(menuId)).Returns(menu);
 
             var menus = new List<Content>().AsQueryable();
@@ -113,9 +103,9 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Edit_ShouldDisplayEditViewWithExistingContent()
         {
-            int contentId = 22;
+            const int contentId = 22;
 
-            TextContent content = new TextContent { ContentId = contentId };
+            var content = new TextContent { ContentId = contentId };
             Mock.Get(contentRepository).Expect(cr => cr.GetById(contentId)).Returns(content).Verifiable();
 
             var menus = new List<Content>().AsQueryable();
@@ -133,10 +123,10 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldAddNewContent()
         {
-            int contentId = 0;
-            int menuId = 1;
+            const int contentId = 0;
+            const int menuId = 1;
 
-            NameValueCollection form = CreateContentEditForm(menuId).ForTextContent();
+            var form = CreateContentEditForm(menuId).ForTextContent();
 
             TextContent textContent = null;
 
@@ -157,10 +147,10 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldAllowHtmlText()
         {
-            int contentId = 0;
-            int menuId = 1;
+            const int contentId = 0;
+            const int menuId = 1;
 
-            NameValueCollection form = CreateContentEditForm(menuId).ForTextContent();
+            var form = CreateContentEditForm(menuId).ForTextContent();
             form["text"] = "<script></script>";
 
             TextContent textContent = null;
@@ -182,10 +172,10 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldAddNewMenu()
         {
-            int contentId = 0;
-            int menuId = 1;
+            const int contentId = 0;
+            const int menuId = 1;
 
-            NameValueCollection form = CreateContentEditForm(menuId).ForMenuContent();
+            var form = CreateContentEditForm(menuId).ForMenuContent();
 
             Menu menu = null;
 
@@ -204,10 +194,12 @@ namespace Suteki.Shop.Tests.Controllers
 
         private NameValueCollection CreateContentEditForm(int menuId)
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("id", "0");
-            form.Add("parentcontentid", menuId.ToString());
-            form.Add("name", "myNewContent");
+            var form = new NameValueCollection
+            {
+                {"id", "0"},
+                {"parentcontentid", menuId.ToString()},
+                {"name", "myNewContent"}
+            };
             Mock.Get(cmsController).ExpectGet(c => c.Form).Returns(form);
             return form;
         }
@@ -217,20 +209,17 @@ namespace Suteki.Shop.Tests.Controllers
             return cmsController.Update(contentId)
                 .ReturnsViewResult()
                 .ForView("List");
-                //.AssertNotNull<CmsViewData, Content>(vd => vd.Content)
-                //.AssertAreEqual<CmsViewData, string>(form["name"], vd => vd.Content.Name)
-                //.AssertAreEqual<CmsViewData, int>(menuId, vd => vd.Content.ParentContentId.Value);
         }
 
         [Test]
         public void Update_ShouldUpdateAnExistingTextContent()
         {
-            int contentId = 22;
-            int menuId = 1;
+            const int contentId = 22;
+            const int menuId = 1;
 
-            NameValueCollection form = CreateContentEditForm(menuId).ForTextContent();
+            var form = CreateContentEditForm(menuId).ForTextContent();
 
-            TextContent content = new TextContent
+            var content = new TextContent
             {
                 Name = "old name",
                 Text = "old text"
@@ -247,7 +236,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void List_ShouldShowListOfExistingContent()
         {
-            Menu mainMenu = new Menu();
+            var mainMenu = new Menu();
             Mock.Get(contentRepository).Expect(mr => mr.GetById(1)).Returns(mainMenu);            
 
             cmsController.List(1)
@@ -261,7 +250,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             const int parentContentId = 1;
 
-            Menu mainMenu = new Menu{ ContentId = parentContentId };
+            var mainMenu = new Menu{ ContentId = parentContentId };
             Mock.Get(contentRepository).Expect(mr => mr.GetById(parentContentId)).Returns(mainMenu);
 
             var menus = new List<Content>().AsQueryable();

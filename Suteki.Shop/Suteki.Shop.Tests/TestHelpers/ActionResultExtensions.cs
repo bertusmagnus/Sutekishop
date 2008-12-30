@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Tests.TestHelpers

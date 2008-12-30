@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+﻿using NUnit.Framework;
 using Suteki.Shop.Models.Exceptions;
 
 namespace Suteki.Shop.Tests.Models

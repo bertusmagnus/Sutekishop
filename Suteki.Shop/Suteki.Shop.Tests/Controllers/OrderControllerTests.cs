@@ -3,9 +3,9 @@ using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
 using Moq;
-using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc;
 using Suteki.Shop.Tests.TestHelpers;
@@ -30,6 +30,8 @@ namespace Suteki.Shop.Tests.Controllers
         IEncryptionService encryptionService;
         IEmailSender emailSender;
         IPostageService postageService;
+        IValidatingBinder validatingBinder;
+        private IHttpContextService httpContextService;
 
         ControllerTestContext testContext;
 
@@ -37,7 +39,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void SetUp()
         {
             // you have to be an administrator to access the order controller
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
             orderRepository = new Mock<IRepository<Order>>().Object;
             basketRepository = new Mock<IRepository<Basket>>().Object;
@@ -47,6 +49,8 @@ namespace Suteki.Shop.Tests.Controllers
             emailSender = new Mock<IEmailSender>().Object;
             encryptionService = new Mock<IEncryptionService>().Object;
             postageService = new Mock<IPostageService>().Object;
+            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
+            httpContextService = new Mock<IHttpContextService>().Object;
 
             orderController = new Mock<OrderController>(
                 orderRepository,
@@ -55,7 +59,9 @@ namespace Suteki.Shop.Tests.Controllers
                 cardTypeRepository,
                 encryptionService,
                 emailSender,
-                postageService).Object;
+                postageService,
+                validatingBinder,
+                httpContextService).Object;
 
             testContext = new ControllerTestContext(orderController);
 
@@ -70,11 +76,11 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Checkout_ShouldDisplayCheckoutForm()
         {
-            int basketId = 6;
+            const int basketId = 6;
 
-            Basket basket = new Basket { BasketId = basketId };
-            IQueryable<Country> countries = new List<Country> { new Country() }.AsQueryable();
-            IQueryable<CardType> cardTypes = new List<CardType> { new CardType() }.AsQueryable();
+            var basket = new Basket { BasketId = basketId };
+            var countries = new List<Country> { new Country() }.AsQueryable();
+            var cardTypes = new List<CardType> { new CardType() }.AsQueryable();
 
             // expectations
             Mock.Get(basketRepository).Expect(br => br.GetById(basketId))
@@ -111,12 +117,12 @@ namespace Suteki.Shop.Tests.Controllers
         public void PlaceOrder_ShouldCreateANewOrder()
         {
             // mock the request form
-            NameValueCollection form = BuildPlaceOrderRequest();
+            var form = BuildPlaceOrderRequest();
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
             // expectations
-            Basket basket = new Basket();
-            Order order = new Order();
+            var basket = new Basket();
+            var order = new Order();
 
             Mock.Get(encryptionService).Expect(es => es.EncryptCard(It.IsAny<Card>())).Verifiable();
 
@@ -163,8 +169,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["card.expiryyear"], card.ExpiryYear.ToString());
             Assert.AreEqual(form["card.startmonth"], card.StartMonth.ToString());
             Assert.AreEqual(form["card.startyear"], card.StartYear.ToString());
-            Assert.AreEqual(form["card.issuenumber"], card.IssueNumber.ToString());
-            Assert.AreEqual(form["card.securitycode"], card.SecurityCode.ToString());
+            Assert.AreEqual(form["card.issuenumber"], card.IssueNumber);
+            Assert.AreEqual(form["card.securitycode"], card.SecurityCode);
 
             Mock.Get(orderRepository).Verify();
             Mock.Get(encryptionService).Verify();
@@ -188,50 +194,46 @@ namespace Suteki.Shop.Tests.Controllers
 
         private static NameValueCollection BuildPlaceOrderRequest()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("order.orderid", "10");
-            form.Add("order.basketid", "22");
+            var form = new NameValueCollection
+            {
+                {"order.orderid", "10"},
+                {"order.basketid", "22"},
+                {"cardcontact.firstname", "Mike"},
+                {"cardcontact.lastname", "Hadlow"},
+                {"cardcontact.address1", "23 The Street"},
+                {"cardcontact.address2", "The Manor"},
+                {"cardcontact.address3", ""},
+                {"cardcontact.town", "Hove"},
+                {"cardcontact.county", "East Sussex"},
+                {"cardcontact.postcode", "BN6 2EE"},
+                {"cardcontact.countryid", "1"},
+                {"cardcontact.telephone", "01273 234234"},
+                {"order.email", "mike@mike.com"},
+                {"emailconfirm", "mike@mike.com"},
+                {"order.usecardholdercontact", "False"},
+                {"deliverycontact.firstname", "Mike"},
+                {"deliverycontact.lastname", "Hadlow"},
+                {"deliverycontact.address1", "23 The Street"},
+                {"deliverycontact.address2", "The Manor"},
+                {"deliverycontact.address3", ""},
+                {"deliverycontact.town", "Hove"},
+                {"deliverycontact.county", "East Sussex"},
+                {"deliverycontact.postcode", "BN6 2EE"},
+                {"deliverycontact.countryid", "1"},
+                {"deliverycontact.telephone", "01273 234234"},
+                {"order.additionalinformation", "some more info"},
+                {"card.cardtypeid", "1"},
+                {"card.holder", "MR M HADLOW"},
+                {"card.number", "1111111111111117"},
+                {"card.expirymonth", "3"},
+                {"card.expiryyear", "2009"},
+                {"card.startmonth", "2"},
+                {"card.startyear", "2003"},
+                {"card.issuenumber", "3"},
+                {"card.securitycode", "235"},
+                {"order.paybytelephone", "False"}
+            };
 
-            form.Add("cardcontact.firstname", "Mike");
-            form.Add("cardcontact.lastname", "Hadlow");
-            form.Add("cardcontact.address1", "23 The Street");
-            form.Add("cardcontact.address2", "The Manor");
-            form.Add("cardcontact.address3", "");
-            form.Add("cardcontact.town", "Hove");
-            form.Add("cardcontact.county", "East Sussex");
-            form.Add("cardcontact.postcode", "BN6 2EE");
-            form.Add("cardcontact.countryid", "1");
-            form.Add("cardcontact.telephone", "01273 234234");
-
-            form.Add("order.email", "mike@mike.com");
-            form.Add("emailconfirm", "mike@mike.com");
-
-            form.Add("order.usecardholdercontact", "False");
-
-            form.Add("deliverycontact.firstname", "Mike");
-            form.Add("deliverycontact.lastname", "Hadlow");
-            form.Add("deliverycontact.address1", "23 The Street");
-            form.Add("deliverycontact.address2", "The Manor");
-            form.Add("deliverycontact.address3", "");
-            form.Add("deliverycontact.town", "Hove");
-            form.Add("deliverycontact.county", "East Sussex");
-            form.Add("deliverycontact.postcode", "BN6 2EE");
-            form.Add("deliverycontact.countryid", "1");
-            form.Add("deliverycontact.telephone", "01273 234234");
-
-            form.Add("order.additionalinformation", "some more info");
-
-            form.Add("card.cardtypeid", "1");
-            form.Add("card.holder", "MR M HADLOW");
-            form.Add("card.number", "1111111111111117");
-            form.Add("card.expirymonth", "3");
-            form.Add("card.expiryyear", "2009");
-            form.Add("card.startmonth", "2");
-            form.Add("card.startyear", "2003");
-            form.Add("card.issuenumber", "3");
-            form.Add("card.securitycode", "235");
-
-            form.Add("order.paybytelephone", "False");
             return form;
         }
 
@@ -241,7 +243,7 @@ namespace Suteki.Shop.Tests.Controllers
             var orders = new List<Order> { new Order() }.AsQueryable();
             Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders).Verifiable();
 
-            orderController.Index()
+            orderController.Index(new FormCollection())
                 .ReturnsViewResult()
                 .ForView("Index")
                 .AssertAreSame<ShopViewData, Order>(orders.First(), vd => vd.Orders.First());
@@ -250,8 +252,8 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Dispatch_ShouldChangeOrderStatusAndDispatchedDate()
         {
-            int orderId = 44;
-            Order order = new Order 
+            const int orderId = 44;
+            var order = new Order 
             { 
                 OrderId = orderId, 
                 OrderStatusId = OrderStatus.CreatedId,
@@ -272,8 +274,8 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void UndoStatus_ShouldChangeOrderStatusToCreated()
         {
-            int orderId = 44;
-            Order order = new Order
+            const int orderId = 44;
+            var order = new Order
             {
                 OrderId = orderId,
                 OrderStatusId = OrderStatus.DispatchedId,
@@ -292,8 +294,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldBuildCriteriaAndExecuteSearch()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("orderid", "3");
+            var form = new NameValueCollection {{"orderid", "3"}};
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(form);
 
             var orders = new List<Order>
@@ -304,20 +305,20 @@ namespace Suteki.Shop.Tests.Controllers
 
             Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders);
 
-            orderController.Index()
+            orderController.Index(new FormCollection())
                 .ReturnsViewResult()
                 .ForView("Index")
-                .AssertAreSame<ShopViewData, Order>(orders.ElementAt(1), vd => vd.Orders.First());
+                .AssertAreSame<ShopViewData, Order>(orders.ElementAt(0), vd => vd.Orders.First());
                 
         }
 
         [Test]
         public void ShowCard_ShouldDecryptCardAndShowOrder()
         {
-            int orderId = 10;
-            string privateKey = "abcd";
+            const int orderId = 10;
+            const string privateKey = "abcd";
 
-            Order order = new Order
+            var order = new Order
             {
                 Card = new Card
                 {
@@ -353,9 +354,9 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Invoice_ShouldShowOrderInInvoiceView()
         {
-            int orderId = 10;
+            const int orderId = 10;
 
-            Order order = new Order();
+            var order = new Order();
 
             Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Services;
 using System.Collections.Specialized;
-using NUnit.Framework.SyntaxHelpers;
-using Suteki.Shop.Repositories;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
@@ -35,7 +32,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldPassRootCategoryToIndexView()
         {
-            Category root = BuildCategories();
+            var root = BuildCategories();
 
             Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
@@ -45,38 +42,31 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreSame<ShopViewData, Category>(root, vd => vd.Category);
         }
 
-        private Category BuildCategories()
+        private static Category BuildCategories()
         {
-            Category root = new Category { CategoryId = 1, Name = "Root" };
+            var root = new Category { CategoryId = 1, Name = "Root" };
             return root;
-        }
-
-        private static IEnumerable<StockItem> CreateStockItems()
-        {
-            IEnumerable<StockItem> stockItems = new List<StockItem>
-            {
-                new StockItem { SizeId = 1, IsInStock = false },
-                new StockItem { SizeId = 2, IsInStock = true }
-            };
-            return stockItems;
         }
 
         [Test]
         public void Update_ShouldUpdateStockItems()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("stockitem_1", "True");
-            Mock.Get(stockController).ExpectGet(c => c.Form).Returns(form);
+            var form = new FormCollection
+            {
+                {"stockitem_0", "false"},
+                {"stockitem_1", "true,false"},
+                {"stockitem_2", "false"}
+            };
 
             var sizes = CreateSizes();
 
             Mock.Get(sizeRepository).Expect(s => s.GetAll()).Returns(sizes);
             Mock.Get(sizeRepository).Expect(s => s.SubmitChanges());
 
-            Category root = BuildCategories();
+            var root = BuildCategories();
             Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
 
-            stockController.Update()
+            stockController.Update(form)
                 .ReturnsViewResult()
                 .ForView("Index")
                 .AssertNotNull<ShopViewData, Category>(vd => vd.Category);
@@ -85,7 +75,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.That(sizes.Last().IsInStock, Is.False);
         }
 
-        private IQueryable<Size> CreateSizes()
+        private static IQueryable<Size> CreateSizes()
         {
             return new List<Size>
             {

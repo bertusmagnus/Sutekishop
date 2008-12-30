@@ -34,9 +34,8 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void GetLookupLists_ShouldGetPostZones()
         {
-            // create a mock IoC container
-            IKernel kernel = new Mock<IKernel>().Object;
-            countryController.Kernel = kernel;
+            var repositoryResolver = new Mock<IRepositoryResolver>().Object;
+            countryController.repositoryResolver = repositoryResolver;
 
             // create a list of post zones
             var postZones = new List<PostZone>
@@ -45,20 +44,15 @@ namespace Suteki.Shop.Tests.Controllers
             }.AsQueryable();
 
             // setup expectations
-            IRepository<PostZone> postZoneRepository = new Mock<IRepository<PostZone>>().Object;
-            Mock.Get(kernel).Expect(k => k.Resolve(typeof(IRepository<PostZone>))).Returns(postZoneRepository);
+            var postZoneRepository = new Mock<IRepository>().Object;
+            Mock.Get(repositoryResolver).Expect(k => k.GetRepository(typeof(PostZone))).Returns(postZoneRepository);
             Mock.Get(postZoneRepository).Expect(pzr => pzr.GetAll()).Returns(postZones);
 
-            // spike mock kernel
-            Type repositoryType = typeof(IRepository<PostZone>);
-            object repository = kernel.Resolve(repositoryType);
-            Assert.IsTrue(repository is IRepository<PostZone>, "repository is not IRepository<PostZone>");
-
             // now exercise the method
-            ScaffoldViewData<Country> viewData = new ScaffoldViewData<Country>();
+            var viewData = new ScaffoldViewData<Country>();
             countryController.AppendLookupLists(viewData);
 
-            Assert.AreSame(postZones, viewData.GetLookUpList<PostZone>());
+            Assert.AreSame(postZones, viewData.GetLookupList(typeof(PostZone)));
         }
     }
 }

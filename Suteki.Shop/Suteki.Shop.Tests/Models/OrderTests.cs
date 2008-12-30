@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using System.Collections.Generic;
 
 namespace Suteki.Shop.Tests.Models
 {

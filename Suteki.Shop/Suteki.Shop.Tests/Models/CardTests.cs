@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Suteki.Common.Validation;
 
 namespace Suteki.Shop.Tests.Models

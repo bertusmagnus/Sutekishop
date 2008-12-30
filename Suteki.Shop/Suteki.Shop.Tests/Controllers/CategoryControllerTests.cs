@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Tests.Repositories;
@@ -18,12 +19,13 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class CategoryControllerTests
     {
-        CategoryController categoryController;
-        Mock<CategoryController> categoryControllerMock;
-        ControllerTestContext testContext;
+        private CategoryController categoryController;
+        private Mock<CategoryController> categoryControllerMock;
+        private ControllerTestContext testContext;
 
-        Mock<Repository<Category>> categoryRepositoryMock;
-        IOrderableService<Category> orderableService;
+        private Mock<Repository<Category>> categoryRepositoryMock;
+        private IOrderableService<Category> orderableService;
+        private IValidatingBinder validatingBinder;
 
         [SetUp]
         public void SetUp()
@@ -33,8 +35,13 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
             orderableService = new Mock<IOrderableService<Category>>().Object;
+            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
-            categoryControllerMock = new Mock<CategoryController>(categoryRepositoryMock.Object, orderableService);
+            categoryControllerMock = new Mock<CategoryController>(
+                categoryRepositoryMock.Object, 
+                orderableService, 
+                validatingBinder);
+
             categoryController = categoryControllerMock.Object;
 
             testContext = new ControllerTestContext(categoryController);

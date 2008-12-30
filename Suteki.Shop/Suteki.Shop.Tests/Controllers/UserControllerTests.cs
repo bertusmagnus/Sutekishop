@@ -122,7 +122,7 @@ namespace Suteki.Shop.Tests.Controllers
             form.Add("email", email);
             form.Add("password", password);
             form.Add("roleid", roleId.ToString());
-            form.Add("isenabled", isEnabled.ToString());
+            form.Add("isenabled", "false");
 
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 

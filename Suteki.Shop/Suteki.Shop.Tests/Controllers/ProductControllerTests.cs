@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 using System.Collections.Generic;
 using Suteki.Shop.Tests.Repositories;
-using Suteki.Shop.Repositories;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
@@ -22,22 +20,23 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class ProductControllerTests
     {
-        ProductController productController;
-        Mock<ProductController> productControllerMock;
-        ControllerTestContext testContext;
+        private ProductController productController;
+        private Mock<ProductController> productControllerMock;
+        private ControllerTestContext testContext;
 
-        Repository<Product> productRepository;
-        Mock<Repository<Product>> productRepositoryMock;
+        private Repository<Product> productRepository;
+        private Mock<Repository<Product>> productRepositoryMock;
 
-        Repository<Category> categoryRepository;
-        Mock<Repository<Category>> categoryRepositoryMock;
+        private Repository<Category> categoryRepository;
+        private Mock<Repository<Category>> categoryRepositoryMock;
 
-        IRepository<ProductImage> productImageRepository;
+        private IRepository<ProductImage> productImageRepository;
 
-        IHttpFileService httpFileService;
-        ISizeService sizeService;
-        IOrderableService<Product> productOrderableService;
-        IOrderableService<ProductImage> productImageOrderableService;
+        private IHttpFileService httpFileService;
+        private ISizeService sizeService;
+        private IOrderableService<Product> productOrderableService;
+        private IOrderableService<ProductImage> productImageOrderableService;
+        private IValidatingBinder validatingBinder;
 
         [SetUp]
         public void SetUp()
@@ -59,6 +58,8 @@ namespace Suteki.Shop.Tests.Controllers
             productOrderableService = new Mock<IOrderableService<Product>>().Object;
             productImageOrderableService = new Mock<IOrderableService<ProductImage>>().Object;
 
+            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
+
             productControllerMock = new Mock<ProductController>(
                 productRepository, 
                 categoryRepository,
@@ -66,7 +67,8 @@ namespace Suteki.Shop.Tests.Controllers
                 httpFileService,
                 sizeService,
                 productOrderableService,
-                productImageOrderableService);
+                productImageOrderableService,
+                validatingBinder);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
