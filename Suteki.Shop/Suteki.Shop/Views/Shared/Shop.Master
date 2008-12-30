@@ -22,13 +22,13 @@
                         <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
                     </li>
                     <li>
-                        <%= Html.ActionLink<CountryController>(c => c.Index(), "Countries") %>
+                        <%= Html.ActionLink<CountryController>(c => c.Index(1), "Countries") %>
                     </li>
                     <li>
-                        <%= Html.ActionLink<PostageController>(c => c.Index(), "Postage Bands") %>
+                        <%= Html.ActionLink<PostageController>(c => c.Index(1), "Postage Bands") %>
                     </li>
                     <li>
-                        <%= Html.ActionLink<PostZoneController>(c => c.Index(), "Postage Zones") %>
+                        <%= Html.ActionLink<PostZoneController>(c => c.Index(1), "Postage Zones") %>
                     </li>
                     <li>
                         <%= Html.ActionLink<ReportController>(c => c.Index(), "Reports") %>

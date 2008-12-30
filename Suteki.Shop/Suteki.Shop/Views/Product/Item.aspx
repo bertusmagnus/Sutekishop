@@ -41,7 +41,7 @@ function onThumbnailClick(img)
 
 
 <div class="productOptions">
-<% using (Html.BeginForm("Basket", "Update"))
+<% using (Html.BeginForm("Update", "Basket"))
    { %>
 
     <%= Html.ErrorBox(ViewData.Model)%>

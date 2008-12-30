@@ -10,12 +10,13 @@ namespace Suteki.Shop.Controllers
 {
     public class BasketController : ControllerBase
     {
-        readonly IRepository<Basket> basketRepository;
-        readonly IRepository<BasketItem> basketItemRepository;
-        readonly IRepository<Size> sizeRepository;
-        readonly IUserService userService;
-        readonly IPostageService postageService;
-        readonly IRepository<Country> countryRepository;
+        private readonly IRepository<Basket> basketRepository;
+        private readonly IRepository<BasketItem> basketItemRepository;
+        private readonly IRepository<Size> sizeRepository;
+        private readonly IUserService userService;
+        private readonly IPostageService postageService;
+        private readonly IRepository<Country> countryRepository;
+        private readonly IValidatingBinder validatingBinder;
 
         public BasketController(
             IRepository<Basket> basketRepository,
@@ -23,7 +24,8 @@ namespace Suteki.Shop.Controllers
             IRepository<Size> sizeRepository,
             IUserService userService,
             IPostageService postageService, 
-            IRepository<Country> countryRepository)
+            IRepository<Country> countryRepository,
+            IValidatingBinder validatingBinder)
         {
             this.basketRepository = basketRepository;
             this.basketItemRepository = basketItemRepository;
@@ -31,6 +33,7 @@ namespace Suteki.Shop.Controllers
             this.userService = userService;
             this.postageService = postageService;
             this.countryRepository = countryRepository;
+            this.validatingBinder = validatingBinder;
         }
 
         public ActionResult Index()
@@ -39,7 +42,7 @@ namespace Suteki.Shop.Controllers
             return RenderIndexView(user.CurrentBasket);
         }
 
-        public ActionResult Update()
+        public ActionResult Update(FormCollection form)
         {
             var user = CurrentUser;
 
@@ -54,7 +57,7 @@ namespace Suteki.Shop.Controllers
             var basket = user.CurrentBasket;
 
             var basketItem = new BasketItem();
-            ValidatingBinder.UpdateFrom(basketItem, Request.Form);
+            validatingBinder.UpdateFrom(basketItem, form, ModelState);
 
             var size = sizeRepository.GetById(basketItem.SizeId);
             if (!size.IsInStock)

@@ -338,7 +338,7 @@ function addHandlers()
                 </tr>
                 <tr>
                     <td class="label"><label for="card.securitycode">Security Code</label></td>
-                    <td colspan="2" class="field small"><%= Html.TextBox("card.securitycode", new { maxlength = "4" })%></td>
+                    <td colspan="2" class="field small"><%= Html.TextBox("card.securitycode", "", new { maxlength = "4" })%></td>
                 </tr>
                 <tr>
                     <td colspan="3"><p>The last three digits printed on the signature strip of your credit/debit card. Or for Amex. the four digits printed on the front of the card above the embossed card number.</p></td>

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
@@ -11,22 +9,21 @@ using Suteki.Common.Validation;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using System.Security.Permissions;
-using MvcContrib.Filters;
 using Suteki.Shop.Services;
 using System.Data.Linq;
-using OrderableExtensions=Suteki.Common.Repositories.OrderableExtensions;
 
 namespace Suteki.Shop.Controllers
 {
     public class ProductController : ControllerBase
     {
-        IRepository<Product> productRepository;
-        IRepository<Category> categoryRepository;
-        IRepository<ProductImage> productImageRepository;
-        IHttpFileService httpFileService;
-        ISizeService sizeService;
-        IOrderableService<Product> productOrderableService;
-        IOrderableService<ProductImage> productImageOrderableService;
+        private readonly IRepository<Product> productRepository;
+        private readonly IRepository<Category> categoryRepository;
+        private readonly IRepository<ProductImage> productImageRepository;
+        private readonly IHttpFileService httpFileService;
+        private readonly ISizeService sizeService;
+        private readonly IOrderableService<Product> productOrderableService;
+        private readonly IOrderableService<ProductImage> productImageOrderableService;
+        private readonly IValidatingBinder validatingBinder;
 
         public ProductController(
             IRepository<Product> productRepository,
@@ -35,7 +32,8 @@ namespace Suteki.Shop.Controllers
             IHttpFileService httpFileService,
             ISizeService sizeService,
             IOrderableService<Product> productOrderableService,
-            IOrderableService<ProductImage> productImageOrderableService)
+            IOrderableService<ProductImage> productImageOrderableService, 
+            IValidatingBinder validatingBinder)
         {
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
@@ -44,6 +42,7 @@ namespace Suteki.Shop.Controllers
             this.sizeService = sizeService;
             this.productOrderableService = productOrderableService;
             this.productImageOrderableService = productImageOrderableService;
+            this.validatingBinder = validatingBinder;
         }
 
         public override string GetControllerName()
@@ -79,7 +78,7 @@ namespace Suteki.Shop.Controllers
 
         private ActionResult RenderItemView(string urlName)
         {
-            Product product = productRepository.GetAll().WithUrlName(urlName);
+            var product = productRepository.GetAll().WithUrlName(urlName);
             AppendTitle(product.Name);
             AppendMetaDescription(product.Description);
             return View("Item", ShopView.Data.WithProduct(product));
@@ -88,7 +87,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult New(int id)
         {
-            Product defaultProduct = new Product
+            var defaultProduct = new Product
             {
                 ProductId = 0,
                 CategoryId = id,
@@ -101,19 +100,13 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Update(int productId)
         {
-            Product product = null;
-            if (productId == 0)
-            {
-                product = CreateDefaultProduct();
-            }
-            else
-            {
-                product = productRepository.GetById(productId);
-            }
+            var product = productId == 0 ? 
+                CreateDefaultProduct() : 
+                productRepository.GetById(productId);
 
             try
             {
-                ValidatingBinder.UpdateFrom(product, Request.Form);
+                validatingBinder.UpdateFrom(product, Request.Form);
                 UpdateImages(product, Request);
                 sizeService.WithValues(Request.Form).Update(product);
 
@@ -144,7 +137,7 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithProduct(product).WithMessage("This product has been saved"));
         }
 
-        private Product CreateDefaultProduct()
+        private static Product CreateDefaultProduct()
         {
             return new Product
             {
@@ -157,8 +150,8 @@ namespace Suteki.Shop.Controllers
 
         private void UpdateImages(Product product, HttpRequestBase request)
         {
-            IEnumerable<Image> images = httpFileService.GetUploadedImages(request);
-            foreach (Image image in images)
+            var images = httpFileService.GetUploadedImages(request);
+            foreach (var image in images)
             {
                 product.ProductImages.Add(new ProductImage 
                 {
@@ -176,7 +169,7 @@ namespace Suteki.Shop.Controllers
 
         private ActionResult RenderEditView(int id)
         {
-            Product product = productRepository.GetById(id);
+            var product = productRepository.GetById(id);
             return View("Edit", EditViewData.WithProduct(product));
         }
 
@@ -227,7 +220,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult DeleteImage(int id, int productImageId)
         {
-            ProductImage productImage = productImageRepository.GetById(productImageId);
+            var productImage = productImageRepository.GetById(productImageId);
             productImageRepository.DeleteOnSubmit(productImage);
             productImageRepository.SubmitChanges();
 
@@ -237,7 +230,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult ClearSizes(int id)
         {
-            Product product = productRepository.GetById(id);
+            var product = productRepository.GetById(id);
             sizeService.Clear(product);
             productRepository.SubmitChanges();
 

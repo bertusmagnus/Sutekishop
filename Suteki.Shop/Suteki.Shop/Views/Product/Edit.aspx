@@ -10,7 +10,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.BeginForm("Product", "Update", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } } ))
+    <% using (Html.BeginForm("Update", "Product", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } }))
        { %>
 
         <%= Html.Hidden("productId", ViewData.Model.Product.ProductId.ToString())%>

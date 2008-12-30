@@ -6,7 +6,8 @@
     <%= Html.ErrorBox(ViewData.Model)%>
     <%= Html.MessageBox(ViewData.Model)%>
 
-    <% using(Html.BeginForm("Category", "Update")) { %>
+    <% using (Html.BeginForm("Update", "Category"))
+       { %>
 
         <%= Html.Hidden("categoryId", ViewData.Model.Category.CategoryId.ToString())%>
         <%= Html.Hidden("position", ViewData.Model.Category.Position.ToString())%>

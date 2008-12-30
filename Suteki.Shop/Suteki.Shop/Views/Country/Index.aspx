@@ -19,8 +19,8 @@
         <td><%= Html.ActionLink<CountryController>(c => c.Edit(country.CountryId), country.Name) %></td>
         <td><%= Html.Tick(country.IsActive) %></td>
         <td><%= country.PostZone.Name %></td>
-        <td><%= Html.UpArrowLink<CountryController>(c => c.MoveUp(country.Position)) %></td>
-        <td><%= Html.DownArrowLink<CountryController>(c => c.MoveDown(country.Position)) %></td>
+        <td><%= Html.UpArrowLink<CountryController>(c => c.MoveUp(country.Position, 1)) %></td>
+        <td><%= Html.DownArrowLink<CountryController>(c => c.MoveDown(country.Position, 1)) %></td>
     </tr>
 <% } %>
 </table>

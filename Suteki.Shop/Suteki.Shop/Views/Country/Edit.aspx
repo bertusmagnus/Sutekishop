@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model)%>
     <%= Html.MessageBox(ViewData.Model)%>
 
-    <% using (Html.BeginForm("Country", "Update"))
+    <% using (Html.BeginForm("Update", "Country"))
        { %>
 
         <%= Html.Hidden("countryid", ViewData.Model.Item.CountryId.ToString())%>
@@ -19,7 +19,7 @@
         <%= Html.CheckBox("isactive", ViewData.Model.Item.IsActive)%>
         
         <label for="postzoneid">Post Zone</label>
-        <%= Html.DropDownList("postzoneid", new SelectList(ViewData.Model.GetLookUpList<PostZone>(), "PostZoneId", "Name", ViewData.Model.Item.PostZoneId))%>
+        <%= Html.DropDownList("postzoneid", new SelectList(ViewData.Model.GetLookupList(typeof(PostZone)), "PostZoneId", "Name", ViewData.Model.Item.PostZoneId))%>
         
         <%= Html.SubmitButton()%>
         

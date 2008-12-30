@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using(Html.BeginForm("User", "Update")) { %>
+    <% using(Html.BeginForm("Update", "User")) { %>
 
         <%= Html.Hidden("userid", ViewData.Model.User.UserId.ToString()) %>
 

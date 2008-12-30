@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
@@ -14,14 +13,16 @@ namespace Suteki.Shop.Controllers
 {
     public class OrderController : ControllerBase
     {
-        readonly IRepository<Order> orderRepository;
-        readonly IRepository<Basket> basketRepository;
-        readonly IRepository<Country> countryRepository;
-        readonly IRepository<CardType> cardTypeRepository;
+        private readonly IRepository<Order> orderRepository;
+        private readonly IRepository<Basket> basketRepository;
+        private readonly IRepository<Country> countryRepository;
+        private readonly IRepository<CardType> cardTypeRepository;
 
-        readonly IEncryptionService encryptionService;
-        readonly IEmailSender emailSender;
-        readonly IPostageService postageService;
+        private readonly IEncryptionService encryptionService;
+        private readonly IEmailSender emailSender;
+        private readonly IPostageService postageService;
+        private readonly IValidatingBinder validatingBinder;
+        private readonly IHttpContextService httpContextService;
 
         public OrderController(
             IRepository<Order> orderRepository,
@@ -29,7 +30,10 @@ namespace Suteki.Shop.Controllers
             IRepository<Country> countryRepository,
             IRepository<CardType> cardTypeRepository,
             IEncryptionService encryptionService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IPostageService postageService,
+            IValidatingBinder validatingBinder,
+            IHttpContextService httpContextService)
         {
             this.orderRepository = orderRepository;
             this.basketRepository = basketRepository;
@@ -37,6 +41,9 @@ namespace Suteki.Shop.Controllers
             this.cardTypeRepository = cardTypeRepository;
             this.encryptionService = encryptionService;
             this.emailSender = emailSender;
+            this.postageService = postageService;
+            this.validatingBinder = validatingBinder;
+            this.httpContextService = httpContextService;
         }
 
         public OrderController(
@@ -57,14 +64,21 @@ namespace Suteki.Shop.Controllers
             this.postageService = postageService;
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult Index()
+        {
+            return Index(new FormCollection());
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Index(FormCollection form)
         {
             var criteria = new OrderSearchCriteria();
 
             try
             {
-                ValidatingBinder.UpdateFrom(criteria, Request.Form);
+                validatingBinder.UpdateFrom(criteria, form, ModelState);
             }
             catch (ValidationException) { } // ignore validation exceptions
 
@@ -72,7 +86,7 @@ namespace Suteki.Shop.Controllers
                 .GetAll()
                 .ThatMatch(criteria)
                 .ByCreatedDate()
-                .ToPagedList(Request.PageNumber(), 20);
+                .ToPagedList(httpContextService.FormOrQuerystring.PageNumber(), 20);
 
             return View("Index", ShopView.Data
                 .WithOrders(orders)
@@ -86,18 +100,18 @@ namespace Suteki.Shop.Controllers
 
         private ViewResult ItemView(int id)
         {
-            Order order = orderRepository.GetById(id);
+            var order = orderRepository.GetById(id);
 
             if (CurrentUser.IsAdministrator)
             {
                 var cookie = Request.Cookies["privateKey"];
                 if (cookie != null)
                 {
-                    string privateKey = cookie.Value.Replace("%3D", "=");
+                    var privateKey = cookie.Value.Replace("%3D", "=");
 
                     if (!order.PayByTelephone)
                     {
-                        Card card = order.Card.Copy();
+                        var card = order.Card.Copy();
                         try
                         {
                             encryptionService.PrivateKey = privateKey;
@@ -130,7 +144,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Print(int id)
         {
-            ViewResult viewResult = ItemView(id);
+            var viewResult = ItemView(id);
             viewResult.MasterName = "Print";
             return viewResult;
         }
@@ -140,9 +154,9 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult ShowCard(int orderId, string privateKey)
         {
-            Order order = orderRepository.GetById(orderId);
+            var order = orderRepository.GetById(orderId);
 
-            Card card = order.Card.Copy();
+            var card = order.Card.Copy();
 
             try
             {
@@ -159,15 +173,15 @@ namespace Suteki.Shop.Controllers
         public ActionResult Checkout(int id)
         {
             // create a default order
-            Order order = new Order { UseCardHolderContact = true };
+            var order = new Order { UseCardHolderContact = true };
 
-            Basket basket = basketRepository.GetById(id);
+            var basket = basketRepository.GetById(id);
             PopulateOrderForView(order, basket);
 
             return View("Checkout", CheckoutViewData(order));
         }
 
-        private void PopulateOrderForView(Order order, Basket basket)
+        private static void PopulateOrderForView(Order order, Basket basket)
         {
             if (order.Basket == null) order.Basket = basket;
             if (order.Contact == null) order.Contact = new Contact();
@@ -189,7 +203,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult PlaceOrder()
         {
-            Order order = new Order();
+            var order = new Order();
             try
             {
                 UpdateOrderFromForm(order);
@@ -202,7 +216,7 @@ namespace Suteki.Shop.Controllers
             }
             catch (ValidationException validationException)
             {
-                Basket basket = basketRepository.GetById(order.BasketId);
+                var basket = basketRepository.GetById(order.BasketId);
                 PopulateOrderForView(order, basket);
                 return View("Checkout", CheckoutViewData(order)
                     .WithErrorMessage(validationException.Message)
@@ -216,7 +230,7 @@ namespace Suteki.Shop.Controllers
             order.CreatedDate = DateTime.Now;
             order.DispatchedDate = DateTime.Now;
 
-            Validator validator = new Validator
+            var validator = new Validator
                                   {
                                       () => UpdateOrder(order),
                                       () => UpdateCardContact(order),
@@ -230,7 +244,7 @@ namespace Suteki.Shop.Controllers
         [NonAction]
         public virtual void EmailOrder(Order order)
         {
-            string subject = "{0}: your order".With(this.BaseControllerService.ShopName);
+            string subject = "{0}: your order".With(BaseControllerService.ShopName);
 
             string message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
 
@@ -242,7 +256,7 @@ namespace Suteki.Shop.Controllers
 
         private void UpdateCardContact(Order order)
         {
-            Contact cardContact = new Contact();
+            var cardContact = new Contact();
             order.Contact = cardContact;
             UpdateContact(cardContact, "cardcontact");
         }
@@ -251,7 +265,7 @@ namespace Suteki.Shop.Controllers
         {
             if (order.UseCardHolderContact) return;
 
-            Contact deliveryContact = new Contact();
+            var deliveryContact = new Contact();
             order.Contact1 = deliveryContact;
             UpdateContact(deliveryContact, "deliverycontact");
         }
@@ -260,7 +274,7 @@ namespace Suteki.Shop.Controllers
         {
             try
             {
-                ValidatingBinder.UpdateFrom(contact, Request.Form, prefix);
+                validatingBinder.UpdateFrom(contact, Request.Form, prefix);
             }
             finally
             {
@@ -275,16 +289,16 @@ namespace Suteki.Shop.Controllers
         {
             if (order.PayByTelephone) return;
 
-            Card card = new Card();
+            var card = new Card();
             order.Card = card;
-            ValidatingBinder.UpdateFrom(card, Request.Form, "card");
+            validatingBinder.UpdateFrom(card, Request.Form, "card");
             encryptionService.EncryptCard(card);
         }
 
         private void UpdateOrder(Order order)
         {
-            ValidatingBinder.UpdateFrom(order, Request.Form, "order");
-            string confirmEmail = this.ReadFromRequest("emailconfirm");
+            validatingBinder.UpdateFrom(order, Request.Form, "order");
+            var confirmEmail = ReadFromRequest("emailconfirm");
             if (order.Email != confirmEmail)
             {
                 throw new ValidationException("Email and Confirm Email do not match");
@@ -294,7 +308,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Dispatch(int id)
         {
-            Order order = orderRepository.GetById(id);
+            var order = orderRepository.GetById(id);
 
             if (order.IsCreated)
             {
@@ -310,7 +324,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Reject(int id)
         {
-            Order order = orderRepository.GetById(id);
+            var order = orderRepository.GetById(id);
 
             if (order.IsCreated)
             {
@@ -325,7 +339,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult UndoStatus(int id)
         {
-            Order order = orderRepository.GetById(id);
+            var order = orderRepository.GetById(id);
 
             if (order.IsDispatched || order.IsRejected)
             {
@@ -339,11 +353,11 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult UpdateCountry(int id, int countryId)
         {
-            Basket basket = basketRepository.GetById(id);
+            var basket = basketRepository.GetById(id);
             basket.CountryId = countryId;
             basketRepository.SubmitChanges();
 
-            Order order = new Order();
+            var order = new Order();
 
             try
             {
@@ -361,7 +375,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]        
         public ActionResult Invoice(int id)
         {
-            Order order = orderRepository.GetById(id);
+            var order = orderRepository.GetById(id);
             postageService.CalculatePostageFor(order);
 
             AppendTitle("Invoice {0}".With(order.OrderId));

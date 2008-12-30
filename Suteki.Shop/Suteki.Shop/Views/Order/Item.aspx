@@ -166,7 +166,7 @@
 
                 <% if (ViewData.Model.Card == null) { %>
 
-                    <% using (Html.BeginForm("Order", "ShowCard", FormMethod.Post,
+                    <% using (Html.BeginForm("ShowCard", "Order", FormMethod.Post,
                            new Dictionary<string, object> { { "onsubmit", "submitHandler();" } }))
                        { %>
                         

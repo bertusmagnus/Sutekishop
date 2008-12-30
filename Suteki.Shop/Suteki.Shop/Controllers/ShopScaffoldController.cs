@@ -5,7 +5,7 @@ using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Controllers
 {
-    public abstract class ShopScaffoldController<T> : ScaffoldController<T>, IProvidesBaseService where T : class, IOrderable, new()
+    public abstract class ShopScaffoldController<T> : OrderableScaffoldController<T>, IProvidesBaseService where T : class, IOrderable, new()
     {
         private IBaseControllerService baseControllerService;
 

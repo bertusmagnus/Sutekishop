@@ -9,8 +9,8 @@ namespace Suteki.Shop.HtmlHelpers
 {
     public class StockWriter
     {
-        HtmlHelper htmlHelper;
-        Category root;
+        readonly HtmlHelper htmlHelper;
+        readonly Category root;
 
         public StockWriter(HtmlHelper htmlHelper, Category root)
         {
@@ -20,7 +20,7 @@ namespace Suteki.Shop.HtmlHelpers
 
         public string Write()
         {
-            HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
+            var writer = new HtmlTextWriter(new StringWriter());
 
             WriteChildCategories(writer, root);
 
@@ -29,13 +29,13 @@ namespace Suteki.Shop.HtmlHelpers
 
         private void WriteChildCategories(HtmlTextWriter writer, Category category)
         {
-            foreach (Category childCategory in category.Categories)
+            foreach (var childCategory in category.Categories)
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.H3);
                 writer.Write(childCategory.Name);
                 writer.RenderEndTag();
 
-                foreach (Product product in childCategory.Products)
+                foreach (var product in childCategory.Products)
                 {
                     WriteProduct(writer, product);
                 }
@@ -77,6 +77,7 @@ namespace Suteki.Shop.HtmlHelpers
         {
             writer.AddAttribute(HtmlTextWriterAttribute.Class, "stockCheckbox");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.Write(size.Name);
             writer.Write(htmlHelper.CheckBox("stockitem_{0}".With(size.SizeId), size.IsInStock));
             writer.RenderEndTag();
         }

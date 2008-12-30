@@ -6,7 +6,7 @@
     <%= Html.ErrorBox(ViewData.Model) %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.BeginForm("Postage", "Update"))
+    <% using (Html.BeginForm("Update", "Postage"))
        { %>
 
         <%= Html.Hidden("postageid", ViewData.Model.Item.PostageId.ToString())%>

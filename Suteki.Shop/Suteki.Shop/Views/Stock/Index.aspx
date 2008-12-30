@@ -5,7 +5,7 @@
 
 <div class="columnContainer">
 
-<% using(Html.BeginForm<StockController>(c => c.Update())) { %>
+<% using(Html.BeginForm("Update", "Stock")) { %>
 
     <%= Html.WriteStock(ViewData.Model.Category) %>
 

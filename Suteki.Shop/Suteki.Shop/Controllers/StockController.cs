@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
@@ -33,20 +34,23 @@ namespace Suteki.Shop.Controllers
             return View("Index", ShopView.Data.WithCategory(root));
         }
 
-        public ActionResult Update()
+        public ActionResult Update(FormCollection form)
         {
             var sizes = sizeRepository.GetAll().ToList();
-            UpdateFromForm(sizes, Form);
+            UpdateFromForm(sizes, form);
             sizeRepository.SubmitChanges();
 
             return RenderIndexView();
         }
 
-        private void UpdateFromForm(IEnumerable<Size> sizes, NameValueCollection form)
+        private static void UpdateFromForm(IEnumerable<Size> sizes, NameValueCollection form)
         {
-            foreach (Size size in sizes)
+            foreach (var size in sizes)
             {
-                size.IsInStock = form["stockitem_{0}".With(size.SizeId)] != null;
+                if (form["stockitem_{0}".With(size.SizeId)] != null)
+                {
+                    size.IsInStock = form["stockitem_{0}".With(size.SizeId)].Contains("true");
+                }
             }
         }
     }

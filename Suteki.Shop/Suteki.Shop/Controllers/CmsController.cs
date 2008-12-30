@@ -12,15 +12,18 @@ namespace Suteki.Shop.Controllers
 {
     public class CmsController : ControllerBase
     {
-        IRepository<Content> contentRepository;
-        IOrderableService<Content> contentOrderableService;
+        public readonly IRepository<Content> contentRepository;
+        public readonly IOrderableService<Content> contentOrderableService;
+        public readonly IValidatingBinder validatingBinder;
 
         public CmsController(
             IRepository<Content> contentRepository,
-            IOrderableService<Content> contentOrderableService)
+            IOrderableService<Content> contentOrderableService, 
+            IValidatingBinder validatingBinder)
         {
             this.contentRepository = contentRepository;
             this.contentOrderableService = contentOrderableService;
+            this.validatingBinder = validatingBinder;
         }
 
         public override string GetControllerName()
@@ -30,16 +33,9 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index(string urlName)
         {
-            Content content;
-
-            if (string.IsNullOrEmpty(urlName))
-            {
-                content = contentRepository.GetAll().DefaultText(null);
-            }
-            else
-            {
-                content = contentRepository.GetAll().WithUrlName(urlName);
-            }
+            var content = string.IsNullOrEmpty(urlName) ? 
+                contentRepository.GetAll().DefaultText(null) : 
+                contentRepository.GetAll().WithUrlName(urlName);
 
             if (content is Menu)
             {
@@ -67,9 +63,9 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Add(int id)
         {
-            Content parentContent = contentRepository.GetById(id);
+            var parentContent = contentRepository.GetById(id);
 
-            TextContent textContent = new TextContent
+            var textContent = new TextContent
             {
                 Content1 = parentContent,
                 IsActive = true,
@@ -83,7 +79,7 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
-            Content content = contentRepository.GetById(id);
+            var content = contentRepository.GetById(id);
             return View("Edit", GetEditViewData(id).WithContent(content));
         }
 
@@ -96,19 +92,13 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Update(int id)
         {
-            Content content = null;
-            if (id == 0)
-            {
-                content = CreateContent();
-            }
-            else
-            {
-                content = contentRepository.GetById(id);
-            }
+            var content = id == 0 ? 
+                CreateContent() : 
+                contentRepository.GetById(id);
 
             try
             {
-                ValidatingBinder.UpdateFrom(content, Form);
+                validatingBinder.UpdateFrom(content, Form);
                 // we spefically want HTML in textContent
                 var textContent = content as ITextContent;
                 if(textContent != null)
@@ -138,8 +128,8 @@ namespace Suteki.Shop.Controllers
         /// <returns></returns>
         private Content CreateContent()
         {
-            Content content = null;
-            int contentTypeId = int.Parse(this.Form["contenttypeid"]);
+            Content content;
+            var contentTypeId = int.Parse(Form["contenttypeid"]);
             switch (contentTypeId)
             {
                 case ContentType.TextContentId:
@@ -161,13 +151,13 @@ namespace Suteki.Shop.Controllers
 
         private ActionResult RenderListView(int contentId)
         {
-            Menu menu = contentRepository.GetById(contentId) as Menu;
+            var menu = contentRepository.GetById(contentId) as Menu;
             return View("List", CmsView.Data.WithContent(menu));
         }
 
         public ActionResult MoveUp(int id)
         {
-            Content content = contentRepository.GetById(id);
+            var content = contentRepository.GetById(id);
 
             contentOrderableService
                 .MoveItemAtPosition(content.Position)
@@ -179,7 +169,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult MoveDown(int id)
         {
-            Content content = contentRepository.GetById(id);
+            var content = contentRepository.GetById(id);
 
             contentOrderableService
                 .MoveItemAtPosition(content.Position)
@@ -191,14 +181,14 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult NewMenu(int id)
         {
-            Content content = contentRepository.GetById(id);
+            var content = contentRepository.GetById(id);
 
             if(!(content is Menu))
             {
                 throw new ApplicationException("Content with id = {0} is not a menu".With(id));
             }
 
-            Menu menu = new Menu
+            var menu = new Menu
             {
                 ContentTypeId = ContentType.MenuId,
                 Content1 = content,

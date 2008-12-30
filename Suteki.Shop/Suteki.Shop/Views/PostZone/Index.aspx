@@ -23,8 +23,8 @@
         <td><%= Html.Tick(postZone.AskIfMaxWeight)%></td>
         <td class="number"><%= postZone.FlatRate.ToString("£0.00") %></td>
         <td><%= Html.Tick(postZone.IsActive)%></td>
-        <td><%= Html.UpArrowLink<PostZoneController>(c => c.MoveUp(postZone.Position))%></td>
-        <td><%= Html.DownArrowLink<PostZoneController>(c => c.MoveDown(postZone.Position))%></td>
+        <td><%= Html.UpArrowLink<PostZoneController>(c => c.MoveUp(postZone.Position, 1))%></td>
+        <td><%= Html.DownArrowLink<PostZoneController>(c => c.MoveDown(postZone.Position, 1))%></td>
     </tr>
 <% } %>
 </table>

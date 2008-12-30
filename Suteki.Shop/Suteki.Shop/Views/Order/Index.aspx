@@ -42,7 +42,7 @@
 
 <div class="columnContainer">
     <div class="pager">
-    <%= Html.Pager("Order", "Index", ViewData.Model.Orders, ViewData.Model.OrderSearchCriteria)%>
+    <%= Html.Pager("Order", "Index", ViewData.Model.Orders)%>
     </div>
 
     <table>

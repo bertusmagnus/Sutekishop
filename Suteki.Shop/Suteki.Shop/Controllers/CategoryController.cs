@@ -10,15 +10,18 @@ namespace Suteki.Shop.Controllers
 {
     public class CategoryController : ControllerBase
     {
-        IRepository<Category> categoryRepository;
-        IOrderableService<Category> orderableService;
+        private readonly IRepository<Category> categoryRepository;
+        private readonly IOrderableService<Category> orderableService;
+        private readonly IValidatingBinder validatingBinder;
 
         public CategoryController(
             IRepository<Category> categoryRepository,
-            IOrderableService<Category> orderableService)
+            IOrderableService<Category> orderableService,
+            IValidatingBinder validatingBinder)
         {
             this.categoryRepository = categoryRepository;
             this.orderableService = orderableService;
+            this.validatingBinder = validatingBinder;
         }
 
         public ActionResult Index()
@@ -28,14 +31,14 @@ namespace Suteki.Shop.Controllers
 
         private ActionResult RenderIndexView()
         {
-            Category root = categoryRepository.GetRootCategory();
+            var root = categoryRepository.GetRootCategory();
             return View("Index", ShopView.Data.WithCategory(root));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult New(int id)
         {
-            Category defaultCategory = new Category 
+            var defaultCategory = new Category 
             { 
                 ParentId = id,
                 Position = orderableService.NextPosition
@@ -46,26 +49,20 @@ namespace Suteki.Shop.Controllers
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
-            Category category = categoryRepository.GetById(id);
+            var category = categoryRepository.GetById(id);
             return View("Edit", EditViewData.WithCategory(category));
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Update(int categoryId)
         {
-            Category category = null;
-            if (categoryId == 0)
-            {
-                category = new Category();
-            }
-            else
-            {
-                category = categoryRepository.GetById(categoryId);
-            }
+            var category = categoryId == 0 ? 
+                new Category() : 
+                categoryRepository.GetById(categoryId);
 
             try
             {
-                ValidatingBinder.UpdateFrom(category, Request.Form);
+                validatingBinder.UpdateFrom(category, Request.Form);
             }
             catch (ValidationException validationException)
             {
@@ -107,7 +104,7 @@ namespace Suteki.Shop.Controllers
 
         private IOrderServiceWithConstrainedPosition<Category> MoveThis(int id)
         {
-            Category category = categoryRepository.GetById(id);
+            var category = categoryRepository.GetById(id);
             return orderableService
                 .MoveItemAtPosition(category.Position)
                 .ConstrainedBy(c => c.ParentId == category.ParentId);

@@ -40,16 +40,9 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Update(int userid)
         {
-            User user = null;
-
-            if (userid == 0)
-            {
-                user = new User();
-            }
-            else
-            {
-                user = userRepository.GetById(userid);
-            }
+            var user = userid == 0 ? 
+                new User() : 
+                userRepository.GetById(userid);
 
             UpdateFromForm(user);
 
@@ -80,7 +73,7 @@ namespace Suteki.Shop.Controllers
         {
             user.Email = this.ReadFromRequest("email");
             user.RoleId = int.Parse(this.ReadFromRequest("roleid"));
-            user.IsEnabled = (this.ReadFromRequest("isenabled") == "True");
+            user.IsEnabled = (this.ReadFromRequest("isenabled") == "true,false");
 
             string password = this.ReadFromRequest("password");
             

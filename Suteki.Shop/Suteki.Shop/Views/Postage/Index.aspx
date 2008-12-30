@@ -20,8 +20,8 @@
         <td class="number"><%= postage.MaxWeight.ToString() %></td>
         <td class="number"><%= postage.Price.ToString("£0.00") %></td>
         <td><%= Html.Tick(postage.IsActive)%></td>
-        <td><%= Html.UpArrowLink<PostageController>(c => c.MoveUp(postage.Position))%></td>
-        <td><%= Html.DownArrowLink<PostageController>(c => c.MoveDown(postage.Position))%></td>
+        <td><%= Html.UpArrowLink<PostageController>(c => c.MoveUp(postage.Position, 1))%></td>
+        <td><%= Html.DownArrowLink<PostageController>(c => c.MoveDown(postage.Position, 1))%></td>
     </tr>
 <% } %>
 </table>
