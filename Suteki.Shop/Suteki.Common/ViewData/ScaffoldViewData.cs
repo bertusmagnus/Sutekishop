@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Suteki.Common.Extensions;
 
@@ -13,13 +14,13 @@ namespace Suteki.Common.ViewData
 
         public ScaffoldViewData<T> With(T item)
         {
-            this.Item = item;
+            Item = item;
             return this;
         }
 
         public ScaffoldViewData<T> With(IEnumerable<T> items)
         {
-            this.Items = items;
+            Items = items;
             return this;
         }
 
@@ -29,14 +30,22 @@ namespace Suteki.Common.ViewData
             return this;
         }
 
-        public IEnumerable<TLookup> GetLookUpList<TLookup>()
+        public IEnumerable GetLookupList(Type lookupType)
         {
-            if (!lookupLists.ContainsKey(typeof(TLookup)))
+            if (!lookupLists.ContainsKey(lookupType))
             {
                 throw new ApplicationException("List of type {0} does not exist in lookup list".With(
-                    typeof(TLookup).Name));
+                    lookupType.Name));
             }
-            return (IEnumerable<TLookup>)lookupLists[typeof(TLookup)];
+            return (IEnumerable)lookupLists[lookupType];
+        }
+
+        public string EntityName
+        {
+            get
+            {
+                return typeof(T).Name;                
+            }
         }
     }
 

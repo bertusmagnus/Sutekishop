@@ -1,47 +1,44 @@
-﻿using System;
+using System.Collections.Specialized;
+using System.Reflection;
 using System.Web.Mvc;
 using MvcContrib;
-using Suteki.Common;
+using MvcContrib.Pagination;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
 using Suteki.Common.ViewData;
-using Castle.MicroKernel;
-using System.Reflection;
 
 namespace Suteki.Common.Controllers
 {
-    public class ScaffoldController<T> : ConventionController where T : class, IOrderable, new()
+    public class ScaffoldController<T> : ConventionController where T : class, new()
     {
-        public IKernel Kernel { get; set; }
         public IRepository<T> Repository { get; set; }
-        public IOrderableService<T> OrderableService { get; set; }
+        public IRepositoryResolver repositoryResolver { get; set; }
+        public IValidatingBinder ValidatingBinder { get; set; }
+        public IHttpContextService httpContextService { get; set; }
 
-        public virtual ActionResult Index()
+        public virtual ActionResult Index(int? page)
         {
-            return RenderIndexView();
+            return RenderIndexView(page);
         }
 
-        private ActionResult RenderIndexView()
+        protected virtual ActionResult RenderIndexView(int? page)
         {
-            var items = Repository.GetAll().InOrder();
+            var items = Repository.GetAll().AsPagination(page ?? 1);
             return View("Index", ScaffoldView.Data<T>().With(items));
         }
 
         public virtual ActionResult New()
         {
-            T item = new T
-                         {
-                             Position = OrderableService.NextPosition
-                         };
+            var item = new T();
             return View("Edit", BuildEditViewData().With(item));
         }
 
         [NonAction]
         public virtual ScaffoldViewData<T> BuildEditViewData()
         {
-            ScaffoldViewData<T> viewData = ScaffoldView.Data<T>();
+            var viewData = ScaffoldView.Data<T>();
             AppendLookupLists(viewData);
             return viewData;
         }
@@ -52,48 +49,51 @@ namespace Suteki.Common.Controllers
             return View("Edit", BuildEditViewData().With(item));
         }
 
-        public virtual ActionResult Update()
+        public virtual ActionResult Delete(int id, int? page)
         {
-            int id = int.Parse(this.ReadFromRequest(typeof(T).GetPrimaryKey().Name));
-            T item = null;
+            T item = Repository.GetById(id);
+            Repository.DeleteOnSubmit(item);
+            Repository.SubmitChanges();
 
-            if (id == 0)
-            {
-                item = new T();
-            }
-            else
-            {
-                item = Repository.GetById(id);
-            }
+            return RedirectToAction("Index", new {page});
+        }
+
+        public virtual ActionResult Update(FormCollection form)
+        {
+            var id = GetPrimaryKey();
+
+            var item = id == 0 ? 
+                new T() : 
+                Repository.GetById(id);
 
             try
             {
-                ValidatingBinder.UpdateFrom(item, Request.Form);
+                ValidatingBinder.UpdateFrom(item, form, ModelState);
                 if (id == 0)
                 {
                     Repository.InsertOnSubmit(item);
                 }
                 Repository.SubmitChanges();
 
-                return RenderIndexView();
+                return RedirectToAction("Index");
             }
             catch (ValidationException validationException)
             {
-                return View("Edit", BuildEditViewData().With(item)
-                                        .WithErrorMessage(validationException.Message));
+                return View("Edit", BuildEditViewData().With(item).WithErrorMessage(validationException.Message));
             }
         }
 
-        public virtual ActionResult MoveUp(int id)
+        public virtual NameValueCollection Form
         {
-            OrderableService.MoveItemAtPosition(id).UpOne();
-            return RenderIndexView();
+            get
+            {
+                return Request.Form;
+            }
         }
 
-        public virtual ActionResult MoveDown(int id)
+        public virtual int GetPrimaryKey()
         {
-            OrderableService.MoveItemAtPosition(id).DownOne();
-            return RenderIndexView();
+            return int.Parse(httpContextService.FormOrQuerystring[typeof(T).GetPrimaryKey().Name]);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Suteki.Common.Controllers
         public virtual void AppendLookupLists(ScaffoldViewData<T> viewData)
         {
             // find any properties that are attributed as a linq entity
-            foreach (PropertyInfo property in typeof(T).GetProperties())
+            foreach (var property in typeof(T).GetProperties())
             {
                 if (property.PropertyType.IsLinqEntity())
                 {
@@ -115,33 +115,13 @@ namespace Suteki.Common.Controllers
 
         private void AppendLookupList(ScaffoldViewData<T> viewData, PropertyInfo property)
         {
-            if (Kernel == null)
-            {
-                throw new ApplicationException("The Kernel property must be set before AppendLookupLists is called");
-            }
-
-            // get the repository for this Entity
-            Type repositoryType = typeof(IRepository<>).MakeGenericType(new[] { property.PropertyType });
-
-            object repository = Kernel.Resolve(repositoryType);
-            if (repository == null)
-            {
-                throw new ApplicationException(StringExtensions.With("Could not find IRepository<{0}> in kernel", property.PropertyType));
-            }
-
-            MethodInfo getAllMethod = repositoryType.GetMethod("GetAll");
+            var repository = repositoryResolver.GetRepository(property.PropertyType);
 
             // get the items
-            object items = getAllMethod.Invoke(repository, new object[] { });
+            object items = repository.GetAll();
 
             // add the items to the viewData
             viewData.WithLookupList(property.PropertyType, items);
-        }
-
-        [NonAction]
-        public string ReadFromRequest(string key)
-        {
-            return Request.QueryString[key] ?? Request.Form[key];
         }
     }
 }

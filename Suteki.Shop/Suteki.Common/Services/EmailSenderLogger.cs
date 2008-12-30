@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using Castle.Core.Logging;
 using Suteki.Common.Extensions;
 
@@ -17,8 +18,7 @@ namespace Suteki.Common.Services
 
         public void Send(string toAddress, string subject, string body)
         {
-            LogEmail(new[]{toAddress}, subject, body);
-            emailSender.Send(toAddress, subject, body);
+            Send(new[] { toAddress }, subject, body);
         }
 
         public void Send(string[] toAddress, string subject, string body)
@@ -28,10 +28,19 @@ namespace Suteki.Common.Services
                 emailSender.Send(toAddress, subject, body);
                 LogEmail(toAddress, subject, body);
             }
-            catch (SmtpException exception)
+            catch (SmtpException e)
             {
-                logger.Error(exception.ToString());
+                LogEmailFailure(toAddress, subject, body, e);
             }
+        }
+
+        private void LogEmailFailure(string[] address, string subject, string body, SmtpException e)
+        {
+            string message = "Email Failure: {0}\r\nAddresses: {1}\r\nSubject {2}\r\n".With(
+                e.Message,
+                address.Join(";"),
+                subject);
+            logger.Error(message, e);
         }
 
         private void LogEmail(string[] toAddress, string subject, string body)

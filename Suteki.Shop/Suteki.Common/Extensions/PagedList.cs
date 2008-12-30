@@ -3,10 +3,9 @@
 // http://blog.wekeroad.com/2007/12/10/aspnet-mvc-pagedlistt/
 //
 
-using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Web;
 
 namespace Suteki.Common.Extensions
 {
@@ -93,17 +92,11 @@ namespace Suteki.Common.Extensions
             return new PagedList<T>(source, index, pageSize);
         }
 
-        public static int PageNumber(this HttpRequestBase httpRequest)
+        public static int PageNumber(this NameValueCollection formOrQuerystring)
         {
+            if (formOrQuerystring == null) return 0;
             int pageNumber = 0;
-            if (httpRequest.RequestType == "POST")
-            {
-                int.TryParse(httpRequest.Form["CurrentPage"], out pageNumber);
-            }
-            if (httpRequest.RequestType == "GET")
-            {
-                int.TryParse(httpRequest.QueryString["CurrentPage"], out pageNumber);
-            }
+            int.TryParse(formOrQuerystring["CurrentPage"], out pageNumber);
             return pageNumber;
         }
     }

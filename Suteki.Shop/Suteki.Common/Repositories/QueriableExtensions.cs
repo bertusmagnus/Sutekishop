@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Repositories
@@ -30,8 +29,8 @@ namespace Suteki.Common.Repositories
             var selectItem = new T();
             property.SetValue(selectItem, "<select>", null);
 
-            var selectItems = new List<T> { selectItem }.AsQueryable();
-            return selectItems.Union(items);
+            var selectItems = new List<T> { selectItem };
+            return selectItems.Union(items.ToList()).AsQueryable();
         }
 
         public static IQueryable<T> NotIncluding<T>(this IQueryable<T> items, int primaryKey)

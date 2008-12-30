@@ -6,13 +6,13 @@ using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T>, IRepository where T : class
     {
         readonly DataContext dataContext;
 
         public Repository(IDataContextProvider dataContextProvider)
         {
-            this.dataContext = dataContextProvider.DataContext;
+            dataContext = dataContextProvider.DataContext;
         }
 
         public virtual T GetById(int id)
@@ -41,12 +41,12 @@ namespace Suteki.Common.Repositories
 
         public virtual void InsertOnSubmit(T entity)
         {
-            this.GetTable().InsertOnSubmit(entity);
+            GetTable().InsertOnSubmit(entity);
         }
 
         public virtual void DeleteOnSubmit(T entity)
         {
-            this.GetTable().DeleteOnSubmit(entity);
+            GetTable().DeleteOnSubmit(entity);
         }
 
         public virtual void SubmitChanges()
@@ -57,6 +57,26 @@ namespace Suteki.Common.Repositories
         public virtual ITable GetTable()
         {
             return dataContext.GetTable<T>();
+        }
+
+        IQueryable IRepository.GetAll()
+        {
+            return GetAll();
+        }
+
+        void IRepository.InsertOnSubmit(object entity)
+        {
+            InsertOnSubmit((T)entity);
+        }
+
+        void IRepository.DeleteOnSubmit(object entity)
+        {
+            DeleteOnSubmit((T)entity);
+        }
+
+        object IRepository.GetById(int id)
+        {
+            return GetById(id);
         }
     }
 }

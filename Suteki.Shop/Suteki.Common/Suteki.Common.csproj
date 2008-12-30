@@ -12,6 +12,14 @@
     <AssemblyName>Suteki.Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,9 +43,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.AutomaticTransactionManagement, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Castle.Facilities.AutomaticTransactionManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.NHibernateIntegration, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Castle.Facilities.NHibernateIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,6 +74,18 @@
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MvcContrib.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcContrib.Castle, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\MvcContrib.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=2.0.0.1002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Linq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=444cf6a87fdab271, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\NHibernate.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -57,51 +97,111 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\System.Web.Abstractions.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\System.Web.Routing.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\OrderableScaffoldController.cs" />
     <Compile Include="Controllers\ScaffoldController.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\NameValue.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\PagedList.cs" />
+    <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UrlExtensions.cs" />
     <Compile Include="Extensions\UrlExtensionsHelper.cs" />
+    <Compile Include="HtmlHelpers\ColumnInfo.cs" />
+    <Compile Include="HtmlHelpers\ColumnSortingExtensions.cs" />
+    <Compile Include="HtmlHelpers\EntityRendererHtmlHelper.cs" />
+    <Compile Include="HtmlHelpers\EntityTreeRendererHtmlHelper.cs" />
+    <Compile Include="HtmlHelpers\FormHelper.cs" />
+    <Compile Include="HtmlHelpers\GridHelper.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="HtmlHelpers\IColumnInfo.cs" />
+    <Compile Include="HtmlHelpers\LinqForeignKeyFinder.cs" />
+    <Compile Include="HtmlHelpers\OrderableGridColumnBuiilder.cs" />
     <Compile Include="HtmlHelpers\Pager.cs" />
-    <Compile Include="Models\IOrderable.cs" />
+    <Compile Include="HtmlHelpers\RequestExtensions.cs" />
+    <Compile Include="HtmlHelpers\TableInfo.cs" />
+    <Compile Include="HtmlHelpers\TreeRenderHtmlHelper.cs" />
+    <Compile Include="Models\IComposite.cs" />
+    <Compile Include="Models\MetaEntity.cs" />
+    <Compile Include="Models\MetaEntityFactory.cs" />
+    <Compile Include="Models\NullableEntityAttribute.cs" />
     <Compile Include="Models\StringValueExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ConnectionStringProvider.cs" />
     <Compile Include="Repositories\DataContextProvider.cs" />
-    <Compile Include="Repositories\IDataContextProvider.cs" />
     <Compile Include="Repositories\IConnectionStringProvider.cs" />
+    <Compile Include="Repositories\IDataContextProvider.cs" />
+    <Compile Include="Services\DebugWritingService.cs" />
+    <Compile Include="Services\DefaultEntityTypeResolver.cs" />
+    <Compile Include="Services\IEntityTypeResolver.cs" />
+    <Compile Include="Services\NHibernateEntityTypeResolver.cs" />
+    <Compile Include="UI\CollectionEntityRenderer.cs" />
+    <Compile Include="UI\DefaultEntityRenderer.cs" />
+    <Compile Include="UI\EntityRenderer.cs" />
+    <Compile Include="UI\FormTypeBinders\CheckBoxTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\DatePickerFormTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\DropDownListFormTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\FormTypeBindingContext.cs" />
+    <Compile Include="UI\FormTypeBinders\IdFormTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\IFormTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\ReadonlyFormTypeBinder.cs" />
+    <Compile Include="UI\FormTypeBinders\TextBoxFormTypeBinder.cs" />
+    <Compile Include="UI\IEntityRenderer.cs" />
+    <Compile Include="Windsor\ArrayResolver.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\IOrderable.cs" />
+    <Compile Include="Models\NamedEntity.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\IRepositoryResolver.cs" />
+    <Compile Include="Repositories\NHibernateRepository.cs" />
     <Compile Include="Repositories\OrderableExtensions.cs" />
     <Compile Include="Repositories\QueriableExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\RepositoryResolver.cs" />
     <Compile Include="Services\EmailSender.cs" />
     <Compile Include="Services\EmailSenderLogger.cs" />
+    <Compile Include="Services\FormBuilder.cs" />
+    <Compile Include="Services\HttpContextService.cs" />
     <Compile Include="Services\IEmailSender.cs" />
+    <Compile Include="Services\IFormBuilder.cs" />
+    <Compile Include="Services\IHttpContextService.cs" />
     <Compile Include="Services\IOrderableService.cs" />
     <Compile Include="Services\Move.cs" />
     <Compile Include="Services\NullEmailSender.cs" />
     <Compile Include="Services\OrderableService.cs" />
+    <Compile Include="TestHelpers\ActionResultExtensions.cs" />
+    <Compile Include="TestHelpers\ContainerTest.cs" />
+    <Compile Include="UI\FormWriterExtensions.cs" />
+    <Compile Include="UI\ISelectListBuilder.cs" />
+    <Compile Include="UI\SelectListBuilder.cs" />
+    <Compile Include="UI\SelectListCollection.cs" />
+    <Compile Include="Validation\BindingContext.cs" />
+    <Compile Include="Validation\BooleanPropertyBinder.cs" />
+    <Compile Include="Validation\EntityBinder.cs" />
+    <Compile Include="Validation\IBindProperties.cs" />
+    <Compile Include="Validation\IValidatingBinder.cs" />
+    <Compile Include="Validation\SimplePropertyBinder.cs" />
     <Compile Include="Validation\ValidatingBinder.cs" />
     <Compile Include="Validation\ValidationException.cs" />
     <Compile Include="Validation\ValidationExtensions.cs" />
@@ -110,6 +210,9 @@
     <Compile Include="ViewData\IMessageViewData.cs" />
     <Compile Include="ViewData\ScaffoldViewData.cs" />
     <Compile Include="ViewData\ViewDataBase.cs" />
+    <Compile Include="Windsor\DependencyGraphWriter.cs" />
+    <Compile Include="Windsor\WindsorApplication.cs" />
+    <Compile Include="Windsor\WindsorServiceLocator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

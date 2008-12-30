@@ -10,66 +10,109 @@ namespace Suteki.Common.Validation
 {
     public static class ValidationExtensions
     {
-        public static ValidationProperty Label(this string value, string label)
+        public static ValidationProperty<T> Label<T>(this T value, string label)
         {
-            return new ValidationProperty(value, label);
+            return new ValidationProperty<T>(value, label);
         }
+
     }
 
-    public class ValidationProperty
+
+    public class ValidationProperty<T>
     {
-        string value;
+        T value;
         string label;
 
-        public ValidationProperty(string value, string label)
+        public ValidationProperty(T value, string label)
         {
             this.value = value;
             this.label = label;
         }
 
-        public ValidationProperty IsRequired()
+        public bool IsObject
         {
-            if(string.IsNullOrEmpty(value))
+            get { return typeof (object).IsAssignableFrom(typeof (T)); }
+        }
+
+        public bool IsString
+        {
+            get { return (IsObject && typeof (string).IsAssignableFrom(typeof (T))); }
+        }
+
+        public string ValueAsString
+        {
+            get { return value as string; }
+        }
+
+        public T Value
+        {
+            get { return value; }
+        }
+
+        public ValidationProperty<T> IsRequired()
+        {
+            if (value == null)
+            {
+                throw new ValidationException(StringExtensions.With("You must enter a value for {0}", label));
+            }
+            if (IsString && string.IsNullOrEmpty(ValueAsString))
             {
                 throw new ValidationException(StringExtensions.With("You must enter a value for {0}", label));
             }
 
-            return this;
+           return this;
         }
 
-        public ValidationProperty IsNumeric()
+        public ValidationProperty<T> IsNumeric()
         {
-            if (value.Trim().Any(c => !char.IsDigit(c)))
+            if(IsString)
             {
-                throw new ValidationException("{0} must be a number".With(label));
+                // the obvious thing (int.Parse) doesn't work for very long strings of digits
+                if (ValueAsString.Trim().Any(c => !char.IsDigit(c)))
+                {
+                    throw new ValidationException("{0} must be a number e.g. 240".With(label));
+                }
             }
 
             return this;
         }
 
-        public ValidationProperty IsDecimal()
+        public ValidationProperty<T> IsDecimal()
         {
-            if (value.Trim().Any(c => !(char.IsDigit(c) || c == '.')))
+            if (IsString && ValueAsString.Trim().Any(c => !(char.IsDigit(c) || c == '.')))
             {
                 throw new ValidationException("{0} must be a decimal number e.g 12.30".With(label));
             }
-
+            
             return this;
         }
 
-        public ValidationProperty WithMaxLength(int maxLength)
+        public ValidationProperty<T> IsNonZero()
         {
-            if (value.Length > maxLength)
+            int test;
+            if (!int.TryParse(value.ToString(), out test))
+            {
+                throw new ValidationException("{0} must be a non-zero number".With(label));
+            }
+            if (test == 0)
+            {
+                throw new ValidationException("{0} must be non-zero".With(label));
+            }
+            return this;
+        }
+
+        public ValidationProperty<T> WithMaxLength(int maxLength)
+        {
+            if (IsString && ValueAsString.Length > maxLength)
             {
                 throw new ValidationException("{0} must not exceed {1} characters".With(label, maxLength));
             }
-
             return this;
         }
 
-        public ValidationProperty WithLengthRange(IEnumerable<int> range)
+        public ValidationProperty<T> WithLengthRange(IEnumerable<int> range)
         {
-            if (value.Length < range.Min() || value.Length > range.Max())
+            if (IsString && ValueAsString.Length < range.Min() || ValueAsString.Length > range.Max())
             {
                 throw new ValidationException(
                     "{0} length must be between {1} and {2} characters".With(label, range.Min(), range.Max()));
@@ -78,13 +121,15 @@ namespace Suteki.Common.Validation
             return this;
         }
 
-        public ValidationProperty IsEmail()
+        public ValidationProperty<T> IsEmail()
         {
             // ignore is null or empty, use IsRequired in parrallel to check this if needed
-            if (string.IsNullOrEmpty(value)) return this;
+            if (!IsString) return this;
 
-            string patternLenient = @"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*";
-            if (!Regex.Match(value, patternLenient).Success)
+            if (string.IsNullOrEmpty(ValueAsString)) return this;
+
+            const string patternLenient = @"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*";
+            if (!Regex.Match(ValueAsString, patternLenient).Success)
             {
                 throw new ValidationException("{0} must be a valid email address".With(label));
             }
@@ -92,22 +137,24 @@ namespace Suteki.Common.Validation
             return this;
         }
 
-        public ValidationProperty IsCreditCard()
+        public ValidationProperty<T> IsCreditCard()
         {
-            var trimmedValue = Regex.Replace(value, "[^0-9]", "");
-
-            trimmedValue.Label(label).IsNumeric().WithLengthRange(13.To(19));
-
-            var numbers = trimmedValue.Trim().Reverse().Select(c => int.Parse(c.ToString()));
-
-            int oddSum = numbers.AtOddPositions().Sum();
-            int doubleEvenSum = numbers.AtEvenPositions().SelectMany(i => new int[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
-
-            if ((oddSum + doubleEvenSum) % 10 != 0)
+            if (IsString)
             {
-                throw new ValidationException("{0} is not a valid credit card number".With(label));
-            }
+                var trimmedValue = Regex.Replace(value.ToString(), "[^0-9]", "");
+                
+                trimmedValue.Label(label).IsNumeric().WithLengthRange(13.To(19));
 
+                var numbers = trimmedValue.Trim().Reverse().Select(c => int.Parse(c.ToString()));
+
+                var oddSum = numbers.AtOddPositions().Sum();
+                var doubleEvenSum = numbers.AtEvenPositions().SelectMany(i => new[] { (i * 2) % 10, (i * 2) / 10 }).Sum();
+
+                if ((oddSum + doubleEvenSum) % 10 != 0)
+                {
+                    throw new ValidationException("{0} is not a valid credit card number".With(label));
+                }
+            }
             return this;
         }
     }

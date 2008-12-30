@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Suteki.Common.Extensions;
@@ -14,38 +15,27 @@ namespace Suteki.Common.HtmlHelpers
         readonly string controller;
         readonly string action;
         readonly IPagedList pagedList;
-        readonly object criteria;
 
         public Pager(
             HtmlHelper htmlHelper,
             string controller,
             string action,
             IPagedList pagedList)
-            : this(
-            htmlHelper,
-            controller,
-            action,
-            pagedList,
-            null)
         {
-        }
+            if (htmlHelper == null) throw new ArgumentNullException("htmlHelper");
+            if (controller == null) throw new ArgumentNullException("controller");
+            if (action == null) throw new ArgumentNullException("action");
+            if (pagedList == null) throw new ArgumentNullException("pagedList");
 
-        public Pager(
-            HtmlHelper htmlHelper,
-            string controller,
-            string action,
-            IPagedList pagedList,
-            object criteria)
-        {
             this.htmlHelper = htmlHelper;
             this.controller = controller;
             this.action = action;
             this.pagedList = pagedList;
-            this.criteria = criteria;
         }
 
         public string WriteHtml()
         {
+            const int pageRange = 10;
             htmlText.Append("<div class=\"pager\">");
 
             WriteLink(0, "<<");
@@ -53,7 +43,8 @@ namespace Suteki.Common.HtmlHelpers
 
             for (int i = 0; i < pagedList.NumberOfPages; i++)
             {
-                WriteLink(i);
+                if ((i + pageRange) > pagedList.PageIndex && ((i - pageRange) < pagedList.PageIndex))
+                    WriteLink(i);
             }
 
             WriteLink(pagedList.PageIndex + 1, ">");
@@ -77,26 +68,15 @@ namespace Suteki.Common.HtmlHelpers
             }
             else
             {
-                htmlText.AppendFormat("{0} ", htmlHelper.ActionLink(text, action, controller, GetCriteria(pageNumber)));
+                htmlText.AppendFormat("{0} ", htmlHelper.ActionLink(text, action, controller, 
+                    GetCriteria(pageNumber), new RouteValueDictionary()));
             }
         }
 
         private RouteValueDictionary GetCriteria(int pageNumber)
         {
-            var values = new RouteValueDictionary {{"CurrentPage", pageNumber}};
-
-            if (criteria != null)
-            {
-                foreach (var property in criteria.GetType().GetProperties())
-                {
-                    var value = property.GetValue(criteria, null);
-                    if (value == null) continue;
-                    if (value.ToString() != string.Empty)
-                    {
-                        values.Add(property.Name, value);
-                    }
-                }
-            }
+            var values = htmlHelper.ViewContext.HttpContext.Request.GetRequestValues("action", "controller", "CurrentPage");
+            values.Add("CurrentPage", pageNumber);
             return values;
         }
     }

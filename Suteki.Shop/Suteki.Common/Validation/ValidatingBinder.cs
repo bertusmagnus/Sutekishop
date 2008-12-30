@@ -1,87 +1,141 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
-using System.ComponentModel;
-using System.Text;
-using System.Data.Linq.Mapping;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Common.Validation
 {
-    public class ValidatingBinder
+    /// <summary>
+    /// An implementation of IValidatingBinder that allows the user to add a pipeline of property binders.
+    /// Each property binder in turn has a chance to bind a given property. See tests for more details.
+    /// 
+    /// Example set up:
+    /// 
+    /// validatingBinder = new ValidatingBinder(
+    ///                 new SimplePropertyBinder(),
+    ///                 new BooleanPropertyBinder());
+    /// </summary>
+    public class ValidatingBinder : IValidatingBinder
     {
-        public static void UpdateFrom(object target, NameValueCollection values)
+        private readonly List<IBindProperties> propertyBinders;
+
+        public ValidatingBinder() : this(new IBindProperties[0])
         {
-            UpdateFrom(target, values, null);
         }
 
-        public static void UpdateFrom(object target, NameValueCollection values, string objectPrefix)
+        public ValidatingBinder(params IBindProperties[] propertyBinders)
         {
-            Type targetType = target.GetType();
-            string typeName = targetType.Name;
+            this.propertyBinders = new List<IBindProperties>(propertyBinders);
+        }
 
-            StringBuilder exceptionMessage = new StringBuilder();
+        public List<IBindProperties> PropertyBinders
+        {
+            get { return propertyBinders; }
+        }
 
-            foreach (PropertyInfo property in targetType.GetProperties())
+        public virtual void UpdateFrom(object target, NameValueCollection values)
+        {
+            UpdateFrom(target, values, new ModelStateDictionary(), null);
+        }
+
+        public virtual void UpdateFrom(object target, NameValueCollection values, ModelStateDictionary modelStateDictionary)
+        {
+            UpdateFrom(target, values, modelStateDictionary, null);
+        }
+
+        public virtual void UpdateFrom(object target, NameValueCollection values, string objectPrefix)
+        {
+            UpdateFrom(target, values, new ModelStateDictionary(), objectPrefix);
+        }
+
+        public virtual void UpdateFrom(
+            object target, 
+            NameValueCollection values, 
+            ModelStateDictionary modelStateDictionary, 
+            string objectPrefix)
+        {
+            UpdateFrom(new BindingContext(target, values, objectPrefix, modelStateDictionary));
+        }
+
+        public virtual void UpdateFrom(BindingContext bindingContext)
+        {
+            foreach (var property in bindingContext.Target.GetType().GetProperties())
             {
-                string propertyName = property.Name;
-                if (!string.IsNullOrEmpty(objectPrefix))
+                try
                 {
-                    propertyName = objectPrefix + "." + property.Name;
-                }
-                if (values[propertyName] == null)
-                {
-                    propertyName = typeName + "." + property.Name;
-                }
-                if (values[propertyName] == null)
-                {
-                    propertyName = typeName + "_" + property.Name;
-                }
-                if (values[propertyName] != null)
-                {
-                    TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
-                    string stringValue = HttpUtility.HtmlEncode(values[propertyName]);
-                    if (!converter.CanConvertFrom(typeof(string)))
+                    foreach (var binder in propertyBinders)
                     {
-                        throw new FormatException("No type converter available for type: " + property.PropertyType);
-                    }
-                    try
-                    {
-                        object value = converter.ConvertFrom(stringValue);
-                        property.SetValue(target, value, null);
-                    }
-                    catch (Exception exception)
-                    {
-                        if (exception.InnerException is FormatException ||
-                            exception.InnerException is IndexOutOfRangeException)
-                        {
-                            exceptionMessage.AppendFormat("'{0}' is not a valid value for {1}<br />", stringValue, property.Name);
-                        }
-                        else if (exception.InnerException is ValidationException)
-                        {
-                            exceptionMessage.AppendFormat("{0}<br />", exception.InnerException.Message);
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        binder.Bind(property, bindingContext);
                     }
                 }
-                else
+                catch (Exception exception)
                 {
-                    // boolean values like checkboxes don't appear unless checked, so set false by default
-                    if (property.PropertyType == typeof(bool) && property.HasAttribute(typeof(ColumnAttribute)))
+                    if (exception.InnerException is FormatException ||
+                        exception.InnerException is IndexOutOfRangeException)
                     {
-                        property.SetValue(target, false, null);
+                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
+                    }
+                    else if (exception is ValidationException)
+                    {
+                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, exception);
+                    }
+                    else if (exception.InnerException is ValidationException)
+                    {
+                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, exception.InnerException);
+                    }
+                    else
+                    {
+                        throw;
                     }
                 }
+
             }
-            if (exceptionMessage.Length > 0)
+            if (!bindingContext.ModelStateDictionary.IsValid)
             {
-                throw new ValidationException(exceptionMessage.ToString());
+                throw new ValidationException("Bind Failed. See ModelStateDictionary for errors");
             }
+        }
+
+        private static bool IsBasicType(Type type)
+        {
+            // TODO: find a better way to deal with Nullable<> types
+            return (
+                type.IsPrimitive ||
+                type.IsEnum ||
+                type == typeof(decimal) ||
+                type == typeof(Guid) ||
+                type == typeof(DateTime) ||
+                type == typeof(string)) ||
+                type == typeof(int?) ||
+                type == typeof(bool?);
+        }
+
+        /// <summary>
+        /// IModelBinder.BindModel
+        /// </summary>
+        /// <param name="bindingContext"></param>
+        /// <returns></returns>
+        public ModelBinderResult BindModel(ModelBindingContext bindingContext)
+        {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException("bindingContext");
+            }
+
+            if (IsBasicType(bindingContext.ModelType))
+            {
+                return new DefaultModelBinder().BindModel(bindingContext);
+            }
+
+            var instance = Activator.CreateInstance(bindingContext.ModelType);
+            var request = bindingContext.HttpContext.Request;
+
+            var form = request.RequestType == "POST" ? request.Form : request.QueryString;
+
+            UpdateFrom(instance, form);
+
+            return new ModelBinderResult(instance);
         }
     }
 }

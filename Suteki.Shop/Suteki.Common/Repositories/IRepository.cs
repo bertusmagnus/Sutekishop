@@ -10,6 +10,14 @@ namespace Suteki.Common.Repositories
         void InsertOnSubmit(T entity);
         void DeleteOnSubmit(T entity);
         void SubmitChanges();
-        ITable GetTable();
+    }
+
+    public interface IRepository
+    {
+        object GetById(int id);
+        IQueryable GetAll();
+        void InsertOnSubmit(object entity);
+        void DeleteOnSubmit(object entity);
+        void SubmitChanges();
     }
 }
