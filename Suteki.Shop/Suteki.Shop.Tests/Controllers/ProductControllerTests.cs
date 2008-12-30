@@ -25,11 +25,10 @@ namespace Suteki.Shop.Tests.Controllers
         private Mock<ProductController> productControllerMock;
         private ControllerTestContext testContext;
 
-        private Repository<Product> productRepository;
+        private IRepository<Product> productRepository;
         private Mock<Repository<Product>> productRepositoryMock;
 
-        private Repository<Category> categoryRepository;
-        private Mock<Repository<Category>> categoryRepositoryMock;
+        private IRepository<Category> categoryRepository;
 
         private IRepository<ProductImage> productImageRepository;
 
@@ -46,8 +45,7 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the product controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
-            categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
-            categoryRepository = categoryRepositoryMock.Object;
+            categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
 
             productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
             productRepository = productRepositoryMock.Object;
@@ -95,7 +93,7 @@ namespace Suteki.Shop.Tests.Controllers
                                             }
                                     };
 
-            categoryRepositoryMock.Expect(r => r.GetById(categoryId)).Returns(category).Verifiable();
+            categoryRepository.Expect(r => r.GetById(categoryId)).Return(category);
 
             var result = productController.Index(categoryId) as ViewResult;
 
@@ -109,7 +107,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             ProductRepositoryExtensionsTests.AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(
                 viewData.Products);
-            categoryRepositoryMock.Verify();
+            categoryRepository.VerifyAllExpectations();
         }
 
         [Test]

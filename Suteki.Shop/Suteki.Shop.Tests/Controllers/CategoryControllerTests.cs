@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Moq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Suteki.Common.TestHelpers;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
@@ -19,10 +19,9 @@ namespace Suteki.Shop.Tests.Controllers
     public class CategoryControllerTests
     {
         private CategoryController categoryController;
-        private Mock<CategoryController> categoryControllerMock;
         private ControllerTestContext testContext;
 
-        private Mock<Repository<Category>> categoryRepositoryMock;
+        private IRepository<Category> categoryRepository;
         private IOrderableService<Category> orderableService;
         private IValidatingBinder validatingBinder;
 
@@ -32,16 +31,14 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the category controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
-            categoryRepositoryMock = MockRepositoryBuilder.CreateCategoryRepository();
-            orderableService = new Mock<IOrderableService<Category>>().Object;
+            categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
+            orderableService = MockRepository.GenerateStub<IOrderableService<Category>>();
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
-            categoryControllerMock = new Mock<CategoryController>(
-                categoryRepositoryMock.Object, 
+            categoryController = new CategoryController(
+                categoryRepository, 
                 orderableService, 
                 validatingBinder);
-
-            categoryController = categoryControllerMock.Object;
 
             testContext = new ControllerTestContext(categoryController);
         }
@@ -49,14 +46,10 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfCategories()
         {
-            var result = categoryController.Index() as ViewResult;
-
-            Assert.IsNotNull(result, "expected a ViewResult");
-
-            Assert.AreEqual("Index", result.ViewName, "ViewName is incorrect");
-
-            var viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
+            var viewData = categoryController.Index()
+                .ReturnsViewResult()
+                .ForView("Index")
+                .WithModel<ShopViewData>();
 
             MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
         }
@@ -64,21 +57,8 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldDisplayCategoryEditView()
         {
-            var result = categoryController.New(1) as ViewResult;
-
+            var result = categoryController.New(1);
             AssertEditViewIsCorrectlyShown(result);
-        }
-
-        private static void AssertEditViewIsCorrectlyShown(ViewResultBase result)
-        {
-            Assert.AreEqual("Edit", result.ViewName, "ViewName is incorrect");
-
-            var viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
-
-            Assert.IsNotNull(viewData.Category, "Category is null");
-            Assert.IsNotNull(viewData.Categories, "Categories is null");
-            Assert.AreEqual(6, viewData.Categories.Count(), "Expected six categories");
         }
 
         [Test]
@@ -93,12 +73,12 @@ namespace Suteki.Shop.Tests.Controllers
                 ParentId = 23
             };
 
-            categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category);
+            categoryRepository.Expect(cr => cr.GetById(categoryId)).Return(category);
 
-            var result = categoryController.Edit(categoryId) as ViewResult;
-
+            var result = categoryController.Edit(categoryId);
             AssertEditViewIsCorrectlyShown(result);
-            categoryRepositoryMock.Verify();
+
+            categoryRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -109,19 +89,25 @@ namespace Suteki.Shop.Tests.Controllers
             const int parentid = 78;
 
             // set up the request form
-            var form = new NameValueCollection();
-            form.Add("categoryid", categoryId.ToString());
-            form.Add("name", name);
-            form.Add("parentid", parentid.ToString());
+            var form = new NameValueCollection
+            {
+                {"categoryid", categoryId.ToString()},
+                {"name", name},
+                {"parentid", parentid.ToString()}
+            };
             testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             // set up expectations on the repository
             Category category = null;
 
-            categoryRepositoryMock.Expect(cr => cr.InsertOnSubmit(It.IsAny<Category>()))
-                .Callback<Category>(c => { category = c; }).Verifiable();
+            categoryRepository.Expect(cr => cr.InsertOnSubmit(Arg<Category>.Is.Anything))
+                .Callback<Category>(c => 
+                { 
+                    category = c;
+                    return true; 
+                });
 
-            categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
+            categoryRepository.Expect(cr => cr.SubmitChanges());
 
             var result = categoryController.Update(categoryId) as ViewResult;
 
@@ -131,8 +117,17 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(parentid, category.ParentId);
 
             AssertEditViewIsCorrectlyShown(result);
+        }
 
-            categoryControllerMock.Verify();
+        private static void AssertEditViewIsCorrectlyShown(ActionResult result)
+        {
+            result
+                .ReturnsViewResult()
+                .ForView("Edit")
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Category)
+                .AssertNotNull(vd => vd.Categories)
+                .AssertAreEqual(6, vd => vd.Categories.Count());
         }
 
         [Test]
@@ -158,8 +153,8 @@ namespace Suteki.Shop.Tests.Controllers
                 ParentId = 22
             };
 
-            categoryRepositoryMock.Expect(cr => cr.GetById(categoryId)).Returns(category).Verifiable();
-            categoryRepositoryMock.Expect(cr => cr.SubmitChanges()).Verifiable();
+            categoryRepository.Expect(cr => cr.GetById(categoryId)).Return(category);
+            categoryRepository.Expect(cr => cr.SubmitChanges());
 
             var result = categoryController.Update(categoryId) as ViewResult;
 
@@ -169,8 +164,6 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(parentid, category.ParentId);
 
             AssertEditViewIsCorrectlyShown(result);
-
-            categoryControllerMock.Verify();
         }
     }
 }

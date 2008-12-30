@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using NUnit.Framework;
 
@@ -48,24 +49,23 @@ namespace Suteki.Shop.Tests.Repositories
             return roleRepositoryMock;
         }
 
-        public static Mock<Repository<Category>> CreateCategoryRepository()
+        public static IRepository<Category> CreateCategoryRepository()
         {
-            var dataContextProviderMock = new Mock<IDataContextProvider>();
-            var categoryRepositoryMock = new Mock<Repository<Category>>(dataContextProviderMock.Object);
+            var categoryRepositoryMock = MockRepository.GenerateStub<IRepository<Category>>();
 
             var root = new Category { Name = "root" };
 
             var one = new Category { Name = "one" };
             var two = new Category { Name = "two" };
-            root.Categories.AddRange(new Category[] { one, two });
+            root.Categories.AddRange(new[] { one, two });
 
             var oneOne = new Category { Name = "oneOne" };
             var oneTwo = new Category { Name = "oneTwo" };
-            one.Categories.AddRange(new Category[] { oneOne, oneTwo });
+            one.Categories.AddRange(new[] { oneOne, oneTwo });
 
             var oneTwoOne = new Category { Name = "oneTwoOne" };
             var oneTwoTwo = new Category { Name = "oneTwoTwo" };
-            oneTwo.Categories.AddRange(new Category[] { oneTwoOne, oneTwoTwo });
+            oneTwo.Categories.AddRange(new[] { oneTwoOne, oneTwoTwo });
 
             Category[] categories = 
             {
@@ -77,8 +77,8 @@ namespace Suteki.Shop.Tests.Repositories
                 oneTwoTwo
             };
 
-            categoryRepositoryMock.Expect(c => c.GetById(1)).Returns(() => root);
-            categoryRepositoryMock.Expect(c => c.GetAll()).Returns(() => categories.AsQueryable());
+            categoryRepositoryMock.Expect(c => c.GetById(1)).Return(root);
+            categoryRepositoryMock.Expect(c => c.GetAll()).Return(categories.AsQueryable());
 
             return categoryRepositoryMock;
         }

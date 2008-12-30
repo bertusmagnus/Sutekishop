@@ -25,10 +25,10 @@ namespace Suteki.Shop.Tests.Repositories
                 var dataContextProvider = new DataContextProvider(connectionStringProvider);
 
                 // first insert a new graph into the database
-                Repository<Category> categoryRepository = new Repository<Category>(dataContextProvider);
+                var categoryRepository = new Repository<Category>(dataContextProvider);
 
                 // use the object graph created by the mock category repository
-                Category root = MockRepositoryBuilder.CreateCategoryRepository().Object.GetRootCategory();
+                var root = MockRepositoryBuilder.CreateCategoryRepository().GetRootCategory();
 
                 // add the root into the real database
                 categoryRepository.InsertOnSubmit(root);
@@ -37,7 +37,7 @@ namespace Suteki.Shop.Tests.Repositories
 
                 // try to get the root again (note we need the actual id because we don't want the real root,
                 // which will have a different graph of categories, from the database)
-                Category rootFromDb = categoryRepository.GetById(root.CategoryId);
+                var rootFromDb = categoryRepository.GetById(root.CategoryId);
 
                 MockRepositoryBuilder.AssertCategoryGraphIsCorrect(rootFromDb);
             }
