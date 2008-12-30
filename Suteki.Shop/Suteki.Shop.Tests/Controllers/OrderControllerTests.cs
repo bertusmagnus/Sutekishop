@@ -20,20 +20,21 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class OrderControllerTests
     {
-        OrderController orderController;
+        private OrderController orderController;
 
-        IRepository<Order> orderRepository;
-        IRepository<Basket> basketRepository;
-        IRepository<Country> countryRepository;
-        IRepository<CardType> cardTypeRepository;
+        private IRepository<Order> orderRepository;
+        private IRepository<Basket> basketRepository;
+        private IRepository<Country> countryRepository;
+        private IRepository<CardType> cardTypeRepository;
 
-        IEncryptionService encryptionService;
-        IEmailSender emailSender;
-        IPostageService postageService;
-        IValidatingBinder validatingBinder;
+        private IEncryptionService encryptionService;
+        private IEmailSender emailSender;
+        private IPostageService postageService;
+        private IValidatingBinder validatingBinder;
         private IHttpContextService httpContextService;
+        private IUserService userService;
 
-        ControllerTestContext testContext;
+        private ControllerTestContext testContext;
 
         [SetUp]
         public void SetUp()
@@ -51,6 +52,7 @@ namespace Suteki.Shop.Tests.Controllers
             postageService = new Mock<IPostageService>().Object;
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
             httpContextService = new Mock<IHttpContextService>().Object;
+            userService = new Mock<IUserService>().Object;
 
             orderController = new Mock<OrderController>(
                 orderRepository,
@@ -61,12 +63,15 @@ namespace Suteki.Shop.Tests.Controllers
                 emailSender,
                 postageService,
                 validatingBinder,
-                httpContextService).Object;
+                httpContextService,
+                userService).Object;
 
             testContext = new ControllerTestContext(orderController);
 
             Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Order>()));
-            
+
+            Mock.Get(userService).Expect(us => us.CurrentUser).Returns(new User {UserId = 4});
+
             testContext.TestContext.ContextMock.ExpectGet(h => h.User).Returns(new User { UserId = 4 });
             testContext.TestContext.RequestMock.ExpectGet(r => r.RequestType).Returns("GET");
             testContext.TestContext.RequestMock.ExpectGet(r => r.QueryString).Returns(new NameValueCollection());

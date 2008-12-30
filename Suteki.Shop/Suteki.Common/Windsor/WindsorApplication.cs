@@ -6,9 +6,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Microsoft.Practices.ServiceLocation;
-using MvcContrib;
 using MvcContrib.Castle;
-using Suteki.Common.Controllers;
 using Suteki.Common.Models;
 using Suteki.Common.UI;
 

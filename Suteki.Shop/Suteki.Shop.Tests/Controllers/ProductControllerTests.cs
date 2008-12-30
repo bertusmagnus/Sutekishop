@@ -37,6 +37,7 @@ namespace Suteki.Shop.Tests.Controllers
         private IOrderableService<Product> productOrderableService;
         private IOrderableService<ProductImage> productImageOrderableService;
         private IValidatingBinder validatingBinder;
+        private IUserService userService;
 
         [SetUp]
         public void SetUp()
@@ -59,6 +60,7 @@ namespace Suteki.Shop.Tests.Controllers
             productImageOrderableService = new Mock<IOrderableService<ProductImage>>().Object;
 
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
+            userService = new Mock<IUserService>().Object;
 
             productControllerMock = new Mock<ProductController>(
                 productRepository, 
@@ -68,20 +70,21 @@ namespace Suteki.Shop.Tests.Controllers
                 sizeService,
                 productOrderableService,
                 productImageOrderableService,
-                validatingBinder);
+                validatingBinder,
+                userService);
 
             productController = productControllerMock.Object;
             testContext = new ControllerTestContext(productController);
 
-            productControllerMock.ExpectGet(c => c.CurrentUser).Returns(new User { RoleId = Role.AdministratorId });
+            Mock.Get(userService).ExpectGet(c => c.CurrentUser).Returns(new User { RoleId = Role.AdministratorId });
         }
 
         [Test]
         public void Index_ShouldShowProductListForCategoryOnIndexView()
         {
-            int categoryId = 4;
+            const int categoryId = 4;
 
-            Category category = new Category
+            var category = new Category
                                     {
                                         CategoryId = categoryId,
                                         Products =
@@ -97,7 +100,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             Assert.AreEqual("Index", result.ViewName);
             if (result.ViewData.Model == null) Assert.Fail("ViewData.Model is null");
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
+            var viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Products, "viewData.Products should not be null");
             Assert.IsNotNull(viewData.Category, "viewData.Category should not be null");
@@ -116,7 +119,7 @@ namespace Suteki.Shop.Tests.Controllers
             // product repository GetAll expectation is already set by
             // MockRepositoryBuilder.CreateProductRepository() in GetFullPath_ShouldReturnFullPage()
 
-            ViewResult result = productController.Item(urlName)
+            productController.Item(urlName)
                 .ReturnsViewResult()
                 .ForView("Item")
                 .AssertNotNull<ShopViewData, Product>(vd => vd.Product)
@@ -126,17 +129,17 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void New_ShouldShowDefaultProductInEditView()
         {
-            int categoryId = 4;
+            const int categoryId = 4;
 
-            ViewResult result = productController.New(categoryId) as ViewResult;
+            var result = productController.New(categoryId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
         }
 
-        private void AssertEditViewIsCorrectlyCalled(ViewResult result)
+        private static void AssertEditViewIsCorrectlyCalled(ViewResultBase result)
         {
             Assert.AreEqual("Edit", result.ViewName);
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
+            var viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
             Assert.IsNotNull(viewData.Product, "viewData.Product should not be null");
             Assert.IsNotNull(viewData.Categories, "viewData.Categories should not be null");
@@ -145,12 +148,12 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Edit_ShouldShowProductInEditView()
         {
-            int productId = 44;
+            const int productId = 44;
 
-            Product product = new Product();
+            var product = new Product();
             productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product).Verifiable();
 
-            ViewResult result = productController.Edit(productId) as ViewResult;
+            var result = productController.Edit(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
             productRepositoryMock.Verify();
@@ -159,17 +162,20 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldInsertTheNewProductIntoRepository()
         {
-            int productId = 0; // means it's a new product
-            int categoryId = 4;
-            string name = "My New Product";
-            string description = "A description of my new product";
+            const int productId = 0; // means it's a new product
+            const int categoryId = 4;
+            const string name = "My New Product";
+            const string description = "A description of my new product";
 
             // create the form
-            NameValueCollection form = new NameValueCollection();
-            form.Add("productid", productId.ToString());
-            form.Add("categoryid", categoryId.ToString());
-            form.Add("name", name);
-            form.Add("description", description);
+            var form = new NameValueCollection
+            {
+                {"productid", productId.ToString()},
+                {"categoryid", categoryId.ToString()},
+                {"name", name},
+                {"description", description}
+            };
+
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
             // add expectations for product repository insertion
@@ -181,13 +187,13 @@ namespace Suteki.Shop.Tests.Controllers
             productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
 
             // add expectations for image upload
-            List<Image> images = new List<Image>
+            var images = new List<Image>
             {
                 new Image(),
                 new Image()
             };
 
-            HttpRequestBase httpRequest = testContext.TestContext.Request;
+            var httpRequest = testContext.TestContext.Request;
             Mock.Get(httpFileService).Expect(h => h.GetUploadedImages(httpRequest)).Returns(images).Verifiable();
 
             // expect the size service to be called
@@ -195,7 +201,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
-            ViewResult result = productController.Update(productId) as ViewResult;
+            var result = productController.Update(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
 
@@ -216,20 +222,22 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldUpdateAnExistingProduct()
         {
-            int productId = 44; // non-zero means it's an existing product
-            int categoryId = 4;
-            string name = "My New Product";
-            string description = "A description of my new product";
+            const int productId = 44; // non-zero means it's an existing product
+            const int categoryId = 4;
+            const string name = "My New Product";
+            const string description = "A description of my new product";
 
             // create the form
-            NameValueCollection form = new NameValueCollection();
-            form.Add("productid", productId.ToString());
-            form.Add("categoryid", categoryId.ToString());
-            form.Add("name", name);
-            form.Add("description", description);
+            var form = new NameValueCollection
+            {
+                {"productid", productId.ToString()},
+                {"categoryid", categoryId.ToString()},
+                {"name", name},
+                {"description", description}
+            };
             testContext.TestContext.RequestMock.ExpectGet(r => r.Form).Returns(() => form);
 
-            Product product = new Product
+            var product = new Product
             {
                 ProductId = productId,
                 CategoryId = 6,
@@ -245,7 +253,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
 
             // excercise the method
-            ViewResult result = productController.Update(productId) as ViewResult;
+            var result = productController.Update(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
 

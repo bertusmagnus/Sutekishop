@@ -2,17 +2,20 @@
 using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
+using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Controllers
 {
     public class LoginController : ControllerBase
     {
-        IRepository<User> userRepository;
+        private readonly IRepository<User> userRepository;
+        private readonly IUserService userService;
 
-        public LoginController(IRepository<User> userRepository)
+        public LoginController(IRepository<User> userRepository, IUserService userService)
         {
             this.userRepository = userRepository;
+            this.userService = userService;
         }
 
         public ActionResult Index()
@@ -24,7 +27,7 @@ namespace Suteki.Shop.Controllers
         {
             if (userRepository.GetAll().ContainsUser(email, EncryptPassword(password)))
             {
-                SetAuthenticationCookie(email);
+                userService.SetAuthenticationCookie(email);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -33,7 +36,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Logout()
         {
-            RemoveAuthenticationCookie();
+            userService.RemoveAuthenticationCookie();
             return RedirectToAction("Index", "Home");
         }
 

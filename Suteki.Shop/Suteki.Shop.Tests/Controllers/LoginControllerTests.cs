@@ -4,10 +4,9 @@ using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
-using Suteki.Shop.Repositories;
+using Suteki.Shop.Services;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.Tests.TestHelpers;
-using Suteki.Shop.ViewData;
 using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -15,28 +14,26 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class LoginControllerTests
     {
-        Mock<LoginController> loginControllerMock;
-        LoginController loginController;
-        ControllerTestContext testContext;
+        private Mock<Repository<User>> userRepository;
+        private IUserService userService;
 
-        Mock<Repository<User>> userRepository;
+        private LoginController loginController;
 
         [SetUp]
         public void SetUp()
         {
             userRepository = MockRepositoryBuilder.CreateUserRepository();
+            userService = new Mock<IUserService>().Object;
 
-            loginControllerMock = new Mock<LoginController>(userRepository.Object);
-            loginController = loginControllerMock.Object;
-            testContext = new ControllerTestContext(loginController);
+            loginController = new LoginController(userRepository.Object, userService);
         }
 
         [Test]
         public void Index_ShouldDisplayIndexView()
         {
-            string view = "Index";
+            const string view = "Index";
 
-            ViewResult result = loginController.Index() as ViewResult;
+            var result = loginController.Index() as ViewResult;
 
             Assert.AreEqual(view, result.ViewName);
         }
@@ -44,18 +41,18 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Authenticate_ShouldAuthenticateValidUser()
         {
-            string email = "Henry@suteki.co.uk";
-            string password = "henry1";
+            const string email = "Henry@suteki.co.uk";
+            const string password = "henry1";
 
             // should set cookie
-            loginControllerMock.Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
+            Mock.Get(userService).Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
 
             var result = loginController.Authenticate(email, password) as RedirectToRouteResult;
 
             Assert.AreEqual("Index", result.Values["action"]);
             Assert.AreEqual("Home", result.Values["controller"]);
 
-            loginControllerMock.Verify();
+            Mock.Get(userService).Verify();
         }
 
         [Test]
@@ -65,7 +62,7 @@ namespace Suteki.Shop.Tests.Controllers
             const string password = "henry3";
 
             // throw if SetAuthenticationToken is called
-            loginControllerMock.Expect(c => c.SetAuthenticationCookie(email))
+            Mock.Get(userService).Expect(c => c.SetAuthenticationCookie(email))
                 .Throws(new Exception("SetAuthenticationToken shouldn't be called"));
 
             loginController.Authenticate(email, password)
@@ -77,14 +74,14 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Logout_ShouldLogUserOut()
         {
-            loginControllerMock.Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
+            Mock.Get(userService).Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
 
-            RedirectToRouteResult result = loginController.Logout() as RedirectToRouteResult;
+            var result = loginController.Logout() as RedirectToRouteResult;
 
             Assert.AreEqual("Index", result.Values["action"]);
             Assert.AreEqual("Home", result.Values["controller"]);
 
-            loginControllerMock.Verify();
+            Mock.Get(userService).Verify();
         }
 
         [Test, Explicit]

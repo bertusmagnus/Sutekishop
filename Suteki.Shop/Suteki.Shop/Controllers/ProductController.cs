@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Web;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
@@ -24,6 +23,7 @@ namespace Suteki.Shop.Controllers
         private readonly IOrderableService<Product> productOrderableService;
         private readonly IOrderableService<ProductImage> productImageOrderableService;
         private readonly IValidatingBinder validatingBinder;
+        private readonly IUserService userService;
 
         public ProductController(
             IRepository<Product> productRepository,
@@ -33,9 +33,11 @@ namespace Suteki.Shop.Controllers
             ISizeService sizeService,
             IOrderableService<Product> productOrderableService,
             IOrderableService<ProductImage> productImageOrderableService, 
-            IValidatingBinder validatingBinder)
+            IValidatingBinder validatingBinder, 
+            IUserService userService)
         {
             this.productRepository = productRepository;
+            this.userService = userService;
             this.categoryRepository = categoryRepository;
             this.productImageRepository = productImageRepository;
             this.httpFileService = httpFileService;
@@ -57,13 +59,13 @@ namespace Suteki.Shop.Controllers
 
         private ActionResult RenderIndexView(int id)
         {
-            Category category = categoryRepository.GetById(id);
+            var category = categoryRepository.GetById(id);
 
             AppendTitle(category.Name);
 
             var products = category.Products.InOrder();
 
-            if (!CurrentUser.IsAdministrator)
+            if (!userService.CurrentUser.IsAdministrator)
             {
                 products = products.Active();
             }

@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Services;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
 
@@ -15,16 +16,18 @@ namespace Suteki.Shop.Tests.Controllers
         private SiteMapController siteMapController;
         private IRepository<Product> productRepository;
         private IRepository<Content> contentRepository;
+        private IUserService userService;
 
         [SetUp]
         public void SetUp()
         {
             productRepository = new Mock<IRepository<Product>>().Object;
             contentRepository = new Mock<IRepository<Content>>().Object;
+            userService = new Mock<IUserService>().Object;
 
-            siteMapController = new Mock<SiteMapController>(productRepository, contentRepository).Object;
+            siteMapController = new SiteMapController(productRepository, contentRepository, userService);
 
-            Mock.Get(siteMapController).ExpectGet(c => c.CurrentUser).Returns(new User());
+            Mock.Get(userService).ExpectGet(c => c.CurrentUser).Returns(new User());
 
         }
 

@@ -38,20 +38,20 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
-            User user = CurrentUser;
+            var user = userService.CurrentUser;
             return RenderIndexView(user.CurrentBasket);
         }
 
         public ActionResult Update(FormCollection form)
         {
-            var user = CurrentUser;
+            var user = userService.CurrentUser;
 
             // if the current user is a guest, promote them to a new customer
             if (user.RoleId == Role.GuestId)
             {
                 user = userService.CreateNewCustomer();
-                SetAuthenticationCookie(user.Email);
-                SetContextUserTo(user);
+                userService.SetAuthenticationCookie(user.Email);
+                userService.SetContextUserTo(user);
             }
 
             var basket = user.CurrentBasket;
@@ -102,8 +102,8 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Remove(int id)
         {
-            Basket basket = CurrentUser.CurrentBasket;
-            BasketItem basketItem = basket.BasketItems.Where(item => item.BasketItemId == id).SingleOrDefault();
+            var basket = userService.CurrentUser.CurrentBasket;
+            var basketItem = basket.BasketItems.Where(item => item.BasketItemId == id).SingleOrDefault();
 
             if (basketItem != null)
             {

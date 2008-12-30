@@ -1,10 +1,8 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Castle.Core.Logging;
 using MvcContrib.Filters;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Services;
-using System.Web.Security;
 using MvcContrib;
 using System.Collections.Specialized;
 
@@ -52,16 +50,6 @@ namespace Suteki.Shop.Controllers
             ViewData["MetaDescription"] = text;
         }
 
-        public virtual User CurrentUser
-        {
-            get
-            {
-                User user = this.ControllerContext.HttpContext.User as User;
-                if (user == null) throw new ApplicationException("HttpContext.User is not a Suteki.Shop.User");
-                return user;
-            }
-        }
-
         public virtual NameValueCollection Form
         {
             get
@@ -72,24 +60,6 @@ namespace Suteki.Shop.Controllers
                 }
                 return Request.QueryString;
             }
-        }
-
-        [NonAction]
-        public virtual void SetAuthenticationCookie(string email)
-        {
-            FormsAuthentication.SetAuthCookie(email, true);
-        }
-
-        [NonAction]
-        public virtual void SetContextUserTo(User user)
-        {
-            System.Threading.Thread.CurrentPrincipal = this.ControllerContext.HttpContext.User = user;
-        }
-
-        [NonAction]
-        public virtual void RemoveAuthenticationCookie()
-        {
-            FormsAuthentication.SignOut();
         }
 
         [NonAction]

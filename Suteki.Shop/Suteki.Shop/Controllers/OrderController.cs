@@ -23,6 +23,7 @@ namespace Suteki.Shop.Controllers
         private readonly IPostageService postageService;
         private readonly IValidatingBinder validatingBinder;
         private readonly IHttpContextService httpContextService;
+        private readonly IUserService userService;
 
         public OrderController(
             IRepository<Order> orderRepository,
@@ -33,9 +34,11 @@ namespace Suteki.Shop.Controllers
             IEmailSender emailSender,
             IPostageService postageService,
             IValidatingBinder validatingBinder,
-            IHttpContextService httpContextService)
+            IHttpContextService httpContextService, 
+            IUserService userService)
         {
             this.orderRepository = orderRepository;
+            this.userService = userService;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
@@ -53,9 +56,10 @@ namespace Suteki.Shop.Controllers
             IRepository<CardType> cardTypeRepository, 
             IEncryptionService encryptionService, 
             IEmailSender emailSender, 
-            IPostageService postageService)
+            IPostageService postageService, IUserService userService)
         {
             this.orderRepository = orderRepository;
+            this.userService = userService;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
@@ -102,7 +106,7 @@ namespace Suteki.Shop.Controllers
         {
             var order = orderRepository.GetById(id);
 
-            if (CurrentUser.IsAdministrator)
+            if (userService.CurrentUser.IsAdministrator)
             {
                 var cookie = Request.Cookies["privateKey"];
                 if (cookie != null)
@@ -133,9 +137,9 @@ namespace Suteki.Shop.Controllers
         [NonAction]
         public virtual void CheckCurrentUserCanViewOrder(Order order)
         {
-            if (!CurrentUser.IsAdministrator)
+            if (!userService.CurrentUser.IsAdministrator)
             {
-                if (order.Basket.UserId != CurrentUser.UserId)
+                if (order.Basket.UserId != userService.CurrentUser.UserId)
                 {
                     throw new ApplicationException("You are attempting to view an order that was not created by you");
                 }
@@ -208,7 +212,7 @@ namespace Suteki.Shop.Controllers
             {
                 UpdateOrderFromForm(order);
                 orderRepository.InsertOnSubmit(order);
-                CurrentUser.CreateNewBasket();
+                userService.CurrentUser.CreateNewBasket();
                 orderRepository.SubmitChanges();
                 EmailOrder(order);
 
@@ -314,7 +318,7 @@ namespace Suteki.Shop.Controllers
             {
                 order.OrderStatusId = OrderStatus.DispatchedId;
                 order.DispatchedDate = DateTime.Now;
-                order.UserId = CurrentUser.UserId;
+                order.UserId = userService.CurrentUser.UserId;
                 orderRepository.SubmitChanges();
             }
 
@@ -329,7 +333,7 @@ namespace Suteki.Shop.Controllers
             if (order.IsCreated)
             {
                 order.OrderStatusId = OrderStatus.RejectedId;
-                order.UserId = CurrentUser.UserId;
+                order.UserId = userService.CurrentUser.UserId;
                 orderRepository.SubmitChanges();
             }
 

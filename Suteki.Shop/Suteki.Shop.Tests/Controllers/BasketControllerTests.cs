@@ -5,7 +5,6 @@ using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.TestHelpers;
 using Suteki.Shop.ViewData;
-using System.Collections.Specialized;
 using System.Web.Mvc;
 using Suteki.Shop.Services;
 
@@ -39,14 +38,14 @@ namespace Suteki.Shop.Tests.Controllers
 
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
-            basketController = new Mock<BasketController>(
+            basketController = new BasketController(
                 basketRepository, 
                 basketItemRepository, 
                 sizeRepository,
                 userService,
                 postageService,
                 countryRepository,
-                validatingBinder).Object;
+                validatingBinder);
 
             testContext = new ControllerTestContext(basketController);
 
@@ -56,13 +55,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldShowIndexViewWithCurrentBasket()
         {
-            User user = CreateUserWithBasket();
+            var user = CreateUserWithBasket();
             testContext.TestContext.ContextMock.ExpectGet(context => context.User).Returns(user);
 
-            ViewResult result = basketController.Index() as ViewResult;
+            var result = basketController.Index() as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
-            ShopViewData viewData = result.ViewData.Model as ShopViewData;
+            var viewData = result.ViewData.Model as ShopViewData;
             Assert.IsNotNull(viewData, "viewData is not ShopViewData");
 
             Assert.AreSame(user.Baskets[0], viewData.Basket, "The user's basket has not been shown");
@@ -70,7 +69,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         private User CreateUserWithBasket()
         {
-            User user = new User
+            var user = new User
             {
                 RoleId = Role.GuestId,
                 Baskets =
@@ -78,7 +77,7 @@ namespace Suteki.Shop.Tests.Controllers
                     new Basket()
                 }
             };
-            Mock.Get(basketController).Expect(bc => bc.CurrentUser).Returns(user);
+            Mock.Get(userService).Expect(bc => bc.CurrentUser).Returns(user);
             return user;
         }
 
@@ -91,8 +90,8 @@ namespace Suteki.Shop.Tests.Controllers
             // expect 
             Mock.Get(basketRepository).Expect(or => or.SubmitChanges()).Verifiable();
             Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user).Verifiable();
-            Mock.Get(basketController).Expect(bc => bc.SetAuthenticationCookie(user.Email)).Verifiable();
-            Mock.Get(basketController).Expect(bc => bc.SetContextUserTo(user)).Verifiable();
+            Mock.Get(userService).Expect(bc => bc.SetAuthenticationCookie(user.Email)).Verifiable();
+            Mock.Get(userService).Expect(bc => bc.SetContextUserTo(user)).Verifiable();
 
             var size = new Size
             {
@@ -111,7 +110,6 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(2, user.Baskets[0].BasketItems[0].Quantity);
             
             Mock.Get(basketRepository).Verify();
-            Mock.Get(basketController).Verify();
             Mock.Get(userService).Verify();
         }
 
@@ -134,8 +132,8 @@ namespace Suteki.Shop.Tests.Controllers
             // expect 
             Mock.Get(basketRepository).Expect(or => or.SubmitChanges());
             Mock.Get(userService).Expect(us => us.CreateNewCustomer()).Returns(user);
-            Mock.Get(basketController).Expect(bc => bc.SetAuthenticationCookie(user.Email));
-            Mock.Get(basketController).Expect(bc => bc.SetContextUserTo(user));
+            Mock.Get(userService).Expect(bc => bc.SetAuthenticationCookie(user.Email));
+            Mock.Get(userService).Expect(bc => bc.SetContextUserTo(user));
 
             var size = new Size
             {
@@ -160,10 +158,10 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Remove_ShouldRemoveItemFromBasket()
         {
-            int basketItemIdToRemove = 3;
+            const int basketItemIdToRemove = 3;
 
-            User user = CreateUserWithBasket();
-            BasketItem basketItem = new BasketItem 
+            var user = CreateUserWithBasket();
+            var basketItem = new BasketItem 
             { 
                 BasketItemId = basketItemIdToRemove,
                 Quantity = 1,
@@ -179,7 +177,7 @@ namespace Suteki.Shop.Tests.Controllers
             Mock.Get(basketItemRepository).Expect(ir => ir.DeleteOnSubmit(basketItem)).Verifiable();
             Mock.Get(basketItemRepository).Expect(ir => ir.SubmitChanges());
 
-            ViewResult result = basketController.Remove(basketItemIdToRemove) as ViewResult;
+            var result = basketController.Remove(basketItemIdToRemove) as ViewResult;
 
             Assert.AreEqual("Index", result.ViewName);
             Mock.Get(basketItemRepository).Verify();
