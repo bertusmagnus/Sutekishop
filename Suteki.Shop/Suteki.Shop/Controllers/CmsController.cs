@@ -90,15 +90,15 @@ namespace Suteki.Shop.Controllers
         }
 
         [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult Update(int id)
+        public ActionResult Update(int id, FormCollection form)
         {
             var content = id == 0 ? 
-                CreateContent() : 
+                CreateContent(form) : 
                 contentRepository.GetById(id);
 
             try
             {
-                validatingBinder.UpdateFrom(content, Form);
+                validatingBinder.UpdateFrom(content, form);
                 // we spefically want HTML in textContent
                 var textContent = content as ITextContent;
                 if(textContent != null)
@@ -126,10 +126,10 @@ namespace Suteki.Shop.Controllers
         /// Create the correct subtype of content based on the contentTypeId returned in the form post
         /// </summary>
         /// <returns></returns>
-        private Content CreateContent()
+        private Content CreateContent(FormCollection form)
         {
             Content content;
-            var contentTypeId = int.Parse(Form["contenttypeid"]);
+            var contentTypeId = int.Parse(form["contenttypeid"]);
             switch (contentTypeId)
             {
                 case ContentType.TextContentId:

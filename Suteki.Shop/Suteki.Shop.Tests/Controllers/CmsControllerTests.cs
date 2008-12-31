@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.TestHelpers;
@@ -13,6 +12,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
 using System.Web.Mvc;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -31,14 +31,14 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the CMS controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
 
-            contentRepository = new Mock<IRepository<Content>>().Object;
-            contentOrderableService = new Mock<IOrderableService<Content>>().Object;
+            contentRepository = MockRepository.GenerateStub<IRepository<Content>>();
+            contentOrderableService = MockRepository.GenerateStub<IOrderableService<Content>>();
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
-            cmsController = new Mock<CmsController>(
+            cmsController = new CmsController(
                 contentRepository, 
                 contentOrderableService,
-                validatingBinder).Object;
+                validatingBinder);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Suteki.Shop.Tests.Controllers
                 new ActionContent { Name = "Help Pages" }
             }.AsQueryable();
 
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
+            contentRepository.Expect(cr => cr.GetAll()).Return(contents);
 
             cmsController.Index(urlName)
                 .ReturnsViewResult()
@@ -73,7 +73,7 @@ namespace Suteki.Shop.Tests.Controllers
                 new TopContent { UrlName = "home_page" }
             }.AsQueryable();
 
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
+            contentRepository.Expect(cr => cr.GetAll()).Return(contents);
 
             cmsController.Index(urlName)
                 .ReturnsViewResult()
@@ -90,10 +90,10 @@ namespace Suteki.Shop.Tests.Controllers
             const int menuId = 1;
 
             var menu = new Menu {ContentId = menuId};
-            Mock.Get(contentRepository).Expect(cr => cr.GetById(menuId)).Returns(menu);
+            contentRepository.Expect(cr => cr.GetById(menuId)).Return(menu);
 
             var menus = new List<Content>().AsQueryable();
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
+            contentRepository.Expect(cr => cr.GetAll()).Return(menus);
 
             cmsController.Add(menuId)
                 .ReturnsViewResult()
@@ -109,10 +109,10 @@ namespace Suteki.Shop.Tests.Controllers
             const int contentId = 22;
 
             var content = new TextContent { ContentId = contentId };
-            Mock.Get(contentRepository).Expect(cr => cr.GetById(contentId)).Returns(content).Verifiable();
+            contentRepository.Expect(cr => cr.GetById(contentId)).Return(content);
 
             var menus = new List<Content>().AsQueryable();
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
+            contentRepository.Expect(cr => cr.GetAll()).Return(menus);
 
             cmsController.Edit(contentId)
                 .ReturnsViewResult()
@@ -121,7 +121,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(contentId, vd => vd.Content.ContentId)
                 .AssertNotNull(vd => vd.Menus);
 
-            Mock.Get(contentRepository).Verify();
+            contentRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -134,18 +134,20 @@ namespace Suteki.Shop.Tests.Controllers
 
             TextContent textContent = null;
 
-            Mock.Get(contentRepository).Expect(cr => cr.InsertOnSubmit(It.IsAny<Content>()))
-                .Callback<Content>(content => textContent = content as TextContent).Verifiable();
-            Mock.Get(contentRepository).Expect(cr => cr.SubmitChanges()).Verifiable();
+            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
+                .IgnoreArguments()
+                .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
 
-            TestUpdateAction(contentId, form).ForText(form);
+            contentRepository.Expect(cr => cr.SubmitChanges());
+
+            TestUpdateAction(contentId, form);
 
             Assert.That(textContent, Is.Not.Null, "textContent is null");
             Assert.That(menuId, Is.EqualTo(menuId));
             Assert.That(textContent.Name, Is.EqualTo(form["name"]));
             Assert.That(textContent.Text, Is.EqualTo(form["text"]));
 
-            Mock.Get(contentRepository).Verify();
+            contentRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -159,18 +161,21 @@ namespace Suteki.Shop.Tests.Controllers
 
             TextContent textContent = null;
 
-            Mock.Get(contentRepository).Expect(cr => cr.InsertOnSubmit(It.IsAny<Content>()))
-                .Callback<Content>(content => textContent = content as TextContent).Verifiable();
-            Mock.Get(contentRepository).Expect(cr => cr.SubmitChanges()).Verifiable();
+            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
+                .IgnoreArguments()
+                .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
 
-            TestUpdateAction(contentId, form).ForText(form);
+            contentRepository.Expect(cr => cr.SubmitChanges());
+
+            TestUpdateAction(contentId, form);
 
             Assert.That(textContent, Is.Not.Null, "textContent is null");
             Assert.That(menuId, Is.EqualTo(menuId));
             Assert.That(textContent.Name, Is.EqualTo(form["name"]));
             Assert.That(textContent.Text, Is.EqualTo(form["text"]));
             Console.WriteLine(textContent.Text);
-            Mock.Get(contentRepository).Verify();
+
+            contentRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -183,9 +188,11 @@ namespace Suteki.Shop.Tests.Controllers
 
             Menu menu = null;
 
-            Mock.Get(contentRepository).Expect(cr => cr.InsertOnSubmit(It.IsAny<Content>()))
-                .Callback<Content>(content => menu = content as Menu).Verifiable();
-            Mock.Get(contentRepository).Expect(cr => cr.SubmitChanges()).Verifiable();
+            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
+                .IgnoreArguments()
+                .WhenCalled(invocation => menu = invocation.Arguments[0] as Menu);
+
+            contentRepository.Expect(cr => cr.SubmitChanges());
 
             TestUpdateAction(contentId, form);
 
@@ -193,24 +200,23 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.That(menuId, Is.EqualTo(menuId));
             Assert.That(menu.Name, Is.EqualTo(form["name"]));
 
-            Mock.Get(contentRepository).Verify();
+            contentRepository.VerifyAllExpectations();
         }
 
-        private NameValueCollection CreateContentEditForm(int menuId)
+        private static FormCollection CreateContentEditForm(int menuId)
         {
-            var form = new NameValueCollection
+            var form = new FormCollection
             {
                 {"id", "0"},
                 {"parentcontentid", menuId.ToString()},
                 {"name", "myNewContent"}
             };
-            Mock.Get(cmsController).ExpectGet(c => c.Form).Returns(form);
             return form;
         }
 
-        private ViewResult TestUpdateAction(int contentId, NameValueCollection form)
+        private void TestUpdateAction(int contentId, FormCollection form)
         {
-            return cmsController.Update(contentId)
+            cmsController.Update(contentId, form)
                 .ReturnsViewResult()
                 .ForView("List");
         }
@@ -229,19 +235,19 @@ namespace Suteki.Shop.Tests.Controllers
                 Text = "old text"
             };
 
-            Mock.Get(contentRepository).Expect(cr => cr.GetById(contentId)).Returns(content).Verifiable();
-            Mock.Get(contentRepository).Expect(cr => cr.SubmitChanges()).Verifiable();
+            contentRepository.Expect(cr => cr.GetById(contentId)).Return(content);
+            contentRepository.Expect(cr => cr.SubmitChanges());
 
-            TestUpdateAction(contentId, form).ForText(form);
+            TestUpdateAction(contentId, form);
 
-            Mock.Get(contentRepository).Verify();
+            contentRepository.VerifyAllExpectations();
         }
 
         [Test]
         public void List_ShouldShowListOfExistingContent()
         {
             var mainMenu = new Menu();
-            Mock.Get(contentRepository).Expect(mr => mr.GetById(1)).Returns(mainMenu);            
+            contentRepository.Expect(mr => mr.GetById(1)).Return(mainMenu);            
 
             cmsController.List(1)
                 .ReturnsViewResult()
@@ -256,10 +262,10 @@ namespace Suteki.Shop.Tests.Controllers
             const int parentContentId = 1;
 
             var mainMenu = new Menu{ ContentId = parentContentId };
-            Mock.Get(contentRepository).Expect(mr => mr.GetById(parentContentId)).Returns(mainMenu);
+            contentRepository.Expect(mr => mr.GetById(parentContentId)).Return(mainMenu);
 
             var menus = new List<Content>().AsQueryable();
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(menus);
+            contentRepository.Expect(cr => cr.GetAll()).Return(menus);
 
             cmsController.NewMenu(parentContentId)
                 .ReturnsViewResult()
@@ -272,26 +278,17 @@ namespace Suteki.Shop.Tests.Controllers
 
     public static class CreateFormExtensions
     {
-        public static NameValueCollection ForTextContent(this NameValueCollection form)
+        public static FormCollection ForTextContent(this FormCollection form)
         {
             form.Add("contenttypeid", ContentType.TextContentId.ToString());
             form.Add("text", "some content text");
             return form;
         }
 
-        public static NameValueCollection ForMenuContent(this NameValueCollection form)
+        public static FormCollection ForMenuContent(this FormCollection form)
         {
             form.Add("contenttypeid", ContentType.MenuId.ToString());
             return form;
-        }
-    }
-
-    public static class ViewResultExtensionsForCmsTests
-    {
-        public static ViewResult ForText(this ViewResult ViewResult, NameValueCollection form)
-        {
-            return ViewResult;
-                //.AssertAreEqual<CmsViewData, string>(form["text"], vd => vd.TextContent.Text);
         }
     }
 }
