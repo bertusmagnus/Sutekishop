@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Moq;
 using NUnit.Framework;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -18,7 +18,7 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            contentRepository = new Mock<IRepository<Content>>().Object;
+            contentRepository = MockRepository.GenerateStub<IRepository<Content>>();
             homeController = new HomeController(contentRepository);
         }
 
@@ -30,7 +30,7 @@ namespace Suteki.Shop.Tests.Controllers
                     new TextContent { UrlName = HomeController.Shopfront }
                 }.AsQueryable();
 
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
+            contentRepository.Expect(cr => cr.GetAll()).Return(contents);
 
             homeController.Index()
                 .ReturnsViewResult()
