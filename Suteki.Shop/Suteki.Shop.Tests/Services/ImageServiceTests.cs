@@ -1,6 +1,6 @@
 ﻿using System;
-using Moq;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Suteki.Shop.Services;
 using System.IO;
 using System.Reflection;
@@ -20,20 +20,19 @@ namespace Suteki.Shop.Tests.Services
         [Test]
         public void CreateSizedImages_ShouldCreateImagesOfTheCorrectSize()
         {
-            Image image = new Image { FileName = new Guid("46af1390-4cff-4741-a1d1-3c87b425bac9") };
+            var image = new Image { FileName = new Guid("46af1390-4cff-4741-a1d1-3c87b425bac9") };
 
-            string imageFolderPath = Path.Combine(
+            var imageFolderPath = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImages");
 
-            var imageFileService = new Mock<ImageFileService>().Object;
-            Mock.Get(imageFileService).Expect(ifs => ifs.GetImageFolderPath()).Returns(imageFolderPath);
+            var imageFileService = MockRepository.GenerateStub<ImageFileService>();
+            imageFileService.Expect(ifs => ifs.GetImageFolderPath()).Return(imageFolderPath);
 
             imageService = new ImageService(imageFileService, 500, 500, 100, 100);
 
-            string jpgTestPath = Path.Combine(imageFolderPath, image.FileNameAsString);
-            string jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);
-            string jpgThumbPath = Path.Combine(imageFolderPath, image.ThumbFileName);
+            var jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);
+            var jpgThumbPath = Path.Combine(imageFolderPath, image.ThumbFileName);
 
             imageService.CreateSizedImages(image);
 

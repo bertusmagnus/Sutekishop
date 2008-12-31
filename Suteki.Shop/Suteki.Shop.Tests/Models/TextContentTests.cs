@@ -8,15 +8,15 @@ namespace Suteki.Shop.Tests.Models
         [Test]
         public void UrlName_ShouldReturnAnyNonNameCharactersAsUnderscores()
         {
-            string name = "That's how (he &) I like £$$$";
-            string expectedName = "That_s_how__he____I_like_____";
+            const string name = "That's how (he &) I like £$$$";
+            const string expectedName = "That_s_how__he____I_like_____";
 
-            TextContent textContent = new TextContent
+            var textContent = new TextContent
             {
                 Name = name
             };
 
-            string urlName = textContent.UrlName;
+            var urlName = textContent.UrlName;
 
             Assert.That(urlName, Is.EqualTo(expectedName));
         }

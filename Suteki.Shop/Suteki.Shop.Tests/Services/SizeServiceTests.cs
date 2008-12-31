@@ -4,9 +4,7 @@ using NUnit.Framework;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Services;
 using System.Collections.Specialized;
-using Suteki.Shop.Repositories;
-using Moq;
-using System.Collections.Generic;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Services
 {
@@ -19,23 +17,25 @@ namespace Suteki.Shop.Tests.Services
         [SetUp]
         public void SetUp()
         {
-            sizeRepository = new Mock<IRepository<Size>>().Object;
+            sizeRepository = MockRepository.GenerateStub<IRepository<Size>>();
             sizeService = new SizeService(sizeRepository);
         }
 
         [Test]
         public void Update_ShouldAddSizesInNameValueCollectionToProduct()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("notASize_1", "abc");
-            form.Add("size_1", "S");
-            form.Add("size_2", "M");
-            form.Add("size_3", "L");
-            form.Add("size_4", "");
-            form.Add("size_5", "");
-            form.Add("someOther", "xyz");
+            var form = new NameValueCollection
+            {
+                {"notASize_1", "abc"},
+                {"size_1", "S"},
+                {"size_2", "M"},
+                {"size_3", "L"},
+                {"size_4", ""},
+                {"size_5", ""},
+                {"someOther", "xyz"}
+            };
 
-            Product product = new Product();
+            var product = new Product();
 
             sizeService.WithValues(form).Update(product);
 
@@ -48,11 +48,13 @@ namespace Suteki.Shop.Tests.Services
         [Test]
         public void Update_ShouldNotMarkExistingSizesInactiveWhenNewOnesAreGiven()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("size_1", "New 1");
-            form.Add("size_2", "New 2");
+            var form = new NameValueCollection
+            {
+                {"size_1", "New 1"}, 
+                {"size_2", "New 2"}
+            };
 
-            Product product = new Product
+            var product = new Product
             {
                 Sizes =
                 {
@@ -80,14 +82,13 @@ namespace Suteki.Shop.Tests.Services
         [Test]
         public void Update_ShouldNotDeactivateExistingKeysWhenNoNewAreGiven()
         {
-            NameValueCollection form = new NameValueCollection();
-            form.Add("someOtherKey", "xyz");
+            var form = new NameValueCollection {{"someOtherKey", "xyz"}};
 
-            Product product = CreateProductWithSizes();
+            var product = CreateProductWithSizes();
 
             // sizeRepository DeleteOnSubmit should not be called
-            Mock.Get(sizeRepository).Expect(sr => sr.DeleteOnSubmit(It.IsAny<Size>()))
-                .Throws(new Exception("Test should not call sizeRepository.DeleteOnSubmit"));
+            sizeRepository.Expect(sr => sr.DeleteOnSubmit(Arg<Size>.Is.Anything))
+                .Throw(new Exception("Test should not call sizeRepository.DeleteOnSubmit"));
 
             sizeService.WithValues(form).Update(product);
 
@@ -99,7 +100,7 @@ namespace Suteki.Shop.Tests.Services
 
         private static Product CreateProductWithSizes()
         {
-            Product product = new Product
+            var product = new Product
             {
                 Sizes =
                 {
@@ -114,7 +115,7 @@ namespace Suteki.Shop.Tests.Services
         [Test]
         public void Clear_ShouldSetAllSizesToInactive()
         {
-            Product product = CreateProductWithSizes();
+            var product = CreateProductWithSizes();
 
             sizeService.Clear(product);
 

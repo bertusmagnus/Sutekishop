@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NUnit.Framework;
 using Suteki.Common.Extensions;
 
@@ -24,8 +21,8 @@ namespace Suteki.Shop.Tests.Extensions
         [Test]
         public void GetPrimaryKeyShouldReturnThePrimaryKeyOfUser()
         {
-            int userId = 10;
-            User user = new User { UserId = userId };
+            const int userId = 10;
+            var user = new User { UserId = userId };
 
             Assert.AreEqual("UserId", user.GetPrimaryKey().Name);
             Assert.AreEqual(10, user.GetPrimaryKey().Value);

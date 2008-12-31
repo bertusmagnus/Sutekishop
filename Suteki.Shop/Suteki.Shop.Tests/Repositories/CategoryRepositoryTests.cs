@@ -1,5 +1,4 @@
-﻿using System;
-using System.Transactions;
+﻿using System.Transactions;
 using NUnit.Framework;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;

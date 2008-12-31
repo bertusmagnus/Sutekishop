@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Services
 {
@@ -15,7 +15,7 @@ namespace Suteki.Shop.Tests.Services
         [SetUp]
         public void SetUp()
         {
-            thingRepository = new Mock<IRepository<Thing>>().Object;
+            thingRepository = MockRepository.GenerateStub<IRepository<Thing>>();
             orderService = new OrderableService<Thing>(thingRepository);
         }
 
@@ -24,14 +24,14 @@ namespace Suteki.Shop.Tests.Services
         {
             IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
 
-            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
-            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+            thingRepository.Expect(tr => tr.GetAll()).Return(things);
+            thingRepository.Expect(tr => tr.SubmitChanges());
 
             // move two up to top
             orderService.MoveItemAtPosition(2).UpOne();
 
             Assert.AreEqual("two", things.Single(t => t.Position == 1).Name); 
-            Mock.Get(thingRepository).Verify();
+            thingRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -39,14 +39,14 @@ namespace Suteki.Shop.Tests.Services
         {
             IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
 
-            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
-            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+            thingRepository.Expect(tr => tr.GetAll()).Return(things);
+            thingRepository.Expect(tr => tr.SubmitChanges());
 
             // move three down to bottom
             orderService.MoveItemAtPosition(3).DownOne();
 
             Assert.AreEqual("three", things.Single(t => t.Position == 4).Name);
-            Mock.Get(thingRepository).Verify();
+            thingRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -54,13 +54,13 @@ namespace Suteki.Shop.Tests.Services
         {
             IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
 
-            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
-            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+            thingRepository.Expect(tr => tr.GetAll()).Return(things);
+            thingRepository.Expect(tr => tr.SubmitChanges());
 
             orderService.MoveItemAtPosition(2).ConstrainedBy(thing => thing.FooId == 1).UpOne();
 
             Assert.AreEqual("two", things.Single(t => t.Position == 2).Name);
-            Mock.Get(thingRepository).Verify();
+            thingRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -68,13 +68,13 @@ namespace Suteki.Shop.Tests.Services
         {
             IQueryable<Thing> things = MoveTests.MakeSomeThings().AsQueryable();
 
-            Mock.Get(thingRepository).Expect(tr => tr.GetAll()).Returns(things).Verifiable();
-            Mock.Get(thingRepository).Expect(tr => tr.SubmitChanges()).Verifiable();
+            thingRepository.Expect(tr => tr.GetAll()).Return(things);
+            thingRepository.Expect(tr => tr.SubmitChanges());
 
             orderService.MoveItemAtPosition(3).ConstrainedBy(thing => thing.FooId == 1).DownOne();
 
             Assert.AreEqual("three", things.Single(t => t.Position == 3).Name);
-            Mock.Get(thingRepository).Verify();
+            thingRepository.VerifyAllExpectations();
         }
     }
 }

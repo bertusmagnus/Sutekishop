@@ -1,8 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using Suteki.Shop.HtmlHelpers;
-using Suteki.Shop.Repositories;
-using Suteki.Shop.Tests.Repositories;
+﻿using NUnit.Framework;
 
 namespace Suteki.Shop.Tests.Extensions
 {

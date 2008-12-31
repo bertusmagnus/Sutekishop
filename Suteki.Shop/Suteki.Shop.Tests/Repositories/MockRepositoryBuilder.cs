@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Moq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using NUnit.Framework;

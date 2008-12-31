@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Moq;
+using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Services;
 
@@ -14,15 +14,15 @@ namespace Suteki.Shop.Tests.Services
         [SetUp]
         public void SetUp()
         {
-            userRepository = new Mock<IRepository<User>>().Object;
+            userRepository = MockRepository.GenerateStub<IRepository<User>>();
             userService = new UserService(userRepository);
         }
 
         [Test]
         public void CreateNewCustomer_ShouldReturnANewCustomerAddedToTheRepository()
         {
-            Mock.Get(userRepository).Expect(ur => ur.InsertOnSubmit(It.IsAny<User>()));
-            Mock.Get(userRepository).Expect(ur => ur.SubmitChanges());
+            userRepository.Expect(ur => ur.InsertOnSubmit(Arg<User>.Is.Anything));
+            userRepository.Expect(ur => ur.SubmitChanges());
 
             User user = userService.CreateNewCustomer();
 

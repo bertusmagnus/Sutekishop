@@ -12,7 +12,7 @@ namespace Suteki.Shop.Tests.Extensions
         [Test]
         public void GetCsv_ShouldRenderCorrectCsv()
         {
-            IEnumerable<Thing> things = new List<Thing>()
+            IEnumerable<Thing> things = new List<Thing>
                 {
                     new Thing
                         {
@@ -36,7 +36,7 @@ namespace Suteki.Shop.Tests.Extensions
                         }
                 };
 
-            string csv = things.Select(t => new { Id = t.Id, Name = t.Name, Date = t.Date, Child = t.Child.Name }).AsCsv();
+            var csv = things.Select(t => new { Id = t.Id, Name = t.Name, Date = t.Date, Child = t.Child.Name }).AsCsv();
 
             Assert.That(csv, Is.EqualTo(expectedCsv));
         }
