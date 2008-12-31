@@ -11,7 +11,6 @@ namespace Suteki.Shop.Tests
         public ControllerTestContext(ControllerBase controller)
         {
             ViewEngine = new MockViewEngine();
-//            controller.ViewEngine = ViewEngine;
 
             TestContext = new HttpContextTestContext();
 

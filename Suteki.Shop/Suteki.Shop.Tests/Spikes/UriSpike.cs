@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Suteki.Shop.Tests.Spikes
 {
