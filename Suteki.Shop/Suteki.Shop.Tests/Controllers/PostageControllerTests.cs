@@ -3,7 +3,6 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web.Mvc;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.TestHelpers;
@@ -11,6 +10,7 @@ using Suteki.Common.Validation;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using System.Collections.Generic;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -30,10 +30,10 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the CMS controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
-            postageRepository = new Mock<IRepository<Postage>>().Object;
-            orderableService = new Mock<IOrderableService<Postage>>().Object;
+            postageRepository = MockRepository.GenerateStub<IRepository<Postage>>();
+            orderableService = MockRepository.GenerateStub<IOrderableService<Postage>>();
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
-            httpContextService = new Mock<IHttpContextService>().Object;
+            httpContextService = MockRepository.GenerateStub<IHttpContextService>();
 
             postageController = new PostageController
             {
@@ -48,7 +48,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void Index_ShouldShowListOfPostages()
         {
             var postages = new List<Postage>();
-            Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages.AsQueryable());
+            postageRepository.Expect(pr => pr.GetAll()).Return(postages.AsQueryable());
 
             postageController.Index(1)
                 .ReturnsViewResult()
@@ -73,7 +73,7 @@ namespace Suteki.Shop.Tests.Controllers
             var postageId = 3;
             var postage = new Postage { PostageId = postageId };
 
-            Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage);
+            postageRepository.Expect(pr => pr.GetById(postageId)).Return(postage);
 
             postageController.Edit(postageId)
                 .ReturnsViewResult()
@@ -90,11 +90,10 @@ namespace Suteki.Shop.Tests.Controllers
 
             Postage postage = null;
 
-            Mock.Get(postageRepository).Expect(pr => pr.InsertOnSubmit(It.IsAny<Postage>()))
-                .Callback<Postage>(p => { postage = p; })
-                .Verifiable();
-            Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
-            Mock.Get(httpContextService).ExpectGet(hcs => hcs.FormOrQuerystring).Returns(form);
+            postageRepository.Expect(pr => pr.InsertOnSubmit(Arg<Postage>.Is.Anything))
+                .WhenCalled(invocation => { postage = invocation.Arguments[0] as Postage; });
+            postageRepository.Expect(pr => pr.SubmitChanges());
+            httpContextService.Expect(hcs => hcs.FormOrQuerystring).Return(form);
 
             postageController.Update(form)
                 .ReturnRedirectToRouteResult()
@@ -104,7 +103,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
             Assert.AreEqual(form["price"], postage.Price.ToString());
 
-            Mock.Get(postageRepository).Verify();
+            postageRepository.VerifyAllExpectations();
         }
 
         private static FormCollection BuildMockPostageForm()
@@ -134,9 +133,9 @@ namespace Suteki.Shop.Tests.Controllers
                 Price = 2.23M
             };
 
-            Mock.Get(postageRepository).Expect(pr => pr.GetById(postageId)).Returns(postage).Verifiable();
-            Mock.Get(postageRepository).Expect(pr => pr.SubmitChanges()).Verifiable();
-            Mock.Get(httpContextService).ExpectGet(hcs => hcs.FormOrQuerystring).Returns(form);
+            postageRepository.Expect(pr => pr.GetById(postageId)).Return(postage);
+            postageRepository.Expect(pr => pr.SubmitChanges());
+            httpContextService.Expect(hcs => hcs.FormOrQuerystring).Return(form);
 
             postageController.Update(form)
                 .ReturnRedirectToRouteResult()
@@ -146,7 +145,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
             Assert.AreEqual(form["price"], postage.Price.ToString());
 
-            Mock.Get(postageRepository).Verify();
+            postageRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -154,18 +153,17 @@ namespace Suteki.Shop.Tests.Controllers
         {
             const int position = 4;
 
-            var orderResult = new Mock<IOrderServiceWithPosition<Postage>>().Object;
+            var orderResult = MockRepository.GenerateMock<IOrderServiceWithPosition<Postage>>();
 
-            Mock.Get(orderableService).Expect(os => os.MoveItemAtPosition(position))
-                .Returns(orderResult).Verifiable();
-            Mock.Get(orderResult).Expect(or => or.UpOne()).Verifiable();
+            orderableService.Expect(os => os.MoveItemAtPosition(position)).Return(orderResult);
+            orderResult.Expect(or => or.UpOne());
 
             var postages = new List<Postage>();
-            Mock.Get(postageRepository).Expect(pr => pr.GetAll()).Returns(postages.AsQueryable());
+            postageRepository.Expect(pr => pr.GetAll()).Return(postages.AsQueryable());
 
             postageController.MoveUp(position, 1);
 
-            Mock.Get(orderableService).Verify();
+            orderableService.VerifyAllExpectations();
         }
     }
 }
