@@ -48,17 +48,5 @@ namespace Suteki.Shop.Controllers
         {
             ViewData["MetaDescription"] = text;
         }
-
-        public virtual NameValueCollection Form
-        {
-            get
-            {
-                if (Request.RequestType == "POST")
-                {
-                    return Request.Form;
-                }
-                return Request.QueryString;
-            }
-        }
     }
 }
