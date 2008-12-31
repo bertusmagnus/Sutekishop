@@ -24,10 +24,10 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the user controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] {"Administrator"});
 
-            userRepositoryMock = MockRepositoryBuilder.CreateUserRepository();
+            userRepository = MockRepositoryBuilder.CreateUserRepository();
             Mock<Repository<Role>> roleRepositoryMock = MockRepositoryBuilder.CreateRoleRepository();
 
-            userControllerMock = new Mock<UserController>(userRepositoryMock.Object, roleRepositoryMock.Object);
+            userControllerMock = new Mock<UserController>(userRepository, roleRepositoryMock.Object);
             userController = userControllerMock.Object;
             testContext = new ControllerTestContext(userController);
 
@@ -45,7 +45,7 @@ namespace Suteki.Shop.Tests.Controllers
         private Mock<UserController> userControllerMock;
         private ControllerTestContext testContext;
 
-        private Mock<Repository<User>> userRepositoryMock;
+        private IRepository<User> userRepository;
 
         private static void AssertUserEditViewDataIsCorrect(ViewResultBase result)
         {
@@ -72,12 +72,12 @@ namespace Suteki.Shop.Tests.Controllers
                 RoleId = 2
             };
 
-            userRepositoryMock.Expect(ur => ur.GetById(userId)).Returns(user).Verifiable();
+            userRepository.Expect(ur => ur.GetById(userId)).Return(user);
 
             var result = userController.Edit(userId) as ViewResult;
 
             AssertUserEditViewDataIsCorrect(result);
-            userRepositoryMock.Verify();
+            userRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -133,12 +133,10 @@ namespace Suteki.Shop.Tests.Controllers
             // setup expectations on the userRepository
             User user = null;
 
-            userRepositoryMock.Expect(ur => ur.InsertOnSubmit(It.IsAny<User>()))
-                .Callback<User>(u => { user = u; })
-                .Verifiable();
+            userRepository.Expect(ur => ur.InsertOnSubmit(It.IsAny<User>()))
+                .Callback<User>(u => { user = u; return false; });
 
-            userRepositoryMock.Expect(ur => ur.SubmitChanges())
-                .Verifiable();
+            userRepository.Expect(ur => ur.SubmitChanges());
 
             // call Update
             var result = userController.Update(0) as ViewResult;
@@ -152,7 +150,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             AssertUserEditViewDataIsCorrect(result);
 
-            userRepositoryMock.Verify();
+            userRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -186,12 +184,9 @@ namespace Suteki.Shop.Tests.Controllers
                 IsEnabled = true
             };
 
-            userRepositoryMock.Expect(ur => ur.GetById(userId))
-                .Returns(user)
-                .Verifiable();
+            userRepository.Expect(ur => ur.GetById(userId)).Return(user);
 
-            userRepositoryMock.Expect(ur => ur.SubmitChanges())
-                .Verifiable();
+            userRepository.Expect(ur => ur.SubmitChanges());
 
             // call Update
             var result = userController.Update(userId) as ViewResult;
@@ -205,7 +200,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             AssertUserEditViewDataIsCorrect(result);
 
-            userRepositoryMock.Verify();
+            userRepository.VerifyAllExpectations();
         }
     }
 }

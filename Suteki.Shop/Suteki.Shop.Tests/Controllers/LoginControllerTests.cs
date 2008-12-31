@@ -1,20 +1,19 @@
 ﻿using System;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using Suteki.Shop.Tests.Repositories;
-using System.Web.Mvc;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
     [TestFixture]
     public class LoginControllerTests
     {
-        private Mock<Repository<User>> userRepository;
+        private IRepository<User> userRepository;
         private IUserService userService;
 
         private LoginController loginController;
@@ -23,9 +22,9 @@ namespace Suteki.Shop.Tests.Controllers
         public void SetUp()
         {
             userRepository = MockRepositoryBuilder.CreateUserRepository();
-            userService = new Mock<IUserService>().Object;
+            userService = MockRepository.GenerateStub<IUserService>();
 
-            loginController = new LoginController(userRepository.Object, userService);
+            loginController = new LoginController(userRepository, userService);
         }
 
         [Test]
@@ -45,14 +44,14 @@ namespace Suteki.Shop.Tests.Controllers
             const string password = "henry1";
 
             // should set cookie
-            Mock.Get(userService).Expect(c => c.SetAuthenticationCookie(email)).Verifiable();
+            userService.Expect(c => c.SetAuthenticationCookie(email));
 
             loginController.Authenticate(email, password)
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
-            Mock.Get(userService).Verify();
+            userService.VerifyAllExpectations();
         }
 
         [Test]
@@ -62,8 +61,8 @@ namespace Suteki.Shop.Tests.Controllers
             const string password = "henry3";
 
             // throw if SetAuthenticationToken is called
-            Mock.Get(userService).Expect(c => c.SetAuthenticationCookie(email))
-                .Throws(new Exception("SetAuthenticationToken shouldn't be called"));
+            userService.Expect(c => c.SetAuthenticationCookie(email))
+                .Throw(new Exception("SetAuthenticationToken shouldn't be called"));
 
             loginController.Authenticate(email, password)
                 .ReturnsViewResult()
@@ -75,14 +74,14 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Logout_ShouldLogUserOut()
         {
-            Mock.Get(userService).Expect(c => c.RemoveAuthenticationCookie()).Verifiable();
+            userService.Expect(c => c.RemoveAuthenticationCookie());
 
             loginController.Logout()
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
-            Mock.Get(userService).Verify();
+            userService.VerifyAllExpectations();
         }
 
         [Test, Explicit]

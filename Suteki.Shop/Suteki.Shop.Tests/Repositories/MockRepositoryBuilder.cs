@@ -9,12 +9,11 @@ namespace Suteki.Shop.Tests.Repositories
 {
     public static class MockRepositoryBuilder
     {
-        public static Mock<Repository<User>> CreateUserRepository()
+        public static IRepository<User> CreateUserRepository()
         {
-            var dataContextProviderMock = new Mock<IDataContextProvider>();
-            var userRepositoryMock = new Mock<Repository<User>>(dataContextProviderMock.Object);
+            var userRepositoryMock = MockRepository.GenerateStub<IRepository<User>>();
 
-            var users = new List<User>()
+            var users = new List<User>
             {
                 new User { UserId = 1, Email = "Henry@suteki.co.uk", 
                     Password = "6C80B78681161C8349552872CFA0739CF823E87B", IsEnabled = true }, // henry1
@@ -26,7 +25,7 @@ namespace Suteki.Shop.Tests.Repositories
                     Password = "980BC222DA7FDD0D37BE816D60084894124509A1", IsEnabled = true } // sky1
             };
 
-            userRepositoryMock.Expect(ur => ur.GetAll()).Returns(() => users.AsQueryable());
+            userRepositoryMock.Expect(ur => ur.GetAll()).Return(users.AsQueryable());
 
             return userRepositoryMock;
         }
