@@ -249,10 +249,8 @@ namespace Suteki.Shop.Controllers
         [NonAction]
         public virtual void EmailOrder(Order order)
         {
-            string subject = "{0}: your order".With(BaseControllerService.ShopName);
-
-            string message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
-
+            var subject = "{0}: your order".With(BaseControllerService.ShopName);
+            var message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
             var toAddresses = new[] { order.Email, BaseControllerService.EmailAddress };
 
             // send the message

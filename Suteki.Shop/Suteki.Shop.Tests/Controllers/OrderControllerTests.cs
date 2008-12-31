@@ -2,7 +2,6 @@
 using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
-using Moq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -43,19 +42,20 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the order controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
-            orderRepository = new Mock<IRepository<Order>>().Object;
-            basketRepository = new Mock<IRepository<Basket>>().Object;
-            countryRepository = new Mock<IRepository<Country>>().Object;
-            cardTypeRepository = new Mock<IRepository<CardType>>().Object;
+            orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
+            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
+            countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
+            cardTypeRepository = MockRepository.GenerateStub<IRepository<CardType>>();
 
-            emailSender = new Mock<IEmailSender>().Object;
-            encryptionService = new Mock<IEncryptionService>().Object;
-            postageService = new Mock<IPostageService>().Object;
+            emailSender = MockRepository.GenerateStub<IEmailSender>();
+            encryptionService = MockRepository.GenerateStub<IEncryptionService>();
+            postageService = MockRepository.GenerateStub<IPostageService>();
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
-            httpContextService = new Mock<IHttpContextService>().Object;
-            userService = new Mock<IUserService>().Object;
+            httpContextService = MockRepository.GenerateStub<IHttpContextService>();
+            userService = MockRepository.GenerateStub<IUserService>();
 
-            orderController = new Mock<OrderController>(
+            var mocks = new MockRepository();
+            orderController = mocks.PartialMock<OrderController>(
                 orderRepository,
                 basketRepository,
                 countryRepository,
@@ -65,18 +65,20 @@ namespace Suteki.Shop.Tests.Controllers
                 postageService,
                 validatingBinder,
                 httpContextService,
-                userService).Object;
+                userService);
 
             testContext = new ControllerTestContext(orderController);
 
-            Mock.Get(postageService).Expect(ps => ps.CalculatePostageFor(It.IsAny<Order>()));
+            postageService.Expect(ps => ps.CalculatePostageFor(Arg<Order>.Is.Anything));
 
-            Mock.Get(userService).Expect(us => us.CurrentUser).Returns(new User {UserId = 4});
+            userService.Expect(us => us.CurrentUser).Return(new User { UserId = 4, RoleId = Role.AdministratorId });
 
             testContext.TestContext.Context.User = new User { UserId = 4 };
             testContext.TestContext.Request.RequestType = "GET";
             testContext.TestContext.Request.Stub(r => r.QueryString).Return(new NameValueCollection());
             testContext.TestContext.Request.Stub(r => r.Form).Return(new NameValueCollection());
+
+            mocks.ReplayAll();
         }
 
         [Test]
@@ -89,19 +91,9 @@ namespace Suteki.Shop.Tests.Controllers
             var cardTypes = new List<CardType> { new CardType() }.AsQueryable();
 
             // expectations
-            Mock.Get(basketRepository).Expect(br => br.GetById(basketId))
-                .Returns(basket)
-                .Verifiable();
-
-            Mock.Get(countryRepository).Expect(cr => cr.GetAll())
-                .Returns(countries)
-                .Verifiable();
-
-            Mock.Get(cardTypeRepository).Expect(ctr => ctr.GetAll())
-                .Returns(cardTypes)
-                .Verifiable();
-
-            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
+            basketRepository.Expect(br => br.GetById(basketId)).Return(basket);
+            countryRepository.Expect(cr => cr.GetAll()).Return(countries);
+            cardTypeRepository.Expect(ctr => ctr.GetAll()).Return(cardTypes);
 
             // exercise Checkout action
             orderController.Checkout(basketId)
@@ -115,9 +107,9 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertNotNull(vd => vd.Countries)
                 .AssertAreSame(cardTypes, vd => vd.CardTypes);
 
-            Mock.Get(basketRepository).Verify();
-            Mock.Get(countryRepository).Verify();
-            Mock.Get(cardTypeRepository).Verify();
+            basketRepository.VerifyAllExpectations();
+            countryRepository.VerifyAllExpectations();
+            cardTypeRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -131,15 +123,16 @@ namespace Suteki.Shop.Tests.Controllers
             var basket = new Basket();
             var order = new Order();
 
-            Mock.Get(encryptionService).Expect(es => es.EncryptCard(It.IsAny<Card>())).Verifiable();
+            encryptionService.Expect(es => es.EncryptCard(Arg<Card>.Is.Anything));
 
-            Mock.Get(orderRepository).Expect(or => or.InsertOnSubmit(It.IsAny<Order>()))
-                .Callback<Order>(o => { order = o; order.Basket = basket; })
-                .Verifiable();
-            Mock.Get(orderRepository).Expect(or => or.SubmitChanges()).Verifiable();
+            orderRepository.Expect(or => or.InsertOnSubmit(null))
+                .IgnoreArguments()
+                .WhenCalled(invocation => { order = invocation.Arguments[0] as Order; order.Basket = basket; });
 
-            Mock.Get(orderController).Expect(c => c.EmailOrder(It.IsAny<Order>())).Verifiable();
-            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
+            orderRepository.Expect(or => or.SubmitChanges());
+
+            orderController.Expect(c => c.EmailOrder(Arg<Order>.Is.Anything));
+            // orderController.Expect(c => c.CheckCurrentUserCanViewOrder(Arg<Order>.Is.Anything));
 
             // exercise PlaceOrder action
             var result = orderController.PlaceOrder(form) as RedirectToRouteResult;
@@ -180,9 +173,9 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["card.issuenumber"], card.IssueNumber);
             Assert.AreEqual(form["card.securitycode"], card.SecurityCode);
 
-            Mock.Get(orderRepository).Verify();
-            Mock.Get(encryptionService).Verify();
-            Mock.Get(orderController).Verify();
+            orderRepository.VerifyAllExpectations();
+            encryptionService.VerifyAllExpectations();
+            orderController.VerifyAllExpectations();
         }
 
         private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix)
@@ -249,7 +242,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void Index_ShouldDisplayAListOfOrders()
         {
             var orders = new List<Order> { new Order() }.AsQueryable();
-            Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders).Verifiable();
+            orderRepository.Expect(or => or.GetAll()).Return(orders);
 
             orderController.Index(new FormCollection())
                 .ReturnsViewResult()
@@ -269,8 +262,8 @@ namespace Suteki.Shop.Tests.Controllers
                 Basket = new Basket()
             };
 
-            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
-            Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
+            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
+            orderRepository.Expect(or => or.SubmitChanges());
 
             orderController.Dispatch(orderId);
 
@@ -292,8 +285,8 @@ namespace Suteki.Shop.Tests.Controllers
                 Basket = new Basket()
             };
 
-            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
-            Mock.Get(orderRepository).Expect(or => or.SubmitChanges());
+            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
+            orderRepository.Expect(or => or.SubmitChanges());
 
             orderController.UndoStatus(orderId);
 
@@ -312,7 +305,7 @@ namespace Suteki.Shop.Tests.Controllers
                 new Order { OrderId = 3 }
             }.AsQueryable();
 
-            Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders);
+            orderRepository.Expect(or => or.GetAll()).Return(orders);
 
             orderController.Index(new FormCollection())
                 .ReturnsViewResult()
@@ -345,12 +338,11 @@ namespace Suteki.Shop.Tests.Controllers
             order.Card.SetEncryptedNumber("asldfkjaslfjdslsdjkfjflkdjdlsakj");
             order.Card.SetEncryptedSecurityCode("asldkfjsadlfjdskjfdlkd");
 
-            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
 
-            Mock.Get(encryptionService).ExpectSet(es => es.PrivateKey).Verifiable();
-            Mock.Get(encryptionService).Expect(es => es.DecryptCard(It.IsAny<Card>())).Verifiable();
+            encryptionService.Expect(es => es.DecryptCard(Arg<Card>.Is.Anything));
 
-            Mock.Get(orderController).Expect(c => c.CheckCurrentUserCanViewOrder(It.IsAny<Order>()));
+            orderController.Expect(c => c.CheckCurrentUserCanViewOrder(Arg<Order>.Is.Anything));
 
             orderController.ShowCard(orderId, privateKey)
                 .ReturnsViewResult()
@@ -359,7 +351,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(order.Card.Number, vd => vd.Card.Number)
                 .AssertAreEqual(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);
 
-            Mock.Get(encryptionService).Verify();
+            encryptionService.VerifyAllExpectations();
         }
 
         [Test]
@@ -369,7 +361,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             var order = new Order();
 
-            Mock.Get(orderRepository).Expect(or => or.GetById(orderId)).Returns(order);
+            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
 
             orderController.Invoice(orderId)
                 .ReturnsViewResult()
