@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using Moq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -22,11 +21,9 @@ namespace Suteki.Shop.Tests.Controllers
     public class ProductControllerTests
     {
         private ProductController productController;
-        private Mock<ProductController> productControllerMock;
         private ControllerTestContext testContext;
 
         private IRepository<Product> productRepository;
-        private Mock<Repository<Product>> productRepositoryMock;
 
         private IRepository<Category> categoryRepository;
 
@@ -47,21 +44,21 @@ namespace Suteki.Shop.Tests.Controllers
 
             categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
 
-            productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
-            productRepository = productRepositoryMock.Object;
+            productRepository = MockRepositoryBuilder.CreateProductRepository();
 
-            productImageRepository = new Mock<IRepository<ProductImage>>().Object;
+            productImageRepository = MockRepository.GenerateStub<IRepository<ProductImage>>();
 
-            httpFileService = new Mock<IHttpFileService>().Object;
-            sizeService = new Mock<ISizeService>().Object;
+            httpFileService = MockRepository.GenerateStub<IHttpFileService>();
+            sizeService = MockRepository.GenerateStub<ISizeService>();
 
-            productOrderableService = new Mock<IOrderableService<Product>>().Object;
-            productImageOrderableService = new Mock<IOrderableService<ProductImage>>().Object;
+            productOrderableService = MockRepository.GenerateStub<IOrderableService<Product>>();
+            productImageOrderableService = MockRepository.GenerateStub<IOrderableService<ProductImage>>();
 
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
-            userService = new Mock<IUserService>().Object;
+            userService = MockRepository.GenerateStub<IUserService>();
 
-            productControllerMock = new Mock<ProductController>(
+            var mocks = new MockRepository();
+            productController = mocks.PartialMock<ProductController>(
                 productRepository, 
                 categoryRepository,
                 productImageRepository,
@@ -72,10 +69,11 @@ namespace Suteki.Shop.Tests.Controllers
                 validatingBinder,
                 userService);
 
-            productController = productControllerMock.Object;
+            mocks.ReplayAll();
+
             testContext = new ControllerTestContext(productController);
 
-            Mock.Get(userService).ExpectGet(c => c.CurrentUser).Returns(new User { RoleId = Role.AdministratorId });
+            userService.Expect(c => c.CurrentUser).Return(new User { RoleId = Role.AdministratorId });
         }
 
         [Test]
@@ -151,12 +149,11 @@ namespace Suteki.Shop.Tests.Controllers
             const int productId = 44;
 
             var product = new Product();
-            productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product).Verifiable();
+            productRepository.Expect(r => r.GetById(productId)).Return(product);
 
             var result = productController.Edit(productId) as ViewResult;
 
             AssertEditViewIsCorrectlyCalled(result);
-            productRepositoryMock.Verify();
         }
 
         [Test]
@@ -181,10 +178,9 @@ namespace Suteki.Shop.Tests.Controllers
             // add expectations for product repository insertion
             Product product = null;
 
-            productRepositoryMock.Expect(r => r.InsertOnSubmit(It.IsAny<Product>()))
-                .Callback<Product>(p => { product = p; })
-                .Verifiable();
-            productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
+            productRepository.Expect(r => r.InsertOnSubmit(Arg<Product>.Is.Anything))
+                .WhenCalled(invocation => { product = invocation.Arguments[0] as Product; });
+            productRepository.Expect(r => r.SubmitChanges());
 
             // add expectations for image upload
             var images = new List<Image>
@@ -194,11 +190,11 @@ namespace Suteki.Shop.Tests.Controllers
             };
 
             var httpRequest = testContext.TestContext.Request;
-            Mock.Get(httpFileService).Expect(h => h.GetUploadedImages(httpRequest)).Returns(images).Verifiable();
+            httpFileService.Expect(h => h.GetUploadedImages(httpRequest)).Return(images);
 
             // expect the size service to be called
-            Mock.Get(sizeService).Expect(s => s.WithValues(form)).Returns(sizeService).Verifiable();
-            Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
+            sizeService.Expect(s => s.WithValues(form)).Return(sizeService);
+            sizeService.Expect(s => s.Update(Arg<Product>.Is.Anything));
 
             // excercise the method
             var result = productController.Update(productId) as ViewResult;
@@ -214,9 +210,9 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreSame(images[0], product.ProductImages[0].Image, "First product image was not added");
             Assert.AreSame(images[1], product.ProductImages[1].Image, "Second product image was not added");
 
-            productRepositoryMock.Verify();
-            Mock.Get(httpFileService).Verify();
-            Mock.Get(sizeService).Verify();
+            productRepository.VerifyAllExpectations();
+            httpFileService.VerifyAllExpectations();
+            sizeService.VerifyAllExpectations();
         }
 
         [Test]
@@ -245,12 +241,15 @@ namespace Suteki.Shop.Tests.Controllers
                 Description = "The old description"
             };
 
-            productRepositoryMock.Expect(r => r.GetById(productId)).Returns(product).Verifiable();
-            productRepositoryMock.Expect(r => r.SubmitChanges()).Verifiable();
+            productRepository.Expect(r => r.GetById(productId)).Return(product);
+            productRepository.Expect(r => r.SubmitChanges());
 
             // expect the size service to be called
-            Mock.Get(sizeService).Expect(s => s.WithValues(form)).Returns(sizeService).Verifiable();
-            Mock.Get(sizeService).Expect(s => s.Update(It.IsAny<Product>())).Verifiable();
+            sizeService.Expect(s => s.WithValues(form)).Return(sizeService);
+            sizeService.Expect(s => s.Update(Arg<Product>.Is.Anything));
+
+            productController.Expect(
+                c => c.UpdateImages(Arg<Product>.Is.Same(product), Arg<HttpRequestBase>.Is.Anything));
 
             // excercise the method
             var result = productController.Update(productId) as ViewResult;
@@ -262,7 +261,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(name, product.Name, "product.Name is incorrect");
             Assert.AreEqual(description, product.Description, "product.Description is incorrect");
 
-            productRepositoryMock.Verify();
+            productRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -270,7 +269,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             const int nextPosition = 23;
             var product = new Product();
-            var request = new Mock<HttpRequestBase>().Object;
+            var request = MockRepository.GenerateMock<HttpRequestBase>();
 
             var image1 = new Image();
             var image2 = new Image();
@@ -278,8 +277,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             var images = new List<Image>{image1, image2, image3};
 
-            Mock.Get(httpFileService).Expect(fs => fs.GetUploadedImages(request)).Returns(images);
-            Mock.Get(productImageOrderableService).ExpectGet(os => os.NextPosition).Returns(nextPosition);
+            httpFileService.Expect(fs => fs.GetUploadedImages(request)).Return(images);
+            productImageOrderableService.Expect(os => os.NextPosition).Return(nextPosition);
 
             productController.UpdateImages(product, request);
 

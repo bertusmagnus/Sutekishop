@@ -103,10 +103,9 @@ namespace Suteki.Shop.Tests.Repositories
             Assert.AreEqual("oneTwoTwo", root.Categories[0].Categories[1].Categories[1].Name);
         }
 
-        public static Mock<Repository<Product>> CreateProductRepository()
+        public static IRepository<Product> CreateProductRepository()
         {
-            var dataContextProviderMock = new Mock<IDataContextProvider>();
-            var productRepositoryMock = new Mock<Repository<Product>>(dataContextProviderMock.Object);
+            var productRepositoryMock = MockRepository.GenerateStub<IRepository<Product>>();
 
             var products = new List<Product>
             {
@@ -118,7 +117,7 @@ namespace Suteki.Shop.Tests.Repositories
                 new Product { ProductId = 6, CategoryId = 6, Name = "Product 6", Description = "Description 6" },
             };
 
-            productRepositoryMock.Expect(pr => pr.GetAll()).Returns(() => products.AsQueryable());
+            productRepositoryMock.Expect(pr => pr.GetAll()).Return(products.AsQueryable());
 
             return productRepositoryMock;
         }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
-using Moq;
-using Suteki.Common.Repositories;
-using Suteki.Shop.Repositories;
 using System.Collections.Generic;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Tests.Repositories
 {
@@ -14,19 +11,19 @@ namespace Suteki.Shop.Tests.Repositories
         [Test]
         public void WhereCategoryIdIs_ShouldReturnListOfProductsForCategory()
         {
-            Mock<Repository<Product>> productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
+            var productRepositoryMock = MockRepositoryBuilder.CreateProductRepository();
 
-            int categoryId = 4;
-            var products = productRepositoryMock.Object.GetAll().WhereCategoryIdIs(categoryId);
+            const int categoryId = 4;
+            var products = productRepositoryMock.GetAll().WhereCategoryIdIs(categoryId);
 
             AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(products);
         }
 
         public static void AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(IEnumerable<Product> products)
         {
-            int categoryId = 4;
+            const int categoryId = 4;
             Assert.AreEqual(2, products.Count(), "Unexpected number of products returned");
-            foreach (Product product in products)
+            foreach (var product in products)
             {
                 Assert.AreEqual(categoryId, product.CategoryId, "Incorrect categoryId returned");
             }
