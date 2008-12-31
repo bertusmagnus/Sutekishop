@@ -73,12 +73,10 @@ namespace Suteki.Shop.Tests.Controllers
                 ParentId = 23
             };
 
-            categoryRepository.Expect(cr => cr.GetById(categoryId)).Return(category);
+            categoryRepository.Stub(cr => cr.GetById(categoryId)).Return(category);
 
             var result = categoryController.Edit(categoryId);
             AssertEditViewIsCorrectlyShown(result);
-
-            categoryRepository.VerifyAllExpectations();
         }
 
         [Test]

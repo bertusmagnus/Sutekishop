@@ -39,9 +39,14 @@ namespace Suteki.Shop.Tests.Controllers
                 validatingBinder);
 
             testContext = new ControllerTestContext(basketController);
+
+            user = CreateUserWithBasket();
+            userService.Stub(us => us.CreateNewCustomer()).Return(user);
         }
 
         #endregion
+
+        private User user;
 
         private BasketController basketController;
         private ControllerTestContext testContext;
@@ -57,7 +62,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         private User CreateUserWithBasket()
         {
-            var user = new User
+            var theUser = new User
             {
                 RoleId = Role.GuestId,
                 Baskets =
@@ -65,8 +70,8 @@ namespace Suteki.Shop.Tests.Controllers
                         new Basket()
                     }
             };
-            userService.Expect(bc => bc.CurrentUser).Return(user);
-            return user;
+            userService.Expect(bc => bc.CurrentUser).Return(theUser);
+            return theUser;
         }
 
         private static FormCollection CreateUpdateForm()
@@ -82,16 +87,13 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldShowIndexViewWithCurrentBasket()
         {
-            var user = CreateUserWithBasket();
             testContext.TestContext.Context.User = user;
 
-            var result = basketController.Index() as ViewResult;
-
-            Assert.AreEqual("Index", result.ViewName);
-            var viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
-
-            Assert.AreSame(user.Baskets[0], viewData.Basket, "The user's basket has not been shown");
+            basketController.Index()
+                .ReturnsViewResult()
+                .ForView("Index")
+                .WithModel<ShopViewData>()
+                .AssertAreSame(user.Baskets[0], vd => vd.Basket);
         }
 
         [Test]
@@ -99,7 +101,6 @@ namespace Suteki.Shop.Tests.Controllers
         {
             const int basketItemIdToRemove = 3;
 
-            var user = CreateUserWithBasket();
             var basketItem = new BasketItem
             {
                 BasketItemId = basketItemIdToRemove,
@@ -112,27 +113,18 @@ namespace Suteki.Shop.Tests.Controllers
             user.Baskets[0].BasketItems.Add(basketItem);
             testContext.TestContext.Context.User = user;
 
-            // expect 
-            basketItemRepository.Expect(ir => ir.DeleteOnSubmit(basketItem));
-            basketItemRepository.Expect(ir => ir.SubmitChanges());
+            basketController.Remove(basketItemIdToRemove)
+                .ReturnsViewResult()
+                .ForView("Index");
 
-            var result = basketController.Remove(basketItemIdToRemove) as ViewResult;
-
-            Assert.AreEqual("Index", result.ViewName);
-            basketItemRepository.VerifyAllExpectations();
+            basketItemRepository.AssertWasCalled(ir => ir.DeleteOnSubmit(basketItem));
+            basketItemRepository.AssertWasCalled(ir => ir.SubmitChanges());
         }
 
         [Test]
         public void Update_ShouldAddBasketLineToCurrentBasket()
         {
             var form = CreateUpdateForm();
-            var user = CreateUserWithBasket();
-
-            // expect 
-            basketRepository.Expect(or => or.SubmitChanges());
-            userService.Expect(us => us.CreateNewCustomer()).Return(user);
-            userService.Expect(bc => bc.SetAuthenticationCookie(user.Email));
-            userService.Expect(bc => bc.SetContextUserTo(user));
 
             var size = new Size
             {
@@ -142,7 +134,7 @@ namespace Suteki.Shop.Tests.Controllers
                     Weight = 10
                 }
             };
-            sizeRepository.Expect(sr => sr.GetById(5)).Return(size);
+            sizeRepository.Stub(sr => sr.GetById(5)).Return(size);
 
             basketController.Update(form);
 
@@ -150,21 +142,15 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
             Assert.AreEqual(2, user.Baskets[0].BasketItems[0].Quantity);
 
-            basketRepository.VerifyAllExpectations();
-            userService.VerifyAllExpectations();
+            basketRepository.AssertWasCalled(repository => repository.SubmitChanges());
+            userService.AssertWasCalled(service => service.SetAuthenticationCookie(user.Email));
+            userService.AssertWasCalled(service => service.SetContextUserTo(user));
         }
 
         [Test]
         public void Update_ShouldShowErrorMessageIfItemIsOutOfStock()
         {
             var form = CreateUpdateForm();
-            var user = CreateUserWithBasket();
-
-            // expect 
-            basketRepository.Expect(or => or.SubmitChanges());
-            userService.Expect(us => us.CreateNewCustomer()).Return(user);
-            userService.Expect(bc => bc.SetAuthenticationCookie(user.Email));
-            userService.Expect(bc => bc.SetContextUserTo(user));
 
             var size = new Size
             {
@@ -173,7 +159,7 @@ namespace Suteki.Shop.Tests.Controllers
                 IsActive = true,
                 Product = new Product {Name = "Denim Jacket"}
             };
-            sizeRepository.Expect(sr => sr.GetById(5)).Return(size);
+            sizeRepository.Stub(sr => sr.GetById(5)).Return(size);
 
             const string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
@@ -184,6 +170,9 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(expectedMessage, vd => vd.ErrorMessage);
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
+
+            userService.AssertWasCalled(bc => bc.SetAuthenticationCookie(user.Email));
+            userService.AssertWasCalled(bc => bc.SetContextUserTo(user));
         }
     }
 }

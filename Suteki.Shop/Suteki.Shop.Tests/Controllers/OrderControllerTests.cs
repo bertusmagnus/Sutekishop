@@ -90,10 +90,10 @@ namespace Suteki.Shop.Tests.Controllers
             var countries = new List<Country> { new Country() }.AsQueryable();
             var cardTypes = new List<CardType> { new CardType() }.AsQueryable();
 
-            // expectations
-            basketRepository.Expect(br => br.GetById(basketId)).Return(basket);
-            countryRepository.Expect(cr => cr.GetAll()).Return(countries);
-            cardTypeRepository.Expect(ctr => ctr.GetAll()).Return(cardTypes);
+            // stubs
+            basketRepository.Stub(br => br.GetById(basketId)).Return(basket);
+            countryRepository.Stub(cr => cr.GetAll()).Return(countries);
+            cardTypeRepository.Stub(ctr => ctr.GetAll()).Return(cardTypes);
 
             // exercise Checkout action
             orderController.Checkout(basketId)
@@ -106,10 +106,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreSame(basket, vd => vd.Order.Basket)
                 .AssertNotNull(vd => vd.Countries)
                 .AssertAreSame(cardTypes, vd => vd.CardTypes);
-
-            basketRepository.VerifyAllExpectations();
-            countryRepository.VerifyAllExpectations();
-            cardTypeRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -123,16 +119,11 @@ namespace Suteki.Shop.Tests.Controllers
             var basket = new Basket();
             var order = new Order();
 
-            encryptionService.Expect(es => es.EncryptCard(Arg<Card>.Is.Anything));
+            orderController.Expect(c => c.EmailOrder(Arg<Order>.Is.Anything));
 
             orderRepository.Expect(or => or.InsertOnSubmit(null))
                 .IgnoreArguments()
                 .WhenCalled(invocation => { order = invocation.Arguments[0] as Order; order.Basket = basket; });
-
-            orderRepository.Expect(or => or.SubmitChanges());
-
-            orderController.Expect(c => c.EmailOrder(Arg<Order>.Is.Anything));
-            // orderController.Expect(c => c.CheckCurrentUserCanViewOrder(Arg<Order>.Is.Anything));
 
             // exercise PlaceOrder action
             var result = orderController.PlaceOrder(form) as RedirectToRouteResult;
@@ -153,15 +144,15 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(DateTime.Now.ToShortDateString(), order.CreatedDate.ToShortDateString(), "CreatedDate is incorrect");
 
             // Card Contact
-            Contact cardContact = order.Contact;
+            var cardContact = order.Contact;
             AssertContactIsCorrect(form, cardContact, "cardcontact");
 
             // Delivery Contact
-            Contact deliveryContact = order.Contact1;
+            var deliveryContact = order.Contact1;
             AssertContactIsCorrect(form, deliveryContact, "deliverycontact");
 
             // Card
-            Card card = order.Card;
+            var card = order.Card;
             Assert.IsNotNull(card, "card is null");
             Assert.AreEqual(form["card.cardtypeid"], card.CardTypeId.ToString());
             Assert.AreEqual(form["card.holder"], card.Holder);
@@ -173,9 +164,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["card.issuenumber"], card.IssueNumber);
             Assert.AreEqual(form["card.securitycode"], card.SecurityCode);
 
-            orderRepository.VerifyAllExpectations();
-            encryptionService.VerifyAllExpectations();
-            orderController.VerifyAllExpectations();
+            encryptionService.AssertWasCalled(es => es.EncryptCard(Arg<Card>.Is.Anything));
+            orderRepository.AssertWasCalled(or => or.SubmitChanges());
         }
 
         private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix)
@@ -338,10 +328,7 @@ namespace Suteki.Shop.Tests.Controllers
             order.Card.SetEncryptedNumber("asldfkjaslfjdslsdjkfjflkdjdlsakj");
             order.Card.SetEncryptedSecurityCode("asldkfjsadlfjdskjfdlkd");
 
-            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
-
-            encryptionService.Expect(es => es.DecryptCard(Arg<Card>.Is.Anything));
-
+            orderRepository.Stub(or => or.GetById(orderId)).Return(order);
             orderController.Expect(c => c.CheckCurrentUserCanViewOrder(Arg<Order>.Is.Anything));
 
             orderController.ShowCard(orderId, privateKey)
@@ -351,7 +338,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(order.Card.Number, vd => vd.Card.Number)
                 .AssertAreEqual(order.Card.ExpiryYear, vd => vd.Card.ExpiryYear);
 
-            encryptionService.VerifyAllExpectations();
+            encryptionService.AssertWasCalled(es => es.DecryptCard(Arg<Card>.Is.Anything));
         }
 
         [Test]

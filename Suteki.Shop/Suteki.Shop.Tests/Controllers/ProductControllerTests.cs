@@ -91,21 +91,18 @@ namespace Suteki.Shop.Tests.Controllers
                                             }
                                     };
 
-            categoryRepository.Expect(r => r.GetById(categoryId)).Return(category);
+            categoryRepository.Stub(r => r.GetById(categoryId)).Return(category);
 
-            var result = productController.Index(categoryId) as ViewResult;
-
-            Assert.AreEqual("Index", result.ViewName);
-            if (result.ViewData.Model == null) Assert.Fail("ViewData.Model is null");
-            var viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "viewData is not ShopViewData");
-            Assert.IsNotNull(viewData.Products, "viewData.Products should not be null");
-            Assert.IsNotNull(viewData.Category, "viewData.Category should not be null");
-            Assert.AreEqual(categoryId, viewData.Category.CategoryId);
+            var viewData = productController.Index(categoryId)
+                .ReturnsViewResult()
+                .ForView("Index")
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Products)
+                .AssertNotNull(vd => vd.Category)
+                .AssertAreEqual(categoryId, vd => vd.Category.CategoryId);
 
             ProductRepositoryExtensionsTests.AssertProductsReturnedBy_WhereCategoryIdIs4_AreCorrect(
                 viewData.Products);
-            categoryRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -180,7 +177,6 @@ namespace Suteki.Shop.Tests.Controllers
 
             productRepository.Expect(r => r.InsertOnSubmit(Arg<Product>.Is.Anything))
                 .WhenCalled(invocation => { product = invocation.Arguments[0] as Product; });
-            productRepository.Expect(r => r.SubmitChanges());
 
             // add expectations for image upload
             var images = new List<Image>
@@ -193,8 +189,7 @@ namespace Suteki.Shop.Tests.Controllers
             httpFileService.Expect(h => h.GetUploadedImages(httpRequest)).Return(images);
 
             // expect the size service to be called
-            sizeService.Expect(s => s.WithValues(form)).Return(sizeService);
-            sizeService.Expect(s => s.Update(Arg<Product>.Is.Anything));
+            sizeService.Stub(s => s.WithValues(form)).Return(sizeService);
 
             // excercise the method
             var result = productController.Update(productId) as ViewResult;
@@ -210,9 +205,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreSame(images[0], product.ProductImages[0].Image, "First product image was not added");
             Assert.AreSame(images[1], product.ProductImages[1].Image, "Second product image was not added");
 
-            productRepository.VerifyAllExpectations();
-            httpFileService.VerifyAllExpectations();
-            sizeService.VerifyAllExpectations();
+            productRepository.AssertWasCalled(r => r.SubmitChanges());
+            sizeService.AssertWasCalled(s => s.Update(Arg<Product>.Is.Anything));
         }
 
         [Test]
@@ -242,11 +236,9 @@ namespace Suteki.Shop.Tests.Controllers
             };
 
             productRepository.Expect(r => r.GetById(productId)).Return(product);
-            productRepository.Expect(r => r.SubmitChanges());
 
             // expect the size service to be called
             sizeService.Expect(s => s.WithValues(form)).Return(sizeService);
-            sizeService.Expect(s => s.Update(Arg<Product>.Is.Anything));
 
             productController.Expect(
                 c => c.UpdateImages(Arg<Product>.Is.Same(product), Arg<HttpRequestBase>.Is.Anything));
@@ -261,7 +253,8 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(name, product.Name, "product.Name is incorrect");
             Assert.AreEqual(description, product.Description, "product.Description is incorrect");
 
-            productRepository.VerifyAllExpectations();
+            productRepository.AssertWasCalled(r => r.SubmitChanges());
+            sizeService.AssertWasCalled(s => s.Update(Arg<Product>.Is.Anything));
         }
 
         [Test]

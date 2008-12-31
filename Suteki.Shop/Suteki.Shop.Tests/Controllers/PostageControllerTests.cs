@@ -90,10 +90,10 @@ namespace Suteki.Shop.Tests.Controllers
 
             Postage postage = null;
 
+            httpContextService.Stub(hcs => hcs.FormOrQuerystring).Return(form);
+
             postageRepository.Expect(pr => pr.InsertOnSubmit(Arg<Postage>.Is.Anything))
                 .WhenCalled(invocation => { postage = invocation.Arguments[0] as Postage; });
-            postageRepository.Expect(pr => pr.SubmitChanges());
-            httpContextService.Expect(hcs => hcs.FormOrQuerystring).Return(form);
 
             postageController.Update(form)
                 .ReturnRedirectToRouteResult()
@@ -103,7 +103,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
             Assert.AreEqual(form["price"], postage.Price.ToString());
 
-            postageRepository.VerifyAllExpectations();
+            postageRepository.AssertWasCalled(pr => pr.SubmitChanges());
         }
 
         private static FormCollection BuildMockPostageForm()
@@ -133,9 +133,8 @@ namespace Suteki.Shop.Tests.Controllers
                 Price = 2.23M
             };
 
-            postageRepository.Expect(pr => pr.GetById(postageId)).Return(postage);
-            postageRepository.Expect(pr => pr.SubmitChanges());
-            httpContextService.Expect(hcs => hcs.FormOrQuerystring).Return(form);
+            postageRepository.Stub(pr => pr.GetById(postageId)).Return(postage);
+            httpContextService.Stub(hcs => hcs.FormOrQuerystring).Return(form);
 
             postageController.Update(form)
                 .ReturnRedirectToRouteResult()
@@ -145,7 +144,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
             Assert.AreEqual(form["price"], postage.Price.ToString());
 
-            postageRepository.VerifyAllExpectations();
+            postageRepository.AssertWasCalled(pr => pr.SubmitChanges());
         }
 
         [Test]
@@ -155,15 +154,14 @@ namespace Suteki.Shop.Tests.Controllers
 
             var orderResult = MockRepository.GenerateMock<IOrderServiceWithPosition<Postage>>();
 
-            orderableService.Expect(os => os.MoveItemAtPosition(position)).Return(orderResult);
-            orderResult.Expect(or => or.UpOne());
+            orderableService.Stub(os => os.MoveItemAtPosition(position)).Return(orderResult);
 
             var postages = new List<Postage>();
             postageRepository.Expect(pr => pr.GetAll()).Return(postages.AsQueryable());
 
             postageController.MoveUp(position, 1);
 
-            orderableService.VerifyAllExpectations();
+            orderResult.AssertWasCalled(or => or.UpOne());
         }
     }
 }

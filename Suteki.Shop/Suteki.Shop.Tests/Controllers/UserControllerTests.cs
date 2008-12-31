@@ -73,12 +73,11 @@ namespace Suteki.Shop.Tests.Controllers
                 RoleId = 2
             };
 
-            userRepository.Expect(ur => ur.GetById(userId)).Return(user);
+            userRepository.Stub(ur => ur.GetById(userId)).Return(user);
 
             var result = userController.Edit(userId) as ViewResult;
 
             AssertUserEditViewDataIsCorrect(result);
-            userRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -137,8 +136,6 @@ namespace Suteki.Shop.Tests.Controllers
             userRepository.Expect(ur => ur.InsertOnSubmit(Arg<User>.Is.Anything))
                 .Callback<User>(u => { user = u; return false; });
 
-            userRepository.Expect(ur => ur.SubmitChanges());
-
             // call Update
             var result = userController.Update(0) as ViewResult;
 
@@ -151,7 +148,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             AssertUserEditViewDataIsCorrect(result);
 
-            userRepository.VerifyAllExpectations();
+            userRepository.AssertWasCalled(ur => ur.SubmitChanges());
         }
 
         [Test]
@@ -187,8 +184,6 @@ namespace Suteki.Shop.Tests.Controllers
 
             userRepository.Expect(ur => ur.GetById(userId)).Return(user);
 
-            userRepository.Expect(ur => ur.SubmitChanges());
-
             // call Update
             var result = userController.Update(userId) as ViewResult;
 
@@ -201,7 +196,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             AssertUserEditViewDataIsCorrect(result);
 
-            userRepository.VerifyAllExpectations();
+            userRepository.AssertWasCalled(ur => ur.SubmitChanges());
         }
     }
 }

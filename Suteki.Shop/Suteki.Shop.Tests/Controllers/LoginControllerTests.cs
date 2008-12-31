@@ -43,15 +43,12 @@ namespace Suteki.Shop.Tests.Controllers
             const string email = "Henry@suteki.co.uk";
             const string password = "henry1";
 
-            // should set cookie
-            userService.Expect(c => c.SetAuthenticationCookie(email));
-
             loginController.Authenticate(email, password)
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
-            userService.VerifyAllExpectations();
+            userService.AssertWasCalled(c => c.SetAuthenticationCookie(email));
         }
 
         [Test]
@@ -74,14 +71,12 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Logout_ShouldLogUserOut()
         {
-            userService.Expect(c => c.RemoveAuthenticationCookie());
-
             loginController.Logout()
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
-            userService.VerifyAllExpectations();
+            userService.AssertWasCalled(c => c.RemoveAuthenticationCookie());
         }
 
         [Test, Explicit]

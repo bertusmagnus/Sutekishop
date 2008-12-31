@@ -109,10 +109,10 @@ namespace Suteki.Shop.Tests.Controllers
             const int contentId = 22;
 
             var content = new TextContent { ContentId = contentId };
-            contentRepository.Expect(cr => cr.GetById(contentId)).Return(content);
+            contentRepository.Stub(cr => cr.GetById(contentId)).Return(content);
 
             var menus = new List<Content>().AsQueryable();
-            contentRepository.Expect(cr => cr.GetAll()).Return(menus);
+            contentRepository.Stub(cr => cr.GetAll()).Return(menus);
 
             cmsController.Edit(contentId)
                 .ReturnsViewResult()
@@ -120,8 +120,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .WithModel<CmsViewData>()
                 .AssertAreEqual(contentId, vd => vd.Content.ContentId)
                 .AssertNotNull(vd => vd.Menus);
-
-            contentRepository.VerifyAllExpectations();
         }
 
         [Test]
@@ -138,8 +136,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .IgnoreArguments()
                 .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
 
-            contentRepository.Expect(cr => cr.SubmitChanges());
-
             TestUpdateAction(contentId, form);
 
             Assert.That(textContent, Is.Not.Null, "textContent is null");
@@ -147,7 +143,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.That(textContent.Name, Is.EqualTo(form["name"]));
             Assert.That(textContent.Text, Is.EqualTo(form["text"]));
 
-            contentRepository.VerifyAllExpectations();
+            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
         }
 
         [Test]
@@ -165,8 +161,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .IgnoreArguments()
                 .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
 
-            contentRepository.Expect(cr => cr.SubmitChanges());
-
             TestUpdateAction(contentId, form);
 
             Assert.That(textContent, Is.Not.Null, "textContent is null");
@@ -175,7 +169,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.That(textContent.Text, Is.EqualTo(form["text"]));
             Console.WriteLine(textContent.Text);
 
-            contentRepository.VerifyAllExpectations();
+            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
         }
 
         [Test]
@@ -192,15 +186,13 @@ namespace Suteki.Shop.Tests.Controllers
                 .IgnoreArguments()
                 .WhenCalled(invocation => menu = invocation.Arguments[0] as Menu);
 
-            contentRepository.Expect(cr => cr.SubmitChanges());
-
             TestUpdateAction(contentId, form);
 
             Assert.That(menu, Is.Not.Null, "textContent is null");
             Assert.That(menuId, Is.EqualTo(menuId));
             Assert.That(menu.Name, Is.EqualTo(form["name"]));
 
-            contentRepository.VerifyAllExpectations();
+            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
         }
 
         private static FormCollection CreateContentEditForm(int menuId)
@@ -235,12 +227,11 @@ namespace Suteki.Shop.Tests.Controllers
                 Text = "old text"
             };
 
-            contentRepository.Expect(cr => cr.GetById(contentId)).Return(content);
-            contentRepository.Expect(cr => cr.SubmitChanges());
+            contentRepository.Stub(cr => cr.GetById(contentId)).Return(content);
 
             TestUpdateAction(contentId, form);
 
-            contentRepository.VerifyAllExpectations();
+            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
         }
 
         [Test]
