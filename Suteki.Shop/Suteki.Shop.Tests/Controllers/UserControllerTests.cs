@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
+using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.ViewData;
@@ -83,29 +84,20 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldShowAListOfUsers()
         {
-            var result = userController.Index() as ViewResult;
-
-            // should show view Index
-            Assert.AreEqual("Index", result.ViewName);
-
-            // ViewData should be UserViewData
-            var viewData = result.ViewData.Model as ShopViewData;
-            Assert.IsNotNull(viewData, "ViewData is not ShopViewData");
-
-            // there should be some users
-            Assert.IsNotNull(viewData.Users, "ViewData.Users is null");
-
-            // there should be three users
-            Assert.AreEqual(3, viewData.Users.Count(), "ViewData.Users.Count() is not equal to 3");
+            userController.Index()
+                .ReturnsViewResult()
+                .ForView("Index")
+                .WithModel<ShopViewData>()
+                .AssertNotNull(vd => vd.Users)
+                .AssertAreEqual(3, vd => vd.Users.Count());
         }
 
         [Test]
         public void New_ShouldDisplayUserEditView()
         {
-            var result = userController.New() as ViewResult;
-
-            // should show Edit view
-            Assert.AreEqual("Edit", result.ViewName);
+            var result = userController.New()
+                .ReturnsViewResult()
+                .ForView("Edit");
 
             AssertUserEditViewDataIsCorrect(result);
         }
@@ -119,7 +111,7 @@ namespace Suteki.Shop.Tests.Controllers
             const bool isEnabled = false;
 
             // set up the request form
-            var form = new NameValueCollection
+            var form = new FormCollection
             {
                 {"userId", "0"},
                 {"email", email},
@@ -128,8 +120,6 @@ namespace Suteki.Shop.Tests.Controllers
                 {"isenabled", "false"}
             };
 
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
-
             // setup expectations on the userRepository
             User user = null;
 
@@ -137,7 +127,8 @@ namespace Suteki.Shop.Tests.Controllers
                 .Callback<User>(u => { user = u; return false; });
 
             // call Update
-            var result = userController.Update(0) as ViewResult;
+            var result = userController.Update(0, form)
+                .ReturnsViewResult();
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
@@ -161,7 +152,7 @@ namespace Suteki.Shop.Tests.Controllers
             const bool isEnabled = false;
 
             // set up the request form
-            var form = new NameValueCollection
+            var form = new FormCollection
             {
                 {"userId", userId.ToString()},
                 {"email", email},
@@ -169,8 +160,6 @@ namespace Suteki.Shop.Tests.Controllers
                 {"roleid", roleId.ToString()},
                 {"isenabled", isEnabled.ToString()}
             };
-
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
 
             // setup expectations on the userRepository
             var user = new User
@@ -185,7 +174,7 @@ namespace Suteki.Shop.Tests.Controllers
             userRepository.Expect(ur => ur.GetById(userId)).Return(user);
 
             // call Update
-            var result = userController.Update(userId) as ViewResult;
+            var result = userController.Update(userId, form) as ViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");

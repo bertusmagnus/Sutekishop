@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Specialized;
+using System.Web.Mvc;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
 using Suteki.Shop.ViewData;
@@ -38,13 +39,13 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithUser(user));
         }
 
-        public ActionResult Update(int userid)
+        public ActionResult Update(int userid, FormCollection form)
         {
             var user = userid == 0 ? 
                 new User() : 
                 userRepository.GetById(userid);
 
-            UpdateFromForm(user);
+            UpdateFromForm(user, form);
 
             try
             {
@@ -69,13 +70,14 @@ namespace Suteki.Shop.Controllers
         /// Have to provide custom update functionality because of the quirks of having a password
         /// </summary>
         /// <param name="user"></param>
-        private void UpdateFromForm(User user)
+        /// <param name="form"></param>
+        private void UpdateFromForm(User user, NameValueCollection form)
         {
-            user.Email = this.ReadFromRequest("email");
-            user.RoleId = int.Parse(this.ReadFromRequest("roleid"));
-            user.IsEnabled = (this.ReadFromRequest("isenabled") == "true,false");
+            user.Email = form["email"];
+            user.RoleId = int.Parse(form["roleid"]);
+            user.IsEnabled = (form["isenabled"] == "true,false");
 
-            string password = this.ReadFromRequest("password");
+            string password = form["password"];
             
             if (!string.IsNullOrEmpty(password))
             {
