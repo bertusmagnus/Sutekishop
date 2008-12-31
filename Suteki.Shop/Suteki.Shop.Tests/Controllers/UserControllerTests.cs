@@ -3,7 +3,6 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 using System.Web.Mvc;
-using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
@@ -25,15 +24,18 @@ namespace Suteki.Shop.Tests.Controllers
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] {"Administrator"});
 
             userRepository = MockRepositoryBuilder.CreateUserRepository();
-            Mock<Repository<Role>> roleRepositoryMock = MockRepositoryBuilder.CreateRoleRepository();
+            
+            var roleRepository = MockRepositoryBuilder.CreateRoleRepository();
 
-            userControllerMock = new Mock<UserController>(userRepository, roleRepositoryMock.Object);
-            userController = userControllerMock.Object;
+            var mocks = new MockRepository();
+            userController = mocks.PartialMock<UserController>(userRepository, roleRepository);
+            mocks.ReplayAll();
+
             testContext = new ControllerTestContext(userController);
 
             // don't worry about encrypting passwords here, just stub out this call so that it has no effect
             // on the user
-            userControllerMock.Expect(c => c.EncryptPassword(It.IsAny<User>()));
+            userController.Expect(c => c.EncryptPassword(Arg<User>.Is.Anything));
 
             // setup the querystring to return an empty name value collection by default
             testContext.TestContext.Request.Expect(r => r.QueryString).Return(new NameValueCollection());
@@ -42,7 +44,6 @@ namespace Suteki.Shop.Tests.Controllers
         #endregion
 
         private UserController userController;
-        private Mock<UserController> userControllerMock;
         private ControllerTestContext testContext;
 
         private IRepository<User> userRepository;
@@ -133,7 +134,7 @@ namespace Suteki.Shop.Tests.Controllers
             // setup expectations on the userRepository
             User user = null;
 
-            userRepository.Expect(ur => ur.InsertOnSubmit(It.IsAny<User>()))
+            userRepository.Expect(ur => ur.InsertOnSubmit(Arg<User>.Is.Anything))
                 .Callback<User>(u => { user = u; return false; });
 
             userRepository.Expect(ur => ur.SubmitChanges());

@@ -4,11 +4,11 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web.Mvc;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.Models;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -24,7 +24,7 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the report controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
-            orderRepository = new Mock<IRepository<Order>>().Object;
+            orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
 
             reportController = new ReportController(orderRepository);
         }
@@ -46,7 +46,7 @@ namespace Suteki.Shop.Tests.Controllers
                                                OrderTests.Create450GramOrder()
                                            }.AsQueryable();
 
-            Mock.Get(orderRepository).Expect(or => or.GetAll()).Returns(orders);
+            orderRepository.Expect(or => or.GetAll()).Return(orders);
 
             ContentResult result = reportController.Orders()
                 .ReturnsContentResult();

@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Web.Mvc;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.ViewData;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -20,12 +20,12 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            categoryRepository = new Mock<IRepository<Category>>().Object;
-            sizeRepository = new Mock<IRepository<Size>>().Object;
+            categoryRepository = MockRepository.GenerateStub<IRepository<Category>>();
+            sizeRepository = MockRepository.GenerateStub<IRepository<Size>>();
 
-            stockController = new Mock<StockController>(
+            stockController = new StockController(
                 categoryRepository,
-                sizeRepository).Object;
+                sizeRepository);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             var root = BuildCategories();
 
-            Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
+            categoryRepository.Expect(cr => cr.GetById(1)).Return(root);
 
             stockController.Index()
                 .ReturnsViewResult()
@@ -60,11 +60,11 @@ namespace Suteki.Shop.Tests.Controllers
 
             var sizes = CreateSizes();
 
-            Mock.Get(sizeRepository).Expect(s => s.GetAll()).Returns(sizes);
-            Mock.Get(sizeRepository).Expect(s => s.SubmitChanges());
+            sizeRepository.Expect(s => s.GetAll()).Return(sizes);
+            sizeRepository.Expect(s => s.SubmitChanges());
 
             var root = BuildCategories();
-            Mock.Get(categoryRepository).Expect(cr => cr.GetById(1)).Returns(root);
+            categoryRepository.Expect(cr => cr.GetById(1)).Return(root);
 
             stockController.Update(form)
                 .ReturnsViewResult()

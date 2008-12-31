@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -21,13 +21,13 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            productRepository = new Mock<IRepository<Product>>().Object;
-            contentRepository = new Mock<IRepository<Content>>().Object;
-            userService = new Mock<IUserService>().Object;
+            productRepository = MockRepository.GenerateStub<IRepository<Product>>();
+            contentRepository = MockRepository.GenerateStub<IRepository<Content>>();
+            userService = MockRepository.GenerateStub<IUserService>();
 
             siteMapController = new SiteMapController(productRepository, contentRepository, userService);
 
-            Mock.Get(userService).ExpectGet(c => c.CurrentUser).Returns(new User());
+            userService.Expect(c => c.CurrentUser).Return(new User());
 
         }
 
@@ -37,8 +37,8 @@ namespace Suteki.Shop.Tests.Controllers
             var products = new List<Product>().AsQueryable();
             var contents = new List<Content>().AsQueryable();
 
-            Mock.Get(productRepository).Expect(pr => pr.GetAll()).Returns(products);
-            Mock.Get(contentRepository).Expect(cr => cr.GetAll()).Returns(contents);
+            productRepository.Expect(pr => pr.GetAll()).Return(products);
+            contentRepository.Expect(cr => cr.GetAll()).Return(contents);
 
             siteMapController.Index()
                 .ReturnsViewResult()

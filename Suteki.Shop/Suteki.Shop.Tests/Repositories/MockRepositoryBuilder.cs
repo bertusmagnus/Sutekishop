@@ -30,10 +30,9 @@ namespace Suteki.Shop.Tests.Repositories
             return userRepositoryMock;
         }
 
-        public static Mock<Repository<Role>> CreateRoleRepository()
+        public static IRepository<Role> CreateRoleRepository()
         {
-            var dataContextProviderMock = new Mock<IDataContextProvider>();
-            var roleRepositoryMock = new Mock<Repository<Role>>(dataContextProviderMock.Object);
+            var roleRepositoryMock = MockRepository.GenerateStub<IRepository<Role>>();
 
             var roles = new List<Role>
             {
@@ -43,7 +42,7 @@ namespace Suteki.Shop.Tests.Repositories
                 new Role { RoleId = 4, Name = "Guest" }
             };
 
-            roleRepositoryMock.Expect(r => r.GetAll()).Returns(() => roles.AsQueryable());
+            roleRepositoryMock.Expect(r => r.GetAll()).Return(roles.AsQueryable());
 
             return roleRepositoryMock;
         }
