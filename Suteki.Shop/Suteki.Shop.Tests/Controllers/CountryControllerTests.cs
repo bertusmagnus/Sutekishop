@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
-using Moq;
 using Suteki.Common.Repositories;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
-using Castle.MicroKernel;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.Principal;
+using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -25,7 +23,7 @@ namespace Suteki.Shop.Tests.Controllers
             // you have to be an administrator to access the user controller
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new string[] { "Administrator" });
 
-            countryRepository = new Mock<IRepository<Country>>().Object;
+            countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
 
             countryController = new CountryController();
             countryController.Repository = countryRepository;
@@ -34,7 +32,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void GetLookupLists_ShouldGetPostZones()
         {
-            var repositoryResolver = new Mock<IRepositoryResolver>().Object;
+            var repositoryResolver = MockRepository.GenerateStub<IRepositoryResolver>();
             countryController.repositoryResolver = repositoryResolver;
 
             // create a list of post zones
@@ -44,9 +42,9 @@ namespace Suteki.Shop.Tests.Controllers
             }.AsQueryable();
 
             // setup expectations
-            var postZoneRepository = new Mock<IRepository>().Object;
-            Mock.Get(repositoryResolver).Expect(k => k.GetRepository(typeof(PostZone))).Returns(postZoneRepository);
-            Mock.Get(postZoneRepository).Expect(pzr => pzr.GetAll()).Returns(postZones);
+            var postZoneRepository = MockRepository.GenerateStub<IRepository>();
+            repositoryResolver.Expect(k => k.GetRepository(typeof(PostZone))).Return(postZoneRepository);
+            postZoneRepository.Expect(pzr => pzr.GetAll()).Return(postZones);
 
             // now exercise the method
             var viewData = new ScaffoldViewData<Country>();
