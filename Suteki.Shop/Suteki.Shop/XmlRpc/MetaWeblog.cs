@@ -178,60 +178,6 @@ namespace Suteki.Shop.XmlRpc
 
             return false;
 
-            //Entry entry = Entries.GetEntry(Int32.Parse(postid), PostConfig.None, true);
-            //if (entry != null)
-            //{
-            //    entry.Author = info.Author;
-            //    entry.Email = info.Email;
-            //    entry.Body = post.description;
-            //    entry.Title = post.title;
-            //    entry.Description = string.Empty;
-
-            //    entry.Categories.Clear();
-            //    if (post.categories != null)
-            //        entry.Categories.AddRange(post.categories);
-
-            //    entry.PostType = PostType.BlogPost;
-            //    entry.IsActive = publish;
-
-            //    entry.DateModified = Config.CurrentBlog.TimeZone.Now;
-            //    int[] categoryIds = { };
-            //    if (entry.Categories.Count > 0)
-            //    {
-            //        categoryIds = Entries.GetCategoryIdsFromCategoryTitles(entry);
-            //    }
-            //    Entries.Update(entry);
-            //    Entries.SetEntryCategoryList(entry.Id, categoryIds);
-
-            //    if (entry.Enclosure == null)
-            //    {
-            //        if (!string.IsNullOrEmpty(post.enclosure.url))
-            //        {
-            //            Components.Enclosure enc = new Components.Enclosure();
-            //            enc.Url = post.enclosure.url;
-            //            enc.MimeType = post.enclosure.type;
-            //            enc.Size = post.enclosure.length;
-            //            enc.EntryId = entry.Id;
-            //            Enclosures.Create(enc);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (!string.IsNullOrEmpty(post.enclosure.url))
-            //        {
-            //            Components.Enclosure enc = entry.Enclosure;
-            //            enc.Url = post.enclosure.url;
-            //            enc.MimeType = post.enclosure.type;
-            //            enc.Size = post.enclosure.length;
-            //            Enclosures.Update(enc);
-            //        }
-            //        else
-            //        {
-            //            Enclosures.Delete(entry.Enclosure.Id);
-            //        }
-            //    }
-            //}
-            //return false;
         }
 
         public Post getPost(string postid, string username, string password)
@@ -260,24 +206,9 @@ namespace Suteki.Shop.XmlRpc
                 categories = new string[0]
             };
 
-            //Framework.BlogInfo info = Config.CurrentBlog;
-            //ValidateUser(username, password, info.AllowServiceAccess);
-
-            //Entry entry = Entries.GetEntry(Int32.Parse(postid), PostConfig.None, true);
-            //Post post = new Post();
-            //post.link = entry.Url;
-            //post.description = entry.Body;
-            //post.dateCreated = entry.DateCreated;
-            //post.postid = entry.Id;
-            //post.title = entry.Title;
-            //post.permalink = entry.FullyQualifiedUrl.ToString();
-            //post.categories = new string[entry.Categories.Count];
-            //entry.Categories.CopyTo(post.categories, 0);
-
-            //return post;
         }
 
-        private string GetPostUrl(Content content)
+        private string GetPostUrl(IUrlNamed content)
         {
             return "{0}cms/{1}".With(baseControllerService.SiteUrl, content.UrlName);
         }
@@ -303,65 +234,10 @@ namespace Suteki.Shop.XmlRpc
 
             return posts.ToArray();
 
-            //ICollection<Entry> ec = Entries.GetRecentPosts(numberOfPosts, PostType.BlogPost, PostConfig.IsActive, true);
-            ////int i = 0;
-            //int count = ec.Count;
-            //Post[] posts = new Post[count];
-
-            //int i = 0;
-            //foreach (Entry entry in ec)
-            //{
-            //    Post post = new Post();
-            //    post.dateCreated = entry.DateCreated;
-            //    post.description = entry.Body;
-            //    post.link = entry.Url;
-            //    post.permalink = entry.FullyQualifiedUrl.ToString();
-            //    post.title = entry.Title;
-            //    post.postid = entry.Id.ToString(CultureInfo.InvariantCulture);
-            //    post.userid = entry.Body.GetHashCode().ToString(CultureInfo.InvariantCulture);
-            //    if (entry.Categories != null && entry.Categories.Count > 0)
-            //    {
-            //        post.categories = new string[entry.Categories.Count];
-            //        entry.Categories.CopyTo(post.categories, 0);
-            //    }
-            //    if (entry.Enclosure != null)
-            //    {
-            //        post.enclosure.length = (int)entry.Enclosure.Size;
-            //        post.enclosure.url = entry.Enclosure.Url;
-            //        post.enclosure.type = entry.Enclosure.MimeType;
-            //    }
-            //    posts[i] = post;
-            //    i++;
-            //}
-            //return posts;
         }
 
         public CategoryInfo[] getCategories(string blogid, string username, string password)
         {
-            //Framework.BlogInfo info = Config.CurrentBlog;
-            //ValidateUser(username, password, info.AllowServiceAccess);
-
-            //ICollection<LinkCategory> lcc = Links.GetCategories(CategoryType.PostCollection, ActiveFilter.None);
-            //if (lcc == null)
-            //{
-            //    throw new XmlRpcFaultException(0, "No categories exist");
-            //}
-            //CategoryInfo[] categories = new CategoryInfo[lcc.Count];
-            //int i = 0;
-            //foreach (LinkCategory linkCategory in lcc)
-            //{
-            //    CategoryInfo category = new CategoryInfo();
-            //    category.categoryid = linkCategory.Id.ToString(CultureInfo.InvariantCulture);
-            //    category.title = linkCategory.Title;
-            //    category.htmlUrl = info.RootUrl + "Category/" + linkCategory.Id.ToString(CultureInfo.InvariantCulture) + ".aspx";
-            //    category.rssUrl = info.RootUrl + "rss.aspx?catid=" + linkCategory.Id.ToString(CultureInfo.InvariantCulture);
-            //    category.description = linkCategory.Title;
-
-            //    categories[i] = category;
-            //    i++;
-            //}
-            //return categories;
-
             return new CategoryInfo[0];
         }
 
@@ -381,7 +257,7 @@ namespace Suteki.Shop.XmlRpc
 
             ValidateUser(username, password);
 
-            TextContent content = new TextContent
+            var content = new TextContent
             {
                 ParentContentId = 1,
                 Position = contentOrderableService.NextPosition,
@@ -394,87 +270,8 @@ namespace Suteki.Shop.XmlRpc
             contentRepository.InsertOnSubmit(content);
             contentRepository.SubmitChanges();
 
-            //Entry entry = new Entry(PostType.BlogPost);
-            //entry.Author = info.Author;
-            //entry.Email = info.Email;
-            //entry.Body = post.description;
-            //entry.Title = post.title;
-            //entry.Description = string.Empty;
-
-            ////TODO: Figure out why this is here.
-            ////		Probably means the poster forgot to set the date.
-            //if (post.dateCreated.Year >= 2003)
-            //{
-            //    entry.DateCreated = post.dateCreated;
-            //    entry.DateModified = post.dateCreated;
-            //}
-            //else
-            //{
-            //    entry.DateCreated = Config.CurrentBlog.TimeZone.Now;
-            //    entry.DateModified = entry.DateCreated;
-            //}
-
-            //if (post.categories != null)
-            //{
-            //    entry.Categories.AddRange(post.categories);
-            //}
-
-            //entry.PostType = PostType.BlogPost;
-
-            //entry.IsActive = publish;
-            //entry.AllowComments = true;
-            //entry.DisplayOnHomePage = true;
-            //entry.IncludeInMainSyndication = true;
-            //entry.IsAggregated = true;
-            //entry.SyndicateDescriptionOnly = false;
-
-            //int postID;
-            //try
-            //{
-            //    postID = Entries.Create(entry);
-
-            //    if (!string.IsNullOrEmpty(post.enclosure.url))
-            //    {
-            //        Components.Enclosure enc = new Components.Enclosure();
-            //        enc.Url = post.enclosure.url;
-            //        enc.MimeType = post.enclosure.type;
-            //        enc.Size = post.enclosure.length;
-            //        enc.EntryId = postID;
-            //        Enclosures.Create(enc);
-            //    }
-
-            //    AddCommunityCredits(entry);
-            //}
-            //catch (Exception e)
-            //{
-            //    throw new XmlRpcFaultException(0, e.Message + " " + e.StackTrace);
-            //}
-            //if (postID < 0)
-            //{
-            //    throw new XmlRpcFaultException(0, "The post could not be added");
-            //}
-            //return postID.ToString(CultureInfo.InvariantCulture);
-
             return content.ContentId.ToString();
         }
-
-        //private void AddCommunityCredits(Entry entry)
-        //{
-        //    string result = string.Empty;
-
-        //    try
-        //    {
-        //        CommunityCreditNotification.AddCommunityCredits(entry);
-        //    }
-        //    catch (CommunityCreditNotificationException ex)
-        //    {
-        //        Log.WarnFormat("Community Credit ws returned the following response while notifying for the url {0}: {1}", entry.FullyQualifiedUrl.ToString(), ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error("Error while connecting to the Community Credit webservice", ex);
-        //    }
-        //}
 
         public mediaObjectInfo newMediaObject(object blogid, string username, string password, mediaObject mediaobject)
         {
@@ -487,15 +284,15 @@ namespace Suteki.Shop.XmlRpc
                 //We don't validate the file because newMediaObject allows file to be overwritten
                 //But we do check the directory and create if necessary
                 //The media object's name can have extra folders appended so we check for this here too.
-                string path = imageFileService.GetFullPath(mediaobject.name.Replace("/", "\\"));
+                var path = imageFileService.GetFullPath(mediaobject.name.Replace("/", "\\"));
 
                 if (!Directory.Exists(Path.GetDirectoryName(path)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                 }
 
-                using (FileStream fileStream = new FileStream(path, FileMode.Create))
-                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                using (var binaryWriter = new BinaryWriter(fileStream))
                 {
                     binaryWriter.Write(mediaobject.bits);
                 }
