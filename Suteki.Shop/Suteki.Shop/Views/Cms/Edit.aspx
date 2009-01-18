@@ -8,7 +8,7 @@
 <%= Html.MessageBox(ViewData.Model)%>
 <%= Html.ErrorBox(ViewData.Model)%>
 
-<% using (Html.BeginForm("Update", "Cms"))
+<% using (Html.BeginForm<CmsController>(c => c.Update(ViewData.Model.Content.ContentId, null)))
    { %>
 
     <%= Html.Hidden("contenttypeid", ViewData.Model.Content.ContentTypeId.ToString())%>
