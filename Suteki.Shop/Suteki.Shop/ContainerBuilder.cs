@@ -28,6 +28,10 @@ namespace Suteki.Shop
 				.FromAssembly(Assembly.GetExecutingAssembly())
 				.Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
 
+			container.Register(
+				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>()
+			);
+
 			return container;
 		}
 	}

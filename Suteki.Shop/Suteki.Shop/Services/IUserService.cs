@@ -7,5 +7,6 @@
         void SetAuthenticationCookie(string email);
         void SetContextUserTo(User user);
         void RemoveAuthenticationCookie();
+    	string HashPassword(string password);
     }
 }

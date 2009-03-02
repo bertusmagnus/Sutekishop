@@ -180,6 +180,7 @@
     <Compile Include="Services\HttpFileService.cs" />
     <Compile Include="Services\IBaseControllerService.cs" />
     <Compile Include="Services\IEncryptionService.cs" />
+    <Compile Include="Services\IFormsAuthentication.cs" />
     <Compile Include="Services\IHttpFileService.cs" />
     <Compile Include="Services\IImageFileService.cs" />
     <Compile Include="Services\IImageService.cs" />
@@ -525,6 +526,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Filters\" />
     <Folder Include="ProductPhotos\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

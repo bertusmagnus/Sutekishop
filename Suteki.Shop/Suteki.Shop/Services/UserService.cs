@@ -8,13 +8,15 @@ namespace Suteki.Shop.Services
     public class UserService : IUserService
     {
         readonly IRepository<User> userRepository;
+		readonly IFormsAuthentication formsAuth;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<User> userRepository, IFormsAuthentication formsAuth)
         {
-            this.userRepository = userRepository;
+        	this.userRepository = userRepository;
+        	this.formsAuth = formsAuth;
         }
 
-        public User CreateNewCustomer()
+    	public User CreateNewCustomer()
         {
             var user = new User
             {
@@ -41,7 +43,7 @@ namespace Suteki.Shop.Services
 
         public virtual void SetAuthenticationCookie(string email)
         {
-            FormsAuthentication.SetAuthCookie(email, true);
+        	formsAuth.SetAuthCookie(email, true);
         }
 
         public virtual void SetContextUserTo(User user)
@@ -51,8 +53,12 @@ namespace Suteki.Shop.Services
 
         public virtual void RemoveAuthenticationCookie()
         {
-            FormsAuthentication.SignOut();
+			formsAuth.SignOut();
         }
 
+    	public string HashPassword(string password)
+    	{
+    		return formsAuth.HashPasswordForStoringInConfigFile(password);
+    	}
     }
 }

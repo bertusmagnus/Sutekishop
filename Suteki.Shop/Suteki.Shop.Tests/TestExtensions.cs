@@ -9,5 +9,11 @@ namespace Suteki.Shop.Tests
 			Assert.IsNotNull(obj);
 			return obj;
 		}
+
+		public static T ShouldEqual<T>(this T actual, object expected)
+		{
+			Assert.AreEqual(expected, actual);
+			return actual;
+		}
 	}
 }

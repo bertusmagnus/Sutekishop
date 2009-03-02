@@ -10,12 +10,14 @@ namespace Suteki.Shop.Tests.Services
     {
         IUserService userService;
         IRepository<User> userRepository;
+    	IFormsAuthentication formsAuthentication;
 
-        [SetUp]
+    	[SetUp]
         public void SetUp()
         {
             userRepository = MockRepository.GenerateStub<IRepository<User>>();
-            userService = new UserService(userRepository);
+        	formsAuthentication = MockRepository.GenerateStub<IFormsAuthentication>();
+            userService = new UserService(userRepository, formsAuthentication);
         }
 
         [Test]
@@ -29,5 +31,26 @@ namespace Suteki.Shop.Tests.Services
             Assert.IsNotNull(user, "returned user is null");
             Assert.IsTrue(user.IsCustomer, "returned user is not a customer");
         }
+
+    	[Test]
+    	public void HashPassword_should_delegate_to_formsAuthentication()
+    	{
+    		formsAuthentication.Expect(x => x.HashPasswordForStoringInConfigFile("foo")).Return("bar");
+    		userService.HashPassword("foo").ShouldEqual("bar");
+    	}
+
+    	[Test]
+    	public void RemoveAuthenticationCookie_should_delegate_to_formsAuthentication()
+    	{
+    		userService.RemoveAuthenticationCookie();
+			formsAuthentication.AssertWasCalled(x => x.SignOut());
+    	}
+
+    	[Test]
+    	public void SetAuthenticationCookie_should_delegate_to_formsAuthentication()
+    	{
+    		userService.SetAuthenticationCookie("foo@foo.com");
+			formsAuthentication.AssertWasCalled(x => x.SetAuthCookie("foo@foo.com", true));
+    	}
     }
 }

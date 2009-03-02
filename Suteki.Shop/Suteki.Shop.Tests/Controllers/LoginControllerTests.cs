@@ -18,12 +18,15 @@ namespace Suteki.Shop.Tests.Controllers
 
         private LoginController loginController;
 
-        [SetUp]
+    	private const string henry1password = "6C80B78681161C8349552872CFA0739CF823E87B";
+    	private const string george1password = "DC25F9DC0DF2BE9E6A83E6F0B26F4B41F57ADF6D";
+    	private const string sky1pasword = "980BC222DA7FDD0D37BE816D60084894124509A1";
+
+    	[SetUp]
         public void SetUp()
         {
             userRepository = MockRepositoryBuilder.CreateUserRepository();
             userService = MockRepository.GenerateStub<IUserService>();
-
             loginController = new LoginController(userRepository, userService);
         }
 
@@ -40,9 +43,11 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Authenticate_ShouldAuthenticateValidUser()
         {
-            const string email = "Henry@suteki.co.uk";
+			const string email = "Henry@suteki.co.uk";
             const string password = "henry1";
 
+        	userService.Expect(x => x.HashPassword(password)).Return(henry1password);
+            
             loginController.Authenticate(email, password)
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
@@ -77,14 +82,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .ToController("Home");
 
             userService.AssertWasCalled(c => c.RemoveAuthenticationCookie());
-        }
-
-        [Test, Explicit]
-        public void EncryptPasswordSpike()
-        {
-            Console.WriteLine(loginController.EncryptPassword("henry1"));   // 6C80B78681161C8349552872CFA0739CF823E87B
-            Console.WriteLine(loginController.EncryptPassword("george1"));  // DC25F9DC0DF2BE9E6A83E6F0B26F4B41F57ADF6D
-            Console.WriteLine(loginController.EncryptPassword("sky1"));     // 980BC222DA7FDD0D37BE816D60084894124509A1
         }
     }
 }

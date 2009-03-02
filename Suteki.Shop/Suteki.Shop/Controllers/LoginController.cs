@@ -15,7 +15,7 @@ namespace Suteki.Shop.Controllers
         public LoginController(IRepository<User> userRepository, IUserService userService)
         {
             this.userRepository = userRepository;
-            this.userService = userService;
+        	this.userService = userService;
         }
 
         public ActionResult Index()
@@ -25,7 +25,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Authenticate(string email, string password)
         {
-            if (userRepository.GetAll().ContainsUser(email, EncryptPassword(password)))
+			if (userRepository.GetAll().ContainsUser(email, userService.HashPassword(password)))
             {
                 userService.SetAuthenticationCookie(email);
                 return RedirectToAction("Index", "Home");
@@ -38,12 +38,6 @@ namespace Suteki.Shop.Controllers
         {
             userService.RemoveAuthenticationCookie();
             return RedirectToAction("Index", "Home");
-        }
-
-        [NonAction]
-        public virtual string EncryptPassword(string password)
-        {
-            return FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
         }
     }
 }
