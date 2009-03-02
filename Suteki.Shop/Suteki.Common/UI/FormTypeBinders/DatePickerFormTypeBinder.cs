@@ -13,8 +13,8 @@ namespace Suteki.Common.UI.FormTypeBinders
             {
                 context.RenderTableBeginRow();
 
-                context.Html.WriteLine(context.HtmlHelper.TextBox(context.Property.HtmlId(), ((DateTime)context.Property.GetValue(context.Entity, null)).ToShortDateString()));
-                context.Html.WriteLine(context.HtmlHelper.ValidationMessage(context.Property.HtmlId()));
+                context.Html.WriteLine(context.HtmlHelper.TextBox(context.Property.HtmlName(), ((DateTime)context.Property.GetValue(context.Entity, null)).ToShortDateString()));
+                context.Html.WriteLine(context.HtmlHelper.ValidationMessage(context.Property.HtmlName()));
 
                 RenderDatePicker(context.Html, context.Property.HtmlId());
 

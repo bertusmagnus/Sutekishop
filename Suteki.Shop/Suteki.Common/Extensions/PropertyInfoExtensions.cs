@@ -55,9 +55,14 @@ namespace Suteki.Common.Extensions
             return typeof (IEntity).IsAssignableFrom(propertyInfo.PropertyType);
         }
 
+		public static string HtmlName(this PropertyInfo propertyInfo)
+		{
+			return propertyInfo.IsEntity() ? propertyInfo.Name + ".Id" : propertyInfo.Name;
+		}
+
         public static string HtmlId(this PropertyInfo propertyInfo)
         {
-            return propertyInfo.IsEntity() ? propertyInfo.Name + ".Id" : propertyInfo.Name;
+            return propertyInfo.IsEntity() ? propertyInfo.Name + System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement  + "Id" : propertyInfo.Name;
         }
 
         public static bool AllowNull(this PropertyInfo propertyInfo)

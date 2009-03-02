@@ -15,8 +15,8 @@ namespace Suteki.Common.UI.FormTypeBinders
                 {
                     context.RenderTableBeginRow();
                     var selectList = context.SelectListCollection[context.Property.Name];
-                    context.Html.WriteLine(context.HtmlHelper.DropDownList(context.Property.HtmlId(), selectList));
-                    context.Html.WriteLine(context.HtmlHelper.ValidationMessage(context.Property.HtmlId()));
+                    context.Html.WriteLine(context.HtmlHelper.DropDownList(context.Property.HtmlName(), selectList));
+                    context.Html.WriteLine(context.HtmlHelper.ValidationMessage(context.Property.HtmlName()));
                     context.RenderTableEndRow();
                 }
                 return true;

@@ -83,7 +83,7 @@ namespace Suteki.Common.Tests.UI
             HtmlHelper htmlHelper = MvcTestHelpers.CreateMockHtmlHelper();
 
             var result = htmlHelper.TextBox("thing.Id");
-            Assert.That(result, Is.EqualTo(@"<input id=""thing.Id"" name=""thing.Id"" type=""text"" value="""" />"));
+            Assert.That(result, Is.EqualTo(@"<input id=""thing_Id"" name=""thing.Id"" type=""text"" value="""" />"));
             //Console.WriteLine(result);
         }
 
@@ -139,9 +139,7 @@ namespace Suteki.Common.Tests.UI
 		
 		</td>
 	</tr><tr>
-		<td><label for=""IsActive"">Is Active</label></td><td><input id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" />
-<input name=""IsActive"" type=""hidden"" value=""false"" />
-
+		<td><label for=""IsActive"">Is Active</label></td><td><input id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" /><input name=""IsActive"" type=""hidden"" value=""false"" />
 		</td>
 	</tr><tr>
 		<td>&nbsp;</td><td><input id=""submit"" name=""submit"" type=""submit"" value=""OK"" />
@@ -160,9 +158,7 @@ namespace Suteki.Common.Tests.UI
 		
 		</td>
 	</tr><tr>
-		<td><label for=""IsActive"">Is Active</label></td><td><input checked=""checked"" id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" />
-<input name=""IsActive"" type=""hidden"" value=""false"" />
-
+		<td><label for=""IsActive"">Is Active</label></td><td><input checked=""checked"" id=""IsActive"" name=""IsActive"" type=""checkbox"" value=""true"" /><input name=""IsActive"" type=""hidden"" value=""false"" />
 		</td>
 	</tr><tr>
 		<td>&nbsp;</td><td><input id=""submit"" name=""submit"" type=""submit"" value=""OK"" />
@@ -173,7 +169,7 @@ namespace Suteki.Common.Tests.UI
         private const string expectedHtml3 =
 @"<table>
 	<tr>
-		<td><label for=""TestCriteria.Id"">Test Criteria</label></td><td><select id=""TestCriteria.Id"" name=""TestCriteria.Id""><option value=""1"">one</option>
+		<td><label for=""TestCriteria_Id"">Test Criteria</label></td><td><select id=""TestCriteria_Id"" name=""TestCriteria.Id""><option value=""1"">one</option>
 <option selected=""selected"" value=""2"">two</option>
 <option value=""3"">three</option>
 </select>
@@ -194,7 +190,7 @@ namespace Suteki.Common.Tests.UI
 </table>";
 
         private const string selectListHtml =
-@"<select id=""thing.Id"" name=""thing.Id""><option>one</option>
+@"<select id=""thing_Id"" name=""thing.Id""><option>one</option>
 <option>two</option>
 <option>three</option>
 <option>four</option>

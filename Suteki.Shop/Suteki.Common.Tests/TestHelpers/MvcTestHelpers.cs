@@ -46,7 +46,7 @@ namespace Suteki.Common.Tests.TestHelpers
 
             var viewDataDictionary = new ViewDataDictionary();
 
-            var viewContext = new ViewContext(new ControllerContext(httpContext, routeData, controller), view, viewDataDictionary, null);
+            var viewContext = new ViewContext(new ControllerContext(httpContext, routeData, controller), view, viewDataDictionary, new TempDataDictionary());
 
             var viewDataContainer = mocks.StrictMock<IViewDataContainer>();
             viewDataContainer.Expect(vdc => vdc.ViewData).Return(viewDataDictionary).Repeat.Any();
