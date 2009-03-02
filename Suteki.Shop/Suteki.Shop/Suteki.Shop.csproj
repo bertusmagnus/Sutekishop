@@ -542,7 +542,7 @@
 		<CallTarget Targets="CompileViews" />
   </Target>
 	<Target Name="CompileViews">
-		<AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+		<AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
 	</Target>
   <ProjectExtensions>
     <VisualStudio>
