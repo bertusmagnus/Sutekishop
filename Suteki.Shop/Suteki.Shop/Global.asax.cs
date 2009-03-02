@@ -1,32 +1,21 @@
 ﻿using System;
-using System.Reflection;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
 using MvcContrib.Castle;
 using Suteki.Common.Repositories;
-using Suteki.Shop.IoC;
 using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
-using Castle.MicroKernel.Registration;
 using System.Web.Security;
-using Suteki.Shop.Services;
 
 namespace Suteki.Shop
 {
     public class GlobalApplication : System.Web.HttpApplication, IContainerAccessor
     {
-        private static WindsorContainer container;
+        private static IWindsorContainer container;
 
-        public static IWindsorContainer Container
+        public IWindsorContainer Container
         {
             get { return container; }
-        }
-
-        IWindsorContainer IContainerAccessor.Container
-        {
-            get { return Container; }
         }
 
         protected void Application_Start(object sender, EventArgs e)
@@ -37,7 +26,7 @@ namespace Suteki.Shop
 
         protected void Application_End(object sender, EventArgs e)
         {
-            Container.Dispose();
+            container.Dispose();
         }
 
         /// <summary>
@@ -49,20 +38,7 @@ namespace Suteki.Shop
             if (container == null)
             {
                 // create a new Windsor Container
-                container = new WindsorContainer(new XmlInterpreter("Configuration\\Windsor.config"));
-
-                // register handler selectors
-                container.Kernel.AddHandlerSelector(new UrlBasedComponentSelector(
-                    typeof(IBaseControllerService),
-                    typeof(IImageFileService),
-                    typeof(IConnectionStringProvider)
-                    ));
-
-                // automatically register controllers
-                container.Register(AllTypes
-                    .Of<Controller>()
-                    .FromAssembly(Assembly.GetExecutingAssembly())
-                    .Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
+				container = ContainerBuilder.Build("Configuration\\Windsor.config"); 
 
                 // set the controller factory to the Windsor controller factory (in MVC Contrib)
                 System.Web.Mvc.ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
