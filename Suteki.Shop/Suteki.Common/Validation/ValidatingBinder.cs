@@ -114,9 +114,10 @@ namespace Suteki.Common.Validation
         /// <summary>
         /// IModelBinder.BindModel
         /// </summary>
+        /// <param name="controllerContext"></param>
         /// <param name="bindingContext"></param>
         /// <returns></returns>
-        public ModelBinderResult BindModel(ModelBindingContext bindingContext)
+        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             if (bindingContext == null)
             {
@@ -125,17 +126,17 @@ namespace Suteki.Common.Validation
 
             if (IsBasicType(bindingContext.ModelType))
             {
-                return new DefaultModelBinder().BindModel(bindingContext);
+                return new DefaultModelBinder().BindModel(controllerContext, bindingContext);
             }
 
             var instance = Activator.CreateInstance(bindingContext.ModelType);
-            var request = bindingContext.HttpContext.Request;
+            var request = controllerContext.HttpContext.Request;
 
             var form = request.RequestType == "POST" ? request.Form : request.QueryString;
 
             UpdateFrom(instance, form);
 
-            return new ModelBinderResult(instance);
+            return instance;
         }
     }
 }

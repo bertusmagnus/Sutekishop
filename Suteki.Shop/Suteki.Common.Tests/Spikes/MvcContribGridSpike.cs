@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
-using MvcContrib.UI.Html.Grid;
+using MvcContrib.UI.LegacyGrid;
 using NUnit.Framework;
 using Suteki.Common.Extensions;
 using Suteki.Common.HtmlHelpers;

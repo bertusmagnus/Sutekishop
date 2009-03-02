@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests
 {
@@ -11,19 +12,19 @@ namespace Suteki.Shop.Tests
             ViewContext = viewContext;
         }
 
-        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
-        {
-            throw new System.NotImplementedException();
-        }
+    	public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+    	{
+    		throw new NotImplementedException();
+    	}
 
-        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
-        {
-            throw new System.NotImplementedException();
-        }
+    	public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+    	{
+    		throw new NotImplementedException();
+    	}
 
-        public void ReleaseView(ControllerContext controllerContext, IView view)
-        {
-            throw new System.NotImplementedException();
-        }
+    	public void ReleaseView(ControllerContext controllerContext, IView view)
+    	{
+    		throw new NotImplementedException();
+    	}
     }
 }

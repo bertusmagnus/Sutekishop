@@ -2,7 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
-using MvcContrib.UI.Html.Grid;
+using MvcContrib.UI.LegacyGrid;
 
 namespace Suteki.Common.HtmlHelpers
 {

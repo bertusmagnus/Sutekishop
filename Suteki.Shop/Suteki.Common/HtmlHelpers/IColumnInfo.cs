@@ -1,5 +1,5 @@
 using System.Linq;
-using MvcContrib.UI.Html.Grid;
+using MvcContrib.UI.LegacyGrid;
 
 namespace Suteki.Common.HtmlHelpers
 {

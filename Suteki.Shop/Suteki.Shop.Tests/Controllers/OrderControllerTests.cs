@@ -130,8 +130,8 @@ namespace Suteki.Shop.Tests.Controllers
 
             // Assertions
             Assert.IsNotNull(result, "result is not a RedirectToRouteResult");
-            Assert.That(result.Values["action"], Is.EqualTo("Item"));
-            Assert.That(result.Values["id"], Is.EqualTo(order.OrderId));
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Item"));
+            Assert.That(result.RouteValues["id"], Is.EqualTo(order.OrderId));
 
             // Order
             Assert.AreEqual(10, order.OrderId, "OrderId is incorrect");

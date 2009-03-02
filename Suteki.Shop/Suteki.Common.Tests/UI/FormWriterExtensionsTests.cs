@@ -95,7 +95,7 @@ namespace Suteki.Common.Tests.UI
             var items = new[] {"one", "two", "three", "four"};
             var selectList = new SelectList(items);
 
-            var result = htmlHelper.DropDownList("", "thing.Id", selectList);
+            var result = htmlHelper.DropDownList("thing.Id", selectList);
             Assert.That(result, Is.EqualTo(selectListHtml));
             //Console.WriteLine(result);
         }

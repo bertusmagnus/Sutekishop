@@ -38,7 +38,7 @@ namespace Suteki.Common.HtmlHelpers
                         var idProperty = typeof (T).GetProperty(property.ForeignKeyIdField());
 
                         response.Write("<label for=\"{0}\">{1}</label>".With(property.Name, property.Name.Pretty()));
-                        response.Write(html.DropDownList("", property.ForeignKeyIdField(), 
+                        response.Write(html.DropDownList(property.ForeignKeyIdField(), 
                             new SelectList(
                                 viewData.GetLookupList(property.PropertyType), 
                                 property.PropertyType.GetPrimaryKey().Name, 

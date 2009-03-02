@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using MvcContrib.UI.Html.Grid;
+using MvcContrib.UI.LegacyGrid;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Common.HtmlHelpers

@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using MvcContrib.UI.LegacyGrid;
 using NUnit.Framework;
 using Suteki.Common.HtmlHelpers;
 using Suteki.Common.Tests.TestHelpers;
-using MvcContrib.UI.Html.Grid;
 
 namespace Suteki.Common.Tests.HtmlHelpers
 {

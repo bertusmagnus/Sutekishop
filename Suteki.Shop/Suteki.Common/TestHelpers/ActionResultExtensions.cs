@@ -59,15 +59,15 @@ namespace Suteki.Common.TestHelpers
 
         public static RedirectToRouteResult WithRouteValue(this RedirectToRouteResult result, string key, string value)
         {
-            if (result.Values[key] == null)
+            if (result.RouteValues[key] == null)
             {
                 throw new TestHelperException(string.Format("route value {0} is null", key));
             }
 
-            if (result.Values[key].ToString() != value)
+            if (result.RouteValues[key].ToString() != value)
             {
                 throw new TestHelperException(string.Format("redirect {0} is {1}, expected {2}",
-                    key, result.Values[key], value));
+                    key, result.RouteValues[key], value));
             }
             return result;
         }
