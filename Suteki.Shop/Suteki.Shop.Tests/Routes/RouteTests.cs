@@ -25,12 +25,6 @@ namespace Suteki.Shop.Tests.Routes
         }
 
         [Test]
-        public void DefaultShouldRouteToCms()
-        {
-            AssertRoutes(Routes, "~/Default.aspx", new { Controller = "Cms", Action = "Index", UrlName = "" });
-        }
-
-        [Test]
         public void DomainOnlyShouldRouteToHomeIndex()
         {
             AssertRoutes(Routes, "~/shop", new { Controller = "Home", Action = "Index", Id = "" });

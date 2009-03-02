@@ -30,10 +30,6 @@ namespace Suteki.Shop.Routes
                 new { controller = "Home", action = "Index", id = "" },
                 new { controller = @"[^\.]*" });
 
-            routes.MapRoute("DefaultAspx",
-                "Default.aspx",
-                new { controller = "Cms", action = "Index", urlName = "" });
-
             routes.MapRoute("Root",
                 "",
                 new { controller = "Cms", action = "Index", urlName = "" });
