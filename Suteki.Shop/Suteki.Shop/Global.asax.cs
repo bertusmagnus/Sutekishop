@@ -12,7 +12,7 @@ using Suteki.Shop.Repositories;
 using Castle.MicroKernel.Registration;
 using System.Web.Security;
 using Suteki.Shop.Services;
-TEST
+
 namespace Suteki.Shop
 {
     public class GlobalApplication : System.Web.HttpApplication, IContainerAccessor
