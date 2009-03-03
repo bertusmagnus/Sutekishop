@@ -48,7 +48,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         	userService.Expect(x => x.HashPassword(password)).Return(henry1password);
             
-            loginController.Authenticate(email, password)
+            loginController.Index(email, password)
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
@@ -66,7 +66,7 @@ namespace Suteki.Shop.Tests.Controllers
             userService.Expect(c => c.SetAuthenticationCookie(email))
                 .Throw(new Exception("SetAuthenticationToken shouldn't be called"));
 
-            loginController.Authenticate(email, password)
+            loginController.Index(email, password)
                 .ReturnsViewResult()
                 .ForView("Index")
                 .WithModel<IErrorViewData>()

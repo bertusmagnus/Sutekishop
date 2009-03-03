@@ -18,7 +18,7 @@
 <%
  }%>
 
-<!--
+<pre>
 
 <%= ViewData.Model.GetType().Name %>
 
@@ -49,6 +49,5 @@
 
 <% } %>
 
--->
-
+</pre>
 </asp:Content>

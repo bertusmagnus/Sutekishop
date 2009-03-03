@@ -1,12 +1,9 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Suteki.Shop.Views.Login.Index" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="ViewPage<ShopViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-
     <h1>Login</h1>
-
     <%= Html.ErrorBox(ViewData.Model)%>
 
-    <form method="post" action="<%= Url.Action("Authenticate", "Login").ToSslUrl() %>">
-
+	<% using(Html.BeginForm()) { %>
         <label for="username">Email</label>
         <%= Html.TextBox("email") %>
         
@@ -14,8 +11,5 @@
         <%= Html.Password("password") %>
 
         <%= Html.SubmitButton() %>
-
-    </form>
-
-
+	<% } %>
 </asp:Content>

@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
-using System.Web.Security;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 
@@ -23,7 +22,8 @@ namespace Suteki.Shop.Controllers
             return View("Index", ShopView.Data);
         }
 
-        public ActionResult Authenticate(string email, string password)
+		[AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Index(string email, string password)
         {
 			if (userRepository.GetAll().ContainsUser(email, userService.HashPassword(password)))
             {
