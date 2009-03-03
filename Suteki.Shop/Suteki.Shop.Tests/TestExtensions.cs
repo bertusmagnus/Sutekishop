@@ -26,5 +26,20 @@ namespace Suteki.Shop.Tests
 		{
 			Assert.IsInstanceOf<T>(actual);
 		}
+
+		public static void ShouldBeNull(this object actual)
+		{
+			Assert.IsNull(actual);
+		}
+
+		public static void ShouldBeTheSameAs(this object actual, object expected)
+		{
+			Assert.AreSame(expected, actual);
+		}
+
+		public static T CastTo<T>(this object source)
+		{
+			return (T)source;
+		}
 	}
 }

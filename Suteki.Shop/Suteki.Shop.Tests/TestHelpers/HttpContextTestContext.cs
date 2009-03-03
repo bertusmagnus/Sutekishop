@@ -3,6 +3,7 @@ using System.Web;
 
 namespace Suteki.Shop.Tests
 {
+	//TODO: Replace this with the TestControllerBuilder
     public class HttpContextTestContext
     {
         public HttpContextBase Context { get; private set; }
