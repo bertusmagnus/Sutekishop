@@ -68,7 +68,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             loginController.Index(email, password)
                 .ReturnsViewResult()
-                .ForView("Index")
+                .ForView("") //view should match action
                 .WithModel<IErrorViewData>()
                 .AssertAreEqual("Unknown email or password", vd => vd.ErrorMessage);
         }
