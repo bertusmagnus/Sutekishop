@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
@@ -8,6 +9,7 @@ using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Services;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.ViewData;
 
@@ -27,16 +29,12 @@ namespace Suteki.Shop.Tests.Controllers
             userRepository = MockRepositoryBuilder.CreateUserRepository();
             
             var roleRepository = MockRepositoryBuilder.CreateRoleRepository();
+        	userService = MockRepository.GenerateStub<IUserService>();
+        	userService.Stub(x => x.HashPassword(Arg<string>.Is.Anything)).Do(new Func<string, string>(s => s));
 
-            var mocks = new MockRepository();
-            userController = mocks.PartialMock<UserController>(userRepository, roleRepository);
-            mocks.ReplayAll();
-
+        	userController = new UserController(userRepository, roleRepository, userService);
             testContext = new ControllerTestContext(userController);
 
-            // don't worry about encrypting passwords here, just stub out this call so that it has no effect
-            // on the user
-            userController.Expect(c => c.EncryptPassword(Arg<User>.Is.Anything));
 
             // setup the querystring to return an empty name value collection by default
             testContext.TestContext.Request.Expect(r => r.QueryString).Return(new NameValueCollection());
@@ -48,6 +46,7 @@ namespace Suteki.Shop.Tests.Controllers
         private ControllerTestContext testContext;
 
         private IRepository<User> userRepository;
+    	private IUserService userService;
 
         private static void AssertUserEditViewDataIsCorrect(ViewResultBase result)
         {

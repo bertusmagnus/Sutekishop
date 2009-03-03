@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
+using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
@@ -14,11 +15,13 @@ namespace Suteki.Shop.Controllers
     {
         readonly IRepository<User> userRepository;
         readonly IRepository<Role> roleRepository;
+    	private readonly IUserService userService;
 
-        public UserController(IRepository<User> userRepository, IRepository<Role> roleRepository)
+    	public UserController(IRepository<User> userRepository, IRepository<Role> roleRepository, IUserService userService)
         {
             this.userRepository = userRepository;
             this.roleRepository = roleRepository;
+        	this.userService = userService;
         }
 
         public ActionResult Index()
@@ -81,15 +84,8 @@ namespace Suteki.Shop.Controllers
             
             if (!string.IsNullOrEmpty(password))
             {
-                user.Password = password;
-                EncryptPassword(user);
+                user.Password = userService.HashPassword(password);
             }
-        }
-
-        [NonAction]
-        public virtual void EncryptPassword(User user)
-        {
-            user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "SHA1");
         }
 
         public ShopViewData EditViewData
