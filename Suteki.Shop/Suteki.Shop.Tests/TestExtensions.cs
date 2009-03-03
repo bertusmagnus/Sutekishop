@@ -41,5 +41,15 @@ namespace Suteki.Shop.Tests
 		{
 			return (T)source;
 		}
+
+		public static void ShouldBeTrue(this bool source)
+		{
+			Assert.IsTrue(source);
+		}
+
+		public static void ShouldBeFalse(this bool source)
+		{
+			Assert.IsFalse(source);
+		}
 	}
 }

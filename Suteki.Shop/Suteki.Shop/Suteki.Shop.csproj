@@ -135,6 +135,7 @@
     <Compile Include="Filters\AdministratorsOnlyAttribute.cs" />
     <Compile Include="Filters\AuthenticateFilter.cs" />
     <Compile Include="Filters\FilterUsingAttribute.cs" />
+    <Compile Include="Filters\TransactionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -34,7 +34,8 @@ namespace Suteki.Shop
 			container.Register(
 				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>(),
 				Component.For<IServiceLocator>().Instance(new WindsorServiceLocator(container)),
-				Component.For<AuthenticateFilter>().LifeStyle.Transient
+				Component.For<AuthenticateFilter>().LifeStyle.Transient,
+				Component.For<TransactionFilter>().LifeStyle.Transient
 			);
 
 			return container;
