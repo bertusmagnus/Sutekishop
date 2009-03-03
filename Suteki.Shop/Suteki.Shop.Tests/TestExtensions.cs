@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Suteki.Shop.Tests
@@ -14,6 +15,16 @@ namespace Suteki.Shop.Tests
 		{
 			Assert.AreEqual(expected, actual);
 			return actual;
+		}
+
+		public static Exception ShouldBeThrownBy(this Type exceptionType, TestDelegate testDelegate)
+		{
+			return Assert.Throws(exceptionType, testDelegate);
+		}
+
+		public static void ShouldBe<T>(this object actual)
+		{
+			Assert.IsInstanceOf<T>(actual);
 		}
 	}
 }

@@ -6,7 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
+using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
+using Suteki.Common.Windsor;
 using Suteki.Shop.Controllers;
 using ControllerBase=Suteki.Shop.Controllers.ControllerBase;
 
@@ -17,8 +19,8 @@ namespace Suteki.Shop.Tests
 	{
 		private IWindsorContainer container;
 
-		[SetUp]
-		public void Setup()
+		[TestFixtureSetUp]
+		public void TestFixtureSetup()
 		{
 			container = ContainerBuilder.Build("Windsor.config");
 			
@@ -33,8 +35,8 @@ namespace Suteki.Shop.Tests
 			module.Init(HttpContext.Current.ApplicationInstance);
 		}
 
-		[TearDown]
-		public void Teardown()
+		[TestFixtureTearDown]
+		public void TestFixtureTeardown()
 		{
 			HttpContext.Current = null;
 			container.Dispose();
@@ -59,6 +61,12 @@ namespace Suteki.Shop.Tests
 					baseController.BaseControllerService.ShouldNotBeNull();
 				}
 			}
+		}
+
+		[Test]
+		public void Should_resolve_service_locator()
+		{
+			container.Resolve<IServiceLocator>().ShouldBe<WindsorServiceLocator>();
 		}
 
 		private class FakePrincipal : IPrincipal, IIdentity

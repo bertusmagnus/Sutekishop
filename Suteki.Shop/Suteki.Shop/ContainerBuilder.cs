@@ -3,7 +3,9 @@ using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
+using Microsoft.Practices.ServiceLocation;
 using Suteki.Common.Repositories;
+using Suteki.Common.Windsor;
 using Suteki.Shop.IoC;
 using Suteki.Shop.Services;
 
@@ -29,7 +31,8 @@ namespace Suteki.Shop
 				.Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
 
 			container.Register(
-				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>()
+				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>(),
+				Component.For<IServiceLocator>().Instance(new WindsorServiceLocator(container))
 			);
 
 			return container;
