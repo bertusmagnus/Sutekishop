@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
+using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
@@ -10,7 +11,7 @@ using System.Security.Permissions;
 
 namespace Suteki.Shop.Controllers
 {
-    [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+	[AdministratorsOnly]
     public class UserController : ControllerBase
     {
         readonly IRepository<User> userRepository;
