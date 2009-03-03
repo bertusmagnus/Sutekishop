@@ -33,8 +33,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult New()
         {
-            User defaultUser = new User { Email = "", Password = "", RoleId = 1, IsEnabled = true };
-            return View("Edit", EditViewData.WithUser(defaultUser));
+            return View("Edit", EditViewData.WithUser(Shop.User.DefaultUser));
         }
 
         public ActionResult Edit(int id)

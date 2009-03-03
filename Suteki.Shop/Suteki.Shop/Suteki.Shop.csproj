@@ -409,12 +409,6 @@
     <Compile Include="Views\User\Edit.aspx.designer.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\User\Index.aspx.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\User\Index.aspx.designer.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

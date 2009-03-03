@@ -16,6 +16,11 @@ namespace Suteki.Shop
             }
         }
 
+    	public static User DefaultUser
+    	{
+			get { return new User { Email = "", Password = "", RoleId = 1, IsEnabled = true }; }
+    	}
+
         public string PublicIdentity
         {
             get
