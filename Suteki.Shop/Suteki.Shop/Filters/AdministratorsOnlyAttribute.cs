@@ -7,6 +7,7 @@ namespace Suteki.Shop.Filters
 		public AdministratorsOnlyAttribute()
 		{
 			Roles = "Administrator";
+			Order = 1; //Must come AFTER AuthenticateAttribute
 		}
 	}
 }
