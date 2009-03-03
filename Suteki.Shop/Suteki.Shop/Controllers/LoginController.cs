@@ -31,7 +31,7 @@ namespace Suteki.Shop.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View("Index", ShopView.Data.WithErrorMessage("Unknown email or password"));
+            return View(ShopView.Data.WithErrorMessage("Unknown email or password"));
         }
 
         public ActionResult Logout()

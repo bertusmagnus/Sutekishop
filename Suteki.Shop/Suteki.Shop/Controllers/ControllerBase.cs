@@ -1,12 +1,13 @@
 ﻿using Castle.Core.Logging;
 using MvcContrib.Filters;
 using Suteki.Common.Extensions;
+using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 using MvcContrib;
 
 namespace Suteki.Shop.Controllers
 {
-    [Rescue("Default")]
+    [Rescue("Default"), Authenticate]
     public abstract class ControllerBase : ConventionController, IProvidesBaseService
     {
         private IBaseControllerService baseControllerService;

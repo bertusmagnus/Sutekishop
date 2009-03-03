@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
@@ -67,6 +68,23 @@ namespace Suteki.Shop.Tests
 		public void Should_resolve_service_locator()
 		{
 			container.Resolve<IServiceLocator>().ShouldBe<WindsorServiceLocator>();
+		}
+
+		[Test]
+		public void Should_resolve_all_filters()
+		{
+			var filterTypes = from type in typeof(HomeController).Assembly.GetExportedTypes()
+							  where typeof(IActionFilter).IsAssignableFrom(type)
+							  || typeof(IResultFilter).IsAssignableFrom(type)
+							  || typeof(IAuthorizationFilter).IsAssignableFrom(type)
+							  where !type.IsAbstract
+							  where !typeof(Attribute).IsAssignableFrom(type)
+							  select type;
+
+			foreach(var type in filterTypes)
+			{
+				container.Resolve(type);
+			}
 		}
 
 		private class FakePrincipal : IPrincipal, IIdentity
