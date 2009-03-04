@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
+using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
 using System.Collections.Specialized;
 using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Controllers
 {
+	[AdministratorsOnly]
     public class StockController : ControllerBase
     {
         IRepository<Category> categoryRepository;
