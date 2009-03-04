@@ -127,6 +127,8 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UrlExtensions.cs" />
     <Compile Include="Extensions\UrlExtensionsHelper.cs" />
+    <Compile Include="Filters\FilterUsingAttribute.cs" />
+    <Compile Include="Filters\UnitOfWorkAttribute.cs" />
     <Compile Include="HtmlHelpers\ColumnInfo.cs" />
     <Compile Include="HtmlHelpers\ColumnSortingExtensions.cs" />
     <Compile Include="HtmlHelpers\EntityRendererHtmlHelper.cs" />

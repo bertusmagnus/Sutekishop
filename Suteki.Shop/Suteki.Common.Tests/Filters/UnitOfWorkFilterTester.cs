@@ -1,19 +1,19 @@
 using System.Data;
 using System.Data.Linq;
-using System.Data.Linq.Mapping;
 using System.Web.Mvc;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
-using Suteki.Shop.Filters;
+using Suteki.Common.Tests.TestHelpers;
 
-namespace Suteki.Shop.Tests.Filters
+namespace Suteki.Common.Tests.Filters
 {
 	[TestFixture]
-	public class TransactionFilterTester
+	public class UnitOfWorkFilterTester
 	{
 		MockContext context;
-		TransactionFilter filter;
+		UnitOfWorkFilter filter;
 
 		[SetUp]
 		public void Setup()
@@ -21,7 +21,7 @@ namespace Suteki.Shop.Tests.Filters
 			context = new MockContext();
 			var contextProvider = MockRepository.GenerateStub<IDataContextProvider>();
 			contextProvider.Expect(x => x.DataContext).Return(context);
-			filter = new TransactionFilter(contextProvider);
+			filter = new UnitOfWorkFilter(contextProvider);
 		}
 
 		[Test]

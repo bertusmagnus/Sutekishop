@@ -88,6 +88,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,12 +110,16 @@
   <ItemGroup>
     <Compile Include="Extensions\TypeExtensionsTests.cs" />
     <Compile Include="Extensions\UrlExtensionsHelperTests.cs" />
+    <Compile Include="Filters\FilterUsingAttributeTester.cs" />
+    <Compile Include="Filters\UnitOfWorkFilterTester.cs" />
     <Compile Include="HtmlHelpers\ColumnOrdererTests.cs" />
     <Compile Include="HtmlHelpers\TreeRendererTests.cs" />
     <Compile Include="Models\EntityGraphVisitorSpike.cs" />
     <Compile Include="Models\MetaEntityTests.cs" />
     <Compile Include="Models\StringValueExtensionsTests.cs" />
     <Compile Include="Services\NHibernateEntityTypeResolverTests.cs" />
+    <Compile Include="TestExtensions.cs" />
+    <Compile Include="TestHelpers\TestController.cs" />
     <Compile Include="TestModel\Customer.cs" />
     <Compile Include="TestModel\CustomerBuilder.cs" />
     <Compile Include="Models\EntityTests.cs" />

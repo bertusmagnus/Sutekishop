@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;

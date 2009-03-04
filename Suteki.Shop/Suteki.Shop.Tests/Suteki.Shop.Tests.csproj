@@ -121,8 +121,6 @@
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
     <Compile Include="Filters\AuthenticateFilterTester.cs" />
-    <Compile Include="Filters\FilterUsingAttributeTester.cs" />
-    <Compile Include="Filters\TransactionFilterTester.cs" />
     <Compile Include="IoCTests.cs" />
     <Compile Include="Models\BasketTests.cs" />
     <Compile Include="Models\CardTests.cs" />

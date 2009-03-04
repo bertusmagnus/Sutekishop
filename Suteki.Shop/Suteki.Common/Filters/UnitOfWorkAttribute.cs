@@ -2,20 +2,20 @@ using System;
 using System.Web.Mvc;
 using Suteki.Common.Repositories;
 
-namespace Suteki.Shop.Filters
+namespace Suteki.Common.Filters
 {
-	public class TransactionAttribute : FilterUsingAttribute
+	public class UnitOfWorkAttribute : FilterUsingAttribute
 	{
-		public TransactionAttribute() : base(typeof(TransactionFilter))
+		public UnitOfWorkAttribute() : base(typeof(UnitOfWorkFilter))
 		{
 		}
 	}
 
-	public class TransactionFilter : IResultFilter
+	public class UnitOfWorkFilter : IResultFilter
 	{
 		private readonly IDataContextProvider provider;
 
-		public TransactionFilter(IDataContextProvider provider)
+		public UnitOfWorkFilter(IDataContextProvider provider)
 		{
 			this.provider = provider;
 		}
@@ -28,10 +28,10 @@ namespace Suteki.Shop.Filters
 		{
 			var context = provider.DataContext;
 
-            if(filterContext.Controller.ViewData.ModelState.IsValid)
-            {
+			if(filterContext.Controller.ViewData.ModelState.IsValid)
+			{
 				context.SubmitChanges();            	
-            }
+			}
 		}
 	}
 }

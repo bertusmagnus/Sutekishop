@@ -3,7 +3,8 @@ using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Suteki.Shop.Filters;
+using Suteki.Common.Filters;
+using Suteki.Common.Tests;
 
 namespace Suteki.Shop.Tests.Filters
 {

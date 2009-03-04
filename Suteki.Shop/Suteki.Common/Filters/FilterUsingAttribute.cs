@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Suteki.Common.Extensions;
 
-namespace Suteki.Shop.Filters
+namespace Suteki.Common.Filters
 {
 	/// <summary>
 	/// Filter attribute that wraps an inner filter. The inner filter is constructed by the ServiceLocator for the current IoC container.
@@ -26,8 +26,8 @@ namespace Suteki.Shop.Filters
 		private bool IsFilterType(Type type)
 		{
 			return typeof(IAuthorizationFilter).IsAssignableFrom(type) 
-				|| typeof(IActionFilter).IsAssignableFrom(type) 
-				|| typeof(IResultFilter).IsAssignableFrom(type);
+			       || typeof(IActionFilter).IsAssignableFrom(type) 
+			       || typeof(IResultFilter).IsAssignableFrom(type);
 		}
 
 		public Type FilterType

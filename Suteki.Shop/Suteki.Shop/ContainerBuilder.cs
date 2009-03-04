@@ -4,6 +4,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Microsoft.Practices.ServiceLocation;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Windsor;
 using Suteki.Shop.Filters;
@@ -35,7 +36,7 @@ namespace Suteki.Shop
 				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>(),
 				Component.For<IServiceLocator>().Instance(new WindsorServiceLocator(container)),
 				Component.For<AuthenticateFilter>().LifeStyle.Transient,
-				Component.For<TransactionFilter>().LifeStyle.Transient
+				Component.For<UnitOfWorkFilter>().LifeStyle.Transient
 			);
 
 			return container;
