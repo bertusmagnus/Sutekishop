@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" CodeBehind="Shop.master.cs" Inherits="Suteki.Shop.Views.Shared.Shop" %>
+﻿<%@ Master Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewMasterPage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
         <div>
@@ -57,7 +57,7 @@
                             </ul>
                         </div>
 
-                        <%= LeftMenuContents %>
+                        <% Html.RenderAction<MenuController>(c => c.LeftMenu()); %>
                     </div>
                 </div>
 

@@ -381,13 +381,6 @@
     <Compile Include="Views\Shared\Rescues\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shared\Shop.Master.cs">
-      <DependentUpon>Shop.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\Shop.Master.designer.cs">
-      <DependentUpon>Shop.Master</DependentUpon>
-    </Compile>
     <Compile Include="Views\Shared\Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -483,6 +476,7 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
     <Content Include="Views\Report\Index.aspx" />
