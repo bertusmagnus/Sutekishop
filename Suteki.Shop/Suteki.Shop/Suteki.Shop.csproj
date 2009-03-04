@@ -134,6 +134,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\AdministratorsOnlyAttribute.cs" />
     <Compile Include="Filters\AuthenticateFilter.cs" />
+    <Compile Include="Filters\CopyMessageFromTempDataToViewData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -427,6 +428,13 @@
     </Compile>
     <Compile Include="Views\Stock\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\User\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\User\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>

@@ -47,5 +47,11 @@ namespace Suteki.Shop.Controllers
         {
             ViewData["MetaDescription"] = text;
         }
+
+    	public string Message
+    	{
+			get { return TempData["message"] as string; }
+			set { TempData["message"] = value; }
+    	}
     }
 }
