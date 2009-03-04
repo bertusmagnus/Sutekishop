@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
+using Suteki.Common.Tests.TestHelpers;
 using Suteki.Common.Windsor;
 
 namespace Suteki.Common.Tests.Windsor
@@ -25,14 +26,6 @@ namespace Suteki.Common.Tests.Windsor
             var controller = ServiceLocator.Current.GetInstance<IController>("testcontroller");
 
             Assert.That(controller is TestController);
-        }
-    }
-
-    public class TestController : IController
-    {
-        public void Execute(RequestContext requestContext)
-        {
-            // not required for test
         }
     }
 
