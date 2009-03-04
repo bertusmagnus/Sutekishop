@@ -88,6 +88,48 @@ namespace Suteki.Common.Tests.Validation
             Assert.That(thing.IsValid, Is.False);
         }
 
+    	[Test]
+    	public void Should_add_to_modelstate_without_prefix()
+    	{
+			var thing = new Thing();
+			var form = new FormCollection 
+			{
+				{ "Age", "not a number" }
+			};
+
+			var modelState = new ModelStateDictionary();
+			try 
+			{
+				validatingBinder.UpdateFrom(thing, form, modelState);
+			}
+			catch {}
+			finally 
+			{
+				modelState.ContainsKey("Age").ShouldBeTrue();
+			}
+    	}
+
+    	[Test]
+    	public void Should_add_to_modelstate_with_prefix()
+    	{
+			var thing = new Thing();
+			var form = new FormCollection 
+			{
+				{ "thing.Age", "not a number" }
+			};
+
+			var modelState = new ModelStateDictionary();
+			try
+			{
+				validatingBinder.UpdateFrom(thing, form, modelState, "thing");				
+			}
+			catch {}
+			finally
+			{
+				modelState.ContainsKey("thing.Age").ShouldBeTrue();				
+			}
+    	}
+
         public class Thing
         {
             public int Id { get; set; }

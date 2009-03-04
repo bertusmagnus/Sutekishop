@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 
@@ -74,15 +75,18 @@ namespace Suteki.Common.Validation
                     if (exception.InnerException is FormatException ||
                         exception.InnerException is IndexOutOfRangeException)
                     {
-                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
+						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
+                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
                     }
                     else if (exception is ValidationException)
                     {
-                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, exception);
+						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
+                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception);
                     }
                     else if (exception.InnerException is ValidationException)
                     {
-                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, exception.InnerException);
+						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
+                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.InnerException);
                     }
                     else
                     {
@@ -96,6 +100,16 @@ namespace Suteki.Common.Validation
                 throw new ValidationException("Bind Failed. See ModelStateDictionary for errors");
             }
         }
+
+		private string BuildKeyForModelState(PropertyInfo property, string prefix)
+		{
+			if(string.IsNullOrEmpty(prefix))
+			{
+				return property.HtmlName();
+			}
+
+			return prefix + "." + property.HtmlName();
+		}
 
         private static bool IsBasicType(Type type)
         {
