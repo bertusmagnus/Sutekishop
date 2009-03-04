@@ -62,7 +62,7 @@ namespace Suteki.Shop.XmlRpc
             this.userRepository = new Repository<User>(dataContextProvider);
             var categoryRepository = new Repository<Suteki.Shop.Category>(dataContextProvider);
             this.contentOrderableService = new OrderableService<Content>(contentRepository);
-            this.baseControllerService = new BaseControllerService(categoryRepository, contentRepository);
+            this.baseControllerService = new BaseControllerService(categoryRepository);
             this.imageFileService = new ImageFileService();
         }
 

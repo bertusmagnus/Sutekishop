@@ -15,24 +15,6 @@ namespace Suteki.Shop.Views.Shared
 {
     public partial class Site : System.Web.Mvc.ViewMasterPage
     {
-        protected string MainMenu
-        {
-            get
-            {
-                var controller = this.ViewContext.Controller as IProvidesBaseService;
-
-                if (controller != null)
-                {
-                    IRepository<Content> contentRepository =
-                        controller.BaseControllerService.ContentRepository;
-
-                    return Html.WriteMenu(contentRepository.GetMainMenu(), new { _class = "mainMenu" });
-                }
-
-                return "";
-            }
-        }
-
         protected string SiteUrl
         {
             get

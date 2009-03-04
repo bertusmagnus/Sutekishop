@@ -121,6 +121,7 @@
     <Compile Include="Controllers\IProvidesBaseService.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\PostZoneController.cs" />
@@ -373,27 +374,6 @@
     <Compile Include="Views\Rsd\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shared\Cms.master.cs">
-      <DependentUpon>Cms.master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\Cms.master.designer.cs">
-      <DependentUpon>Cms.master</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\CmsSubMenu.master.cs">
-      <DependentUpon>CmsSubMenu.master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\CmsSubMenu.master.designer.cs">
-      <DependentUpon>CmsSubMenu.master</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\Print.Master.cs">
-      <DependentUpon>Print.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\Print.Master.designer.cs">
-      <DependentUpon>Print.Master</DependentUpon>
-    </Compile>
     <Compile Include="Views\Shared\Rescues\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -503,6 +483,7 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
     <Content Include="Views\Report\Index.aspx" />
     <Content Include="Views\Shared\Print.Master" />

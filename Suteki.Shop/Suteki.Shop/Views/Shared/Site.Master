@@ -34,7 +34,7 @@
             </div>
             
             <div>
-                <%= MainMenu %>
+				<% Html.RenderAction<MenuController>(c => c.MainMenu()); %>
             </div>
             
         </div>

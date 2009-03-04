@@ -9,7 +9,6 @@ namespace Suteki.Shop.Services
     public class BaseControllerService : IBaseControllerService
     {
         public IRepository<Category> CategoryRepository { get; private set; }
-        public IRepository<Content> ContentRepository { get; private set; }
         public string GoogleTrackingCode { get; set; }
         public string MetaDescription { get; set; }
         private string shopName;
@@ -18,12 +17,9 @@ namespace Suteki.Shop.Services
         private string phoneNumber;
         private string siteCss;
 
-        public BaseControllerService(
-            IRepository<Category> categoryRepository,
-            IRepository<Content> contentRepository)
+        public BaseControllerService(IRepository<Category> categoryRepository)
         {
             this.CategoryRepository = categoryRepository;
-            this.ContentRepository = contentRepository;
         }
 
         public string EmailAddress
