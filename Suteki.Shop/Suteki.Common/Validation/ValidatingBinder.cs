@@ -74,15 +74,15 @@ namespace Suteki.Common.Validation
                     if (exception.InnerException is FormatException ||
                         exception.InnerException is IndexOutOfRangeException)
                     {
-                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
+                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
                     }
                     else if (exception is ValidationException)
                     {
-                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, exception);
+                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, exception);
                     }
                     else if (exception.InnerException is ValidationException)
                     {
-                        bindingContext.AddModelError(property.HtmlId(), bindingContext.AttemptedValue, exception.InnerException);
+                        bindingContext.AddModelError(property.HtmlName(), bindingContext.AttemptedValue, exception.InnerException);
                     }
                     else
                     {
