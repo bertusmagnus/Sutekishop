@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="HtmlHelpers\CategoryWriter.cs" />
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="HtmlHelpers\LowercaseFirstCharacterOfNameBehaviour.cs" />
     <Compile Include="HtmlHelpers\MenuWriter.cs" />
     <Compile Include="HtmlHelpers\StockWriter.cs" />
     <Compile Include="IoC\UrlBasedComponentSelector.cs" />
@@ -426,13 +427,6 @@
     </Compile>
     <Compile Include="Views\Stock\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\User\Edit.aspx.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\User\Edit.aspx.designer.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>

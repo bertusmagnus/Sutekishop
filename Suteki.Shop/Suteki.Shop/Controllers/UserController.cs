@@ -36,6 +36,14 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithUser(Shop.User.DefaultUser));
         }
 
+/*
+		[AcceptVerbs(HttpVerbs.Post)]
+		public ActionResult New(User user)
+		{
+			
+		}
+*/
+
         public ActionResult Edit(int id)
         {
             User user = userRepository.GetById(id);
