@@ -1,13 +1,13 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Suteki.Shop.Views.Stock.Index" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1>Stock</h1>
 
 <div class="columnContainer">
 
-<% using(Html.BeginForm("Update", "Stock")) { %>
+<% using(Html.BeginForm()) { %>
 
-    <%= Html.WriteStock(ViewData.Model.Category) %>
+    <%= Html.WriteStock(Model.Category) %>
 
     <%= Html.SubmitButton() %>
 

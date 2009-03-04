@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
@@ -36,12 +37,11 @@ namespace Suteki.Shop.Controllers
             return View("Index", ShopView.Data.WithCategory(root));
         }
 
-        public ActionResult Update(FormCollection form)
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+        public ActionResult Index(FormCollection form)
         {
             var sizes = sizeRepository.GetAll().ToList();
             UpdateFromForm(sizes, form);
-            sizeRepository.SubmitChanges();
-
             return RenderIndexView();
         }
 

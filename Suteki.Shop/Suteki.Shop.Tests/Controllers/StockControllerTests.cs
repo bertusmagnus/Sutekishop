@@ -66,7 +66,7 @@ namespace Suteki.Shop.Tests.Controllers
             var root = BuildCategories();
             categoryRepository.Expect(cr => cr.GetById(1)).Return(root);
 
-            stockController.Update(form)
+            stockController.Index(form)
                 .ReturnsViewResult()
                 .ForView("Index")
                 .WithModel<ShopViewData>()
