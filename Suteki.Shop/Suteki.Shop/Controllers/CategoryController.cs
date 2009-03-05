@@ -38,11 +38,7 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult New(int id)
         {
-            var defaultCategory = new Category 
-            { 
-                ParentId = id,
-                Position = orderableService.NextPosition
-            };
+			var defaultCategory = Category.DefaultCategory(id, orderableService.NextPosition);
             return View("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
 

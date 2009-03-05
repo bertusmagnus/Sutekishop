@@ -37,5 +37,14 @@ namespace Suteki.Shop
                 return null;
             }
         }
+
+    	public static Category DefaultCategory(int parentId, int position)
+    	{
+			return new Category 
+			{
+				ParentId = parentId,
+				Position = position
+			};
+    	}
     }
 }
