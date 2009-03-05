@@ -740,3 +740,34 @@ td.number
 	width: 150px;
 }
 
+/*----------------------------------- ModelState -------------------------------------*/
+
+/* flash */
+ul.validation-summary-errors
+{
+	border: 2px solid #ff0000;
+	margin: 5px 0 7px 0;
+	padding: 5px;
+	background-color: #f9d5d6;
+	font-weight: bold;
+	color: Black;
+}
+.input-validation-error 
+{
+	border: 2px solid #ff0000;
+	background-color: #f9d5d6;
+}
+.field-validation-error 
+{
+	color: red;
+	font-weight: bold;
+}
+ul.validation-summary-errors 
+{
+	list-style-type: none;
+}
+ul.validation-summary-errors li 
+{
+	padding: 0;
+	margin: 0;
+}
