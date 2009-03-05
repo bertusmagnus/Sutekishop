@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BindUsingAttributeTester.cs" />
     <Compile Include="Controllers\CategoryControllerTests.cs" />
     <Compile Include="Controllers\CmsControllerTests.cs" />
     <Compile Include="Controllers\CountryControllerTests.cs" />

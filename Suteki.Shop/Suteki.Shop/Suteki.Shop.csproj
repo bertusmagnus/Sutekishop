@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BindUsingAttribute.cs" />
     <Compile Include="ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CmsController.cs" />
