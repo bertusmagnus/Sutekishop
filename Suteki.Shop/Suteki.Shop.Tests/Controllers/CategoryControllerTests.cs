@@ -28,9 +28,6 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            // you have to be an administrator to access the category controller
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
-
             categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
             orderableService = MockRepository.GenerateStub<IOrderableService<Category>>();
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());

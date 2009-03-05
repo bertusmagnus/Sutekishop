@@ -2,12 +2,13 @@
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
+using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
-using System.Security.Permissions;
 
 namespace Suteki.Shop.Controllers
 {
+	[AdministratorsOnly]
     public class CategoryController : ControllerBase
     {
         private readonly IRepository<Category> categoryRepository;
@@ -35,7 +36,6 @@ namespace Suteki.Shop.Controllers
             return View("Index", ShopView.Data.WithCategory(root));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult New(int id)
         {
             var defaultCategory = new Category 
@@ -46,14 +46,12 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Edit(int id)
         {
             var category = categoryRepository.GetById(id);
             return View("Edit", EditViewData.WithCategory(category));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult Update(int categoryId)
         {
             var category = categoryId == 0 ? 
@@ -88,14 +86,12 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult MoveUp(int id)
         {
             MoveThis(id).UpOne();
             return RenderIndexView();
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
         public ActionResult MoveDown(int id)
         {
             MoveThis(id).DownOne();

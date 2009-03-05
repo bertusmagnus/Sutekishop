@@ -1,4 +1,5 @@
-﻿using Castle.Core.Logging;
+﻿using System.Web.Mvc;
+using Castle.Core.Logging;
 using MvcContrib.Filters;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Filters;
@@ -8,7 +9,7 @@ using MvcContrib;
 namespace Suteki.Shop.Controllers
 {
     [Rescue("Default"), Authenticate]
-    public abstract class ControllerBase : ConventionController, IProvidesBaseService
+    public abstract class ControllerBase : Controller, IProvidesBaseService
     {
         private IBaseControllerService baseControllerService;
 

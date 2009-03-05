@@ -3,6 +3,7 @@ using Suteki.Common.Repositories;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
+using MvcContrib;
 
 namespace Suteki.Shop.Controllers
 {
@@ -28,7 +29,7 @@ namespace Suteki.Shop.Controllers
 			if (userRepository.GetAll().ContainsUser(email, userService.HashPassword(password)))
             {
                 userService.SetAuthenticationCookie(email);
-                return RedirectToAction("Index", "Home");
+				return this.RedirectToAction<HomeController>(c => c.Index());
             }
 
             return View(ShopView.Data.WithErrorMessage("Unknown email or password"));
@@ -37,7 +38,7 @@ namespace Suteki.Shop.Controllers
         public ActionResult Logout()
         {
             userService.RemoveAuthenticationCookie();
-            return RedirectToAction("Index", "Home");
+			return this.RedirectToAction<HomeController>(c => c.Index());
         }
     }
 }
