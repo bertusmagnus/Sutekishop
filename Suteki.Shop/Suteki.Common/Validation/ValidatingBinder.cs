@@ -81,12 +81,12 @@ namespace Suteki.Common.Validation
                     else if (exception is ValidationException)
                     {
 						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
-                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception);
+                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.Message);
                     }
                     else if (exception.InnerException is ValidationException)
                     {
 						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
-                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.InnerException);
+                        bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.InnerException.Message);
                     }
                     else
                     {

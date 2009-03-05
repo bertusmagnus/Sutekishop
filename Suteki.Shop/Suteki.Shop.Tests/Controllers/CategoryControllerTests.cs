@@ -30,7 +30,7 @@ namespace Suteki.Shop.Tests.Controllers
         {
             categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
             orderableService = MockRepository.GenerateStub<IOrderableService<Category>>();
-            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
+			validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
             categoryController = new CategoryController(
                 categoryRepository, 
@@ -160,5 +160,55 @@ namespace Suteki.Shop.Tests.Controllers
 
             AssertEditViewIsCorrectlyShown(result);
         }
+
+		[Test]
+		public void NewWithPost_should_insert_new_category()
+		{
+			const int categoryId = 0;
+			const string name = "My Category";
+			const int parentid = 78;
+
+			// set up the request form
+			var form = new FormCollection()
+            {
+                {"category.CategoryId", categoryId.ToString()},
+                {"category.Name", name},
+                {"category.ParentId", parentid.ToString()}
+            };
+
+			// set up expectations on the repository
+			Category category = null;
+
+			categoryRepository.Expect(x => x.InsertOnSubmit(Arg<Category>.Is.Anything))
+				.Callback<Category>(x => { category = x; return true; });
+
+			categoryController.New(form)
+				.ReturnRedirectToRouteResult()
+				.ToAction("Index");
+
+			category.ShouldNotBeNull();
+			category.Name.ShouldEqual(name);
+			category.ParentId.ShouldEqual(parentid);
+
+			categoryController.Message.ShouldNotBeNull();
+		}
+
+    	[Test]
+    	public void NewWithPost_should_render_view_on_error()
+    	{
+			var form = new FormCollection 
+			{
+				{ "category.CategoryId", "foo" }
+			};
+
+			categoryController.New(form)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertNotNull(x => x.ErrorMessage);
+
+			categoryController.ModelState.IsValid.ShouldBeFalse();
+    	}
+
     }
 }

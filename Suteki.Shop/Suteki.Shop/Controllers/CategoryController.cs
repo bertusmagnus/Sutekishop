@@ -1,10 +1,12 @@
 ﻿using System.Web.Mvc;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
 using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
+using MvcContrib;
 
 namespace Suteki.Shop.Controllers
 {
@@ -41,6 +43,26 @@ namespace Suteki.Shop.Controllers
 			var defaultCategory = Category.DefaultCategory(id, orderableService.NextPosition);
             return View("Edit", EditViewData.WithCategory(defaultCategory)); 
         }
+
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult New(FormCollection form)
+		{
+			var category = new Category();
+			try
+			{
+				validatingBinder.UpdateFrom(category, form, ModelState, "category");	
+			}
+			catch(ValidationException ex)
+			{
+				return View("Edit", EditViewData.WithCategory(category)
+					.WithErrorMessage(ex.Message));
+			}
+
+			categoryRepository.InsertOnSubmit(category);
+			Message = "New category has been added.";
+
+			return this.RedirectToAction(c => c.Index());
+		}
 
         public ActionResult Edit(int id)
         {

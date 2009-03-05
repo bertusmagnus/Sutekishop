@@ -8,7 +8,7 @@ using MvcContrib;
 
 namespace Suteki.Shop.Controllers
 {
-    [Rescue("Default"), Authenticate]
+    [Rescue("Default"), Authenticate, CopyMessageFromTempDataToViewData]
     public abstract class ControllerBase : Controller, IProvidesBaseService
     {
         private IBaseControllerService baseControllerService;
