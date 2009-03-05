@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Security.Permissions;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
+using Suteki.Shop.Filters;
 
 namespace Suteki.Shop.Controllers
 {
-    [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+    [AdministratorsOnly]
     public class ReportController : ControllerBase
     {
         readonly private IRepository<Order> orderRepository;

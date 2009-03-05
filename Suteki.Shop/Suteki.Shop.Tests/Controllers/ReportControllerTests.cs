@@ -21,11 +21,7 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            // you have to be an administrator to access the report controller
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
-
             orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
-
             reportController = new ReportController(orderRepository);
         }
 
