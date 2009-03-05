@@ -76,7 +76,33 @@ namespace Suteki.Shop.Tests.Controllers
             AssertEditViewIsCorrectlyShown(result);
         }
 
-        [Test]
+    	[Test]
+    	public void EditWithPost_should_render_view_when_binding_succeeded()
+    	{
+    		var category = new Category();
+			categoryController.Edit(category)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertAreEqual(category, x => x.Category)
+				.AssertNotNull(x => x.Message);
+    	}
+
+    	[Test]
+    	public void EditWithPost_should_render_view_with_error_when_binding_fails()
+    	{
+			categoryController.ModelState.AddModelError("foo", "bar");
+
+			var category = new Category();
+			categoryController.Edit(category)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertAreEqual(category, x => x.Category)
+				.AssertNull(x => x.Message);
+    	}
+
+       /* [Test]
         public void Update_ShouldInsertNewCategory()
         {
             const int categoryId = 0;
@@ -112,7 +138,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(parentid, category.ParentId);
 
             AssertEditViewIsCorrectlyShown(result);
-        }
+        }*/
 
         private static void AssertEditViewIsCorrectlyShown(ActionResult result)
         {
@@ -125,7 +151,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(6, vd => vd.Categories.Count());
         }
 
-        [Test]
+       /* [Test]
         public void Update_ShouldUpdateAnExistingCategory()
         {
             const int categoryId = 12;
@@ -159,7 +185,7 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.AreEqual(parentid, category.ParentId);
 
             AssertEditViewIsCorrectlyShown(result);
-        }
+        }*/
 
 		[Test]
 		public void NewWithPost_should_insert_new_category()

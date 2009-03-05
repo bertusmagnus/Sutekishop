@@ -7,6 +7,7 @@ using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using MvcContrib;
+using Suteki.Shop.Binders;
 
 namespace Suteki.Shop.Controllers
 {
@@ -45,7 +46,7 @@ namespace Suteki.Shop.Controllers
         }
 
 		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult New(FormCollection form)
+		public ActionResult New(FormCollection form) //TODO: modify DataBind attribute to only fetch optionally. 
 		{
 			var category = new Category();
 			try
@@ -70,7 +71,21 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithCategory(category));
         }
 
-        public ActionResult Update(int categoryId)
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult Edit([DataBind] Category category) //TODO: remove duplication
+		{
+			if(ModelState.IsValid)
+			{
+				return View("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved."));
+			}
+			else
+			{
+				return View("Edit", EditViewData.WithCategory(category));
+					//.WithErrorMessage(validationException.Message));
+			}
+		}
+
+        /*public ActionResult Update(int categoryId)
         {
             var category = categoryId == 0 ? 
                 new Category() : 
@@ -94,7 +109,7 @@ namespace Suteki.Shop.Controllers
             categoryRepository.SubmitChanges();
 
             return View("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved"));
-        }
+        }*/
 
         private ShopViewData EditViewData
         {
