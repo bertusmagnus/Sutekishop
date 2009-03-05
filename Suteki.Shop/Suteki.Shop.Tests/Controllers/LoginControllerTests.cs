@@ -21,6 +21,8 @@ namespace Suteki.Shop.Tests.Controllers
     	private const string henry1password = "6C80B78681161C8349552872CFA0739CF823E87B";
     	private const string george1password = "DC25F9DC0DF2BE9E6A83E6F0B26F4B41F57ADF6D";
     	private const string sky1pasword = "980BC222DA7FDD0D37BE816D60084894124509A1";
+    	private const string email = "Henry@suteki.co.uk";
+    	private const string password = "henry1";
 
     	[SetUp]
         public void SetUp()
@@ -43,30 +45,25 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Authenticate_ShouldAuthenticateValidUser()
         {
-			const string email = "Henry@suteki.co.uk";
-            const string password = "henry1";
-
         	userService.Expect(x => x.HashPassword(password)).Return(henry1password);
             
-            loginController.Index(email, password)
+            loginController.Index(email, password, null)
                 .ReturnRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
             userService.AssertWasCalled(c => c.SetAuthenticationCookie(email));
         }
-
+			
         [Test]
         public void Authenticate_ShouldNotAuthenticateInvalidUser()
         {
-            const string email = "Henry@suteki.co.uk";
-            const string password = "henry3";
-
-            // throw if SetAuthenticationToken is called
-            userService.Expect(c => c.SetAuthenticationCookie(email))
+			const string password = "henry3";
+        	// throw if SetAuthenticationToken is called
+            userService.Expect(c => c.SetAuthenticationCookie(password))
                 .Throw(new Exception("SetAuthenticationToken shouldn't be called"));
 
-            loginController.Index(email, password)
+            loginController.Index(email, password, null)
                 .ReturnsViewResult()
                 .ForView("") //view should match action
                 .WithModel<IErrorViewData>()
@@ -83,5 +80,15 @@ namespace Suteki.Shop.Tests.Controllers
 
             userService.AssertWasCalled(c => c.RemoveAuthenticationCookie());
         }
+
+    	[Test]
+    	public void Should_redirect_to_returnurl()
+    	{
+			userService.Expect(x => x.HashPassword(password)).Return(henry1password);
+
+			loginController.Index(email, password, "/foo/bar")
+				.ReturnsRedirect().Url.ShouldEqual("/foo/bar");
+
+    	}
     }
 }

@@ -24,11 +24,17 @@ namespace Suteki.Shop.Controllers
         }
 
 		[AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index(string email, string password)
+        public ActionResult Index(string email, string password, string returnUrl)
         {
 			if (userRepository.GetAll().ContainsUser(email, userService.HashPassword(password)))
             {
                 userService.SetAuthenticationCookie(email);
+
+				if(! string.IsNullOrEmpty(returnUrl))
+				{
+					return Redirect(returnUrl);
+				}
+
 				return this.RedirectToAction<HomeController>(c => c.Index());
             }
 

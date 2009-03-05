@@ -27,6 +27,17 @@ namespace Suteki.Common.TestHelpers
             return viewResult;
         }
 
+		public static RedirectResult ReturnsRedirect(this ActionResult result)
+		{
+			var redirectResult = result as RedirectResult;
+			if(redirectResult == null)
+			{
+				throw new TestHelperException("result is not a RedirectResult");
+			}
+
+			return redirectResult;
+		}
+
         public static PartialViewResult ReturnsPartialViewResult(this ActionResult result)
         {
             var viewResult = result as PartialViewResult;
