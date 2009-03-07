@@ -31,6 +31,32 @@ namespace Suteki.Common.Tests.Validation
             validator.Validate();
         }
 
+    	[Test]
+    	public void ShouldStoreIndividualValidationFailures()
+    	{
+			const string property = "";
+
+			var validator = new Validator
+                                      {
+                                          () => property.Label("Property 1").IsRequired(),
+                                          () => property.Label("Property 2").IsRequired(),
+                                          () => property.Label("Property 3").IsRequired()
+                                      };
+
+			var errors = new ValidationException[0];
+
+			try
+			{
+				validator.Validate();
+			}
+			catch(ValidationException ex)
+			{
+				errors = ex.Errors;
+			}
+
+			errors.Length.ShouldEqual(3);
+    	}
+
         [Test]
         public void IsCreditCard_ShouldSuccessfullyValidateACreditCard()
         {

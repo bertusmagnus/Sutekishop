@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Suteki.Common.Validation;
 
@@ -9,7 +10,7 @@ namespace Suteki.Common.Validation
     {
         public void Validate()
         {
-            StringBuilder message = new StringBuilder();
+			var errors = new List<ValidationException>();
 
             foreach (Action validation in this)
             {
@@ -19,13 +20,15 @@ namespace Suteki.Common.Validation
                 }
                 catch (ValidationException validationException)
                 {
-                    message.AppendFormat("{0}<br />", validationException.Message);
+					errors.Add(validationException);
                 }
             }
 
-            if (message.Length > 0)
+            if (errors.Count > 0)
             {
-                throw new ValidationException(message.ToString());
+				//backwards compatibility
+				string error = string.Join("", errors.Select(x => x.Message + "<br />").ToArray());
+                throw new ValidationException(error, errors);
             }
         }
     }

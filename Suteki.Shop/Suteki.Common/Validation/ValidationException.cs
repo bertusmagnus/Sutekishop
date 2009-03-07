@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Suteki.Common.Validation
 {
@@ -19,5 +21,23 @@ namespace Suteki.Common.Validation
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
+
+		[Obsolete("This constructor is only here for backwards compatibility")]
+		public ValidationException(string error, IEnumerable<ValidationException> errors) : base(error)
+		{
+			this.errors = errors.ToArray();
+		}
+
+    	public ValidationException(IEnumerable<ValidationException> errors)
+    	{
+			this.errors = errors.ToArray();
+    	}
+
+    	private ValidationException[] errors = new ValidationException[0];
+
+    	public ValidationException[] Errors
+    	{
+			get { return errors;  }
+    	}
     }
 }
