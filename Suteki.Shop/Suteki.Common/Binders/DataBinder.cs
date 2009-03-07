@@ -4,7 +4,7 @@ using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
 using Suteki.Common.Extensions;
 
-namespace Suteki.Shop.Binders
+namespace Suteki.Common.Binders
 {
 	public class DataBindAttribute : BindUsingAttribute
 	{

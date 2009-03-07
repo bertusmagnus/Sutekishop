@@ -1,6 +1,6 @@
 using System;
 
-namespace Suteki.Shop.Binders
+namespace Suteki.Common.Binders
 {
 	public interface IAcceptsAttribute
 	{

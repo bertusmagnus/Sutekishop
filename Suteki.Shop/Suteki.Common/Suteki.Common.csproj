@@ -114,6 +114,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BindUsingAttribute.cs" />
+    <Compile Include="Binders\DataBinder.cs" />
+    <Compile Include="Binders\IAcceptsAttribute.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\OrderableScaffoldController.cs" />
     <Compile Include="Controllers\ScaffoldController.cs" />

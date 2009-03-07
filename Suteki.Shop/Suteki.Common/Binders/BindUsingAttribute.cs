@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Suteki.Common.Extensions;
 
-namespace Suteki.Shop.Binders
+namespace Suteki.Common.Binders
 {
 	public class BindUsingAttribute : CustomModelBinderAttribute
 	{

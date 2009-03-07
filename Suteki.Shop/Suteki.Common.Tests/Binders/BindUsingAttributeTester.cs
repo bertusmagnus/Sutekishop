@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Binders;
 
-namespace Suteki.Shop.Tests.Binders
+namespace Suteki.Common.Tests.Binders
 {
 	[TestFixture]
 	public class BindUsingAttributeTester

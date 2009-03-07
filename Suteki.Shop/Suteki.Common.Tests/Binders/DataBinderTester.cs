@@ -11,7 +11,7 @@ using Suteki.Common.Binders;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
 
-namespace Suteki.Shop.Tests.Binders
+namespace Suteki.Common.Tests.Binders
 {
 	[TestFixture]
 	public class DataBinderTester
@@ -32,16 +32,16 @@ namespace Suteki.Shop.Tests.Binders
 			binder = new DataBinder(validatingBinder, repositoryResolver);
 
 			context = new ModelBindingContext()
-          	{
-                ModelName = "foo", 
-				ModelType = typeof(TestEntity),
-				ModelState = new ModelStateDictionary()
-          	};
+			          {
+			          	ModelName = "foo", 
+			          	ModelType = typeof(TestEntity),
+			          	ModelState = new ModelStateDictionary()
+			          };
 
 			controllerContext= new ControllerContext()
-           	{
-				HttpContext = MockRepository.GenerateStub<HttpContextBase>() 
-           	};
+			                   {
+			                   	HttpContext = MockRepository.GenerateStub<HttpContextBase>() 
+			                   };
 
 			controllerContext.HttpContext.Expect(x => x.Request).Return(MockRepository.GenerateStub<HttpRequestBase>());
 			controllerContext.HttpContext.Request.Expect(x => x.Form).Return(new NameValueCollection() { { "foo.Id", "3"}, { "foo.Name", "Jeremy" } }).Repeat.Any();

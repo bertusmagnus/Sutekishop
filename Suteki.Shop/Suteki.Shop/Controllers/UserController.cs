@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
+using Suteki.Common.Binders;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
-using Suteki.Shop.Binders;
 using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;

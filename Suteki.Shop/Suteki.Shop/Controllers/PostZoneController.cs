@@ -1,8 +1,9 @@
-﻿using Suteki.Shop.Filters;
+﻿using Suteki.Common.Filters;
+using Suteki.Shop.Filters;
 
 namespace Suteki.Shop.Controllers
 {
-	[AdministratorsOnly]
+	[AdministratorsOnly, UnitOfWork]
     public class PostZoneController : ShopScaffoldController<PostZone>
     {
     }

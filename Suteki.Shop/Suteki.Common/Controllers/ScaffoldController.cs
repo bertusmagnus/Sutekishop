@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Web.Mvc;
 using MvcContrib;
 using MvcContrib.Pagination;
+using Suteki.Common.Binders;
 using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -11,7 +13,7 @@ using Suteki.Common.ViewData;
 
 namespace Suteki.Common.Controllers
 {
-    public class ScaffoldController<T> : ConventionController where T : class, new()
+    public class ScaffoldController<T> : Controller where T : class, new()
     {
         public IRepository<T> Repository { get; set; }
         public IRepositoryResolver repositoryResolver { get; set; }
@@ -35,6 +37,20 @@ namespace Suteki.Common.Controllers
             return View("Edit", BuildEditViewData().With(item));
         }
 
+		
+		[AcceptVerbs(HttpVerbs.Post)]
+		public ActionResult New([DataBind(Fetch = false)] T item)
+		{
+			if(ModelState.IsValid)
+			{
+				Repository.InsertOnSubmit(item);
+				TempData["message"] = "Item successfully added."; //Make use of the CopyMessageFromTempDataToViewData filter to show this in the view.
+				return RedirectToAction("Index"); //can't use strongly typed redirect here or the wrong controller name will be picked up	
+			}
+
+			return View("Edit", BuildEditViewData().With(item));
+		}
+
         [NonAction]
         public virtual ScaffoldViewData<T> BuildEditViewData()
         {
@@ -49,15 +65,29 @@ namespace Suteki.Common.Controllers
             return View("Edit", BuildEditViewData().With(item));
         }
 
+		[AcceptVerbs(HttpVerbs.Post)]
+		public virtual ActionResult Edit([DataBind] T item)
+		{
+			var viewData = BuildEditViewData().With(item);
+
+			if(ModelState.IsValid)
+			{
+				viewData.WithMessage("Item successfully updated.");
+			}
+
+			return View("Edit", viewData);
+		}
+
         public virtual ActionResult Delete(int id, int? page)
         {
             T item = Repository.GetById(id);
             Repository.DeleteOnSubmit(item);
-            Repository.SubmitChanges();
+            //Repository.SubmitChanges();
 
             return RedirectToAction("Index", new {page});
         }
 
+		[Obsolete]
         public virtual ActionResult Update(FormCollection form)
         {
             var id = GetPrimaryKey();

@@ -108,6 +108,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BindUsingAttributeTester.cs" />
+    <Compile Include="Binders\DataBinderTester.cs" />
     <Compile Include="Extensions\TypeExtensionsTests.cs" />
     <Compile Include="Extensions\UrlExtensionsHelperTests.cs" />
     <Compile Include="Filters\FilterUsingAttributeTester.cs" />

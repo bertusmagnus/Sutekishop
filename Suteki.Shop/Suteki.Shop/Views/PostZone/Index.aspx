@@ -8,7 +8,7 @@
 
 <%= Html.Grid(Model.Items).Columns(column => {
 		column.For(x => Html.ActionLink<PostZoneController>(c => c.Edit(x.PostZoneId), x.Name)).Named("Name").DoNotEncode().HeaderAttributes(@class => "thin");
-		column.For(x => x.Multiplier.ToString("0.00##")).Named("Multiplier").Attributes(@class => "number").HeaderAttributes(@class => "thin number");
+		column.For(x => x.Multiplier).Format("{0:0.00}").Attributes(@class => "number").HeaderAttributes(@class => "thin number");
 		column.For(x => Html.Tick(x.AskIfMaxWeight)).DoNotEncode().Named("Ask If Max Weight").HeaderAttributes(@class => "wide");
 		column.For(x => x.FlatRate).Format("{0:C}").HeaderAttributes(@class => "thin number").Attributes(@class => "number");
 		column.For(x => Html.Tick(x.IsActive)).Named("Active").DoNotEncode().HeaderAttributes(@class => "thin");

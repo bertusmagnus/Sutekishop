@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.User.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
     <h1>User</h1>
@@ -14,7 +14,7 @@
 		<%= this.Select(x => x.User.RoleId).Options(Model.Roles, x => x.RoleId, x => x.Name).Label("Role") %>
         <%= this.CheckBox(x => x.User.IsEnabled).Label("User can log on") %>
 
-        <%= Html.SubmitButton() %>
+		<input type="submit" value="Save" />
     <% } %>
 
 </asp:Content>
