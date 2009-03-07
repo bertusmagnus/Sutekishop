@@ -1,10 +1,12 @@
 ﻿using Suteki.Common;
 using Suteki.Common.Controllers;
 using Suteki.Common.Extensions;
+using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 
 namespace Suteki.Shop.Controllers
 {
+	[Authenticate, CopyMessageFromTempDataToViewData]
     public abstract class ShopScaffoldController<T> : OrderableScaffoldController<T>, IProvidesBaseService where T : class, IOrderable, new()
     {
         private IBaseControllerService baseControllerService;
