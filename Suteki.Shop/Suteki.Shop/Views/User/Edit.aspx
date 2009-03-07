@@ -3,27 +3,18 @@
 
     <h1>User</h1>
     
-    <%= Html.ErrorBox(ViewData.Model) %>
+	<%= Html.ValidationSummary() %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using(Html.BeginForm("Update", "User")) { %>
-
-        <%= Html.Hidden("userid", ViewData.Model.User.UserId.ToString()) %>
-
-        <label for="email">Email</label>
-        <%= Html.TextBox("email", ViewData.Model.User.Email) %>
-        
-        <label for="password">Password (leave blank if you don't want to change)</label>
-        <%= Html.Password("password") %>
-
-        <label for="roleid">Role</label>
-        <%= Html.DropDownList("roleid", new SelectList(ViewData.Model.Roles, "RoleId", "Name", ViewData.Model.User.RoleId))%>
-        
-        <label for="isenabled">User can log on</label>
-        <%= Html.CheckBox("isenabled", ViewData.Model.User.IsEnabled) %>
+    <% using(Html.BeginForm()) { %>
+		<%= this.Hidden(x => x.User.UserId) %>
+		<%= this.TextBox(x => x.User.Email).Label("Email") %>
+		<%-- NOTE: We lose modelstate support for password as we're overriding the name --%>
+		<%= this.Password(x=> x.User.Password).Name("password").Value("").Label("Password (leave blank if you don't want to change)") %>
+		<%= this.Select(x => x.User.RoleId).Options(Model.Roles, x => x.RoleId, x => x.Name).Label("Role") %>
+        <%= this.CheckBox(x => x.User.IsEnabled).Label("User can log on") %>
 
         <%= Html.SubmitButton() %>
-
     <% } %>
 
 </asp:Content>

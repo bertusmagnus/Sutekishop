@@ -30,7 +30,7 @@ namespace Suteki.Shop.Tests.Controllers
             
             var roleRepository = MockRepositoryBuilder.CreateRoleRepository();
         	userService = MockRepository.GenerateStub<IUserService>();
-        	userService.Stub(x => x.HashPassword(Arg<string>.Is.Anything)).Do(new Func<string, string>(s => s));
+        	userService.Stub(x => x.HashPassword(Arg<string>.Is.Anything)).Do(new Func<string, string>(s => s + "HASHED"));
 
         	userController = new UserController(userRepository, roleRepository, userService);
             testContext = new ControllerTestContext(userController);
@@ -101,48 +101,50 @@ namespace Suteki.Shop.Tests.Controllers
             AssertUserEditViewDataIsCorrect(result);
         }
 
+    	[Test]
+    	public void NewWithPost_ShouldInsertNewUser()
+    	{
+			const string password = "bl0gs";
+			var user = new User 
+			{
+				UserId = 0,
+				Email = "blogs@blogs.com",
+				RoleId = 3,
+				IsEnabled = false
+			};
+
+			userController.New(user, password)
+				.ReturnRedirectToRouteResult()
+				.ToAction("Index");
+
+			userController.Message.ShouldNotBeNull();
+			user.Password.ShouldEqual(password + "HASHED");
+    	}
+
+    	[Test]
+    	public void NewWithPost_shouldReturnViewOnError()
+    	{
+			var user = new User 
+			{
+				UserId = 0,
+				Email = "blogs@blogs.com",
+				RoleId = 3,
+				IsEnabled = false
+			};
+
+			userController.New(user, null)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(user, x => x.User);
+
+			userController.ModelState.IsValid.ShouldBeFalse();
+
+
+    	}
+
         [Test]
-        public void Update_ShouldInsertNewUser()
-        {
-            const string email = "blogs@blogs.com";
-            const string password = "bl0gs";
-            const int roleId = 3;
-            const bool isEnabled = false;
-
-            // set up the request form
-            var form = new FormCollection
-            {
-                {"userId", "0"},
-                {"email", email},
-                {"password", password},
-                {"roleid", roleId.ToString()},
-                {"isenabled", "false"}
-            };
-
-            // setup expectations on the userRepository
-            User user = null;
-
-            userRepository.Expect(ur => ur.InsertOnSubmit(Arg<User>.Is.Anything))
-                .Callback<User>(u => { user = u; return false; });
-
-            // call Update
-            var result = userController.Update(0, form)
-                .ReturnsViewResult();
-
-            // Assertions
-            Assert.IsNotNull(user, "user is null");
-            Assert.AreEqual(email, user.Email);
-            Assert.AreEqual(password, user.Password);
-            Assert.AreEqual(roleId, user.RoleId);
-            Assert.AreEqual(isEnabled, user.IsEnabled);
-
-            AssertUserEditViewDataIsCorrect(result);
-
-            userRepository.AssertWasCalled(ur => ur.SubmitChanges());
-        }
-
-        [Test]
-        public void Update_ShouldUpdateExistingUser()
+        public void EditWithPost_ShouldUpdateExistingUser()
         {
             const int userId = 34;
             const string email = "blogs@blogs.com";
@@ -150,41 +152,55 @@ namespace Suteki.Shop.Tests.Controllers
             const int roleId = 3;
             const bool isEnabled = false;
 
-            // set up the request form
-            var form = new FormCollection
-            {
-                {"userId", userId.ToString()},
-                {"email", email},
-                {"password", password},
-                {"roleid", roleId.ToString()},
-                {"isenabled", isEnabled.ToString()}
-            };
-
             // setup expectations on the userRepository
             var user = new User
             {
                 UserId = userId,
-                Email = "old@old.com",
+                Email = email,
                 Password = "oldpassword",
-                RoleId = 1,
-                IsEnabled = true
+                RoleId = roleId,
+                IsEnabled = isEnabled
             };
 
-            userRepository.Expect(ur => ur.GetById(userId)).Return(user);
-
             // call Update
-            var result = userController.Update(userId, form) as ViewResult;
+            var result = userController.Edit(user, password) as ViewResult;
 
             // Assertions
             Assert.IsNotNull(user, "user is null");
             Assert.AreEqual(email, user.Email);
-            Assert.AreEqual(password, user.Password);
+            Assert.AreEqual(password + "HASHED", user.Password);
             Assert.AreEqual(roleId, user.RoleId);
             Assert.AreEqual(isEnabled, user.IsEnabled);
-
+            
             AssertUserEditViewDataIsCorrect(result);
-
-            userRepository.AssertWasCalled(ur => ur.SubmitChanges());
         }
+
+    	[Test]
+    	public void EditWithPost_ShouldUpdateExistingUserButNotChangePassword()
+    	{
+			// setup expectations on the userRepository
+    		const string oldpassword = "oldpassword";
+
+    		var user = new User 
+			{
+				UserId = 34,
+				Email = "old@old.com",
+				Password = oldpassword,
+				RoleId = 1,
+				IsEnabled = true
+			};
+
+			userController.Edit(user, null);
+			user.Password.ShouldEqual(oldpassword);
+
+    	}
+
+    	[Test]
+    	public void EditWithPost_should_add_error_to_modelstate()
+    	{
+			var user = new User();
+			userController.Edit(user, null);
+			userController.ModelState.IsValid.ShouldBeFalse();
+    	}
     }
 }

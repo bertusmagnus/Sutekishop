@@ -1,14 +1,16 @@
 ﻿using System.Collections.Specialized;
 using System.Web.Mvc;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
+using Suteki.Shop.Binders;
 using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
 using System.Security.Permissions;
-
+using MvcContrib;
 namespace Suteki.Shop.Controllers
 {
 	[AdministratorsOnly]
@@ -36,13 +38,29 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithUser(Shop.User.DefaultUser));
         }
 
-/*
-		[AcceptVerbs(HttpVerbs.Post)]
-		public ActionResult New(User user)
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult New(User user, string password)
 		{
-			
+			if(! string.IsNullOrEmpty(password))
+			{
+				user.Password = userService.HashPassword(password);
+			}
+
+			try
+			{
+				user.Validate();
+			}
+			catch(ValidationException ex)
+			{
+				ex.CopyToModelState(ModelState, "user");
+				return View("Edit", EditViewData.WithUser(user));
+			}
+
+			userRepository.InsertOnSubmit(user);
+			Message = "User has been added.";
+
+			return this.RedirectToAction(c => c.Index());
 		}
-*/
 
         public ActionResult Edit(int id)
         {
@@ -50,51 +68,26 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithUser(user));
         }
 
-        public ActionResult Update(int userid, FormCollection form)
-        {
-            var user = userid == 0 ? 
-                new User() : 
-                userRepository.GetById(userid);
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult Edit([DataBind] User user, string password)
+		{
+			if(! string.IsNullOrEmpty(password))
+			{
+				user.Password = userService.HashPassword(password);
+			}
 
-            UpdateFromForm(user, form);
+			try
+			{
+				user.Validate();
+			}
+			catch (ValidationException validationException) 
+			{
+				validationException.CopyToModelState(ModelState, "user");
+				return View("Edit", EditViewData.WithUser(user));
+			}
 
-            try
-            {
-                user.Validate();
-            }
-            catch (ValidationException validationException)
-            {
-                return View("Edit", EditViewData.WithUser(user).WithErrorMessage(validationException.Message));
-            }
-
-            if (userid == 0)
-            {
-                userRepository.InsertOnSubmit(user);
-            }
-
-            userRepository.SubmitChanges();
-
-            return View("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
-        }
-
-        /// <summary>
-        /// Have to provide custom update functionality because of the quirks of having a password
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="form"></param>
-        private void UpdateFromForm(User user, NameValueCollection form)
-        {
-            user.Email = form["email"];
-            user.RoleId = int.Parse(form["roleid"]);
-            user.IsEnabled = (form["isenabled"] == "true,false");
-
-            string password = form["password"];
-            
-            if (!string.IsNullOrEmpty(password))
-            {
-                user.Password = userService.HashPassword(password);
-            }
-        }
+			return View("Edit", EditViewData.WithUser(user).WithMessage("Changes have been saved")); 
+		}
 
         public ShopViewData EditViewData
         {

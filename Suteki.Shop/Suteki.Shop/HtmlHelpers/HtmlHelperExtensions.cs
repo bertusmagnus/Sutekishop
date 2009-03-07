@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Microsoft.Web.Mvc;
+using MvcContrib.FluentHtml.Elements;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Controllers;
 
@@ -64,5 +65,11 @@ namespace Suteki.Shop.HtmlHelpers
             var menuWriter = new MenuWriter(htmlHelper, menu, nest, attributes);
             return menuWriter.Write();
         }
+
+		public static THelper Name<THelper>(this THelper helper, string name) where THelper : IElement
+		{
+			helper.Builder.MergeAttribute("name", name, true);
+			return helper;
+		}
     }
 }
