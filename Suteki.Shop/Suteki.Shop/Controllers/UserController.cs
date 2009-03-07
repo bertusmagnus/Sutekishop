@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
@@ -8,8 +7,6 @@ using Suteki.Shop.Filters;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
-using System.Web.Security;
-using System.Security.Permissions;
 using MvcContrib;
 namespace Suteki.Shop.Controllers
 {

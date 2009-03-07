@@ -37,6 +37,30 @@ namespace Suteki.Shop.Tests.Binders
 			typeof(InvalidOperationException).ShouldBeThrownBy(() => new BindUsingAttribute(typeof(IDisposable)));
 		}
 
+		[Test]
+		public void Binder_should_Accept_attribute()
+		{
+			var attribute = new BindUsingAttribute(typeof(TestBinder2));
+			var binder = attribute.GetBinder() as TestBinder2;
+			binder.Attribute.ShouldNotBeNull();
+		}
+
+		private class TestBinder2 : IModelBinder, IAcceptsAttribute
+		{
+			public BindUsingAttribute Attribute;
+
+			public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+			{
+				return null;
+			}
+
+
+			public void Accept(Attribute attribute)
+			{
+				this.Attribute = (BindUsingAttribute) attribute;
+			}
+		}
+
 		private class TestBinder : IModelBinder
 		{
 			public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)

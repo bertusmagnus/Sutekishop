@@ -21,7 +21,14 @@ namespace Suteki.Shop.Binders
 
 		public override IModelBinder GetBinder()
 		{
-			return (IModelBinder) ServiceLocator.Current.GetInstance(binderType);
+			var binder = (IModelBinder) ServiceLocator.Current.GetInstance(binderType);
+
+			if(binder is IAcceptsAttribute)
+			{
+				((IAcceptsAttribute)binder).Accept(this);
+			}
+
+			return binder;
 		}
 	}
 }
