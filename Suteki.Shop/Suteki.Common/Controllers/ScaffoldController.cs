@@ -87,45 +87,6 @@ namespace Suteki.Common.Controllers
             return RedirectToAction("Index", new {page});
         }
 
-		[Obsolete]
-        public virtual ActionResult Update(FormCollection form)
-        {
-            var id = GetPrimaryKey();
-
-            var item = id == 0 ? 
-                new T() : 
-                Repository.GetById(id);
-
-            try
-            {
-                ValidatingBinder.UpdateFrom(item, form, ModelState);
-                if (id == 0)
-                {
-                    Repository.InsertOnSubmit(item);
-                }
-                Repository.SubmitChanges();
-
-                return RedirectToAction("Index");
-            }
-            catch (ValidationException validationException)
-            {
-                return View("Edit", BuildEditViewData().With(item).WithErrorMessage(validationException.Message));
-            }
-        }
-
-        public virtual NameValueCollection Form
-        {
-            get
-            {
-                return Request.Form;
-            }
-        }
-
-        public virtual int GetPrimaryKey()
-        {
-            return int.Parse(httpContextService.FormOrQuerystring[typeof(T).GetPrimaryKey().Name]);
-        }
-
         /// <summary>
         /// Appends any lookup lists T might need for editing
         /// </summary>

@@ -1,31 +1,18 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Postage.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master"   Inherits="Suteki.Shop.ViewPage<ScaffoldViewData<Suteki.Shop.Postage>>" %>
+<%@ Import Namespace="Suteki.Common.ViewData"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
     <h1>Postage Band</h1>
-    
-    <%= Html.ErrorBox(ViewData.Model) %>
+    <%= Html.ValidationSummary() %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.BeginForm("Update", "Postage"))
-       { %>
-
-        <%= Html.Hidden("postageid", ViewData.Model.Item.PostageId.ToString())%>
-        <%= Html.Hidden("position", ViewData.Model.Item.Position.ToString())%>
-
-        <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Model.Item.Name)%>
-        
-        <label for="maxweight">Max Weight (grams)</label>
-        <%= Html.TextBox("maxweight", ViewData.Model.Item.MaxWeight.ToString())%>
-        
-        <label for="price">Price</label>
-        <%= Html.TextBox("price", ViewData.Model.Item.Price)%>
-        
-        <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", ViewData.Model.Item.IsActive)%>
-        
-        <%= Html.SubmitButton()%>
-        
+    <% using (Html.BeginForm()) { %>
+		<%= this.Hidden(x=>x.Item.PostageId) %>
+		<%= this.Hidden(x => x.Item.Position) %>
+		<%= this.TextBox(x => x.Item.Name).Label("Name") %>
+		<%= this.TextBox(x => x.Item.MaxWeight).Label("Max Weight (grams)") %>
+        <%= this.TextBox(x => x.Item.Price).Format("0.00").Label("Price") %>
+        <%= this.CheckBox(x=>x.Item.IsActive).Label("Active") %>
+        <input type="submit" value="Save Changes" />
     <% } %>
-
 </asp:Content>

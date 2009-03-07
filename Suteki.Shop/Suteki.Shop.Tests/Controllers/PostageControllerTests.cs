@@ -11,6 +11,7 @@ using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using System.Collections.Generic;
 using Rhino.Mocks;
+using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -82,29 +83,28 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreSame(postage, vd => vd.Item);
         }
 
-        [Test]
-        public void Update_ShouldAddNewPostage()
-        {
-            var form = BuildMockPostageForm();
-            form.Add("postageid", "0");
+    	[Test]
+    	public void NewWithPost_ShouldAddNewPostage()
+    	{
+    		var postage = new Postage() { MaxWeight = 250, Price = (decimal)5.25, Name = "foo"};
+    		postageController.New(postage)
+    			.ReturnRedirectToRouteResult()
+    			.ToAction("Index");
 
-            Postage postage = null;
+			postageRepository.AssertWasCalled(x=>x.InsertOnSubmit(postage));
+    	}
 
-            httpContextService.Stub(hcs => hcs.FormOrQuerystring).Return(form);
+    	[Test]
+    	public void NewWithPost_ShouldRenderViewOnError()
+    	{
+    		postageController.ModelState.AddModelError("foo", "bar");
+    		postageController.New(new Postage())
+    			.ReturnsViewResult()
+    			.ForView("Edit");
 
-            postageRepository.Expect(pr => pr.InsertOnSubmit(Arg<Postage>.Is.Anything))
-                .WhenCalled(invocation => { postage = invocation.Arguments[0] as Postage; });
+			postageRepository.AssertWasNotCalled(x=>x.InsertOnSubmit(Arg<Postage>.Is.Anything));
+    	}
 
-            postageController.Update(form)
-                .ReturnRedirectToRouteResult()
-                .ToAction("Index");
-
-            Assert.AreEqual(form["name"], postage.Name);
-            Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
-            Assert.AreEqual(form["price"], postage.Price.ToString());
-
-            postageRepository.AssertWasCalled(pr => pr.SubmitChanges());
-        }
 
         private static FormCollection BuildMockPostageForm()
         {
@@ -118,34 +118,28 @@ namespace Suteki.Shop.Tests.Controllers
             return form;
         }
 
-        [Test]
-        public void Update_ShouldUpdateExistingPostage()
-        {
-            const int postageId = 4;
-            var form = BuildMockPostageForm();
-            form.Add("postageid", postageId.ToString());
+    	[Test]
+    	public void EditWithPost_ShouldRenderViewOnSuccessfulSave()
+    	{
+    		var postage = new Postage();
+    		postageController.Edit(postage)
+    			.ReturnsViewResult()
+    			.WithModel<ScaffoldViewData<Postage>>()
+    			.AssertNotNull(x => x.Message)
+				.AssertAreSame(postage,x=>x.Item);
+    	}
 
-            var postage = new Postage 
-            {
-                PostageId = postageId,
-                Name = "old name",
-                MaxWeight = 100,
-                Price = 2.23M
-            };
-
-            postageRepository.Stub(pr => pr.GetById(postageId)).Return(postage);
-            httpContextService.Stub(hcs => hcs.FormOrQuerystring).Return(form);
-
-            postageController.Update(form)
-                .ReturnRedirectToRouteResult()
-                .ToAction("Index");
-
-            Assert.AreEqual(form["name"], postage.Name);
-            Assert.AreEqual(form["maxweight"], postage.MaxWeight.ToString());
-            Assert.AreEqual(form["price"], postage.Price.ToString());
-
-            postageRepository.AssertWasCalled(pr => pr.SubmitChanges());
-        }
+    	[Test]
+    	public void EditWithPost_ShouldRenderViewOnError()
+    	{
+    		postageController.ModelState.AddModelError("foo", "Bar");
+    		var postage = new Postage();
+    		postageController.Edit(postage)
+    			.ReturnsViewResult()
+    			.WithModel<ScaffoldViewData<Postage>>()
+    			.AssertNull(x => x.Message)
+    			.AssertAreSame(postage, x => x.Item);
+    	}
 
         [Test]
         public void MoveUp_ShouldMoveItemUp()
