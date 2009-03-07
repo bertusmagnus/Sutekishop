@@ -53,11 +53,11 @@ namespace Suteki.Common.Validation
         {
             if (value == null)
             {
-                throw new ValidationException(StringExtensions.With("You must enter a value for {0}", label));
+                throw new ValidationException(label, StringExtensions.With("You must enter a value for {0}", label));
             }
             if (IsString && string.IsNullOrEmpty(ValueAsString))
             {
-                throw new ValidationException(StringExtensions.With("You must enter a value for {0}", label));
+                throw new ValidationException(label, StringExtensions.With("You must enter a value for {0}", label));
             }
 
            return this;
@@ -70,7 +70,7 @@ namespace Suteki.Common.Validation
                 // the obvious thing (int.Parse) doesn't work for very long strings of digits
                 if (ValueAsString.Trim().Any(c => !char.IsDigit(c)))
                 {
-                    throw new ValidationException("{0} must be a number e.g. 240".With(label));
+                    throw new ValidationException(label,"{0} must be a number e.g. 240".With(label));
                 }
             }
 
@@ -81,7 +81,7 @@ namespace Suteki.Common.Validation
         {
             if (IsString && ValueAsString.Trim().Any(c => !(char.IsDigit(c) || c == '.')))
             {
-                throw new ValidationException("{0} must be a decimal number e.g 12.30".With(label));
+                throw new ValidationException(label,"{0} must be a decimal number e.g 12.30".With(label));
             }
             
             return this;
@@ -92,11 +92,11 @@ namespace Suteki.Common.Validation
             int test;
             if (!int.TryParse(value.ToString(), out test))
             {
-                throw new ValidationException("{0} must be a non-zero number".With(label));
+                throw new ValidationException(label,"{0} must be a non-zero number".With(label));
             }
             if (test == 0)
             {
-                throw new ValidationException("{0} must be non-zero".With(label));
+                throw new ValidationException(label,"{0} must be non-zero".With(label));
             }
             return this;
         }
@@ -105,7 +105,7 @@ namespace Suteki.Common.Validation
         {
             if (IsString && ValueAsString.Length > maxLength)
             {
-                throw new ValidationException("{0} must not exceed {1} characters".With(label, maxLength));
+                throw new ValidationException(label,"{0} must not exceed {1} characters".With(label, maxLength));
             }
             return this;
         }
@@ -114,7 +114,7 @@ namespace Suteki.Common.Validation
         {
             if (IsString && ValueAsString.Length < range.Min() || ValueAsString.Length > range.Max())
             {
-                throw new ValidationException(
+                throw new ValidationException(label,
                     "{0} length must be between {1} and {2} characters".With(label, range.Min(), range.Max()));
             }
 
@@ -131,7 +131,7 @@ namespace Suteki.Common.Validation
             const string patternLenient = @"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*";
             if (!Regex.Match(ValueAsString, patternLenient).Success)
             {
-                throw new ValidationException("{0} must be a valid email address".With(label));
+                throw new ValidationException(label,"{0} must be a valid email address".With(label));
             }
 
             return this;
@@ -152,7 +152,7 @@ namespace Suteki.Common.Validation
 
                 if ((oddSum + doubleEvenSum) % 10 != 0)
                 {
-                    throw new ValidationException("{0} is not a valid credit card number".With(label));
+                    throw new ValidationException(label,"{0} is not a valid credit card number".With(label));
                 }
             }
             return this;

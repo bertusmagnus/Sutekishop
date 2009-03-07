@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Suteki.Common.Validation
 {
@@ -14,10 +15,16 @@ namespace Suteki.Common.Validation
         //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
         //
 
-        public ValidationException() { }
-        public ValidationException(string message) : base(message) { }
-        public ValidationException(string message, Exception inner) : base(message, inner) { }
-        protected ValidationException(
+		//TODO: Consider removing these two ctors
+		public ValidationException(string message) : base(message) {}
+		public ValidationException(string message, Exception inner) : base(message, inner) { }
+
+        public ValidationException(string key, string message) : base(message)
+        {
+			this.propertyKey = key;
+        }
+        
+		protected ValidationException(
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
@@ -34,10 +41,21 @@ namespace Suteki.Common.Validation
     	}
 
     	private ValidationException[] errors = new ValidationException[0];
+    	private string propertyKey;
 
     	public ValidationException[] Errors
     	{
 			get { return errors;  }
+    	}
+
+    	public void CopyToModelState(ModelStateDictionary dictionary, string prefix)
+    	{
+    		foreach(var error in errors)
+    		{
+				string key = string.IsNullOrEmpty(prefix) ? error.propertyKey : prefix + "." + error.propertyKey;
+
+				dictionary.AddModelError(key, error.Message);
+    		}
     	}
     }
 }
