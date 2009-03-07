@@ -46,17 +46,11 @@ namespace Suteki.Shop.Controllers
         }
 
 		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult New(FormCollection form) //TODO: modify DataBind attribute to only fetch optionally. 
+		public ActionResult New([DataBind(Fetch = false)] Category category)
 		{
-			var category = new Category();
-			try
+			if(! ModelState.IsValid)
 			{
-				validatingBinder.UpdateFrom(category, form, ModelState, "category");	
-			}
-			catch(ValidationException ex)
-			{
-				return View("Edit", EditViewData.WithCategory(category)
-					.WithErrorMessage(ex.Message));
+				return View("Edit", EditViewData.WithCategory(category));
 			}
 
 			categoryRepository.InsertOnSubmit(category);
@@ -72,44 +66,17 @@ namespace Suteki.Shop.Controllers
         }
 
 		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult Edit([DataBind] Category category) //TODO: remove duplication
+		public ActionResult Edit([DataBind] Category category)
 		{
+			var viewData = EditViewData.WithCategory(category);
+
 			if(ModelState.IsValid)
 			{
-				return View("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved."));
+				viewData.WithMessage("The category has been saved.");
 			}
-			else
-			{
-				return View("Edit", EditViewData.WithCategory(category));
-					//.WithErrorMessage(validationException.Message));
-			}
+
+			return View(viewData);
 		}
-
-        /*public ActionResult Update(int categoryId)
-        {
-            var category = categoryId == 0 ? 
-                new Category() : 
-                categoryRepository.GetById(categoryId);
-
-            try
-            {
-                validatingBinder.UpdateFrom(category, Request.Form);
-            }
-            catch (ValidationException validationException)
-            {
-                return View("Edit", EditViewData.WithCategory(category)
-                    .WithErrorMessage(validationException.Message));
-            }
-
-            if (categoryId == 0)
-            {
-                categoryRepository.InsertOnSubmit(category);
-            }
-
-            categoryRepository.SubmitChanges();
-
-            return View("Edit", EditViewData.WithCategory(category).WithMessage("The category has been saved"));
-        }*/
 
         private ShopViewData EditViewData
         {

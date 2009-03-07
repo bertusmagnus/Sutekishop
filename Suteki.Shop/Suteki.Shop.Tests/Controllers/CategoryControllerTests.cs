@@ -82,7 +82,6 @@ namespace Suteki.Shop.Tests.Controllers
     		var category = new Category();
 			categoryController.Edit(category)
 				.ReturnsViewResult()
-				.ForView("Edit")
 				.WithModel<ShopViewData>()
 				.AssertAreEqual(category, x => x.Category)
 				.AssertNotNull(x => x.Message);
@@ -96,50 +95,12 @@ namespace Suteki.Shop.Tests.Controllers
 			var category = new Category();
 			categoryController.Edit(category)
 				.ReturnsViewResult()
-				.ForView("Edit")
 				.WithModel<ShopViewData>()
 				.AssertAreEqual(category, x => x.Category)
 				.AssertNull(x => x.Message);
     	}
 
-       /* [Test]
-        public void Update_ShouldInsertNewCategory()
-        {
-            const int categoryId = 0;
-            const string name = "My Category";
-            const int parentid = 78;
-
-            // set up the request form
-            var form = new NameValueCollection
-            {
-                {"categoryid", categoryId.ToString()},
-                {"name", name},
-                {"parentid", parentid.ToString()}
-            };
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
-
-            // set up expectations on the repository
-            Category category = null;
-
-            categoryRepository.Expect(cr => cr.InsertOnSubmit(Arg<Category>.Is.Anything))
-                .Callback<Category>(c => 
-                { 
-                    category = c;
-                    return true; 
-                });
-
-            categoryRepository.Expect(cr => cr.SubmitChanges());
-
-            var result = categoryController.Update(categoryId) as ViewResult;
-
-            // assert that the category has the correct values from the form
-            Assert.IsNotNull(category, "category is null");
-            Assert.AreEqual(name, category.Name);
-            Assert.AreEqual(parentid, category.ParentId);
-
-            AssertEditViewIsCorrectlyShown(result);
-        }*/
-
+   
         private static void AssertEditViewIsCorrectlyShown(ActionResult result)
         {
             result
@@ -151,41 +112,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(6, vd => vd.Categories.Count());
         }
 
-       /* [Test]
-        public void Update_ShouldUpdateAnExistingCategory()
-        {
-            const int categoryId = 12;
-            const string name = "My Category";
-            const int parentid = 78;
-
-            // set up the request form
-            var form = new NameValueCollection
-            {
-                {"categoryid", categoryId.ToString()},
-                {"name", name},
-                {"parentid", parentid.ToString()}
-            };
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
-
-            var category = new Category
-            {
-                CategoryId = 12,
-                Name = "Old Name",
-                ParentId = 22
-            };
-
-            categoryRepository.Expect(cr => cr.GetById(categoryId)).Return(category);
-            categoryRepository.Expect(cr => cr.SubmitChanges());
-
-            var result = categoryController.Update(categoryId) as ViewResult;
-
-            // assert that the category has the correct values from the form
-            Assert.IsNotNull(category, "category is null");
-            Assert.AreEqual(name, category.Name);
-            Assert.AreEqual(parentid, category.ParentId);
-
-            AssertEditViewIsCorrectlyShown(result);
-        }*/
 
 		[Test]
 		public void NewWithPost_should_insert_new_category()
@@ -194,46 +120,33 @@ namespace Suteki.Shop.Tests.Controllers
 			const string name = "My Category";
 			const int parentid = 78;
 
-			// set up the request form
-			var form = new FormCollection()
-            {
-                {"category.CategoryId", categoryId.ToString()},
-                {"category.Name", name},
-                {"category.ParentId", parentid.ToString()}
-            };
+			var category = new Category 
+			{
+				CategoryId = categoryId,
+				Name = name,
+				ParentId = parentid
+			};
 
-			// set up expectations on the repository
-			Category category = null;
-
-			categoryRepository.Expect(x => x.InsertOnSubmit(Arg<Category>.Is.Anything))
-				.Callback<Category>(x => { category = x; return true; });
-
-			categoryController.New(form)
+			categoryController.New(category)
 				.ReturnRedirectToRouteResult()
 				.ToAction("Index");
 
-			category.ShouldNotBeNull();
-			category.Name.ShouldEqual(name);
-			category.ParentId.ShouldEqual(parentid);
-
+			categoryRepository.AssertWasCalled(x => x.InsertOnSubmit(category));
 			categoryController.Message.ShouldNotBeNull();
 		}
 
     	[Test]
     	public void NewWithPost_should_render_view_on_error()
     	{
-			var form = new FormCollection 
-			{
-				{ "category.CategoryId", "foo" }
-			};
+			categoryController.ModelState.AddModelError("foo", "bar");
 
-			categoryController.New(form)
+			categoryController.New(new Category())
 				.ReturnsViewResult()
 				.ForView("Edit")
-				.WithModel<ShopViewData>()
-				.AssertNotNull(x => x.ErrorMessage);
+				.WithModel<ShopViewData>();
 
-			categoryController.ModelState.IsValid.ShouldBeFalse();
+			categoryRepository.AssertWasNotCalled(x => x.InsertOnSubmit(Arg<Category>.Is.Anything));
+
     	}
 
     }

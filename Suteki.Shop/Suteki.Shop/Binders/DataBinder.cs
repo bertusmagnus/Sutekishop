@@ -10,14 +10,18 @@ namespace Suteki.Shop.Binders
 	{
 		public DataBindAttribute() : base(typeof(DataBinder))
 		{
+			Fetch = true;
 		}
+
+		public bool Fetch { get; set; }
 	}
 
-	public class DataBinder : IModelBinder
+	public class DataBinder : IModelBinder, IAcceptsAttribute
 	{
 		private readonly IValidatingBinder validatingBinder;
 		private readonly IRepositoryResolver resolver;
-
+		private DataBindAttribute declaringAttribute;
+		
 		public DataBinder(IValidatingBinder validatingBinder, IRepositoryResolver resolver)
 		{
 			this.validatingBinder = validatingBinder;
@@ -26,19 +30,17 @@ namespace Suteki.Shop.Binders
 
 		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
 		{
-			var primaryKey = bindingContext.ModelType.GetPrimaryKey();
-			string name = bindingContext.ModelName + "." + primaryKey.Name;
+			object entity;
 
-			string rawKeyValue = controllerContext.HttpContext.Request.Form[name];
-
-			if(string.IsNullOrEmpty(rawKeyValue))
+			if(declaringAttribute == null || declaringAttribute.Fetch)
 			{
-				throw new InvalidOperationException("Could not find a value named '{0}'".With(name));
+				entity = FetchEntity(bindingContext, controllerContext);
 			}
-
-			int key = Convert.ToInt32(rawKeyValue);
-			var repository = resolver.GetRepository(bindingContext.ModelType);
-			var entity = repository.GetById(key);
+			else 
+			{
+				entity = Activator.CreateInstance(bindingContext.ModelType);
+			}
+			
 
 			try
 			{
@@ -53,5 +55,28 @@ namespace Suteki.Shop.Binders
 			return entity;
 		}
 
+		private object FetchEntity(ModelBindingContext bindingContext, ControllerContext controllerContext)
+		{
+			object entity;
+			var primaryKey = bindingContext.ModelType.GetPrimaryKey();
+			string name = bindingContext.ModelName + "." + primaryKey.Name;
+
+			string rawKeyValue = controllerContext.HttpContext.Request.Form[name];
+
+			if (string.IsNullOrEmpty(rawKeyValue))
+			{
+				throw new InvalidOperationException("Could not find a value named '{0}'".With(name));
+			}
+
+			int key = Convert.ToInt32(rawKeyValue);
+			var repository = resolver.GetRepository(bindingContext.ModelType);
+			entity = repository.GetById(key);
+			return entity;
+		}
+
+		public void Accept(Attribute attribute)
+		{
+			declaringAttribute = (DataBindAttribute) attribute;			
+		}
 	}
 }

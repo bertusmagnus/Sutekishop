@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Reflection;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
@@ -77,16 +78,19 @@ namespace Suteki.Common.Validation
                     {
 						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
                         bindingContext.AddModelError(key, bindingContext.AttemptedValue, "Invalid value for {0}".With(property.Name));
+						bindingContext.ModelStateDictionary.SetModelValue(key, new ValueProviderResult(bindingContext.AttemptedValue, bindingContext.AttemptedValue, CultureInfo.CurrentCulture));
                     }
                     else if (exception is ValidationException)
                     {
 						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
                         bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.Message);
+						bindingContext.ModelStateDictionary.SetModelValue(key, new ValueProviderResult(bindingContext.AttemptedValue, bindingContext.AttemptedValue, CultureInfo.CurrentCulture));
                     }
                     else if (exception.InnerException is ValidationException)
                     {
 						string key = BuildKeyForModelState(property, bindingContext.ObjectPrefix);
                         bindingContext.AddModelError(key, bindingContext.AttemptedValue, exception.InnerException.Message);
+						bindingContext.ModelStateDictionary.SetModelValue(key, new ValueProviderResult(bindingContext.AttemptedValue, bindingContext.AttemptedValue, CultureInfo.CurrentCulture));
                     }
                     else
                     {

@@ -74,6 +74,17 @@ namespace Suteki.Shop.Tests.Binders
 			validatingBinder.AssertWasCalled(x => x.UpdateFrom(testEntity, controllerContext.HttpContext.Request.Form, context.ModelState, "foo"));
 		}
 
+		[Test]
+		public void Should_not_fetch_when_fetch_disabled()
+		{
+			var attribute = new DataBindAttribute() { Fetch = false };
+			binder.Accept(attribute);
+			binder.BindModel(controllerContext, context);
+
+			validatingBinder.AssertWasCalled(x => x.UpdateFrom(Arg<TestEntity>.Is.Anything, Arg<NameValueCollection>.Is.Equal(controllerContext.HttpContext.Request.Form), Arg<ModelStateDictionary>.Is.Anything, Arg<string>.Is.Equal("foo")));
+			repository.AssertWasNotCalled(x => x.GetById(3));
+		}
+
 		private class TestEntity
 		{
 			[Column(IsPrimaryKey = true)]
