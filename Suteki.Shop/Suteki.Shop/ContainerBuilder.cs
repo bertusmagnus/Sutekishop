@@ -8,6 +8,7 @@ using Suteki.Common.Binders;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Windsor;
+using Suteki.Shop.Binders;
 using Suteki.Shop.Filters;
 using Suteki.Shop.IoC;
 using Suteki.Shop.Services;
@@ -39,7 +40,8 @@ namespace Suteki.Shop
 				Component.For<AuthenticateFilter>().LifeStyle.Transient,
 				Component.For<UnitOfWorkFilter>().LifeStyle.Transient,
 				Component.For<DataBinder>().LifeStyle.Transient,
-				Component.For<LoadUsingFilter>().LifeStyle.Transient
+				Component.For<LoadUsingFilter>().LifeStyle.Transient,
+				Component.For<CurrentBasketBinder>().LifeStyle.Transient
 			);
 
 			return container;

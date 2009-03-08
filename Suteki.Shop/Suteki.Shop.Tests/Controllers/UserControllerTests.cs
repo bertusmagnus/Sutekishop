@@ -114,7 +114,7 @@ namespace Suteki.Shop.Tests.Controllers
 			};
 
 			userController.New(user, password)
-				.ReturnRedirectToRouteResult()
+				.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
 
 			userController.Message.ShouldNotBeNull();

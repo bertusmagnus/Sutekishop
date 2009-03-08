@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\CurrentBasketBinder.cs" />
     <Compile Include="ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CmsController.cs" />
@@ -248,13 +249,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Home\Index.aspx.designer.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Basket\Index.aspx.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Basket\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Order\Checkout.aspx.cs">
@@ -420,7 +414,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Binders\" />
     <Folder Include="ProductPhotos\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

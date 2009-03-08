@@ -27,7 +27,7 @@ namespace Suteki.Common.Tests.Filters
 		[Test]
 		public void Changes_should_be_submitted_when_result_executed()
 		{
-			filter.OnResultExecuted(new ResultExecutedContext() { Controller = new TestController() });
+			filter.OnActionExecuted(new ActionExecutedContext() { Controller = new TestController() });
 			context.ChangesSubmitted.ShouldBeTrue();
 		}
 
@@ -36,7 +36,7 @@ namespace Suteki.Common.Tests.Filters
 		{
 			var controller = new TestController();
 			controller.ModelState.AddModelError("foo", "bar");
-			filter.OnResultExecuted(new ResultExecutedContext() { Controller = controller });
+			filter.OnActionExecuted(new ActionExecutedContext() { Controller = controller });
 			context.ChangesSubmitted.ShouldBeFalse();
 		}
 

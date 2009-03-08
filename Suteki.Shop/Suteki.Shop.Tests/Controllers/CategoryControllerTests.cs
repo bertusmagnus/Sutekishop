@@ -81,7 +81,7 @@ namespace Suteki.Shop.Tests.Controllers
     	{
     		var category = new Category();
 			categoryController.Edit(category)
-				.ReturnRedirectToRouteResult()
+				.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
     	}
 
@@ -126,7 +126,7 @@ namespace Suteki.Shop.Tests.Controllers
 			};
 
 			categoryController.New(category)
-				.ReturnRedirectToRouteResult()
+				.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
 
 			categoryRepository.AssertWasCalled(x => x.InsertOnSubmit(category));

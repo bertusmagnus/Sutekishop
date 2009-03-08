@@ -88,7 +88,7 @@ namespace Suteki.Shop.Tests.Controllers
     	{
     		var postage = new Postage() { MaxWeight = 250, Price = (decimal)5.25, Name = "foo"};
     		postageController.New(postage)
-    			.ReturnRedirectToRouteResult()
+    			.ReturnsRedirectToRouteResult()
     			.ToAction("Index");
 
 			postageRepository.AssertWasCalled(x=>x.InsertOnSubmit(postage));
@@ -111,7 +111,7 @@ namespace Suteki.Shop.Tests.Controllers
     	{
     		var postage = new Postage();
     		postageController.Edit(postage)
-    			.ReturnRedirectToRouteResult()
+    			.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
     	}
 

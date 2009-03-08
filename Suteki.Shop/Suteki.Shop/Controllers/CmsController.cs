@@ -10,7 +10,8 @@ using System.Security.Permissions;
 
 namespace Suteki.Shop.Controllers
 {
-    public class CmsController : ControllerBase
+    public class 
+		CmsController : ControllerBase
     {
         public readonly IRepository<Content> contentRepository;
         public readonly IOrderableService<Content> contentOrderableService;

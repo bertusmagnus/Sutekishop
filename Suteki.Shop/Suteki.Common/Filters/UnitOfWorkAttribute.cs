@@ -1,4 +1,3 @@
-using System;
 using System.Web.Mvc;
 using Suteki.Common.Repositories;
 
@@ -6,12 +5,12 @@ namespace Suteki.Common.Filters
 {
 	public class UnitOfWorkAttribute : FilterUsingAttribute
 	{
-		public UnitOfWorkAttribute() : base(typeof(UnitOfWorkFilter))
+		public UnitOfWorkAttribute() : base(typeof (UnitOfWorkFilter))
 		{
 		}
 	}
 
-	public class UnitOfWorkFilter : IResultFilter
+	public class UnitOfWorkFilter : IActionFilter
 	{
 		private readonly IDataContextProvider provider;
 
@@ -20,17 +19,17 @@ namespace Suteki.Common.Filters
 			this.provider = provider;
 		}
 
-		public void OnResultExecuting(ResultExecutingContext filterContext)
+		public void OnActionExecuting(ActionExecutingContext filterContext)
 		{
 		}
 
-		public void OnResultExecuted(ResultExecutedContext filterContext)
+		public void OnActionExecuted(ActionExecutedContext filterContext)
 		{
 			var context = provider.DataContext;
 
-			if(filterContext.Controller.ViewData.ModelState.IsValid)
+			if (filterContext.Controller.ViewData.ModelState.IsValid)
 			{
-				context.SubmitChanges();            	
+				context.SubmitChanges();
 			}
 		}
 	}

@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Suteki.Common.Extensions;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
+using Suteki.Shop.Binders;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Services;
-
+using MvcContrib;
 namespace Suteki.Shop.Controllers
 {
     public class BasketController : ControllerBase
@@ -39,36 +41,25 @@ namespace Suteki.Shop.Controllers
         public ActionResult Index()
         {
             var user = userService.CurrentUser;
-            return RenderIndexView(user.CurrentBasket);
+            return  View("Index", IndexViewData(user.CurrentBasket));
         }
 
-        public ActionResult Update(FormCollection form)
+        [UnitOfWork, AcceptVerbs(HttpVerbs.Post)] //TODO: Change this to use DataBind after the ProductController has been updated
+		public ActionResult Update([CurrentBasket] Basket basket, FormCollection form)
         {
-            var user = userService.CurrentUser;
-
-            // if the current user is a guest, promote them to a new customer
-            if (user.RoleId == Role.GuestId)
-            {
-                user = userService.CreateNewCustomer();
-                userService.SetAuthenticationCookie(user.Email);
-                userService.SetContextUserTo(user);
-            }
-
-            var basket = user.CurrentBasket;
-
             var basketItem = new BasketItem();
             validatingBinder.UpdateFrom(basketItem, form, ModelState);
 
             var size = sizeRepository.GetById(basketItem.SizeId);
+
             if (!size.IsInStock)
             {
                 return RenderIndexViewWithError(basket, size);
             }
 
             basket.BasketItems.Add(basketItem);
-            basketRepository.SubmitChanges();
 
-            return RedirectToRoute(new {Controller = "Basket", Action = "Index"});
+			return this.RedirectToAction(c => c.Index());
         }
 
         private ActionResult RenderIndexViewWithError(Basket basket, Size size)
@@ -85,11 +76,6 @@ namespace Suteki.Shop.Controllers
             return View("Index", IndexViewData(basket).WithErrorMessage(message));
         }
 
-        private ActionResult RenderIndexView(Basket basket)
-        {
-            return View("Index", IndexViewData(basket));
-        }
-
         private ShopViewData IndexViewData(Basket basket)
         {
             if (basket.Country == null)
@@ -100,6 +86,7 @@ namespace Suteki.Shop.Controllers
                 .WithTotalPostage(postageService.CalculatePostageFor(basket));
         }
 
+		[UnitOfWork]
         public ActionResult Remove(int id)
         {
             var basket = userService.CurrentUser.CurrentBasket;
@@ -108,10 +95,9 @@ namespace Suteki.Shop.Controllers
             if (basketItem != null)
             {
                 basketItemRepository.DeleteOnSubmit(basketItem);
-                basketItemRepository.SubmitChanges();
             }
 
-            return RenderIndexView(basket);
+			return this.RedirectToAction(c => c.Index());
         }
     }
 }

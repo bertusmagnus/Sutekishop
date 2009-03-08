@@ -48,7 +48,7 @@ namespace Suteki.Shop.Tests.Controllers
         	userService.Expect(x => x.HashPassword(password)).Return(henry1password);
             
             loginController.Index(email, password, null)
-                .ReturnRedirectToRouteResult()
+                .ReturnsRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 
@@ -74,7 +74,7 @@ namespace Suteki.Shop.Tests.Controllers
         public void Logout_ShouldLogUserOut()
         {
             loginController.Logout()
-                .ReturnRedirectToRouteResult()
+                .ReturnsRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
 

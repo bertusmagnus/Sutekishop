@@ -17,7 +17,7 @@ namespace Suteki.Common.TestHelpers
             return viewResult;
         }
 
-        public static RedirectToRouteResult ReturnRedirectToRouteResult(this ActionResult result)
+        public static RedirectToRouteResult ReturnsRedirectToRouteResult(this ActionResult result)
         {
             var viewResult = result as RedirectToRouteResult;
             if (viewResult == null)
