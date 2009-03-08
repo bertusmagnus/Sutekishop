@@ -77,14 +77,12 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
     	[Test]
-    	public void EditWithPost_should_render_view_when_binding_succeeded()
+    	public void EditWithPost_should_redirect_when_binding_succeeded()
     	{
     		var category = new Category();
 			categoryController.Edit(category)
-				.ReturnsViewResult()
-				.WithModel<ShopViewData>()
-				.AssertAreEqual(category, x => x.Category)
-				.AssertNotNull(x => x.Message);
+				.ReturnRedirectToRouteResult()
+				.ToAction("Index");
     	}
 
     	[Test]

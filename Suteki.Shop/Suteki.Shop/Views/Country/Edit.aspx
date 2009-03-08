@@ -1,28 +1,17 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Country.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ScaffoldViewData<Suteki.Shop.Country>>" %>
+<%@ Import Namespace="Suteki.Common.ViewData"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
     <h1>Country</h1>
-    
-    <%= Html.ErrorBox(ViewData.Model)%>
+    <%= Html.ValidationSummary() %>
     <%= Html.MessageBox(ViewData.Model)%>
 
-    <% using (Html.BeginForm("Update", "Country"))
-       { %>
-
-        <%= Html.Hidden("countryid", ViewData.Model.Item.CountryId.ToString())%>
-        <%= Html.Hidden("position", ViewData.Model.Item.Position.ToString())%>
-
-        <label for="name">Name</label>
-        <%= Html.TextBox("name", ViewData.Model.Item.Name)%>
-        
-        <label for="isactive">Active</label>
-        <%= Html.CheckBox("isactive", ViewData.Model.Item.IsActive)%>
-        
-        <label for="postzoneid">Post Zone</label>
-        <%= Html.DropDownList("postzoneid", new SelectList(ViewData.Model.GetLookupList(typeof(PostZone)), "PostZoneId", "Name", ViewData.Model.Item.PostZoneId))%>
-        
-        <%= Html.SubmitButton()%>
-        
+    <% using (Html.BeginForm()) { %>
+		<%= this.Hidden(x => x.Item.CountryId) %>
+		<%= this.Hidden(x => x.Item.Position) %>
+		<%= this.TextBox(x => x.Item.Name).Label("Name") %>
+		<%= this.CheckBox(x => x.Item.IsActive).Label("Active") %>
+		<%= this.Select(x => x.Item.PostZoneId).Options(Model.GetLookupList<PostZone>(), x => x.PostZoneId, x => x.Name).Label("Post Zone")%>
+		<input type="submit" value="Save" />
     <% } %>
-
 </asp:Content>

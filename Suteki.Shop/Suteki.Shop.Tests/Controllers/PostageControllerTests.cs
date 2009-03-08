@@ -106,18 +106,6 @@ namespace Suteki.Shop.Tests.Controllers
     	}
 
 
-        private static FormCollection BuildMockPostageForm()
-        {
-            var form = new FormCollection
-            {
-                {"name", "A"}, 
-                {"maxWeight", "250"}, 
-                {"price", "5.25"}
-            };
-
-            return form;
-        }
-
     	[Test]
     	public void EditWithPost_ShouldRedirectOnSuccessfulSave()
     	{

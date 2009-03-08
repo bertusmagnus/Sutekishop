@@ -30,6 +30,11 @@ namespace Suteki.Common.ViewData
             return this;
         }
 
+		public IEnumerable<TLookup> GetLookupList<TLookup>()
+		{
+			return (IEnumerable<TLookup>) GetLookupList(typeof(TLookup));
+		}
+
         public IEnumerable GetLookupList(Type lookupType)
         {
             if (!lookupLists.ContainsKey(lookupType))

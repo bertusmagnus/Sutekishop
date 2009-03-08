@@ -1,28 +1,22 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Suteki.Shop.Views.Country.Index" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ScaffoldViewData<Suteki.Shop.Country>>" %>
+<%@ Import Namespace="MvcContrib.Pagination"%>
+<%@ Import Namespace="Suteki.Common.ViewData"%>
+<%@ Import Namespace="MvcContrib.UI.Pager" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1>Countries</h1>
 
+<div class="message"><%= TempData["message"] %></div>
+
 <p><%= Html.ActionLink<CountryController>(c => c.New(), "New Country") %></p>
 
-<table>
-    <tr>
-        <th class="wide">Name</th>
-        <th class="thin">Active</th>
-        <th class="thin">Post Zone</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-    </tr>
-<% foreach (var country in ViewData.Model.Items)
-   { %>
-    <tr>
-        <td><%= Html.ActionLink<CountryController>(c => c.Edit(country.CountryId), country.Name) %></td>
-        <td><%= Html.Tick(country.IsActive) %></td>
-        <td><%= country.PostZone.Name %></td>
-        <td><%= Html.UpArrowLink<CountryController>(c => c.MoveUp(country.Position, 1)) %></td>
-        <td><%= Html.DownArrowLink<CountryController>(c => c.MoveDown(country.Position, 1)) %></td>
-    </tr>
-<% } %>
-</table>
-
+<%= Html.Grid(Model.Items).Columns(column => {
+		column.For(x => Html.ActionLink<CountryController>(c => c.Edit(x.CountryId), x.Name)).DoNotEncode().Named("Name").HeaderAttributes(@class => "wide");
+		column.For(x => Html.Tick(x.IsActive)).DoNotEncode().Named("Active").HeaderAttributes(@class => "thin");
+		column.For(x => x.PostZone.Name).Named("Post Zone").HeaderAttributes(@class => "thin");
+		column.For(x => Html.UpArrowLink<CountryController>(c => c.MoveUp(x.Position, 1))).DoNotEncode().Named("&nbsp;");
+		column.For(x => Html.DownArrowLink<CountryController>(c => c.MoveDown(x.Position, 1))).DoNotEncode().Named("&nbsp;");
+    }) %>
+    
+ <%= Html.Pager((IPagination)Model.Items) %>
 </asp:Content>

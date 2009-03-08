@@ -1,8 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ScaffoldViewData<Suteki.Shop.PostZone>>" %>
+<%@ Import Namespace="MvcContrib.Pagination"%>
 <%@ Import Namespace="Suteki.Common.ViewData"%>
+<%@ Import Namespace="Suteki.Common.ViewData"%>
+<%@ Import Namespace="MvcContrib.UI.Pager" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1>Postage Zones</h1>
+
+<div class="message"><%= TempData["message"] %></div>
 
 <p><%= Html.ActionLink<PostZoneController>(c => c.New(), "New Postage Zone") %></p>
 
@@ -15,4 +20,6 @@
 		column.For(x => Html.UpArrowLink<PostZoneController>(c => c.MoveUp(x.Position, 1))).DoNotEncode().Named("&nbsp;");
 		column.For(x => Html.DownArrowLink<PostZoneController>(c => c.MoveDown(x.Position, 1))).DoNotEncode().Named("&nbsp;");
    }) %>
+   
+<%= Html.Pager((IPagination)Model.Items) %>
 </asp:Content>
