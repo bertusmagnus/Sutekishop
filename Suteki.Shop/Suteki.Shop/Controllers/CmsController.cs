@@ -61,7 +61,7 @@ namespace Suteki.Shop.Controllers
             return View("SubPage", CmsView.Data.WithContent(content));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Add(int id)
         {
             var parentContent = contentRepository.GetById(id);
@@ -77,7 +77,7 @@ namespace Suteki.Shop.Controllers
             return View("Edit", GetEditViewData(0).WithContent(textContent));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Edit(int id)
         {
             var content = contentRepository.GetById(id);
@@ -90,7 +90,7 @@ namespace Suteki.Shop.Controllers
                 return CmsView.Data.WithMenus(menus);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Update(int id, FormCollection form)
         {
             var content = id == 0 ? 

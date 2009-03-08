@@ -75,7 +75,7 @@ namespace Suteki.Shop.Controllers
             return Index(new FormCollection());
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Index(FormCollection form)
         {
@@ -154,9 +154,9 @@ namespace Suteki.Shop.Controllers
             return viewResult;
         }
 
-        
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult ShowCard(int orderId, string privateKey)
         {
             var order = orderRepository.GetById(orderId);
@@ -308,7 +308,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Dispatch(int id)
         {
             var order = orderRepository.GetById(id);
@@ -324,7 +324,7 @@ namespace Suteki.Shop.Controllers
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Reject(int id)
         {
             var order = orderRepository.GetById(id);
@@ -339,7 +339,7 @@ namespace Suteki.Shop.Controllers
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult UndoStatus(int id)
         {
             var order = orderRepository.GetById(id);
@@ -375,7 +375,7 @@ namespace Suteki.Shop.Controllers
             return View("Checkout", CheckoutViewData(order));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]        
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Invoice(int id)
         {
             var order = orderRepository.GetById(id);

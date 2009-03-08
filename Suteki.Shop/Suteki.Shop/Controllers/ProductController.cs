@@ -86,7 +86,7 @@ namespace Suteki.Shop.Controllers
             return View("Item", ShopView.Data.WithProduct(product));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult New(int id)
         {
             var defaultProduct = new Product
@@ -99,7 +99,7 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithProduct(defaultProduct)); 
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Update(int productId)
         {
             var product = productId == 0 ? 
@@ -166,7 +166,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+        [Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Edit(int id)
         {
             return RenderEditView(id);
@@ -178,7 +178,7 @@ namespace Suteki.Shop.Controllers
             return View("Edit", EditViewData.WithProduct(product));
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
+		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult MoveUp(int id, int position)
         {
             productOrderableService
@@ -189,8 +189,8 @@ namespace Suteki.Shop.Controllers
             return RenderIndexView(id);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult MoveDown(int id, int position)
+		[Suteki.Shop.Filters.AdministratorsOnly]
+		public ActionResult MoveDown(int id, int position)
         {
             productOrderableService
                 .MoveItemAtPosition(position)
@@ -200,8 +200,8 @@ namespace Suteki.Shop.Controllers
             return RenderIndexView(id);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult MoveImageUp(int id, int position)
+		[Suteki.Shop.Filters.AdministratorsOnly]
+		public ActionResult MoveImageUp(int id, int position)
         {
             productImageOrderableService
                 .MoveItemAtPosition(position)
@@ -211,8 +211,8 @@ namespace Suteki.Shop.Controllers
             return RenderEditView(id);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult MoveImageDown(int id, int position)
+		[Suteki.Shop.Filters.AdministratorsOnly]
+		public ActionResult MoveImageDown(int id, int position)
         {
             productImageOrderableService
                 .MoveItemAtPosition(position)
@@ -222,8 +222,8 @@ namespace Suteki.Shop.Controllers
             return RenderEditView(id);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult DeleteImage(int id, int productImageId)
+		[Suteki.Shop.Filters.AdministratorsOnly]
+		public ActionResult DeleteImage(int id, int productImageId)
         {
             var productImage = productImageRepository.GetById(productImageId);
             productImageRepository.DeleteOnSubmit(productImage);
@@ -232,8 +232,8 @@ namespace Suteki.Shop.Controllers
             return RenderEditView(id);
         }
 
-        [PrincipalPermission(SecurityAction.Demand, Role = "Administrator")]
-        public ActionResult ClearSizes(int id)
+		[Suteki.Shop.Filters.AdministratorsOnly]
+		public ActionResult ClearSizes(int id)
         {
             var product = productRepository.GetById(id);
             sizeService.Clear(product);
