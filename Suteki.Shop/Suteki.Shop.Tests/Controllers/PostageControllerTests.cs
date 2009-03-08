@@ -119,14 +119,12 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
     	[Test]
-    	public void EditWithPost_ShouldRenderViewOnSuccessfulSave()
+    	public void EditWithPost_ShouldRedirectOnSuccessfulSave()
     	{
     		var postage = new Postage();
     		postageController.Edit(postage)
-    			.ReturnsViewResult()
-    			.WithModel<ScaffoldViewData<Postage>>()
-    			.AssertNotNull(x => x.Message)
-				.AssertAreSame(postage,x=>x.Item);
+    			.ReturnRedirectToRouteResult()
+				.ToAction("Index");
     	}
 
     	[Test]
