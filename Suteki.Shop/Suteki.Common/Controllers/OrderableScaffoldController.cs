@@ -28,13 +28,13 @@ namespace Suteki.Common.Controllers
         public virtual ActionResult MoveUp(int id, int? page)
         {
             OrderableService.MoveItemAtPosition(id).UpOne();
-            return RenderIndexView(page);
+			return RedirectToAction("Index");
         }
 
         public virtual ActionResult MoveDown(int id, int? page)
         {
             OrderableService.MoveItemAtPosition(id).DownOne();
-            return RenderIndexView(page);
+			return RedirectToAction("Index");
         }
     }
 }

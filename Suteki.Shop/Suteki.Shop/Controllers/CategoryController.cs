@@ -30,13 +30,8 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
-            return RenderIndexView();
-        }
-
-        private ActionResult RenderIndexView()
-        {
-            var root = categoryRepository.GetRootCategory();
-            return View("Index", ShopView.Data.WithCategory(root));
+			var root = categoryRepository.GetRootCategory();
+			return View("Index", ShopView.Data.WithCategory(root));
         }
 
         public ActionResult New(int id)
@@ -72,10 +67,13 @@ namespace Suteki.Shop.Controllers
 
 			if(ModelState.IsValid)
 			{
-				viewData.WithMessage("The category has been saved.");
+				Message = "The category has been saved.";
+				return this.RedirectToAction(c => c.Index());
 			}
-
-			return View(viewData);
+			else
+			{
+				return View(viewData);					
+			}
 		}
 
         private ShopViewData EditViewData
@@ -89,13 +87,13 @@ namespace Suteki.Shop.Controllers
         public ActionResult MoveUp(int id)
         {
             MoveThis(id).UpOne();
-            return RenderIndexView();
+			return this.RedirectToAction(c => c.Index());
         }
 
         public ActionResult MoveDown(int id)
         {
             MoveThis(id).DownOne();
-            return RenderIndexView();
+			return this.RedirectToAction(c => c.Index());
         }
 
         private IOrderServiceWithConstrainedPosition<Category> MoveThis(int id)

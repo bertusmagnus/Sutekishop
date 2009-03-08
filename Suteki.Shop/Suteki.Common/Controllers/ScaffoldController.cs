@@ -68,14 +68,13 @@ namespace Suteki.Common.Controllers
 		[AcceptVerbs(HttpVerbs.Post)]
 		public virtual ActionResult Edit([DataBind] T item)
 		{
-			var viewData = BuildEditViewData().With(item);
-
 			if(ModelState.IsValid)
 			{
-				viewData.WithMessage("Item successfully updated.");
+				TempData["message"] = "Item successfully updated.";
+				return RedirectToAction("Index");
 			}
 
-			return View("Edit", viewData);
+			return View("Edit", BuildEditViewData().With(item));
 		}
 
         public virtual ActionResult Delete(int id, int? page)
