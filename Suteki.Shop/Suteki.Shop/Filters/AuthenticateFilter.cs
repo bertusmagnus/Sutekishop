@@ -13,6 +13,7 @@ namespace Suteki.Shop.Filters
 	{
 		public AuthenticateAttribute() : base(typeof(AuthenticateFilter))
 		{
+			Order = 0;
 		}
 	}
 

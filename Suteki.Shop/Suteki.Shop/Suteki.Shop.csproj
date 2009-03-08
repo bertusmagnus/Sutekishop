@@ -136,6 +136,7 @@
     <Compile Include="Filters\AdministratorsOnlyAttribute.cs" />
     <Compile Include="Filters\AuthenticateFilter.cs" />
     <Compile Include="Filters\CopyMessageFromTempDataToViewData.cs" />
+    <Compile Include="Filters\LoadUsingAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -160,6 +161,7 @@
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\ITextContent.cs" />
     <Compile Include="Models\IUrlNamed.cs" />
+    <Compile Include="Models\LoadOptions.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\ModelHelpers\UrlNameHelperExtensions.cs" />
     <Compile Include="Models\Order.cs" />

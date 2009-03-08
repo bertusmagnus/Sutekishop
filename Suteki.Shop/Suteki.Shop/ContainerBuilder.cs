@@ -38,7 +38,8 @@ namespace Suteki.Shop
 				Component.For<IServiceLocator>().Instance(new WindsorServiceLocator(container)),
 				Component.For<AuthenticateFilter>().LifeStyle.Transient,
 				Component.For<UnitOfWorkFilter>().LifeStyle.Transient,
-				Component.For<DataBinder>().LifeStyle.Transient
+				Component.For<DataBinder>().LifeStyle.Transient,
+				Component.For<LoadUsingFilter>().LifeStyle.Transient
 			);
 
 			return container;
