@@ -1,12 +1,12 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="List.aspx.cs" Inherits="Suteki.Shop.Views.Cms.List" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" Inherits="Suteki.Shop.ViewPage<CmsViewData>" %>
 <%@ Import Namespace="Suteki.Common.Repositories"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1><%= ViewData.Model.Menu.Name%></h1>
-
+<div class="message"><%= TempData["message"] %></div>
 <p>
     <%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Model.Menu.ContentId), "New Page")%>&nbsp;
-    <%= Html.ActionLink<CmsController>(c => c.NewMenu(ViewData.Model.Menu.ContentId), "New Menu")%>
+    <%= Html.ActionLink<MenuController>(c => c.New(ViewData.Model.Menu.ContentId), "New Menu")%>
 </p>
 
 <table>
@@ -33,7 +33,7 @@
         
         <% if (content.IsMenu) { %>
             <td><%= Html.ActionLink<CmsController>(c => c.Add(content.ContentId), "New Page") %></td>
-            <td><%= Html.ActionLink<CmsController>(c => c.NewMenu(content.ContentId), "New Menu")%></td>
+            <td><%= Html.ActionLink<MenuController>(c => c.New(content.ContentId), "New Menu")%></td>
         <% } else { %>
             <td>&nbsp;</td>
             <td>&nbsp;</td>

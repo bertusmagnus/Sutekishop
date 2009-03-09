@@ -1,0 +1,90 @@
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using Rhino.Mocks;
+using Suteki.Common.Repositories;
+using Suteki.Common.Services;
+using Suteki.Common.TestHelpers;
+using Suteki.Shop.Controllers;
+using Suteki.Shop.Tests.Repositories;
+using Suteki.Shop.ViewData;
+
+namespace Suteki.Shop.Tests.Controllers
+{
+	[TestFixture]
+	public class MenuControllerTester
+	{
+		private MenuController controller;
+		private IRepository<Menu> menuRepository;
+		private IRepository<Category> categoryRepository;
+		private IOrderableService<Content> orderableService;
+
+		[SetUp]
+		public void Setup()
+		{
+			categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
+			menuRepository = MockRepository.GenerateStub<IRepository<Menu>>();
+			orderableService = MockRepository.GenerateStub<IOrderableService<Content>>();
+			controller = new MenuController(menuRepository, categoryRepository, orderableService);
+		}
+
+		[Test]
+		public void Edit_should_render_view()
+		{
+			var menu = new Menu();
+			menuRepository.Expect(x => x.GetAll()).Return(new List<Menu>().AsQueryable());
+			menuRepository.Expect(x => x.GetById(3)).Return(menu);
+			controller.Edit(3)
+				.WithModel<CmsViewData>()
+				.AssertAreSame(menu, x => x.Content);
+				
+		}
+
+		[Test]
+		public void New_should_render_view()
+		{
+			const int parentContentId = 1;
+
+			var mainMenu = new Menu { ContentId = parentContentId };
+			menuRepository.Expect(mr => mr.GetById(parentContentId)).Return(mainMenu);
+
+			var menus = new List<Menu>().AsQueryable();
+			menuRepository.Expect(cr => cr.GetAll()).Return(menus);
+
+			controller.New(parentContentId)
+				.ForView("Edit")
+				.WithModel<CmsViewData>()
+				.AssertNotNull<CmsViewData, Content>(vd => vd.Menu)
+				.AssertAreEqual(parentContentId, vd => vd.Menu.ParentContentId.Value);
+
+		}
+
+		[Test]
+		public void NewWithPost_should_save()
+		{
+			var menu = new Menu() { ParentContentId = 5 };
+
+			controller.New(menu)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Cms")
+				.ToAction("List").WithRouteValue("id", menu.ParentContentId.ToString());
+
+
+			menuRepository.AssertWasCalled(x => x.InsertOnSubmit(menu));
+
+		}
+
+		[Test]
+		public void NewWithPost_should_render_edit_view_on_error()
+		{
+			controller.ModelState.AddModelError("foo", "bar");
+			menuRepository.Expect(x => x.GetAll()).Return(new List<Menu>().AsQueryable());
+			var menu = new Menu() { ParentContentId = 5 };
+			controller.New(menu)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<CmsViewData>()
+				.AssertAreSame(menu, x => x.Content);
+		}
+	}
+}

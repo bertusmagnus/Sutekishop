@@ -9,8 +9,10 @@ using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
+using Suteki.Common.Repositories;
 using Suteki.Common.Windsor;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Models;
 using ControllerBase=Suteki.Shop.Controllers.ControllerBase;
 
 namespace Suteki.Shop.Tests
@@ -85,6 +87,12 @@ namespace Suteki.Shop.Tests
 			{
 				container.Resolve(type);
 			}
+		}
+
+		[Test]
+		public void Should_resolve_special_repositories()
+		{
+			container.Resolve<IRepository<Menu>>().ShouldBe<MenuRepository>();
 		}
 
 		private class FakePrincipal : IPrincipal, IIdentity

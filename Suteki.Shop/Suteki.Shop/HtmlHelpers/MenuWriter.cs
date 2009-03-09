@@ -71,7 +71,8 @@ namespace Suteki.Shop.HtmlHelpers
             if (htmlHelper.CurrentUser().IsAdministrator)
             {
                 writer.AddAttribute("class", "editMenuLink");
-                writer.RenderBeginTag(HtmlTextWriterTag.Li);
+                writer.RenderBeginTag(HtmlTextWriterTag.Li); 
+				//TODO: Link to MenuController instead. 
                 writer.Write(htmlHelper.ActionLink<CmsController>(c => c.List(menu.ContentId), "Edit this menu"));
                 writer.RenderEndTag();
             }

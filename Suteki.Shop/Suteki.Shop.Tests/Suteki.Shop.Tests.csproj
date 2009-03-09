@@ -111,6 +111,7 @@
     <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\LoginControllerTests.cs" />
     <Compile Include="Controllers\BasketControllerTests.cs" />
+    <Compile Include="Controllers\MenuControllerTester.cs" />
     <Compile Include="Controllers\OrderControllerTests.cs" />
     <Compile Include="Controllers\PostageControllerTests.cs" />
     <Compile Include="Controllers\ProductControllerTests.cs" />

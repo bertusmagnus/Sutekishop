@@ -6,6 +6,7 @@ namespace Suteki.Shop.Repositories
 {
     public static class ContentRepositoryExtensions
     {
+/*
         public static Menu GetMainMenu(this IRepository<Content> contentRepository)
         {
             // the static data setup should create a main menu content item with contentId = 1
@@ -17,6 +18,7 @@ namespace Suteki.Shop.Repositories
             }
             return mainMenu; 
         }
+*/
 
         public static IQueryable<Content> WithParent(this IQueryable<Content> contents, Content parent)
         {

@@ -164,6 +164,7 @@
     <Compile Include="Models\IUrlNamed.cs" />
     <Compile Include="Models\LoadOptions.cs" />
     <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\MenuRepository.cs" />
     <Compile Include="Models\ModelHelpers\UrlNameHelperExtensions.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderSearchCriteria.cs" />
@@ -222,13 +223,6 @@
     </Compile>
     <Compile Include="Views\Cms\Edit.aspx.designer.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Cms\List.aspx.cs">
-      <DependentUpon>List.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Cms\List.aspx.designer.cs">
-      <DependentUpon>List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Cms\SubPage.aspx.cs">
       <DependentUpon>SubPage.aspx</DependentUpon>
@@ -388,6 +382,7 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />

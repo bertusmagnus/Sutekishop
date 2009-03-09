@@ -179,25 +179,5 @@ namespace Suteki.Shop.Controllers
 
             return RenderListView(content.ParentContentId.Value);
         }
-
-        public ActionResult NewMenu(int id)
-        {
-            var content = contentRepository.GetById(id);
-
-            if(!(content is Menu))
-            {
-                throw new ApplicationException("Content with id = {0} is not a menu".With(id));
-            }
-
-            var menu = new Menu
-            {
-                ContentTypeId = ContentType.MenuId,
-                Content1 = content,
-                IsActive = true,
-                Position = contentOrderableService.NextPosition
-            };
-
-            return View("Edit", GetEditViewData(0).WithContent(menu));
-        }
     }
 }

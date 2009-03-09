@@ -246,25 +246,6 @@ namespace Suteki.Shop.Tests.Controllers
                 .WithModel<CmsViewData>()
                 .AssertAreSame(mainMenu, vd => vd.Menu);
         }
-
-        [Test]
-        public void NewMenu_ShouldShowMenuEditView()
-        {
-            const int parentContentId = 1;
-
-            var mainMenu = new Menu{ ContentId = parentContentId };
-            contentRepository.Expect(mr => mr.GetById(parentContentId)).Return(mainMenu);
-
-            var menus = new List<Content>().AsQueryable();
-            contentRepository.Expect(cr => cr.GetAll()).Return(menus);
-
-            cmsController.NewMenu(parentContentId)
-                .ReturnsViewResult()
-                .ForView("Edit")
-                .WithModel<CmsViewData>()
-                .AssertNotNull<CmsViewData, Content>(vd => vd.Menu)
-                .AssertAreEqual(parentContentId, vd => vd.Menu.ParentContentId.Value);
-        }
     }
 
     public static class CreateFormExtensions

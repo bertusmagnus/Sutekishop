@@ -10,7 +10,7 @@ namespace Suteki.Shop
 
         public override string EditLink(HtmlHelper htmlHelper)
         {
-            return htmlHelper.ActionLink<CmsController>(c => c.Edit(ContentId), "Edit");
+            return htmlHelper.ActionLink<MenuController>(c => c.Edit(ContentId), "Edit");
         }
 
         public bool IsMainMenu
@@ -20,5 +20,16 @@ namespace Suteki.Shop
                 return ContentId == MainMenuId;
             }
         }
+
+		public static Menu CreateDefaultMenu(int position, Content parent)
+		{
+			return new Menu 
+			{
+				ContentTypeId = ContentType.MenuId,
+				Content1 = parent,
+				IsActive = true,
+				Position = position
+			};
+		}
     }
 }
