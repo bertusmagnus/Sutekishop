@@ -144,11 +144,11 @@ namespace Suteki.Shop.Tests.Controllers
 
             const string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
-            basketController.Update(user.CurrentBasket, form)
-                .ReturnsViewResult()
-                .ForView("Index")
-                .WithModel<ShopViewData>()
-                .AssertAreEqual(expectedMessage, vd => vd.ErrorMessage);
+			basketController.Update(user.CurrentBasket, form)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("Index");
+
+			basketController.Message.ShouldEqual(expectedMessage);
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
         }

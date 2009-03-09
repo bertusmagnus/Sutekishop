@@ -3,7 +3,7 @@
 
 <h1>Basket</h1>
 
-<%= Html.ErrorBox(ViewData.Model) %>
+<%= Html.ValidationSummary() %>
 
 <% if(ViewData.Model.Basket.IsEmpty) { %>
 

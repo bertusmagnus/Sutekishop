@@ -54,7 +54,8 @@ namespace Suteki.Shop.Controllers
 
             if (!size.IsInStock)
             {
-                return RenderIndexViewWithError(basket, size);
+                Message = RenderIndexViewWithError(size);
+				return this.RedirectToAction(c => c.Index());
             }
 
             basket.BasketItems.Add(basketItem);
@@ -62,18 +63,14 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction(c => c.Index());
         }
 
-        private ActionResult RenderIndexViewWithError(Basket basket, Size size)
+        private string RenderIndexViewWithError(Size size)
         {
-            string message;
-            if (size.Product.HasSize)
+        	if (size.Product.HasSize)
             {
-                message = "Sorry, {0}, Size {1} is out of stock.".With(size.Product.Name, size.Name);
+                return "Sorry, {0}, Size {1} is out of stock.".With(size.Product.Name, size.Name);
             }
-            else
-            {
-                message = "Sorry, {0} is out of stock.".With(size.Product.Name);
-            }
-            return View("Index", IndexViewData(basket).WithErrorMessage(message));
+
+        	return "Sorry, {0} is out of stock.".With(size.Product.Name);
         }
 
         private ShopViewData IndexViewData(Basket basket)
