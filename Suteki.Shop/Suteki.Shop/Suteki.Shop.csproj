@@ -385,6 +385,7 @@
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />
+    <Content Include="Views\Menu\UpDown.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
     <Content Include="Views\Report\Index.aspx" />
     <Content Include="Views\Shared\Print.Master" />

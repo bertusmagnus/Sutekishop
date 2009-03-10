@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" Inherits="Suteki.Shop.ViewPage<CmsViewData>" %>
+<%@ Import Namespace="MvcContrib"%>
 <%@ Import Namespace="Suteki.Common.Repositories"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
@@ -9,37 +10,16 @@
     <%= Html.ActionLink<MenuController>(c => c.New(ViewData.Model.Menu.ContentId), "New Menu")%>
 </p>
 
-<table>
-    <tr>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-        <th class="thin">&nbsp;</th>
-    </tr>
-<% foreach (var content in ViewData.Model.Menu.Contents.InOrder())
-   { %>
-    <tr>
-        <td><%= content.Type %></td>
-        <td><%= content.Link(Html) %></td>
-        <td><%= content.EditLink(Html) %></td>
-        <td><%= Html.Tick(content.IsActive) %></td>
-        <td>
-            <%= Html.UpArrowLink<CmsController>(c => c.MoveUp(content.ContentId)) %>
-            &nbsp;<%= Html.DownArrowLink<CmsController>(c => c.MoveDown(content.ContentId))%>
-        </td>
-        
-        <% if (content.IsMenu) { %>
-            <td><%= Html.ActionLink<CmsController>(c => c.Add(content.ContentId), "New Page") %></td>
-            <td><%= Html.ActionLink<MenuController>(c => c.New(content.ContentId), "New Menu")%></td>
-        <% } else { %>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        <% } %>
-    </tr>
-<% } %>
-</table>
+<%= Html.Grid(Model.Menu.Contents.InOrder()).Columns(column => {
+		column.For(x => x.Type).Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For(x => x.Link(Html)).DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For(x => x.EditLink(Html)).DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For(x => Html.Tick(x.IsActive)).DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For("&nbsp;").Partial("UpDown").HeaderAttributes(@class => "thin"); //Re-ordering arrows
+		column.For(x => x.IsMenu ? Html.ActionLink<CmsController>(c => c.Add(x.ContentId), "New Page") : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For(x => x.IsMenu ? Html.ActionLink<MenuController>(c => c.New(x.ContentId), "New Menu") : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+			
+	}) %>
+
 
 </asp:Content>

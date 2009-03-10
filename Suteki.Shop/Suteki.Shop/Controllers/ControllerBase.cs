@@ -54,5 +54,10 @@ namespace Suteki.Shop.Controllers
 			get { return TempData["message"] as string; }
 			set { TempData["message"] = value; }
     	}
+
+		protected override void OnException(ExceptionContext filterContext) {
+			Response.Clear();
+			base.OnException(filterContext);
+		}
     }
 }
