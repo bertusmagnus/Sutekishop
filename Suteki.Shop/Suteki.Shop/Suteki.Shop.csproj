@@ -395,7 +395,7 @@
     <Content Include="Views\Shared\CmsSubMenu.master" />
     <Content Include="metablogapi.aspx" />
     <Content Include="Views\Cms\Edit.aspx" />
-    <Content Include="Views\Cms\List.aspx" />
+    <Content Include="Views\Menu\List.aspx" />
     <Content Include="Views\Shared\Cms.master" />
     <Content Include="Views\Shared\Shop.Master" />
     <Content Include="Views\SiteMap\Index.aspx" />

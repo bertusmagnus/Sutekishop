@@ -234,18 +234,6 @@ namespace Suteki.Shop.Tests.Controllers
             contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
         }
 
-        [Test]
-        public void List_ShouldShowListOfExistingContent()
-        {
-            var mainMenu = new Menu();
-            contentRepository.Expect(mr => mr.GetById(1)).Return(mainMenu);            
-
-            cmsController.List(1)
-                .ReturnsViewResult()
-                .ForView("List")
-                .WithModel<CmsViewData>()
-                .AssertAreSame(mainMenu, vd => vd.Menu);
-        }
     }
 
     public static class CreateFormExtensions

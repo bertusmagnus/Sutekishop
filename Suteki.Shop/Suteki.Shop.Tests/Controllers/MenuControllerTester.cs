@@ -66,7 +66,7 @@ namespace Suteki.Shop.Tests.Controllers
 
 			controller.New(menu)
 				.ReturnsRedirectToRouteResult()
-				.ToController("Cms")
+				.ToController("Menu")
 				.ToAction("List").WithRouteValue("id", menu.ParentContentId.ToString());
 
 
@@ -86,5 +86,18 @@ namespace Suteki.Shop.Tests.Controllers
 				.WithModel<CmsViewData>()
 				.AssertAreSame(menu, x => x.Content);
 		}
+
+		[Test]
+		public void List_ShouldShowListOfExistingContent() 
+		{
+			var mainMenu = new Menu();
+			menuRepository.Expect(mr => mr.GetById(1)).Return(mainMenu);
+
+			controller.List(1)
+				.ReturnsViewResult()
+				.WithModel<CmsViewData>()
+				.AssertAreSame(mainMenu, vd => vd.Menu);
+		}
+
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Web.Mvc;
+using MvcContrib;
 using Suteki.Common.Binders;
 using Suteki.Common.Extensions;
 using Suteki.Common.Filters;
@@ -8,7 +9,7 @@ using Suteki.Common.Services;
 using Suteki.Shop.Filters;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
-using MvcContrib;
+
 namespace Suteki.Shop.Controllers
 {
 	public class MenuController : ControllerBase
@@ -17,7 +18,8 @@ namespace Suteki.Shop.Controllers
 		private readonly IRepository<Category> categoryRepository;
 		private readonly IOrderableService<Content> contentOrderableService;
 
-		public MenuController(IRepository<Menu> menuRepository, IRepository<Category> categoryRepository, IOrderableService<Content> contentOrderableService)
+		public MenuController(IRepository<Menu> menuRepository, IRepository<Category> categoryRepository,
+		                      IOrderableService<Content> contentOrderableService)
 		{
 			this.menuRepository = menuRepository;
 			this.contentOrderableService = contentOrderableService;
@@ -35,6 +37,12 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[AdministratorsOnly]
+		public ActionResult List(int id)
+		{
+			return View(CmsView.Data.WithContent(menuRepository.GetById(id)));
+		}
+
+		[AdministratorsOnly]
 		public ViewResult Edit(int id)
 		{
 			return View(GetEditViewData(id).WithContent(menuRepository.GetById(id)));
@@ -43,10 +51,10 @@ namespace Suteki.Shop.Controllers
 		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post), UnitOfWork]
 		public ActionResult Edit([DataBind] Menu content)
 		{
-			if(ModelState.IsValid)
+			if (ModelState.IsValid)
 			{
 				Message = "Changes have been saved.";
-				return this.RedirectToAction<CmsController>(c => c.List(content.ParentContentId.Value));
+				return this.RedirectToAction(c => c.List(content.ParentContentId.Value));
 			}
 
 			return View("Edit", GetEditViewData(content.ParentContentId.Value).WithContent(content));
@@ -57,7 +65,7 @@ namespace Suteki.Shop.Controllers
 		{
 			var parentMenu = menuRepository.GetById(id);
 
-			if (parentMenu == null) 
+			if (parentMenu == null)
 			{
 				throw new ApplicationException("Content with id = {0} is not a menu".With(id));
 			}
@@ -67,19 +75,19 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post), AdministratorsOnly, UnitOfWork]
-		public ActionResult New([DataBind(Fetch=false)] Menu content)
+		public ActionResult New([DataBind(Fetch = false)] Menu content)
 		{
-			if(ModelState.IsValid)
+			if (ModelState.IsValid)
 			{
 				menuRepository.InsertOnSubmit(content);
 				Message = "New menu has been successfully added.";
-				return this.RedirectToAction<CmsController>(c => c.List(content.ParentContentId.Value));
+				return this.RedirectToAction(c => c.List(content.ParentContentId.Value));
 			}
-			
+
 			return View("Edit", GetEditViewData(content.ParentContentId.Value).WithContent(content));
 		}
 
-		private CmsViewData GetEditViewData(int contentId) 
+		private CmsViewData GetEditViewData(int contentId)
 		{
 			var menus = menuRepository.GetAll().NotIncluding(contentId);
 			return CmsView.Data.WithMenus(menus);
