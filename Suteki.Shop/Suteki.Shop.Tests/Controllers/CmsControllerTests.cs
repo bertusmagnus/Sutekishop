@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using NUnit.Framework;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
@@ -103,7 +104,35 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreEqual(menuId, vd => vd.Content.ParentContentId.Value);
         }
 
-        [Test]
+		[Test]
+		public void AddWithPost_ShouldAddNewContent()
+		{
+			var content = new TextContent() { ParentContentId = 4 };
+			cmsController.Add(content)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Menu")
+				.ToAction("List")
+				.WithRouteValue("id", "4");
+
+			contentRepository.AssertWasCalled(x => x.InsertOnSubmit(content));
+		}
+
+
+    	[Test]
+    	public void AddWithPost_ShouldRenderViewWithError()
+    	{
+			contentRepository.Stub(cr => cr.GetAll()).Return(new List<Content>().AsQueryable());
+    		cmsController.ModelState.AddModelError("foo", "bar");
+
+    		var content = new TextContent();
+			cmsController.Add(content)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<CmsViewData>()
+				.AssertAreSame(content, x => x.Content);
+    	}
+
+    	[Test]
         public void Edit_ShouldDisplayEditViewWithExistingContent()
         {
             const int contentId = 22;
@@ -122,118 +151,46 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertNotNull(vd => vd.Menus);
         }
 
-        [Test]
-        public void Update_ShouldAddNewContent()
-        {
-            const int contentId = 0;
-            const int menuId = 1;
+    	[Test]
+    	public void EditWithPost_ShouldRenderViewWithError()
+    	{
+			contentRepository.Stub(cr => cr.GetAll()).Return(new List<Content>().AsQueryable());
+			cmsController.ModelState.AddModelError("foo", "bar");
 
-            var form = CreateContentEditForm(menuId).ForTextContent();
+			var content = new TextContent();
+			cmsController.Edit(content)
+				.ReturnsViewResult()
+				.WithModel<CmsViewData>()
+				.AssertAreSame(content, x => x.Content);
+    	}
 
-            TextContent textContent = null;
+    	[Test]
+    	public void EditWithPost_ShouldRedirectOnSuccessfulBinding()
+    	{
+    		var content = new TextContent {ParentContentId = 4};
 
-            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
-                .IgnoreArguments()
-                .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
+			cmsController.Add(content)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Menu")
+				.ToAction("List")
+				.WithRouteValue("id", "4");
+    	}
 
-            TestUpdateAction(contentId, form);
+    	[Test]
+    	public void EditWithPost_ShouldAllowHtmlText()
+    	{
+			var content = new TextContent() { Text = HttpUtility.HtmlEncode("<script>"), ParentContentId = 4 };
+			cmsController.Edit(content);
+			content.Text.ShouldEqual("<script>");
+    	}
 
-            Assert.That(textContent, Is.Not.Null, "textContent is null");
-            Assert.That(menuId, Is.EqualTo(menuId));
-            Assert.That(textContent.Name, Is.EqualTo(form["name"]));
-            Assert.That(textContent.Text, Is.EqualTo(form["text"]));
-
-            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
-        }
-
-        [Test]
-        public void Update_ShouldAllowHtmlText()
-        {
-            const int contentId = 0;
-            const int menuId = 1;
-
-            var form = CreateContentEditForm(menuId).ForTextContent();
-            form["text"] = "<script></script>";
-
-            TextContent textContent = null;
-
-            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
-                .IgnoreArguments()
-                .WhenCalled(invocation => textContent = invocation.Arguments[0] as TextContent);
-
-            TestUpdateAction(contentId, form);
-
-            Assert.That(textContent, Is.Not.Null, "textContent is null");
-            Assert.That(menuId, Is.EqualTo(menuId));
-            Assert.That(textContent.Name, Is.EqualTo(form["name"]));
-            Assert.That(textContent.Text, Is.EqualTo(form["text"]));
-            Console.WriteLine(textContent.Text);
-
-            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
-        }
-
-        [Test]
-        public void Update_ShouldAddNewMenu()
-        {
-            const int contentId = 0;
-            const int menuId = 1;
-
-            var form = CreateContentEditForm(menuId).ForMenuContent();
-
-            Menu menu = null;
-
-            contentRepository.Expect(cr => cr.InsertOnSubmit(null))
-                .IgnoreArguments()
-                .WhenCalled(invocation => menu = invocation.Arguments[0] as Menu);
-
-            TestUpdateAction(contentId, form);
-
-            Assert.That(menu, Is.Not.Null, "textContent is null");
-            Assert.That(menuId, Is.EqualTo(menuId));
-            Assert.That(menu.Name, Is.EqualTo(form["name"]));
-
-            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
-        }
-
-        private static FormCollection CreateContentEditForm(int menuId)
-        {
-            var form = new FormCollection
-            {
-                {"id", "0"},
-                {"parentcontentid", menuId.ToString()},
-                {"name", "myNewContent"}
-            };
-            return form;
-        }
-
-        private void TestUpdateAction(int contentId, FormCollection form)
-        {
-            cmsController.Update(contentId, form)
-                .ReturnsViewResult()
-                .ForView("List");
-        }
-
-        [Test]
-        public void Update_ShouldUpdateAnExistingTextContent()
-        {
-            const int contentId = 22;
-            const int menuId = 1;
-
-            var form = CreateContentEditForm(menuId).ForTextContent();
-
-            var content = new TextContent
-            {
-                Name = "old name",
-                Text = "old text"
-            };
-
-            contentRepository.Stub(cr => cr.GetById(contentId)).Return(content);
-
-            TestUpdateAction(contentId, form);
-
-            contentRepository.AssertWasCalled(cr => cr.SubmitChanges());
-        }
-
+		[Test]
+		public void AddWithPost_ShouldAllowHtmlText() 
+		{
+			var content = new TextContent() { Text = HttpUtility.HtmlEncode("<script>"), ParentContentId = 4 };
+			cmsController.Add(content);
+			content.Text.ShouldEqual("<script>");
+		}
     }
 
     public static class CreateFormExtensions

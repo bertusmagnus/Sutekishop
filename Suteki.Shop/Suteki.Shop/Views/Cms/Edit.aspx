@@ -1,38 +1,24 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Cms.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/CmsSubMenu.master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.ViewPage<CmsViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1>Content</h1>
 
-<p><%= ViewData.Model.Content.Link(Html)%></p>
+<p><%= Model.Content.Link(Html)%></p>
 
 <%= Html.MessageBox(ViewData.Model)%>
-<%= Html.ErrorBox(ViewData.Model)%>
+<%= Html.ValidationSummary() %>
 
-<% using (Html.BeginForm<CmsController>(c => c.Update(ViewData.Model.Content.ContentId, null)))
-   { %>
-
-    <%= Html.Hidden("contenttypeid", ViewData.Model.Content.ContentTypeId.ToString())%>
-    <%= Html.Hidden("position", ViewData.Model.Content.Position.ToString())%>
-
-    <label for="name">Name</label>
-    <%= Html.TextBox("name", ViewData.Model.Content.Name)%>
-
-    <% if (ViewData.Model.Content.IsTextContent)
-       { %>
-
-        <label for="text">Text</label>
-        <%= Html.TextArea("text", ViewData.Model.TextContent.Text)%>
-    
-    <% } %>
-
-    <label for="parentcontentid">Parent Menu</label>
-    <%= Html.DropDownList("parentcontentid", new SelectList(ViewData.Model.Menus, "ContentId", "Name", ViewData.Model.Content.ParentContentId))%>
-
-    <label for="isactive">Active</label>
-    <%= Html.CheckBox("isactive", ViewData.Model.Content.IsActive)%>
-
-    <%= Html.SubmitButton() %>
-
+<% using (Html.BeginForm()) { %>
+	<% var content = Model.Content as TextContent; %>
+	<%= this.Hidden(x => x.Content.ContentTypeId) %>
+	<%= this.Hidden(x => x.Content.ContentId) %>
+	<%= this.Hidden(x => x.Content.Position) %>
+	<%= this.TextBox(x => x.Content.Name).Label("Name") %>
+	<%= this.TextArea(x => (x.Content as ITextContent).Text).Label("Text") %>
+	<%= this.Select(x => x.Content.ParentContentId).Options(Model.Menus, x => x.ContentId, x => x.Name).Label("Parent Menu") %>
+	<%= this.CheckBox(x => x.Content.IsActive).Label("Active") %>
+	
+	<input type="submit" value="Save Changes" />
 <% } %>
 
 </asp:Content>
