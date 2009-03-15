@@ -8,5 +8,6 @@
         void SetContextUserTo(User user);
         void RemoveAuthenticationCookie();
     	string HashPassword(string password);
+        bool Authenticate(string email, string password);
     }
 }

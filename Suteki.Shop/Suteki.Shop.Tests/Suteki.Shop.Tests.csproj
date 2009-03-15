@@ -95,6 +95,9 @@
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -165,6 +168,7 @@
     <Compile Include="TestHelpers\MockViewEngine.cs" />
     <Compile Include="TestHelpers\TestController.cs" />
     <Compile Include="XmlRpc\MetaWeblogTests.cs" />
+    <Compile Include="XmlRpc\MetaWeblogWcfSpike.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Suteki.Common\Suteki.Common.csproj">

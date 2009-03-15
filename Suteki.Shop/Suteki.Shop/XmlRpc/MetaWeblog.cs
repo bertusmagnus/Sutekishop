@@ -51,7 +51,6 @@ namespace Suteki.Shop.XmlRpc
 
         public MetaWeblog()
         {
-            
         }
 
         private void CreateServices()

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Services;
@@ -52,5 +53,23 @@ namespace Suteki.Shop.Tests.Services
     		userService.SetAuthenticationCookie("foo@foo.com");
 			formsAuthentication.AssertWasCalled(x => x.SetAuthCookie("foo@foo.com", true));
     	}
+
+        [Test]
+        public void Authenticate_should_check_that_user_and_matching_password_exist_in_repository()
+        {
+            formsAuthentication.Stub(x => x.HashPasswordForStoringInConfigFile("foo")).Return("bar");
+
+            var user = new User
+            {
+                Email = "foo@foo.com", 
+                Password = "bar",
+                IsEnabled = true
+            };
+            userRepository.Stub(r => r.GetAll()).Return(new[] {user}.AsQueryable());
+
+            var isAuthenticated = userService.Authenticate("foo@foo.com", "foo");
+
+            Assert.That(isAuthenticated, Is.True);
+        }
     }
 }

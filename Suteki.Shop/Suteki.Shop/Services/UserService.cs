@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
-using System.Web.Security;
 using Suteki.Common.Repositories;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Services
 {
@@ -60,5 +60,10 @@ namespace Suteki.Shop.Services
     	{
     		return formsAuth.HashPasswordForStoringInConfigFile(password);
     	}
+
+        public bool Authenticate(string email, string password)
+        {
+            return userRepository.GetAll().ContainsUser(email, HashPassword(password));
+        }
     }
 }
