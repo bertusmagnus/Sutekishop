@@ -1,11 +1,8 @@
-﻿using System;
-using NUnit.Framework;
-using Suteki.Common.Repositories;
+﻿using NUnit.Framework;
 using Suteki.Common.TestHelpers;
 using Suteki.Common.ViewData;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
-using Suteki.Shop.Tests.Repositories;
 using Rhino.Mocks;
 
 namespace Suteki.Shop.Tests.Controllers
@@ -13,23 +10,18 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class LoginControllerTests
     {
-        private IRepository<User> userRepository;
         private IUserService userService;
 
         private LoginController loginController;
 
-    	private const string henry1password = "6C80B78681161C8349552872CFA0739CF823E87B";
-    	private const string george1password = "DC25F9DC0DF2BE9E6A83E6F0B26F4B41F57ADF6D";
-    	private const string sky1pasword = "980BC222DA7FDD0D37BE816D60084894124509A1";
-    	private const string email = "Henry@suteki.co.uk";
+        private const string email = "Henry@suteki.co.uk";
     	private const string password = "henry1";
 
     	[SetUp]
         public void SetUp()
         {
-            userRepository = MockRepositoryBuilder.CreateUserRepository();
             userService = MockRepository.GenerateStub<IUserService>();
-            loginController = new LoginController(userRepository, userService);
+            loginController = new LoginController(userService);
         }
 
         [Test]
@@ -43,25 +35,37 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
         [Test]
-        public void Authenticate_ShouldAuthenticateValidUser()
+        public void Index_Post_should_authenticate_user()
         {
-        	userService.Expect(x => x.HashPassword(password)).Return(henry1password);
-            
+            loginController.Index(email, password, "some URL");
+            userService.AssertWasCalled(s => s.Authenticate(email, password));
+        }
+
+        [Test]
+        public void Index_Post_should_set_authentication_cookie()
+        {
+            userService.Stub(s => s.Authenticate(email, password)).Return(true);
+
+            loginController.Index(email, password, null);
+
+            userService.AssertWasCalled(s => s.SetAuthenticationCookie(email));
+        }
+
+        [Test]
+        public void Index_Post_should_redirect_to_index_home_when_login_is_successful()
+        {
+            userService.Stub(s => s.Authenticate(email, password)).Return(true);
+
             loginController.Index(email, password, null)
                 .ReturnsRedirectToRouteResult()
                 .ToAction("Index")
                 .ToController("Home");
-
-            userService.AssertWasCalled(c => c.SetAuthenticationCookie(email));
         }
-			
+
         [Test]
-        public void Authenticate_ShouldNotAuthenticateInvalidUser()
+        public void Index_Post__should_show_error_message_if_authentication_fails()
         {
-			const string password = "henry3";
-        	// throw if SetAuthenticationToken is called
-            userService.Expect(c => c.SetAuthenticationCookie(password))
-                .Throw(new Exception("SetAuthenticationToken shouldn't be called"));
+            userService.Stub(s => s.Authenticate(email, password)).Return(false);
 
             loginController.Index(email, password, null)
                 .ReturnsViewResult()
@@ -84,7 +88,7 @@ namespace Suteki.Shop.Tests.Controllers
     	[Test]
     	public void Should_redirect_to_returnurl()
     	{
-			userService.Expect(x => x.HashPassword(password)).Return(henry1password);
+    	    userService.Stub(s => s.Authenticate(email, password)).Return(true);
 
 			loginController.Index(email, password, "/foo/bar")
 				.ReturnsRedirect().Url.ShouldEqual("/foo/bar");

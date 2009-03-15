@@ -1,6 +1,4 @@
 ﻿using System.Web.Mvc;
-using Suteki.Common.Repositories;
-using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using MvcContrib;
@@ -9,12 +7,10 @@ namespace Suteki.Shop.Controllers
 {
     public class LoginController : ControllerBase
     {
-        private readonly IRepository<User> userRepository;
         private readonly IUserService userService;
 
-        public LoginController(IRepository<User> userRepository, IUserService userService)
+        public LoginController(IUserService userService)
         {
-            this.userRepository = userRepository;
         	this.userService = userService;
         }
 
@@ -26,7 +22,7 @@ namespace Suteki.Shop.Controllers
 		[AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Index(string email, string password, string returnUrl)
         {
-			if (userRepository.GetAll().ContainsUser(email, userService.HashPassword(password)))
+			if (userService.Authenticate(email, password))
             {
                 userService.SetAuthenticationCookie(email);
 
