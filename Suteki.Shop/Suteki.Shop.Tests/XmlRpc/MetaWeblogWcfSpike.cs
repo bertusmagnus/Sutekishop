@@ -15,27 +15,35 @@ namespace Suteki.Shop.Tests.XmlRpc
     [TestFixture]
     public class MetaWeblogWcfSpike
     {
-        /// <summary>
-        /// Enable the port number to be run by your username, if not running as admin:
-        /// netsh http add urlacl url=http://+:27198/MetaWeblogTest.svc user=DOMAIN\user
-        /// </summary>
-        [Test, Explicit("Make sure you have access the correct namespace reservation before running this test")]
-        public void Should_be_able_to_communicate_using_XmlRpc()
-        {
-            var contentRepository = MockRepository.GenerateStub<IRepository<Content>>();
-            var contentOrderableService = MockRepository.GenerateStub<IOrderableService<Content>>();
-            var baseControllerService = MockRepository.GenerateStub<IBaseControllerService>();
-            var imageFileService = MockRepository.GenerateStub<IImageFileService>();
-            var userService = MockRepository.GenerateStub<IUserService>();
+        private MetaWeblogWcf metaWeblog;
 
-            var metaWebLog = new MetaWeblogWcf(
+        private IRepository<Content> contentRepository;
+        private IOrderableService<Content> contentOrderableService;
+        private IBaseControllerService baseControllerService;
+        private IImageFileService imageFileService;
+        private IUserService userService;
+        private IWindsorContainer container;
+
+        private IMetaWeblog client;
+
+        private const string theSiteUrl = "http://my.excellent.shop/";
+
+        [SetUp]
+        public void SetUp()
+        {
+            contentRepository = MockRepository.GenerateStub<IRepository<Content>>();
+            contentOrderableService = MockRepository.GenerateStub<IOrderableService<Content>>();
+            baseControllerService = MockRepository.GenerateStub<IBaseControllerService>();
+            imageFileService = MockRepository.GenerateStub<IImageFileService>();
+            userService = MockRepository.GenerateStub<IUserService>();
+
+            metaWeblog = new MetaWeblogWcf(
                 userService,
                 contentRepository,
                 baseControllerService,
                 contentOrderableService,
                 imageFileService);
 
-            var theSiteUrl = "http://my.excellent.shop/";
             var url = "http://localhost:27198/MetaWeblogTest.svc";
 
             baseControllerService.Stub(s => s.SiteUrl).Return(theSiteUrl);
@@ -46,11 +54,12 @@ namespace Suteki.Shop.Tests.XmlRpc
             };
             userService.Stub(s => s.CurrentUser).Return(user);
 
-            using (new WindsorContainer()
+
+            container = new WindsorContainer()
                 .AddFacility<WcfFacility>()
                 .Register(
                     Component.For<XmlRpcEndpointBehavior>(),
-                    Component.For<IMetaWeblog>().Instance(metaWebLog)
+                    Component.For<IMetaWeblog>().Instance(metaWeblog)
                         .ActAs(new DefaultServiceModel()
                             .AddBaseAddresses(url)
                             .AddEndpoints(
@@ -59,17 +68,55 @@ namespace Suteki.Shop.Tests.XmlRpc
                             )
 
                         )
-                    )
-                )
+                    );
+
+            var factory = new XmlRpcChannelFactory<IMetaWeblog>(new XmlRpcHttpBinding(), new EndpointAddress(url));
+            client = factory.CreateChannel();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            container.Dispose();
+        }
+
+        /// <summary>
+        /// Enable the port number to be run by your username, if not running as admin:
+        /// netsh http add urlacl url=http://+:27198/MetaWeblogTest.svc user=DOMAIN\user
+        /// </summary>
+        [Test, Explicit("Make sure you have access the correct namespace reservation before running this test")]
+        public void Should_be_able_to_get_blogs()
+        {
+            var posts = client.getUsersBlogs("", "mike", "m1ke");
+
+            Assert.That(posts.Length, Is.EqualTo(1));
+            Assert.That(posts[0].url, Is.EqualTo(theSiteUrl));
+        }
+
+        [Test, Explicit("Make sure you have access the correct namespace reservation before running this test")]
+        public void Should_be_able_to_add_a_post()
+        {
+            Content content = null;
+
+            contentRepository.Expect(r => r.InsertOnSubmit(null)).Callback((Content arg1) =>
             {
-                var factory = new XmlRpcChannelFactory<IMetaWeblog>(new XmlRpcHttpBinding(), new EndpointAddress(url));
-                var client = factory.CreateChannel();
+                content = arg1;
+                return true;
+            });
 
-                var posts = client.getUsersBlogs("", "mike", "m1ke");
+            var post = new Post
+            {
+                title = "the title",
+                description = "the description"
+            };
 
-                Assert.That(posts.Length, Is.EqualTo(1));
-                Assert.That(posts[0].url, Is.EqualTo(theSiteUrl));
-            }
+            client.newPost("1", "mike", "m1ke", post, true);
+
+            var textContent = content as TextContent;
+            if(textContent == null) Assert.Fail("content should be an instance of TextContent");
+
+            Assert.That(textContent.Name, Is.EqualTo(post.title));
+            Assert.That(textContent.Text, Is.EqualTo(post.description));
         }
     }
 }
