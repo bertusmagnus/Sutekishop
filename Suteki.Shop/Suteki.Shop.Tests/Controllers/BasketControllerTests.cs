@@ -60,14 +60,9 @@ namespace Suteki.Shop.Tests.Controllers
         private IRepository<Country> countryRepository;
         private IValidatingBinder validatingBinder;
 
-        private static FormCollection CreateUpdateForm()
+        private static BasketItem CreateBasketItem()
         {
-            var form = new FormCollection
-            {
-                {"sizeid", "5"},
-                {"quantity", "2"}
-            };
-            return form;
+			return new BasketItem { SizeId = 5, Quantity = 2 };
         }
 
         [Test]
@@ -109,7 +104,7 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldAddBasketLineToCurrentBasket()
         {
-            var form = CreateUpdateForm();
+            var basketItem = CreateBasketItem();
 
             var size = new Size
             {
@@ -121,7 +116,7 @@ namespace Suteki.Shop.Tests.Controllers
             };
             sizeRepository.Stub(sr => sr.GetById(5)).Return(size);
 
-            basketController.Update(user.CurrentBasket, form);
+            basketController.Update(user.CurrentBasket, basketItem);
 
             Assert.AreEqual(1, user.Baskets[0].BasketItems.Count, "expected BasketItem is missing");
             Assert.AreEqual(5, user.Baskets[0].BasketItems[0].SizeId);
@@ -131,22 +126,24 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Update_ShouldShowErrorMessageIfItemIsOutOfStock()
         {
-            var form = CreateUpdateForm();
+            var basketItem = CreateBasketItem();
 
             var size = new Size
             {
                 Name = "S",
                 IsInStock = false,
                 IsActive = true,
-                Product = new Product {Name = "Denim Jacket"}
+                Product = new Product {Name = "Denim Jacket", UrlName = "denim_jacket"}
             };
             sizeRepository.Stub(sr => sr.GetById(5)).Return(size);
 
             const string expectedMessage = "Sorry, Denim Jacket, Size S is out of stock.";
 
-			basketController.Update(user.CurrentBasket, form)
+			basketController.Update(user.CurrentBasket, basketItem)
 				.ReturnsRedirectToRouteResult()
-				.ToAction("Index");
+				.ToController("Product")
+				.ToAction("Item")
+				.WithRouteValue("urlName", size.Product.UrlName);
 
 			basketController.Message.ShouldEqual(expectedMessage);
 

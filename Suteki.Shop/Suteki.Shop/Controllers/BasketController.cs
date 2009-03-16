@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Suteki.Common.Binders;
 using Suteki.Common.Extensions;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
@@ -45,17 +46,17 @@ namespace Suteki.Shop.Controllers
         }
 
         [UnitOfWork, AcceptVerbs(HttpVerbs.Post)] //TODO: Change this to use DataBind after the ProductController has been updated
-		public ActionResult Update([CurrentBasket] Basket basket, FormCollection form)
+		public ActionResult Update([CurrentBasket] Basket basket, [DataBind(Fetch = false)] BasketItem basketItem)
         {
-            var basketItem = new BasketItem();
-            validatingBinder.UpdateFrom(basketItem, form, ModelState);
-
-            var size = sizeRepository.GetById(basketItem.SizeId);
+//            var basketItem = new BasketItem();
+//            validatingBinder.UpdateFrom(basketItem, form, ModelState);
+            
+			var size = sizeRepository.GetById(basketItem.SizeId);
 
             if (!size.IsInStock)
             {
                 Message = RenderIndexViewWithError(size);
-				return this.RedirectToAction(c => c.Index());
+				return this.RedirectToAction<ProductController>(c => c.Item(size.Product.UrlName));
             }
 
             basket.BasketItems.Add(basketItem);
