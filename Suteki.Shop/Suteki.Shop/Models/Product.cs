@@ -67,5 +67,16 @@ namespace Suteki.Shop
                 return " Not Active";
             }
         }
+
+		public static Product DefaultProduct(int parentCategory, int position)
+		{
+			return new Product 
+			{
+				ProductId = 0,
+				CategoryId = parentCategory,
+				Position = position
+			};
+
+		}
     }
 }

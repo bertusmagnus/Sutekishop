@@ -89,13 +89,7 @@ namespace Suteki.Shop.Controllers
 		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult New(int id)
         {
-            var defaultProduct = new Product
-            {
-                ProductId = 0,
-                CategoryId = id,
-                Position = productOrderableService.NextPosition
-            };
-
+			var defaultProduct = Product.DefaultProduct(id, productOrderableService.NextPosition);
             return View("Edit", EditViewData.WithProduct(defaultProduct)); 
         }
 
