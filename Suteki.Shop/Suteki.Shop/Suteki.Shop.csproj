@@ -152,6 +152,7 @@
     <Compile Include="HtmlHelpers\LowercaseFirstCharacterOfNameBehaviour.cs" />
     <Compile Include="HtmlHelpers\MenuWriter.cs" />
     <Compile Include="HtmlHelpers\StockWriter.cs" />
+    <Compile Include="HtmlHelpers\UrlHelperExtensions.cs" />
     <Compile Include="IoC\UrlBasedComponentSelector.cs" />
     <Compile Include="Models\ActionContent.cs" />
     <Compile Include="Models\Card.cs" />
@@ -258,13 +259,6 @@
     <Compile Include="Views\Product\Edit.aspx.designer.cs">
       <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Product\Index.aspx.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Product\Index.aspx.designer.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Product\Item.aspx.cs">
       <DependentUpon>Item.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -366,6 +360,8 @@
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Menu\UpDown.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
+    <Content Include="Views\Product\Product.ascx" />
+    <Content Include="Views\Product\SubCategory.ascx" />
     <Content Include="Views\Report\Index.aspx" />
     <Content Include="Views\Shared\Print.Master" />
     <Content Include="Content\Print.css" />

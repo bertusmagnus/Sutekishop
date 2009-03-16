@@ -9,4 +9,12 @@ namespace Suteki.Shop
 			
 		}
 	}
+
+	public class ViewUserControl<T> : MvcContrib.FluentHtml.ModelViewUserControl<T> where T : class
+	{
+		public ViewUserControl() : base(new LowercaseFirstCharacterOfNameBehaviour())
+		{
+			
+		}
+	}
 }
