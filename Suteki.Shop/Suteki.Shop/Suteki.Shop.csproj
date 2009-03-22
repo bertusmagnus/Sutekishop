@@ -134,6 +134,7 @@
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ProductImageController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RsdController.cs" />
     <Compile Include="Controllers\ShopScaffoldController.cs" />

@@ -3,12 +3,12 @@
 
     <h1>Product</h1>
     
+	<%= Html.ValidationSummary() %>
+    <%= Html.MessageBox(ViewData.Model) %>
+    
     <% if(ViewData.Model.Product.ProductId > 0) { %>
         <%= Html.ActionLink<ProductController>(c => c.Item(ViewData.Model.Product.UrlName), "Preview") %>
     <% } %>
-
-	<%= Html.ValidationSummary() %>
-    <%= Html.MessageBox(ViewData.Model) %>
 
     <% using (Html.MultipartForm()) { %>
 		<%= this.Hidden(x => x.Product.ProductId) %>
@@ -51,9 +51,9 @@
         <% foreach(var productImage in ViewData.Model.Product.ProductImages.InOrder()) { %>
             <div class="imageEdit">
             <%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName) %><br />
-            <%= Html.UpArrowLink<ProductController>(c => c.MoveImageUp(ViewData.Model.Product.ProductId, productImage.Position)) %>
-            <%= Html.DownArrowLink<ProductController>(c => c.MoveImageDown(ViewData.Model.Product.ProductId, productImage.Position)) %> &nbsp;&nbsp;
-            <%= Html.CrossLink<ProductController>(c => c.DeleteImage(ViewData.Model.Product.ProductId, productImage.ProductImageId)) %>
+            <%= Html.UpArrowLink<ProductImageController>(c => c.MoveImageUp(ViewData.Model.Product.ProductId, productImage.Position)) %>
+            <%= Html.DownArrowLink<ProductImageController>(c => c.MoveImageDown(ViewData.Model.Product.ProductId, productImage.Position)) %> &nbsp;&nbsp;
+            <%= Html.CrossLink<ProductImageController>(c => c.DeleteImage(ViewData.Model.Product.ProductId, productImage.ProductImageId)) %>
             </div>
         <% } %>
         </div>

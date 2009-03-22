@@ -15,28 +15,17 @@ namespace Suteki.Shop.Controllers
 	{
 		readonly IRepository<Product> productRepository;
 		readonly IRepository<Category> categoryRepository;
-		readonly IRepository<ProductImage> productImageRepository;
 		readonly ISizeService sizeService;
 		readonly IOrderableService<Product> productOrderableService;
-		readonly IOrderableService<ProductImage> productImageOrderableService;
 		readonly IUserService userService;
 
-		public ProductController(
-			IRepository<Product> productRepository, 
-			IRepository<Category> categoryRepository,
-		    IRepository<ProductImage> productImageRepository, 
-			ISizeService sizeService,
-		    IOrderableService<Product> productOrderableService,
-		    IOrderableService<ProductImage> productImageOrderableService, 
-			IUserService userService)
+		public ProductController(IRepository<Product> productRepository, IRepository<Category> categoryRepository, ISizeService sizeService, IOrderableService<Product> productOrderableService, IUserService userService)
 		{
 			this.productRepository = productRepository;
 			this.userService = userService;
 			this.categoryRepository = categoryRepository;
-			this.productImageRepository = productImageRepository;
 			this.sizeService = sizeService;
 			this.productOrderableService = productOrderableService;
-			this.productImageOrderableService = productImageOrderableService;
 		}
 
 		public override string GetControllerName()
@@ -148,44 +137,16 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction(x => x.Index(id));
 		}
 
-		[AdministratorsOnly]
-		public ActionResult MoveImageUp(int id, int position)
-		{
-			productImageOrderableService
-				.MoveItemAtPosition(position)
-				.ConstrainedBy(productImage => productImage.ProductId == id)
-				.UpOne();
-
-			return RenderEditView(id);
-		}
-
-		[AdministratorsOnly]
-		public ActionResult MoveImageDown(int id, int position)
-		{
-			productImageOrderableService
-				.MoveItemAtPosition(position)
-				.ConstrainedBy(productImage => productImage.ProductId == id)
-				.DownOne();
-
-			return RenderEditView(id);
-		}
-
-		[AdministratorsOnly, UnitOfWork]
-		public ActionResult DeleteImage(int id, int productImageId)
-		{
-			var productImage = productImageRepository.GetById(productImageId);
-			productImageRepository.DeleteOnSubmit(productImage);
-
-			return RenderEditView(id);
-		}
+		
 
 		[AdministratorsOnly, UnitOfWork]
 		public ActionResult ClearSizes(int id)
 		{
 			var product = productRepository.GetById(id);
 			sizeService.Clear(product);
+			Message = "Sizes have been cleared.";
 
-			return View("Edit", EditViewData.WithProduct(product));
+			return this.RedirectToAction(c => c.Edit(id));
 		}
 
 		public ShopViewData EditViewData

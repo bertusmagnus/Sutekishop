@@ -21,17 +21,10 @@ namespace Suteki.Shop.Tests.Controllers
     public class ProductControllerTests
     {
         private ProductController productController;
-        private ControllerTestContext testContext;
-
-        private IRepository<Product> productRepository;
-
+    	private IRepository<Product> productRepository;
         private IRepository<Category> categoryRepository;
-
-        private IRepository<ProductImage> productImageRepository;
-
     	private ISizeService sizeService;
         private IOrderableService<Product> productOrderableService;
-        private IOrderableService<ProductImage> productImageOrderableService;
     	private IUserService userService;
 
         [SetUp]
@@ -44,21 +37,19 @@ namespace Suteki.Shop.Tests.Controllers
 
             productRepository = MockRepositoryBuilder.CreateProductRepository();
 
-            productImageRepository = MockRepository.GenerateStub<IRepository<ProductImage>>();
+            MockRepository.GenerateStub<IRepository<ProductImage>>();
 
             MockRepository.GenerateStub<IHttpFileService>();
             sizeService = MockRepository.GenerateStub<ISizeService>();
 
             productOrderableService = MockRepository.GenerateStub<IOrderableService<Product>>();
-            productImageOrderableService = MockRepository.GenerateStub<IOrderableService<ProductImage>>();
+            MockRepository.GenerateStub<IOrderableService<ProductImage>>();
 
         	userService = MockRepository.GenerateStub<IUserService>();
 
-			productController = new ProductController(productRepository, categoryRepository, productImageRepository, sizeService, productOrderableService, productImageOrderableService, userService);
+			productController = new ProductController(productRepository, categoryRepository, sizeService, productOrderableService, userService);
 
-            testContext = new ControllerTestContext(productController);
-
-            userService.Expect(c => c.CurrentUser).Return(new User { RoleId = Role.AdministratorId });
+        	userService.Expect(c => c.CurrentUser).Return(new User { RoleId = Role.AdministratorId });
         }
 
         [Test]
