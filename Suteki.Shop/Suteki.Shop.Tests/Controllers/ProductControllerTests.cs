@@ -153,141 +153,52 @@ namespace Suteki.Shop.Tests.Controllers
             AssertEditViewIsCorrectlyCalled(result);
         }
 
-        [Test]
-        public void Update_ShouldInsertTheNewProductIntoRepository()
-        {
-            const int productId = 0; // means it's a new product
-            const int categoryId = 4;
-            const string name = "My New Product";
-            const string description = "A description of my new product";
+    	[Test]
+    	public void EditWithPost_ShouldRedirectOnSucessfulBinding()
+    	{
+			var product = new Product() { CategoryId = 5 };
+			productController.Edit(product)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("Index")
+				.WithRouteValue("id", "5");
+    	}
 
-            // create the form
-            var form = new NameValueCollection
-            {
-                {"productid", productId.ToString()},
-                {"categoryid", categoryId.ToString()},
-                {"name", name},
-                {"description", description}
-            };
+    	[Test]
+    	public void EditWithPost_ShouldRenderViewWhenBindingFails()
+    	{
+			productController.ModelState.AddModelError("foo", "bar");
+			var product = new Product();
 
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
+			productController.Edit(product)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(product, x => x.Product);
+    	}
 
-            // add expectations for product repository insertion
-            Product product = null;
+    	[Test]
+    	public void NewWithPost_ShouldInsertNewProduct()
+    	{
+			var product = new Product() { CategoryId = 5 };
+			productController.New(product)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("Index")
+				.WithRouteValue("id", "5");
 
-            productRepository.Expect(r => r.InsertOnSubmit(Arg<Product>.Is.Anything))
-                .WhenCalled(invocation => { product = invocation.Arguments[0] as Product; });
+			productController.Message.ShouldNotBeNull();
+			productRepository.AssertWasCalled(x => x.InsertOnSubmit(product));
+    	}
 
-            // add expectations for image upload
-            var images = new List<Image>
-            {
-                new Image(),
-                new Image()
-            };
-
-            var httpRequest = testContext.TestContext.Request;
-            httpFileService.Expect(h => h.GetUploadedImages(httpRequest)).Return(images);
-
-            // expect the size service to be called
-            sizeService.Stub(s => s.WithValues(form)).Return(sizeService);
-
-            // excercise the method
-            var result = productController.Update(productId) as ViewResult;
-
-            AssertEditViewIsCorrectlyCalled(result);
-
-            // assert the product was created correctly
-            Assert.AreEqual(categoryId, product.CategoryId, "product.CategoryId is incorrect");
-            Assert.AreEqual(name, product.Name, "product.Name is incorrect");
-            Assert.AreEqual(description, product.Description, "product.Description is incorrect");
-
-            // assert the images were added to the product
-            Assert.AreSame(images[0], product.ProductImages[0].Image, "First product image was not added");
-            Assert.AreSame(images[1], product.ProductImages[1].Image, "Second product image was not added");
-
-            productRepository.AssertWasCalled(r => r.SubmitChanges());
-            sizeService.AssertWasCalled(s => s.Update(Arg<Product>.Is.Anything));
-        }
-
-        [Test]
-        public void Update_ShouldUpdateAnExistingProduct()
-        {
-            const int productId = 44; // non-zero means it's an existing product
-            const int categoryId = 4;
-            const string name = "My New Product";
-            const string description = "A description of my new product";
-
-            // create the form
-            var form = new NameValueCollection
-            {
-                {"productid", productId.ToString()},
-                {"categoryid", categoryId.ToString()},
-                {"name", name},
-                {"description", description}
-            };
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
-
-            var product = new Product
-            {
-                ProductId = productId,
-                CategoryId = 6,
-                Name = "The old name",
-                Description = "The old description"
-            };
-
-            productRepository.Expect(r => r.GetById(productId)).Return(product);
-
-            // expect the size service to be called
-            sizeService.Expect(s => s.WithValues(form)).Return(sizeService);
-
-            productController.Expect(
-                c => c.UpdateImages(Arg<Product>.Is.Same(product), Arg<HttpRequestBase>.Is.Anything));
-
-            // excercise the method
-            var result = productController.Update(productId) as ViewResult;
-
-            AssertEditViewIsCorrectlyCalled(result);
-
-            // assert the product was created correctly
-            Assert.AreEqual(categoryId, product.CategoryId, "product.CategoryId is incorrect");
-            Assert.AreEqual(name, product.Name, "product.Name is incorrect");
-            Assert.AreEqual(description, product.Description, "product.Description is incorrect");
-
-            productRepository.AssertWasCalled(r => r.SubmitChanges());
-            sizeService.AssertWasCalled(s => s.Update(Arg<Product>.Is.Anything));
-        }
-
-        [Test]
-        public void UpdateImages_ShouldAddUploadedImagesToProduct()
-        {
-            const int nextPosition = 23;
-            var product = new Product();
-            var request = MockRepository.GenerateMock<HttpRequestBase>();
-
-            var image1 = new Image();
-            var image2 = new Image();
-            var image3 = new Image();
-
-            var images = new List<Image>{image1, image2, image3};
-
-            httpFileService.Expect(fs => fs.GetUploadedImages(request)).Return(images);
-            productImageOrderableService.Expect(os => os.NextPosition).Return(nextPosition);
-
-            productController.UpdateImages(product, request);
-
-            // UpdateImages should add the three images to the product with the correct
-            // positions
-
-            Assert.That(product.ProductImages.Count, Is.EqualTo(3), "Wrong number of images");
-
-            Assert.That(product.ProductImages[0].Image, Is.SameAs(image1), "Incorect first image");
-            Assert.That(product.ProductImages[0].Position, Is.EqualTo(nextPosition), "Incorect first position");
-
-            Assert.That(product.ProductImages[1].Image, Is.SameAs(image2), "Incorect second image");
-            Assert.That(product.ProductImages[1].Position, Is.EqualTo(nextPosition + 1), "Incorect second position");
-            
-            Assert.That(product.ProductImages[2].Image, Is.SameAs(image3), "Incorect third image");
-            Assert.That(product.ProductImages[2].Position, Is.EqualTo(nextPosition + 2), "Incorect third position");
-        }
+    	[Test]
+    	public void NewWithPost_ShouldRenderViewWhenThereAreBindingErrors()
+    	{
+    		productController.ModelState.AddModelError("foo", "bar");
+    		var product = new Product();
+			productController.New(product)
+				.ReturnsViewResult()
+				.ForView("Edit")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(product, x => x.Product);
+    	}
     }
 }

@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CurrentBasketBinder.cs" />
+    <Compile Include="Binders\ProductBinder.cs" />
     <Compile Include="ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CmsController.cs" />
@@ -251,13 +252,6 @@
     </Compile>
     <Compile Include="Views\Order\Item.aspx.designer.cs">
       <DependentUpon>Item.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Product\Edit.aspx.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Product\Edit.aspx.designer.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Rsd\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>

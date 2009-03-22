@@ -8,7 +8,11 @@ namespace Suteki.Common.Binders
 {
 	public class DataBindAttribute : BindUsingAttribute
 	{
-		public DataBindAttribute() : base(typeof(DataBinder))
+		public DataBindAttribute() : this(typeof(DataBinder))
+		{
+		}
+
+		protected DataBindAttribute(Type binderType) : base(binderType)
 		{
 			Fetch = true;
 		}
@@ -18,8 +22,8 @@ namespace Suteki.Common.Binders
 
 	public class DataBinder : IModelBinder, IAcceptsAttribute
 	{
-		private readonly IValidatingBinder validatingBinder;
-		private readonly IRepositoryResolver resolver;
+		protected readonly IValidatingBinder validatingBinder;
+		protected readonly IRepositoryResolver resolver;
 		private DataBindAttribute declaringAttribute;
 		
 		public DataBinder(IValidatingBinder validatingBinder, IRepositoryResolver resolver)
@@ -28,7 +32,7 @@ namespace Suteki.Common.Binders
 			this.resolver = resolver;
 		}
 
-		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+		public virtual object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
 		{
 			object entity;
 

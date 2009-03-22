@@ -41,7 +41,8 @@ namespace Suteki.Shop
 				Component.For<UnitOfWorkFilter>().LifeStyle.Transient,
 				Component.For<DataBinder>().LifeStyle.Transient,
 				Component.For<LoadUsingFilter>().LifeStyle.Transient,
-				Component.For<CurrentBasketBinder>().LifeStyle.Transient
+				Component.For<CurrentBasketBinder>().LifeStyle.Transient,
+				Component.For<ProductBinder>().LifeStyle.Transient
 			);
 
 			return container;

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" AutoEventWireup="true" ValidateRequest="false" CodeBehind="Edit.aspx.cs" Inherits="Suteki.Shop.Views.Product.Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
     <h1>Product</h1>
@@ -7,31 +7,20 @@
         <%= Html.ActionLink<ProductController>(c => c.Item(ViewData.Model.Product.UrlName), "Preview") %>
     <% } %>
 
-    <%= Html.ErrorBox(ViewData.Model) %>
+	<%= Html.ValidationSummary() %>
     <%= Html.MessageBox(ViewData.Model) %>
 
-    <% using (Html.BeginForm("Update", "Product", FormMethod.Post, new Dictionary<string, object> { { "enctype", "multipart/form-data" } }))
-       { %>
-
-        <%= Html.Hidden("productId", ViewData.Model.Product.ProductId.ToString())%>
-        <%= Html.Hidden("position", ViewData.Model.Product.Position.ToString())%>
+    <% using (Html.MultipartForm()) { %>
+		<%= this.Hidden(x => x.Product.ProductId) %>
+		<%= this.Hidden(x => x.Product.Position) %>
 
         <div class="columnContainer">
             <div class="contentLeftColumn">
-                <label for="name">Name</label>
-                <%= Html.TextBox("name", ViewData.Model.Product.Name)%>
-                
-                <label for="categoryid">Category</label>
-                <%= Html.DropDownList("categoryid", new SelectList(ViewData.Model.Categories, "CategoryId", "Name", ViewData.Model.Product.CategoryId))%>
-                
-                <label for="weight">Weight</label>
-                <%= Html.TextBox("weight", ViewData.Model.Product.Weight.ToString())%>
-                
-                <label for="price">Price £</label>
-                <%= Html.TextBox("price", ViewData.Model.Product.Price.ToString("0.00"))%>
-                
-                <label for="isactive">Active</label>
-                <%= Html.CheckBox("isactive", ViewData.Model.Product.IsActive)%>
+				<%= this.TextBox(x => x.Product.Name).Label("Name") %>
+                <%= this.Select(x => x.Product.CategoryId).Options(Model.Categories, x => x.CategoryId, x => x.Name).Label("Category") %>
+                <%= this.TextBox(x => x.Product.Weight).Label("Weight") %>
+                <%= this.TextBox(x => x.Product.Price).Format("{0:0.00}").Label("Price £") %>
+                <%= this.CheckBox(x => x.Product.IsActive).Label("Active") %>
             </div>
             
             <div class="contentRightColumn">
@@ -39,8 +28,7 @@
             </div>
         </div>
         
-        <label for="description">Description</label>
-        <%= Html.TextArea("description", ViewData.Model.Product.Description)%>
+        <%= this.TextArea(x => x.Product.Description).Label("Description") %>
         
         <h3>Sizes</h3>
         
@@ -53,7 +41,7 @@
         </p>
         <div class="sizeInput">
         <% for(int i=0; i<10; i++) { %>
-            <%= Html.TextBox("size_" + i.ToString())%>
+            <%= Html.TextBox("size_" + i)%>
         <% } %>
         </div>
         
@@ -72,13 +60,10 @@
         
         <div class="clear" />
         
-        <% for (int i = 0; i < 5; i++)
-           { %>
+        <% for (int i = 0; i < 5; i++) { %>
             <input type="file" id="image_<%= i.ToString() %>" name="image_<%= i.ToString() %>" />
         <% } %>
-        <%= Html.SubmitButton()%>
-
+        
+        <input type="submit" value="Save Changes" />
     <% } %>
-
-
 </asp:Content>

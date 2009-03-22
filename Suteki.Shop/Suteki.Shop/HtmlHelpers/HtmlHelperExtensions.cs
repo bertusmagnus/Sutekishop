@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Web.Mvc;
 using Microsoft.Web.Mvc;
+using MvcContrib;
 using MvcContrib.FluentHtml.Elements;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Controllers;
-
+using System.Web.Mvc.Html;
 namespace Suteki.Shop.HtmlHelpers
 {
     public static class HtmlHelperExtensions
@@ -70,6 +71,13 @@ namespace Suteki.Shop.HtmlHelpers
 		{
 			helper.Builder.MergeAttribute("name", name, true);
 			return helper;
+		}
+
+		public static IDisposable MultipartForm(this HtmlHelper helper)
+		{
+			string action = helper.ViewContext.RouteData.GetRequiredString("action");
+			string controller = helper.ViewContext.RouteData.GetRequiredString("controller");
+			return helper.BeginForm(action, controller, FormMethod.Post, new Hash(enctype => "multipart/form-data"));
 		}
     }
 }
