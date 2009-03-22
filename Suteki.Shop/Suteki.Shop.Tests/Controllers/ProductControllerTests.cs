@@ -57,19 +57,7 @@ namespace Suteki.Shop.Tests.Controllers
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
             userService = MockRepository.GenerateStub<IUserService>();
 
-            var mocks = new MockRepository();
-            productController = mocks.PartialMock<ProductController>(
-                productRepository, 
-                categoryRepository,
-                productImageRepository,
-                httpFileService,
-                sizeService,
-                productOrderableService,
-                productImageOrderableService,
-                validatingBinder,
-                userService);
-
-            mocks.ReplayAll();
+			productController = new ProductController(productRepository, categoryRepository, productImageRepository, sizeService, productOrderableService, productImageOrderableService, userService);
 
             testContext = new ControllerTestContext(productController);
 
