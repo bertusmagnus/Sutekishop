@@ -133,7 +133,8 @@ namespace Suteki.Shop.Controllers
 				.ConstrainedBy(product => product.CategoryId == id)
 				.UpOne();
 
-			return RenderIndexView(id);
+
+			return this.RedirectToAction(x => x.Index(id));
 		}
 
 		[AdministratorsOnly]
@@ -144,7 +145,7 @@ namespace Suteki.Shop.Controllers
 				.ConstrainedBy(product => product.CategoryId == id)
 				.DownOne();
 
-			return RenderIndexView(id);
+			return this.RedirectToAction(x => x.Index(id));
 		}
 
 		[AdministratorsOnly]

@@ -29,12 +29,10 @@ namespace Suteki.Shop.Tests.Controllers
 
         private IRepository<ProductImage> productImageRepository;
 
-        private IHttpFileService httpFileService;
-        private ISizeService sizeService;
+    	private ISizeService sizeService;
         private IOrderableService<Product> productOrderableService;
         private IOrderableService<ProductImage> productImageOrderableService;
-        private IValidatingBinder validatingBinder;
-        private IUserService userService;
+    	private IUserService userService;
 
         [SetUp]
         public void SetUp()
@@ -48,14 +46,13 @@ namespace Suteki.Shop.Tests.Controllers
 
             productImageRepository = MockRepository.GenerateStub<IRepository<ProductImage>>();
 
-            httpFileService = MockRepository.GenerateStub<IHttpFileService>();
+            MockRepository.GenerateStub<IHttpFileService>();
             sizeService = MockRepository.GenerateStub<ISizeService>();
 
             productOrderableService = MockRepository.GenerateStub<IOrderableService<Product>>();
             productImageOrderableService = MockRepository.GenerateStub<IOrderableService<ProductImage>>();
 
-            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
-            userService = MockRepository.GenerateStub<IUserService>();
+        	userService = MockRepository.GenerateStub<IUserService>();
 
 			productController = new ProductController(productRepository, categoryRepository, productImageRepository, sizeService, productOrderableService, productImageOrderableService, userService);
 
