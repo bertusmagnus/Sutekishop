@@ -215,6 +215,7 @@
     <Compile Include="Services\IPostageService.cs" />
     <Compile Include="Services\ISizeService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\OrderSearchService.cs" />
     <Compile Include="Services\PostageService.cs" />
     <Compile Include="Services\SizeService.cs" />
     <Compile Include="Services\UserService.cs" />
@@ -232,13 +233,6 @@
     </Compile>
     <Compile Include="Views\Order\Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Order\Index.aspx.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Order\Index.aspx.designer.cs">
-      <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Order\Invoice.aspx.cs">
       <DependentUpon>Invoice.aspx</DependentUpon>
@@ -348,6 +342,7 @@
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Menu\UpDown.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
+    <Content Include="Views\Order\OrderSearchForm.ascx" />
     <Content Include="Views\Product\BasketOptions.ascx" />
     <Content Include="Views\Product\Product.ascx" />
     <Content Include="Views\Product\ProductDescription.ascx" />

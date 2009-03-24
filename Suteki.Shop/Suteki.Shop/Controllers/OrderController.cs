@@ -5,10 +5,12 @@ using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
+using Suteki.Shop.Filters;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;
 using System.Security.Permissions;
+using Suteki.Common.Binders;
 
 namespace Suteki.Shop.Controllers
 {
@@ -25,6 +27,7 @@ namespace Suteki.Shop.Controllers
         private readonly IValidatingBinder validatingBinder;
         private readonly IHttpContextService httpContextService;
         private readonly IUserService userService;
+		readonly IOrderSearchService searchService;
 
         public OrderController(
             IRepository<Order> orderRepository,
@@ -36,10 +39,11 @@ namespace Suteki.Shop.Controllers
             IPostageService postageService,
             IValidatingBinder validatingBinder,
             IHttpContextService httpContextService, 
-            IUserService userService)
+            IUserService userService, IOrderSearchService searchService)
         {
             this.orderRepository = orderRepository;
-            this.userService = userService;
+        	this.searchService = searchService;
+        	this.userService = userService;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
@@ -57,10 +61,11 @@ namespace Suteki.Shop.Controllers
             IRepository<CardType> cardTypeRepository, 
             IEncryptionService encryptionService, 
             IEmailSender emailSender, 
-            IPostageService postageService, IUserService userService)
+            IPostageService postageService, IUserService userService, IOrderSearchService searchService)
         {
             this.orderRepository = orderRepository;
-            this.userService = userService;
+        	this.searchService = searchService;
+        	this.userService = userService;
             this.basketRepository = basketRepository;
             this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
@@ -72,30 +77,17 @@ namespace Suteki.Shop.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult Index()
         {
-            return Index(new FormCollection());
+            return Index(new OrderSearchCriteria());
         }
 
-		[Suteki.Shop.Filters.AdministratorsOnly]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index(FormCollection form)
+		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Index([DataBind(Fetch = false)] OrderSearchCriteria orderSearchCriteria)
         {
-            var criteria = new OrderSearchCriteria();
-
-            try
-            {
-                validatingBinder.UpdateFrom(criteria, form, ModelState);
-            }
-            catch (ValidationException) { } // ignore validation exceptions
-
-            var orders = orderRepository
-                .GetAll()
-                .ThatMatch(criteria)
-                .ByCreatedDate()
-                .ToPagedList(httpContextService.FormOrQuerystring.PageNumber(), 20);
+			var orders = searchService.PerformSearch(orderSearchCriteria);
 
             return View("Index", ShopView.Data
                 .WithOrders(orders)
-                .WithOrderSearchCriteria(criteria));
+                .WithOrderSearchCriteria(orderSearchCriteria));
         }
 
         public ActionResult Item(int id)

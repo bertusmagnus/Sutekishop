@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.TestHelpers;
@@ -33,6 +34,7 @@ namespace Suteki.Shop.Tests.Controllers
         private IValidatingBinder validatingBinder;
         private IHttpContextService httpContextService;
         private IUserService userService;
+		IOrderSearchService searchService;
 
         private ControllerTestContext testContext;
 
@@ -46,6 +48,7 @@ namespace Suteki.Shop.Tests.Controllers
             basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
             countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
             cardTypeRepository = MockRepository.GenerateStub<IRepository<CardType>>();
+			
 
             emailSender = MockRepository.GenerateStub<IEmailSender>();
             encryptionService = MockRepository.GenerateStub<IEncryptionService>();
@@ -53,6 +56,7 @@ namespace Suteki.Shop.Tests.Controllers
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
             httpContextService = MockRepository.GenerateStub<IHttpContextService>();
             userService = MockRepository.GenerateStub<IUserService>();
+			searchService = MockRepository.GenerateStub<IOrderSearchService>();
 
             var mocks = new MockRepository();
             orderController = mocks.PartialMock<OrderController>(
@@ -65,7 +69,9 @@ namespace Suteki.Shop.Tests.Controllers
                 postageService,
                 validatingBinder,
                 httpContextService,
-                userService);
+                userService,
+				searchService
+				);
 
             testContext = new ControllerTestContext(orderController);
 
@@ -231,14 +237,14 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfOrders()
         {
-            var orders = new List<Order> { new Order() }.AsQueryable();
-            orderRepository.Expect(or => or.GetAll()).Return(orders);
+            var orders = new PagedList<Order>(new List<Order>(), 1, 1);
+			searchService.Expect(x => x.PerformSearch(null)).IgnoreArguments().Return(orders);
 
-            orderController.Index(new FormCollection())
+            orderController.Index(null)
                 .ReturnsViewResult()
                 .ForView("Index")
                 .WithModel<ShopViewData>()
-                .AssertAreSame(orders.First(), vd => vd.Orders.First());
+                .AssertAreSame(orders, vd => vd.Orders);
         }
 
         [Test]
@@ -286,23 +292,17 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldBuildCriteriaAndExecuteSearch()
         {
-            var form = new NameValueCollection {{"orderid", "3"}};
-            testContext.TestContext.Request.Expect(r => r.Form).Return(form);
+			var criteria = new OrderSearchCriteria();
+        	var results = new PagedList<Order>(new List<Order>(), 1, 1);
+			searchService.Expect(x => x.PerformSearch(criteria)).Return(results);
 
-            var orders = new List<Order>
-            {
-                new Order { OrderId = 2 },
-                new Order { OrderId = 3 }
-            }.AsQueryable();
+			orderController.Index(criteria)
+				.ReturnsViewResult()
+				.ForView("Index")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(criteria, vd => vd.OrderSearchCriteria)
+				.AssertAreSame(results, vd => vd.Orders);
 
-            orderRepository.Expect(or => or.GetAll()).Return(orders);
-
-            orderController.Index(new FormCollection())
-                .ReturnsViewResult()
-                .ForView("Index")
-                .WithModel<ShopViewData>()
-                .AssertAreSame(orders.ElementAt(0), vd => vd.Orders.First());
-                
         }
 
         [Test]

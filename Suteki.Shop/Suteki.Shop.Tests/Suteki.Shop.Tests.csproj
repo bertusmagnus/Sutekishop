@@ -159,6 +159,7 @@
     <Compile Include="Services\ImageServiceTests.cs" />
     <Compile Include="Services\MoveTests.cs" />
     <Compile Include="Services\OrderableServiceTests.cs" />
+    <Compile Include="Services\OrderSearchServiceTests.cs" />
     <Compile Include="Services\PostageServiceTests.cs" />
     <Compile Include="Services\SizeServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />

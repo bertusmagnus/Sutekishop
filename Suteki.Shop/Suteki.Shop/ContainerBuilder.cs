@@ -42,7 +42,8 @@ namespace Suteki.Shop
 				Component.For<DataBinder>().LifeStyle.Transient,
 				Component.For<LoadUsingFilter>().LifeStyle.Transient,
 				Component.For<CurrentBasketBinder>().LifeStyle.Transient,
-				Component.For<ProductBinder>().LifeStyle.Transient
+				Component.For<ProductBinder>().LifeStyle.Transient,
+				Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient
 			);
 
 			return container;
