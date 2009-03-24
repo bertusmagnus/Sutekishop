@@ -17,14 +17,10 @@ namespace Suteki.Shop.Tests.Services
 		IOrderSearchService service;
 		List<Order> orders;
 		IHttpContextService contextService;
-		NameValueCollection formOrQuerystring;
-//		HttpContextTestContext testContext;
 
 		[SetUp]
 		public void Setup()
 		{
-//			testContext = new HttpContextTestContext();
-			formOrQuerystring = new NameValueCollection();
 			orders = new List<Order>();
 			var repository = MockRepository.GenerateStub<IRepository<Order>>();
 			contextService = MockRepository.GenerateStub<IHttpContextService>();
