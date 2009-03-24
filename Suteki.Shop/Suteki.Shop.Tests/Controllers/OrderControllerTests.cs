@@ -68,7 +68,6 @@ namespace Suteki.Shop.Tests.Controllers
                 emailSender,
                 postageService,
                 validatingBinder,
-                httpContextService,
                 userService,
 				searchService
 				);

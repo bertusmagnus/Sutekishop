@@ -25,21 +25,19 @@ namespace Suteki.Shop.Controllers
         private readonly IEmailSender emailSender;
         private readonly IPostageService postageService;
         private readonly IValidatingBinder validatingBinder;
-        private readonly IHttpContextService httpContextService;
-        private readonly IUserService userService;
+    	private readonly IUserService userService;
 		readonly IOrderSearchService searchService;
 
         public OrderController(
-            IRepository<Order> orderRepository,
-            IRepository<Basket> basketRepository,
-            IRepository<Country> countryRepository,
-            IRepository<CardType> cardTypeRepository,
-            IEncryptionService encryptionService,
-            IEmailSender emailSender,
-            IPostageService postageService,
-            IValidatingBinder validatingBinder,
-            IHttpContextService httpContextService, 
-            IUserService userService, IOrderSearchService searchService)
+			IRepository<Order> orderRepository, 
+			IRepository<Basket> basketRepository, 
+			IRepository<Country> countryRepository, 
+			IRepository<CardType> cardTypeRepository, 
+			IEncryptionService encryptionService, IEmailSender emailSender, 
+			IPostageService postageService, 
+			IValidatingBinder validatingBinder, 
+			IUserService userService, 
+			IOrderSearchService searchService)
         {
             this.orderRepository = orderRepository;
         	this.searchService = searchService;
@@ -51,7 +49,6 @@ namespace Suteki.Shop.Controllers
             this.emailSender = emailSender;
             this.postageService = postageService;
             this.validatingBinder = validatingBinder;
-            this.httpContextService = httpContextService;
         }
 
         public OrderController(
@@ -74,7 +71,7 @@ namespace Suteki.Shop.Controllers
             this.postageService = postageService;
         }
 
-        [AcceptVerbs(HttpVerbs.Get)]
+        [AcceptVerbs(HttpVerbs.Get), AdministratorsOnly]
         public ActionResult Index()
         {
             return Index(new OrderSearchCriteria());
