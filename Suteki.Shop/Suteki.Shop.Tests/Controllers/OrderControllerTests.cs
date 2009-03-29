@@ -298,21 +298,5 @@ namespace Suteki.Shop.Tests.Controllers
 
             encryptionService.AssertWasCalled(es => es.DecryptCard(Arg<Card>.Is.Anything));
         }
-
-        [Test]
-        public void Invoice_ShouldShowOrderInInvoiceView()
-        {
-            const int orderId = 10;
-
-            var order = new Order();
-
-            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
-
-            orderController.Invoice(orderId)
-                .ReturnsViewResult()
-                .ForView("Invoice")
-                .WithModel<ShopViewData>()
-                .AssertAreSame(order, vd => vd.Order);
-        }
     }
 }

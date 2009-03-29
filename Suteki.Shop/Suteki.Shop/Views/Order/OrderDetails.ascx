@@ -21,7 +21,7 @@
     <% } else { %>
         <%= Html.ActionLink<OrderStatusController>(c => c.UndoStatus(ViewData.Model.Order.OrderId), "Reset Status", new { _class = "linkButton" })%>
     <% } %>
-    <%= Html.ActionLink<OrderController>(c => c.Invoice(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
+    <%= Html.ActionLink<InvoiceController>(c => c.Show(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
 <% } %>
 </div>    
 

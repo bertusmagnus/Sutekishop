@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Print.Master" AutoEventWireup="true" CodeBehind="Invoice.aspx.cs" Inherits="Suteki.Shop.Views.Order.Invoice" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Print.Master" Inherits="System.Web.Mvc.ViewPage<ShopViewData>" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <div class="invoiceHeader">

@@ -284,56 +284,6 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-/*
-		[Suteki.Shop.Filters.AdministratorsOnly]
-        public ActionResult Dispatch(int id)
-        {
-            var order = orderRepository.GetById(id);
-
-            if (order.IsCreated)
-            {
-                order.OrderStatusId = OrderStatus.DispatchedId;
-                order.DispatchedDate = DateTime.Now;
-                order.UserId = userService.CurrentUser.UserId;
-                orderRepository.SubmitChanges();
-            }
-
-            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
-        }
-*/
-
-/*
-		[Suteki.Shop.Filters.AdministratorsOnly]
-        public ActionResult Reject(int id)
-        {
-            var order = orderRepository.GetById(id);
-
-            if (order.IsCreated)
-            {
-                order.OrderStatusId = OrderStatus.RejectedId;
-                order.UserId = userService.CurrentUser.UserId;
-                orderRepository.SubmitChanges();
-            }
-
-            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
-        }
-*/
-
-		/*[Suteki.Shop.Filters.AdministratorsOnly]
-        public ActionResult UndoStatus(int id)
-        {
-            var order = orderRepository.GetById(id);
-
-            if (order.IsDispatched || order.IsRejected)
-            {
-                order.OrderStatusId = OrderStatus.CreatedId;
-                order.UserId = null;
-                orderRepository.SubmitChanges();
-            }
-
-            return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
-        }*/
-
         public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
         {
             var basket = basketRepository.GetById(id);
@@ -353,17 +303,6 @@ namespace Suteki.Shop.Controllers
 
             PopulateOrderForView(order, basket);
             return View("Checkout", CheckoutViewData(order));
-        }
-
-		[Suteki.Shop.Filters.AdministratorsOnly]
-        public ActionResult Invoice(int id)
-        {
-            var order = orderRepository.GetById(id);
-            postageService.CalculatePostageFor(order);
-
-            AppendTitle("Invoice {0}".With(order.OrderId));
-
-            return View("Invoice", ShopView.Data.WithOrder(order));
         }
     }
 }

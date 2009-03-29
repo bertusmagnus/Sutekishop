@@ -134,6 +134,7 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\IProvidesBaseService.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
@@ -243,20 +244,6 @@
     <Compile Include="Views\Order\Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Order\Invoice.aspx.cs">
-      <DependentUpon>Invoice.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Order\Invoice.aspx.designer.cs">
-      <DependentUpon>Invoice.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Order\Item.aspx.cs">
-      <DependentUpon>Item.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Order\Item.aspx.designer.cs">
-      <DependentUpon>Item.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Rsd\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -356,9 +343,11 @@
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Menu\UpDown.ascx" />
-    <Content Include="Views\Order\Invoice.aspx" />
+    <Content Include="Views\Invoice\Show.aspx" />
+    <Content Include="Views\Order\CustomerDetails.ascx" />
     <Content Include="Views\Order\OrderDetails.ascx" />
     <Content Include="Views\Order\OrderSearchForm.ascx" />
+    <Content Include="Views\Order\PaymentDetails.ascx" />
     <Content Include="Views\Product\BasketOptions.ascx" />
     <Content Include="Views\Product\Product.ascx" />
     <Content Include="Views\Product\ProductDescription.ascx" />
