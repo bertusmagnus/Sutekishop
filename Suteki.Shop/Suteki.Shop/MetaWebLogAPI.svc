@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Service="metaWebLog" Factory="Castle.Facilities.WcfIntegration.DefaultServiceHostFactory, Castle.Facilities.WcfIntegration"  %>

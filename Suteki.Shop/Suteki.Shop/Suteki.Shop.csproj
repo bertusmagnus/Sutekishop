@@ -43,6 +43,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.Facilities.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Castle.Facilities.WcfIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.MicroKernel.dll</HintPath>
@@ -66,6 +70,10 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ServiceModel.Samples.XmlRpc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=565b4392ea21ace0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Microsoft.ServiceModel.Samples.XmlRpc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -275,6 +283,10 @@
     <Compile Include="XmlRpc\MetaWeblog.cs" />
     <Compile Include="XmlRpc\MetaWeblogAPI.cs" />
     <Compile Include="XmlRpc\MetaWeblogWcf.cs" />
+    <Compile Include="XmlRpc\Service\XmlRpcServiceHost.cs" />
+    <Compile Include="XmlRpc\Service\XmlRpcServiceHostBuilder.cs" />
+    <Compile Include="XmlRpc\Service\XmlRpcServiceModel.cs" />
+    <Compile Include="XmlRpc\WcfConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
@@ -337,6 +349,8 @@
     <None Include="Shop.dbml.layout">
       <DependentUpon>Shop.dbml</DependentUpon>
     </None>
+    <None Include="MetaWebLogAPI.svc.explicitXmlRpcHost.Factory" />
+    <Content Include="MetaWebLogAPI.svc" />
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />

@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Service="metaWebLog" Factory="Castle.Facilities.WcfIntegration.WindsorServiceHostFactory`1[[Suteki.Shop.XmlRpc.Service.XmlRpcServiceModel, Suteki.Shop]], Castle.Facilities.WcfIntegration"  %>

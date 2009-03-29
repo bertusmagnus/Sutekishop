@@ -56,7 +56,7 @@ namespace Suteki.Shop.Tests.XmlRpc
 
 
             container = new WindsorContainer()
-                .AddFacility<WcfFacility>()
+                .AddFacility<WcfFacility>(f => f.DefaultBinding = new XmlRpcHttpBinding())
                 .Register(
                     Component.For<XmlRpcEndpointBehavior>(),
                     Component.For<IMetaWeblog>().Instance(metaWeblog)
@@ -64,7 +64,6 @@ namespace Suteki.Shop.Tests.XmlRpc
                             .AddBaseAddresses(url)
                             .AddEndpoints(
                                 WcfEndpoint.ForContract<IMetaWeblog>()
-                                .BoundTo(new XmlRpcHttpBinding())
                             )
 
                         )

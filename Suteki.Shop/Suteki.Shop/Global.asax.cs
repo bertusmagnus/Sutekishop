@@ -7,6 +7,7 @@ using Suteki.Common.Repositories;
 using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
+using Suteki.Shop.XmlRpc;
 
 namespace Suteki.Shop
 {
@@ -40,6 +41,9 @@ namespace Suteki.Shop
             {
                 // create a new Windsor Container
 				container = ContainerBuilder.Build("Configuration\\Windsor.config"); 
+
+                WcfConfiguration.ConfigureContainer(container);
+
 				ServiceLocator.SetLocatorProvider(() => container.Resolve<IServiceLocator>());
                 // set the controller factory to the Windsor controller factory (in MVC Contrib)
                 System.Web.Mvc.ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
