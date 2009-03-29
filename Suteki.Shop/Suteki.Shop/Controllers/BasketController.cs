@@ -13,30 +13,19 @@ namespace Suteki.Shop.Controllers
 {
     public class BasketController : ControllerBase
     {
-        private readonly IRepository<Basket> basketRepository;
-        private readonly IRepository<BasketItem> basketItemRepository;
+    	private readonly IRepository<BasketItem> basketItemRepository;
         private readonly IRepository<Size> sizeRepository;
         private readonly IUserService userService;
         private readonly IPostageService postageService;
         private readonly IRepository<Country> countryRepository;
-        private readonly IValidatingBinder validatingBinder;
 
-        public BasketController(
-            IRepository<Basket> basketRepository,
-            IRepository<BasketItem> basketItemRepository,
-            IRepository<Size> sizeRepository,
-            IUserService userService,
-            IPostageService postageService, 
-            IRepository<Country> countryRepository,
-            IValidatingBinder validatingBinder)
+    	public BasketController(IRepository<BasketItem> basketItemRepository, IRepository<Size> sizeRepository, IUserService userService, IPostageService postageService, IRepository<Country> countryRepository)
         {
-            this.basketRepository = basketRepository;
-            this.basketItemRepository = basketItemRepository;
+    		this.basketItemRepository = basketItemRepository;
             this.sizeRepository = sizeRepository;
             this.userService = userService;
             this.postageService = postageService;
             this.countryRepository = countryRepository;
-            this.validatingBinder = validatingBinder;
         }
 
         public ActionResult Index()
@@ -45,12 +34,9 @@ namespace Suteki.Shop.Controllers
             return  View("Index", IndexViewData(user.CurrentBasket));
         }
 
-        [UnitOfWork, AcceptVerbs(HttpVerbs.Post)] //TODO: Change this to use DataBind after the ProductController has been updated
+        [UnitOfWork, AcceptVerbs(HttpVerbs.Post)]
 		public ActionResult Update([CurrentBasket] Basket basket, [DataBind(Fetch = false)] BasketItem basketItem)
         {
-//            var basketItem = new BasketItem();
-//            validatingBinder.UpdateFrom(basketItem, form, ModelState);
-            
 			var size = sizeRepository.GetById(basketItem.SizeId);
 
             if (!size.IsInStock)

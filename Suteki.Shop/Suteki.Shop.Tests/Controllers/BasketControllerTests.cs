@@ -29,14 +29,11 @@ namespace Suteki.Shop.Tests.Controllers
 
             validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
-            basketController = new BasketController(
-                basketRepository,
-                basketItemRepository,
+            basketController = new BasketController(basketItemRepository,
                 sizeRepository,
                 userService,
                 postageService,
-                countryRepository,
-                validatingBinder);
+                countryRepository);
 
             testContext = new ControllerTestContext(basketController);
 
