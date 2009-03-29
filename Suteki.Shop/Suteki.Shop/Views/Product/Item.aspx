@@ -17,7 +17,7 @@ function onThumbnailClick(img)
 
 <h1><%= ViewData.Model.Product.Name %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= ViewData.Model.Product.Price.ToString("£0.00") %><%= ViewData.Model.Product.IsActiveAsString %></h1>
 
-<% if(Context.User.IsInRole("Administrator")) { %>
+<% if(User.IsAdministrator()) { %>
     <p><%= Html.ActionLink<ProductController>(c => c.Edit(ViewData.Model.Product.ProductId), "Edit") %></p>
 <% } %>
 

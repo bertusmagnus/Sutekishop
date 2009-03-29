@@ -83,6 +83,17 @@ namespace Suteki.Shop
         public bool IsAdministrator { get { return RoleId == Role.AdministratorId; } }
         public bool IsOrderProcessor { get { return RoleId == Role.OrderProcessorId; } }
         public bool IsCustomer { get { return RoleId == Role.CustomerId; } }
+
+		public void EnsureCanViewOrder(Order order)
+		{
+			if (!IsAdministrator) 
+			{
+				if (order.Basket.UserId != UserId) 
+				{
+					throw new ApplicationException("You are attempting to view an order that was not created by you");
+				}
+			}
+		}
     }
 
     /// <summary>

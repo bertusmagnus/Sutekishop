@@ -3,7 +3,7 @@
 
 <h1><%= Model.Category.Name %></h1>
 
-<% if(Context.User.IsInRole("Administrator")) { %>
+<% if(User.IsAdministrator()) { %>
     <p><%= Html.ActionLink<CategoryController>(c => c.New(ViewData.Model.Category.CategoryId), "New Category")%></p>
     <p><%= Html.ActionLink<ProductController>(c => c.New(ViewData.Model.Category.CategoryId), "New Product") %></p>
 <% } %>

@@ -139,6 +139,7 @@
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OrderStatusController.cs" />
     <Compile Include="Controllers\PostageController.cs" />
     <Compile Include="Controllers\PostZoneController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -356,6 +357,7 @@
     <Content Include="Views\Menu\MainMenu.ascx" />
     <Content Include="Views\Menu\UpDown.ascx" />
     <Content Include="Views\Order\Invoice.aspx" />
+    <Content Include="Views\Order\OrderDetails.ascx" />
     <Content Include="Views\Order\OrderSearchForm.ascx" />
     <Content Include="Views\Product\BasketOptions.ascx" />
     <Content Include="Views\Product\Product.ascx" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Web.Mvc;
 using Microsoft.Web.Mvc;
 using MvcContrib;
@@ -78,6 +79,11 @@ namespace Suteki.Shop.HtmlHelpers
 			string action = helper.ViewContext.RouteData.GetRequiredString("action");
 			string controller = helper.ViewContext.RouteData.GetRequiredString("controller");
 			return helper.BeginForm(action, controller, FormMethod.Post, new Hash(enctype => "multipart/form-data"));
+		}
+
+		public static bool IsAdministrator(this IPrincipal principal)
+		{
+			return principal.IsInRole("Administrator");
 		}
     }
 }

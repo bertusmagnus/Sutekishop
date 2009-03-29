@@ -4,7 +4,7 @@
         <div>
             
             <!-- Admin menu should only show when the user is an administrator -->
-            <% if (Context.User.IsInRole("Administrator"))
+            <% if (Context.User.IsAdministrator())
                { %>
             
             <div>

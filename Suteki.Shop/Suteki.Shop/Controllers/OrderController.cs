@@ -120,20 +120,8 @@ namespace Suteki.Shop.Controllers
                 }
             }
 
-            CheckCurrentUserCanViewOrder(order);
+			userService.CurrentUser.EnsureCanViewOrder(order);
             return View("Item", CheckoutViewData(order));
-        }
-
-        [NonAction]
-        public virtual void CheckCurrentUserCanViewOrder(Order order)
-        {
-            if (!userService.CurrentUser.IsAdministrator)
-            {
-                if (order.Basket.UserId != userService.CurrentUser.UserId)
-                {
-                    throw new ApplicationException("You are attempting to view an order that was not created by you");
-                }
-            }            
         }
 
         public ActionResult Print(int id)
@@ -185,8 +173,7 @@ namespace Suteki.Shop.Controllers
 
         private ShopViewData CheckoutViewData(Order order)
         {
-            CheckCurrentUserCanViewOrder(order);
-
+			userService.CurrentUser.EnsureCanViewOrder(order);
             postageService.CalculatePostageFor(order);
 
             return ShopView.Data
@@ -297,6 +284,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
+/*
 		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Dispatch(int id)
         {
@@ -312,7 +300,9 @@ namespace Suteki.Shop.Controllers
 
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
+*/
 
+/*
 		[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult Reject(int id)
         {
@@ -327,8 +317,9 @@ namespace Suteki.Shop.Controllers
 
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
         }
+*/
 
-		[Suteki.Shop.Filters.AdministratorsOnly]
+		/*[Suteki.Shop.Filters.AdministratorsOnly]
         public ActionResult UndoStatus(int id)
         {
             var order = orderRepository.GetById(id);
@@ -341,7 +332,7 @@ namespace Suteki.Shop.Controllers
             }
 
             return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
-        }
+        }*/
 
         public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
         {

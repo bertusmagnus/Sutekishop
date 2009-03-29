@@ -246,47 +246,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .AssertAreSame(orders, vd => vd.Orders);
         }
 
-        [Test]
-        public void Dispatch_ShouldChangeOrderStatusAndDispatchedDate()
-        {
-            const int orderId = 44;
-            var order = new Order 
-            { 
-                OrderId = orderId, 
-                OrderStatusId = OrderStatus.CreatedId,
-                Basket = new Basket()
-            };
 
-            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
-            orderRepository.Expect(or => or.SubmitChanges());
-
-            orderController.Dispatch(orderId);
-
-            Assert.IsTrue(order.IsDispatched, "order has not been dispatched");
-            Assert.AreEqual(DateTime.Now.ToShortDateString(), order.DispatchedDateAsString, 
-                "DispatchedDateAsString is incorrect");
-            Assert.AreEqual(4, order.UserId, "UserId is incorrect"); // set GetFullPath_ShouldReturnFullPage
-        }
-
-        [Test]
-        public void UndoStatus_ShouldChangeOrderStatusToCreated()
-        {
-            const int orderId = 44;
-            var order = new Order
-            {
-                OrderId = orderId,
-                OrderStatusId = OrderStatus.DispatchedId,
-                DispatchedDate = DateTime.Now,
-                Basket = new Basket()
-            };
-
-            orderRepository.Expect(or => or.GetById(orderId)).Return(order);
-            orderRepository.Expect(or => or.SubmitChanges());
-
-            orderController.UndoStatus(orderId);
-
-            Assert.IsTrue(order.IsCreated, "order status has not been reset");
-        }
 
         [Test]
         public void Index_ShouldBuildCriteriaAndExecuteSearch()
@@ -328,7 +288,6 @@ namespace Suteki.Shop.Tests.Controllers
             order.Card.SetEncryptedSecurityCode("asldkfjsadlfjdskjfdlkd");
 
             orderRepository.Stub(or => or.GetById(orderId)).Return(order);
-            orderController.Expect(c => c.CheckCurrentUserCanViewOrder(Arg<Order>.Is.Anything));
 
             orderController.ShowCard(orderId, privateKey)
                 .ReturnsViewResult()
