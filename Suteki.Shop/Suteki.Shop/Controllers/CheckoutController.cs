@@ -76,7 +76,7 @@ namespace Suteki.Shop.Controllers
 				.WithOrder(order);
 		}
 
-		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		[AcceptVerbs(HttpVerbs.Post)]
 		public ActionResult Index([BindUsing(typeof(OrderBinder))] Order order)
 		{
 
@@ -98,54 +98,14 @@ namespace Suteki.Shop.Controllers
 			PopulateOrderForView(order, basket);
 
 			return View(CheckoutViewData(order));
-
-			//return this.RedirectToAction(x => x.Index(order.BasketId));
-
-			//try
-			//{
-				//UpdateOrderFromForm(order, form);
-//				orderRepository.InsertOnSubmit(order);
-//				userService.CurrentUser.CreateNewBasket();
-//				orderRepository.SubmitChanges();
-//				EmailOrder(order);
-
-//				return RedirectToRoute(new {Controller = "Order", Action = "Item", id = order.OrderId});
-			//}
-//			catch (ValidationException validationException)
-//			{
-//				var basket = basketRepository.GetById(order.BasketId);
-//				PopulateOrderForView(order, basket);
-//				return View("Index", CheckoutViewData(order).WithErrorMessage(validationException.Message));
-//			}
 		}
-
-	/*	void UpdateOrderFromForm(Order order, NameValueCollection form)
-		{
-			order.OrderStatusId = OrderStatus.CreatedId;
-			order.CreatedDate = DateTime.Now;
-			order.DispatchedDate = DateTime.Now;
-
-			var validator = new Validator
-			{
-				() => UpdateOrder(order, form),
-				() => UpdateCardContact(order, form),
-				() => UpdateDeliveryContact(order, form),
-				() => UpdateCard(order, form)
-			};
-
-			validator.Validate();
-		}*/
-
-
-		
-		
 
 		[NonAction]
 		public virtual void EmailOrder(Order order)
 		{
 			//TODO: This needs cleaning up. 
-
-			var result = View("~/Views/Order/Print.aspx", "Print", CheckoutViewData(order));
+			PopulateOrderForView(order, order.Basket);
+			var result = View("~/Views/Order/Item.aspx", "Print", CheckoutViewData(order));
 
 			var subject = "{0}: your order".With(BaseControllerService.ShopName);
 			var message = this.CaptureActionHtml(c => result);
