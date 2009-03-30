@@ -20,9 +20,9 @@
 				.DoNotEncode().Named("Number").HeaderAttributes(@class => "thin");
 			column.For(x => x.Contact.Fullname).Named("Customer").HeaderAttributes(@class => "wide");
 			column.For(x => x.CreatedDate.ToShortDateString()).Named("Created").HeaderAttributes(@class => "thin");
-			column.For(x => x.DispatchedDateAsString).Named("Dispatched").HeaderAttributes(@class => "thin");
+			column.For(x => x.DispatchedDateAsString).Named("Dispatched").HeaderAttributes(@class => "thin").DoNotEncode();
 			column.For(x => x.OrderStatus.Name).Named("Status").HeaderAttributes(@class => "thin");
-			column.For(x => x.UserAsString).Named("Updated by").HeaderAttributes(@class => "thin");
+			column.For(x => x.UserAsString).Named("Updated by").HeaderAttributes(@class => "thin").DoNotEncode();
 	}).RowAttributes(row => new Hash(@class => row.Item.OrderStatus.Name)) %>
 
     <p>Total orders: <%= ViewData.Model.Orders.TotalCount %></p>
