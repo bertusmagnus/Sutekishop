@@ -87,33 +87,6 @@ namespace Suteki.Shop.Tests.Controllers
         }
 
         [Test]
-        public void Checkout_ShouldDisplayCheckoutForm()
-        {
-            const int basketId = 6;
-
-            var basket = new Basket { BasketId = basketId };
-            var countries = new List<Country> { new Country() }.AsQueryable();
-            var cardTypes = new List<CardType> { new CardType() }.AsQueryable();
-
-            // stubs
-            basketRepository.Stub(br => br.GetById(basketId)).Return(basket);
-            countryRepository.Stub(cr => cr.GetAll()).Return(countries);
-            cardTypeRepository.Stub(ctr => ctr.GetAll()).Return(cardTypes);
-
-            // exercise Checkout action
-            orderController.Checkout(basketId)
-                .ReturnsViewResult()
-                .WithModel<ShopViewData>()
-                .AssertNotNull(vd => vd.Order)
-                .AssertNotNull(vd => vd.Order.Contact)
-                .AssertNotNull(vd => vd.Order.Contact1)
-                .AssertNotNull(vd => vd.Order.Card)
-                .AssertAreSame(basket, vd => vd.Order.Basket)
-                .AssertNotNull(vd => vd.Countries)
-                .AssertAreSame(cardTypes, vd => vd.CardTypes);
-        }
-
-        [Test]
         public void PlaceOrder_ShouldCreateANewOrder()
         {
             // mock the request form

@@ -131,9 +131,7 @@ namespace Suteki.Shop.Controllers
             return viewResult;
         }
 
-
-
-		[Suteki.Shop.Filters.AdministratorsOnly]
+		[AdministratorsOnly]
         public ActionResult ShowCard(int orderId, string privateKey)
         {
             var order = orderRepository.GetById(orderId);
@@ -152,6 +150,7 @@ namespace Suteki.Shop.Controllers
             }
         }
 
+/*
         public ActionResult Checkout(int id)
         {
             // create a default order
@@ -162,6 +161,7 @@ namespace Suteki.Shop.Controllers
 
             return View("Checkout", CheckoutViewData(order));
         }
+*/
 
         private static void PopulateOrderForView(Order order, Basket basket)
         {

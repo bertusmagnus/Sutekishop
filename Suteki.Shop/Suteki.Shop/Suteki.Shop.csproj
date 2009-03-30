@@ -130,6 +130,7 @@
     <Compile Include="Binders\ProductBinder.cs" />
     <Compile Include="ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CmsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\CountryController.cs" />
@@ -237,13 +238,6 @@
     <Compile Include="ViewData\CmsViewData.cs" />
     <Compile Include="ViewData\RsdViewData.cs" />
     <Compile Include="ViewData\ShopViewData.cs" />
-    <Compile Include="Views\Order\Checkout.aspx.cs">
-      <DependentUpon>Checkout.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Order\Checkout.aspx.designer.cs">
-      <DependentUpon>Checkout.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Rsd\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -302,7 +296,7 @@
     <Content Include="Views\Country\Index.aspx" />
     <Content Include="Views\Login\Index.aspx" />
     <Content Include="Views\Basket\Index.aspx" />
-    <Content Include="Views\Order\Checkout.aspx" />
+    <Content Include="Views\Checkout\Index.aspx" />
     <Content Include="Views\Order\Index.aspx" />
     <Content Include="Views\Order\Item.aspx" />
     <Content Include="Views\Postage\Edit.aspx" />
@@ -339,6 +333,9 @@
     </None>
     <None Include="MetaWebLogAPI.svc.explicitXmlRpcHost.Factory" />
     <Content Include="MetaWebLogAPI.svc" />
+    <Content Include="Views\Checkout\CustomerDetails.ascx" />
+    <Content Include="Views\Checkout\OrderDetails.ascx" />
+    <Content Include="Views\Checkout\PaymentDetails.ascx" />
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />

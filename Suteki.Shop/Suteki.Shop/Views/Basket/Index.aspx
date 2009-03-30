@@ -5,7 +5,7 @@
 
 <%= Html.ValidationSummary() %>
 
-<% if(ViewData.Model.Basket.IsEmpty) { %>
+<% if(Model.Basket.IsEmpty) { %>
 
     <p>Your basket is empty</p>
 
@@ -21,8 +21,7 @@
             <th class="thin number">Delete</th>
         </tr>
         
-        <% foreach (var basketItem in ViewData.Model.Basket.BasketItems)
-           { %>
+        <% foreach (var basketItem in Model.Basket.BasketItems) { %>
         
         <tr>
             <td><%= Html.ActionLink<ProductController>(c => c.Item(basketItem.Size.Product.UrlName), basketItem.Size.Product.Name)%></td>
@@ -40,7 +39,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Model.Basket.Total.ToString("£0.00")%></td>
+            <td class="number"><%= Model.Basket.Total.ToString("£0.00")%></td>
             <td>&nbsp;</td>
         </tr>
 
@@ -49,12 +48,12 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Model.Basket.PostageTotal%></td>
+            <td class="number"><%= Model.Basket.PostageTotal%></td>
             <td>&nbsp;</td>
         </tr>
 
         <tr>
-            <td>(for <%= ViewData.Model.Basket.Country.Name %>)</td>
+            <td>(for <%= Model.Basket.Country.Name %>)</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -67,7 +66,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="number"><%= ViewData.Model.Basket.TotalWithPostage%></td>
+            <td class="number"><%= Model.Basket.TotalWithPostage%></td>
             <td>&nbsp;</td>
         </tr>
         
@@ -75,7 +74,7 @@
 
     <p>The default postage & package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
 
-    <%= Html.ActionLink<OrderController>(c => c.Checkout(ViewData.Model.Basket.BasketId), "Checkout", new { _class = "linkButton" }).ToSslLink() %>
+    <%= Html.ActionLink<CheckoutController>(c => c.Index(Model.Basket.BasketId), "Checkout", new { _class = "linkButton" }).ToSslLink() %>
 
 <% } %>
 

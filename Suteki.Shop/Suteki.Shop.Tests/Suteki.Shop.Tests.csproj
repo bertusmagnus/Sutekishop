@@ -118,6 +118,7 @@
     <Compile Include="Binders\CurrentBasketBinderTester.cs" />
     <Compile Include="Binders\ProductBinderTester.cs" />
     <Compile Include="Controllers\CategoryControllerTests.cs" />
+    <Compile Include="Controllers\CheckoutControllerTester.cs" />
     <Compile Include="Controllers\CmsControllerTests.cs" />
     <Compile Include="Controllers\CountryControllerTests.cs" />
     <Compile Include="Controllers\HomeControllerTests.cs" />
