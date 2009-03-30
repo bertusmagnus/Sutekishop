@@ -182,6 +182,7 @@ namespace Suteki.Shop.Controllers
                 .WithOrder(order);
         }
 
+/*
         public ActionResult PlaceOrder(FormCollection form)
         {
             var order = new Order();
@@ -204,8 +205,9 @@ namespace Suteki.Shop.Controllers
                     );
             }
         }
+*/
 
-        private void UpdateOrderFromForm(Order order, NameValueCollection form)
+     /*   private void UpdateOrderFromForm(Order order, NameValueCollection form)
         {
             order.OrderStatusId = OrderStatus.CreatedId;
             order.CreatedDate = DateTime.Now;
@@ -221,7 +223,8 @@ namespace Suteki.Shop.Controllers
 
             validator.Validate();
         }
-
+*/
+/*
         [NonAction]
         public virtual void EmailOrder(Order order)
         {
@@ -232,77 +235,9 @@ namespace Suteki.Shop.Controllers
             // send the message
             emailSender.Send(toAddresses, subject, message);
         }
+*/
 
-        private void UpdateCardContact(Order order, NameValueCollection form)
-        {
-            var cardContact = new Contact();
-            order.Contact = cardContact;
-            UpdateContact(cardContact, "cardcontact", form);
-        }
+     
 
-        private void UpdateDeliveryContact(Order order, NameValueCollection form)
-        {
-            if (order.UseCardHolderContact) return;
-
-            var deliveryContact = new Contact();
-            order.Contact1 = deliveryContact;
-            UpdateContact(deliveryContact, "deliverycontact", form);
-        }
-
-        private void UpdateContact(Contact contact, string prefix, NameValueCollection form)
-        {
-            try
-            {
-                validatingBinder.UpdateFrom(contact, form, prefix);
-            }
-            finally
-            {
-                if (contact.CountryId != 0 && contact.Country == null)
-                {
-                    contact.Country = countryRepository.GetById(contact.CountryId);
-                }
-            }
-        }
-
-        private void UpdateCard(Order order, NameValueCollection form)
-        {
-            if (order.PayByTelephone) return;
-
-            var card = new Card();
-            order.Card = card;
-            validatingBinder.UpdateFrom(card, form, "card");
-            encryptionService.EncryptCard(card);
-        }
-
-        private void UpdateOrder(Order order, NameValueCollection form)
-        {
-            validatingBinder.UpdateFrom(order, form, "order");
-            var confirmEmail = form["emailconfirm"];
-            if (order.Email != confirmEmail)
-            {
-                throw new ValidationException("Email and Confirm Email do not match");
-            }
-        }
-
-        public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
-        {
-            var basket = basketRepository.GetById(id);
-            basket.CountryId = countryId;
-            basketRepository.SubmitChanges();
-
-            var order = new Order();
-
-            try
-            {
-                UpdateOrderFromForm(order, form);
-            }
-            catch (ValidationException)
-            {
-                // ignore validation exceptions
-            }
-
-            PopulateOrderForView(order, basket);
-            return View("Checkout", CheckoutViewData(order));
-        }
     }
 }

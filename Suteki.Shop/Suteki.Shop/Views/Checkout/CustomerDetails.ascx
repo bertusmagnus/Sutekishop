@@ -1,6 +1,5 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
 <%@ Import Namespace="Suteki.Common.Models"%>
-  <form method="post" action="<%= Url.Action("PlaceOrder", "Order").ToSslUrl() %>" id="mainForm" name="mainForm">
 
         <%= Html.Hidden("order.orderid", ViewData.Model.Order.OrderId.ToString())%>
         <%= Html.Hidden("order.basketid", ViewData.Model.Order.BasketId.ToString())%>

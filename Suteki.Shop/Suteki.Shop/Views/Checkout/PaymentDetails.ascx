@@ -56,4 +56,3 @@
 </div> 
 <div class="clear" />       
     <%= Html.SubmitButton("submitButton", "Place Order")%>
-</form>

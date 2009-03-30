@@ -98,19 +98,21 @@ function addHandlers()
 <!-- basket view -->
 
     <h3>Order Details</h3>
-
 	<% Html.RenderPartial("OrderDetails"); %>
 
 <!-- addresses -->
+	
+	<% using (Html.BeginForm<CheckoutController>(c => c.PlaceOrder(), FormMethod.Post, new { name = "mainForm", id = "mainForm" })) { %>
+	
+	<h3>Customer Details</h3>
+	<% Html.RenderPartial("CustomerDetails"); %>
 
-<h3>Customer Details</h3>
-
-  <% Html.RenderPartial("CustomerDetails"); %>
-
-  <h3>Payment Details</h3>     
+	<h3>Payment Details</h3>     
 	<% Html.RenderPartial("PaymentDetails"); %>
+	
+	<% } %>
 
-<script>
+<script type="text/javascript">
 
 toggleCardHolderDetails();
 toggleCard();
