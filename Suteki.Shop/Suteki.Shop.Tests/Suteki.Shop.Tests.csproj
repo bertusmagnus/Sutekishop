@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CurrentBasketBinderTester.cs" />
+    <Compile Include="Binders\OrderBinderTester.cs" />
     <Compile Include="Binders\ProductBinderTester.cs" />
     <Compile Include="Controllers\CategoryControllerTests.cs" />
     <Compile Include="Controllers\CheckoutControllerTester.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Repositories\QueriableExtensionsTests.cs" />
     <Compile Include="Repositories\UserRepositoryExtensionsTests.cs" />
     <Compile Include="Routes\RouteTests.cs" />
+    <Compile Include="Services\CheckoutServiceTester.cs" />
     <Compile Include="Services\EncryptionServiceTests.cs" />
     <Compile Include="Services\ImageFileServiceTests.cs" />
     <Compile Include="Services\ImageServiceTests.cs" />

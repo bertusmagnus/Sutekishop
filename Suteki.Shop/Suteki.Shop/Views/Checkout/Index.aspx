@@ -102,7 +102,7 @@ function addHandlers()
 
 <!-- addresses -->
 	
-	<% using (Html.BeginForm<CheckoutController>(c => c.PlaceOrder(), FormMethod.Post, new { name = "mainForm", id = "mainForm" })) { %>
+	<% using (Html.BeginForm<CheckoutController>(c => c.PlaceOrder(null), FormMethod.Post, new { name = "mainForm", id = "mainForm" })) { %>
 	
 	<h3>Customer Details</h3>
 	<% Html.RenderPartial("CustomerDetails"); %>

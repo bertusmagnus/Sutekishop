@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CurrentBasketBinder.cs" />
+    <Compile Include="Binders\OrderBinder.cs" />
     <Compile Include="Binders\ProductBinder.cs" />
     <Compile Include="ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Repositories\UserRepositoryExtensions.cs" />
     <Compile Include="Routes\RouteManager.cs" />
     <Compile Include="Services\BaseControllerService.cs" />
+    <Compile Include="Services\CheckoutService.cs" />
     <Compile Include="Services\EncryptionService.cs" />
     <Compile Include="Services\HttpFileService.cs" />
     <Compile Include="Services\IBaseControllerService.cs" />

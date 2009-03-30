@@ -16,59 +16,29 @@ namespace Suteki.Shop.Controllers
 {
     public class OrderController : ControllerBase
     {
-        private readonly IRepository<Order> orderRepository;
-        private readonly IRepository<Basket> basketRepository;
-        private readonly IRepository<Country> countryRepository;
-        private readonly IRepository<CardType> cardTypeRepository;
-
-        private readonly IEncryptionService encryptionService;
-        private readonly IEmailSender emailSender;
-        private readonly IPostageService postageService;
-        private readonly IValidatingBinder validatingBinder;
-    	private readonly IUserService userService;
+        readonly IRepository<Order> orderRepository;
+    	readonly IRepository<Country> countryRepository;
+        readonly IRepository<CardType> cardTypeRepository;
+        readonly IEncryptionService encryptionService;
+    	readonly IPostageService postageService;
+    	readonly IUserService userService;
 		readonly IOrderSearchService searchService;
 
         public OrderController(
 			IRepository<Order> orderRepository, 
-			IRepository<Basket> basketRepository, 
 			IRepository<Country> countryRepository, 
 			IRepository<CardType> cardTypeRepository, 
-			IEncryptionService encryptionService, IEmailSender emailSender, 
+			IEncryptionService encryptionService, 
 			IPostageService postageService, 
-			IValidatingBinder validatingBinder, 
-			IUserService userService, 
-			IOrderSearchService searchService)
+			IUserService userService, IOrderSearchService searchService)
         {
             this.orderRepository = orderRepository;
         	this.searchService = searchService;
         	this.userService = userService;
-            this.basketRepository = basketRepository;
-            this.countryRepository = countryRepository;
+        	this.countryRepository = countryRepository;
             this.cardTypeRepository = cardTypeRepository;
             this.encryptionService = encryptionService;
-            this.emailSender = emailSender;
-            this.postageService = postageService;
-            this.validatingBinder = validatingBinder;
-        }
-
-        public OrderController(
-            IRepository<Order> orderRepository, 
-            IRepository<Basket> basketRepository, 
-            IRepository<Country> countryRepository, 
-            IRepository<CardType> cardTypeRepository, 
-            IEncryptionService encryptionService, 
-            IEmailSender emailSender, 
-            IPostageService postageService, IUserService userService, IOrderSearchService searchService)
-        {
-            this.orderRepository = orderRepository;
-        	this.searchService = searchService;
-        	this.userService = userService;
-            this.basketRepository = basketRepository;
-            this.countryRepository = countryRepository;
-            this.cardTypeRepository = cardTypeRepository;
-            this.encryptionService = encryptionService;
-            this.emailSender = emailSender;
-            this.postageService = postageService;
+        	this.postageService = postageService;
         }
 
         [AcceptVerbs(HttpVerbs.Get), AdministratorsOnly]
@@ -150,27 +120,6 @@ namespace Suteki.Shop.Controllers
             }
         }
 
-/*
-        public ActionResult Checkout(int id)
-        {
-            // create a default order
-            var order = new Order { UseCardHolderContact = true };
-
-            var basket = basketRepository.GetById(id);
-            PopulateOrderForView(order, basket);
-
-            return View("Checkout", CheckoutViewData(order));
-        }
-*/
-
-        private static void PopulateOrderForView(Order order, Basket basket)
-        {
-            if (order.Basket == null) order.Basket = basket;
-            if (order.Contact == null) order.Contact = new Contact();
-            if (order.Contact1 == null) order.Contact1 = new Contact();
-            if (order.Card == null) order.Card = new Card();
-        }
-
         private ShopViewData CheckoutViewData(Order order)
         {
 			userService.CurrentUser.EnsureCanViewOrder(order);
@@ -181,63 +130,5 @@ namespace Suteki.Shop.Controllers
                 .WithCardTypes(cardTypeRepository.GetAll())
                 .WithOrder(order);
         }
-
-/*
-        public ActionResult PlaceOrder(FormCollection form)
-        {
-            var order = new Order();
-            try
-            {
-                UpdateOrderFromForm(order, form);
-                orderRepository.InsertOnSubmit(order);
-                userService.CurrentUser.CreateNewBasket();
-                orderRepository.SubmitChanges();
-                EmailOrder(order);
-
-                return RedirectToRoute(new { Controller = "Order", Action = "Item", id = order.OrderId });
-            }
-            catch (ValidationException validationException)
-            {
-                var basket = basketRepository.GetById(order.BasketId);
-                PopulateOrderForView(order, basket);
-                return View("Checkout", CheckoutViewData(order)
-                    .WithErrorMessage(validationException.Message)
-                    );
-            }
-        }
-*/
-
-     /*   private void UpdateOrderFromForm(Order order, NameValueCollection form)
-        {
-            order.OrderStatusId = OrderStatus.CreatedId;
-            order.CreatedDate = DateTime.Now;
-            order.DispatchedDate = DateTime.Now;
-
-            var validator = new Validator
-                                  {
-                                      () => UpdateOrder(order, form),
-                                      () => UpdateCardContact(order, form),
-                                      () => UpdateDeliveryContact(order, form),
-                                      () => UpdateCard(order, form)
-                                  };
-
-            validator.Validate();
-        }
-*/
-/*
-        [NonAction]
-        public virtual void EmailOrder(Order order)
-        {
-            var subject = "{0}: your order".With(BaseControllerService.ShopName);
-            var message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
-            var toAddresses = new[] { order.Email, BaseControllerService.EmailAddress };
-
-            // send the message
-            emailSender.Send(toAddresses, subject, message);
-        }
-*/
-
-     
-
     }
 }

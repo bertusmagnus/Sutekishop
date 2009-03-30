@@ -25,8 +25,9 @@ namespace Suteki.Shop.Controllers
 
 		public CheckoutController(IRepository<Basket> basketRepository, IUserService userService,
 		                          IPostageService postageService, IRepository<Country> countryRepository,
-		                          IRepository<CardType> cardTypeRepository, IRepository<Order> orderRepository, 
-			IValidatingBinder validatingBinder, IEmailSender emailSender, IEncryptionService encryptionService)
+		                          IRepository<CardType> cardTypeRepository, IRepository<Order> orderRepository,
+		                          IValidatingBinder validatingBinder, IEmailSender emailSender,
+		                          IEncryptionService encryptionService)
 		{
 			this.basketRepository = basketRepository;
 			this.encryptionService = encryptionService;
@@ -69,12 +70,13 @@ namespace Suteki.Shop.Controllers
 				.WithOrder(order);
 		}
 
+		[AcceptVerbs(HttpVerbs.Post)]
 		public ActionResult PlaceOrder(FormCollection form)
 		{
 			var order = new Order();
 			try
 			{
-				UpdateOrderFromForm(order, form);
+				//UpdateOrderFromForm(order, form);
 				orderRepository.InsertOnSubmit(order);
 				userService.CurrentUser.CreateNewBasket();
 				orderRepository.SubmitChanges();
@@ -86,98 +88,68 @@ namespace Suteki.Shop.Controllers
 			{
 				var basket = basketRepository.GetById(order.BasketId);
 				PopulateOrderForView(order, basket);
-				return View("Checkout", CheckoutViewData(order).WithErrorMessage(validationException.Message));
+				return View("Index", CheckoutViewData(order).WithErrorMessage(validationException.Message));
 			}
 		}
 
-		private void UpdateOrderFromForm(Order order, NameValueCollection form) 
+	/*	void UpdateOrderFromForm(Order order, NameValueCollection form)
 		{
 			order.OrderStatusId = OrderStatus.CreatedId;
 			order.CreatedDate = DateTime.Now;
 			order.DispatchedDate = DateTime.Now;
 
 			var validator = new Validator
-                                  {
-                                      () => UpdateOrder(order, form),
-                                      () => UpdateCardContact(order, form),
-                                      () => UpdateDeliveryContact(order, form),
-                                      () => UpdateCard(order, form)
-                                  };
+			{
+				() => UpdateOrder(order, form),
+				() => UpdateCardContact(order, form),
+				() => UpdateDeliveryContact(order, form),
+				() => UpdateCard(order, form)
+			};
 
 			validator.Validate();
-		}
+		}*/
 
 
-		private void UpdateCardContact(Order order, NameValueCollection form) {
-			var cardContact = new Contact();
-			order.Contact = cardContact;
-			UpdateContact(cardContact, "cardcontact", form);
-		}
-
-		private void UpdateDeliveryContact(Order order, NameValueCollection form) {
-			if (order.UseCardHolderContact) return;
-
-			var deliveryContact = new Contact();
-			order.Contact1 = deliveryContact;
-			UpdateContact(deliveryContact, "deliverycontact", form);
-		}
-
-		private void UpdateContact(Contact contact, string prefix, NameValueCollection form) {
-			try {
-				validatingBinder.UpdateFrom(contact, form, prefix);
-			}
-			finally {
-				if (contact.CountryId != 0 && contact.Country == null) {
-					contact.Country = countryRepository.GetById(contact.CountryId);
-				}
-			}
-		}
-
-		private void UpdateCard(Order order, NameValueCollection form) {
-			if (order.PayByTelephone) return;
-
-			var card = new Card();
-			order.Card = card;
-			validatingBinder.UpdateFrom(card, form, "card");
-			encryptionService.EncryptCard(card);
-		}
-
-		private void UpdateOrder(Order order, NameValueCollection form) {
-			validatingBinder.UpdateFrom(order, form, "order");
-			var confirmEmail = form["emailconfirm"];
-			if (order.Email != confirmEmail) {
-				throw new ValidationException("Email and Confirm Email do not match");
-			}
-		}
+		
+		
 
 		[NonAction]
-		public virtual void EmailOrder(Order order) {
-			/*var subject = "{0}: your order".With(BaseControllerService.ShopName);
-			var message = this.CaptureActionHtml(c => (ViewResult)c.Print(order.OrderId));
+		public virtual void EmailOrder(Order order)
+		{
+			//TODO: This needs cleaning up. 
+
+			var result = View("~/Views/Order/Print.aspx", "Print", CheckoutViewData(order));
+
+			var subject = "{0}: your order".With(BaseControllerService.ShopName);
+			var message = this.CaptureActionHtml(c => result);
 			var toAddresses = new[] { order.Email, BaseControllerService.EmailAddress };
 
 			// send the message
-			emailSender.Send(toAddresses, subject, message);*/
-			throw new NotImplementedException();
+			emailSender.Send(toAddresses, subject, message);
 		}
 
-		public ActionResult UpdateCountry(int id, int countryId, FormCollection form) {
+		public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
+		{
+/*
 			var basket = basketRepository.GetById(id);
 			basket.CountryId = countryId;
 			basketRepository.SubmitChanges();
 
 			var order = new Order();
 
-			try {
+			try
+			{
 				UpdateOrderFromForm(order, form);
 			}
-			catch (ValidationException) {
+			catch (ValidationException)
+			{
 				// ignore validation exceptions
 			}
 
 			PopulateOrderForView(order, basket);
 			return View("Checkout", CheckoutViewData(order));
+*/
+			throw new NotImplementedException();
 		}
-
 	}
 }
