@@ -45,11 +45,11 @@ function updatePostageOnUseCardholderDetailsChange(checkbox)
     var select;
     if(checkbox.checked)
     {
-        select = document.getElementById("cardcontact.countryid");
+        select = document.getElementById("cardcontact_countryid");
     }
     else
     {
-        select = document.getElementById("deliverycontact.countryid");
+        select = document.getElementById("deliverycontact_countryid");
     }
     updateSelectedCountry(select);
 }
@@ -58,7 +58,7 @@ function updateSelectedCountry(select)
 {
     var useCardholderContactCheck = document.getElementsByName("order.usecardholdercontact")[0];
     
-    if((!useCardholderContactCheck.checked && select.id) == "cardcontact.countryid") return;
+    if((!useCardholderContactCheck.checked && select.id) == "cardcontact_countryid") return;
     
     for(var i = 0; i < select.options.length; i++)
     {
@@ -79,10 +79,10 @@ function updateSelectedCountry(select)
 
 function addHandlers()
 {
-    var cardcontactCountryid = document.getElementById("cardcontact.countryid");
+    var cardcontactCountryid = document.getElementById("cardcontact_countryid");
     cardcontactCountryid.onchange = function() { updateSelectedCountry(this); }
     
-    var deliverycontactCountryid = document.getElementById("deliverycontact.countryid");
+    var deliverycontactCountryid = document.getElementById("deliverycontact_countryid");
     deliverycontactCountryid.onchange = function() { updateSelectedCountry(this); }
 }
 

@@ -27,7 +27,6 @@ namespace Suteki.Shop.Tests.Controllers
 		IRepository<Order> orderRepository;
 		IEmailSender emailSender;
 		IValidatingBinder validatingBinder;
-		IEncryptionService encryptionService;
 		IUnitOfWorkManager unitOfWorkManager;
 
 		[SetUp]
@@ -43,18 +42,15 @@ namespace Suteki.Shop.Tests.Controllers
 			orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
 			emailSender = MockRepository.GenerateStub<IEmailSender>();
 			validatingBinder = MockRepository.GenerateStub<IValidatingBinder>();
-			encryptionService = MockRepository.GenerateStub<IEncryptionService>();
 			var mocks = new MockRepository(); //TODO: No need to partial mock once email sending is fixed
-			controller = mocks.PartialMock<CheckoutController>( //new CheckoutController(
+			controller = mocks.PartialMock<CheckoutController>(//new CheckoutController(
 				basketRepository,
 				userService,
 				postageService,
 				countryRepository,
 				cardTypeRepository,
 				orderRepository,
-				validatingBinder,
 				emailSender,
-				encryptionService,
 				unitOfWorkManager
 			);
 			mocks.ReplayAll();

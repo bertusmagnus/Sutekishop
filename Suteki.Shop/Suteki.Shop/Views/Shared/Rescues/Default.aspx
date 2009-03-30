@@ -18,36 +18,35 @@
 <%
  }%>
 
+<% if (Context.IsDebuggingEnabled) { %>
 <pre>
 
-<%= ViewData.Model.GetType().Name %>
+<%= ViewData.Model.GetType().Name%>
 
-<%= ViewData.Model.Exception.Message %>
+<%= ViewData.Model.Exception.Message%>
 
-<%= ViewData.Model.Exception.StackTrace %>
+<%= ViewData.Model.Exception.StackTrace%>
 
-<% if (ViewData.Model.Exception.InnerException != null)
-   { %>
+<% if (ViewData.Model.Exception.InnerException != null) { %>
 
-    <%= ViewData.Model.Exception.InnerException.GetType().Name %>
+    <%= ViewData.Model.Exception.InnerException.GetType().Name%>
 
-    <%= ViewData.Model.Exception.InnerException.Message %>
+    <%= ViewData.Model.Exception.InnerException.Message%>
 
-    <%= ViewData.Model.Exception.InnerException.StackTrace %>
+    <%= ViewData.Model.Exception.InnerException.StackTrace%>
 
-    <% if (ViewData.Model.Exception.InnerException.InnerException != null)
-       { %>
+    <% if (ViewData.Model.Exception.InnerException.InnerException != null) { %>
 
-        <%= ViewData.Model.Exception.InnerException.InnerException.GetType().Name %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.GetType().Name%>
 
-        <%= ViewData.Model.Exception.InnerException.InnerException.Message %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.Message%>
 
-        <%= ViewData.Model.Exception.InnerException.InnerException.StackTrace %>
+        <%= ViewData.Model.Exception.InnerException.InnerException.StackTrace%>
 
     <% } %>
 
 
 <% } %>
-
+<% } %>
 </pre>
 </asp:Content>

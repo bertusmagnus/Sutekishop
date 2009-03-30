@@ -23,22 +23,22 @@ namespace Suteki.Shop.Controllers
 		readonly IRepository<Country> countryRepository;
 		readonly IRepository<CardType> cardTypeRepository;
 		readonly IRepository<Order> orderRepository;
-		readonly IValidatingBinder validatingBinder;
 		readonly IEmailSender emailSender;
-		readonly IEncryptionService encryptionService;
 		readonly IUnitOfWorkManager unitOfWork;
 
-		public CheckoutController(IRepository<Basket> basketRepository, IUserService userService,
-		                          IPostageService postageService, IRepository<Country> countryRepository,
-		                          IRepository<CardType> cardTypeRepository, IRepository<Order> orderRepository,
-		                          IValidatingBinder validatingBinder, IEmailSender emailSender,
-		                          IEncryptionService encryptionService, IUnitOfWorkManager unitOfWork)
+		public CheckoutController(
+			IRepository<Basket> basketRepository, 
+			IUserService userService, 
+			IPostageService postageService, 
+			IRepository<Country> countryRepository, 
+			IRepository<CardType> cardTypeRepository, 
+			IRepository<Order> orderRepository, 
+			IEmailSender emailSender, 
+			IUnitOfWorkManager unitOfWork)
 		{
 			this.basketRepository = basketRepository;
 			this.unitOfWork = unitOfWork;
-			this.encryptionService = encryptionService;
 			this.emailSender = emailSender;
-			this.validatingBinder = validatingBinder;
 			this.orderRepository = orderRepository;
 			this.cardTypeRepository = cardTypeRepository;
 			this.countryRepository = countryRepository;
@@ -115,6 +115,7 @@ namespace Suteki.Shop.Controllers
 			emailSender.Send(toAddresses, subject, message);
 		}
 
+		[UnitOfWork]
 		public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
 		{
 /*
