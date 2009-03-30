@@ -77,7 +77,7 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult PlaceOrder([BindUsing(typeof(OrderBinder))] Order order)
+		public ActionResult Index([BindUsing(typeof(OrderBinder))] Order order)
 		{
 
 			if (ModelState.IsValid)
@@ -94,7 +94,12 @@ namespace Suteki.Shop.Controllers
 				return this.RedirectToAction<OrderController>(c => c.Item(order.OrderId));
 			}
 
-			return this.RedirectToAction(x => x.Index(order.BasketId));
+			var basket = basketRepository.GetById(order.BasketId);
+			PopulateOrderForView(order, basket);
+
+			return View(CheckoutViewData(order));
+
+			//return this.RedirectToAction(x => x.Index(order.BasketId));
 
 			//try
 			//{

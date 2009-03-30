@@ -44,7 +44,8 @@ namespace Suteki.Shop.Tests.Controllers
 			emailSender = MockRepository.GenerateStub<IEmailSender>();
 			validatingBinder = MockRepository.GenerateStub<IValidatingBinder>();
 			encryptionService = MockRepository.GenerateStub<IEncryptionService>();
-			controller = new CheckoutController(
+			var mocks = new MockRepository(); //TODO: No need to partial mock once email sending is fixed
+			controller = mocks.PartialMock<CheckoutController>( //new CheckoutController(
 				basketRepository,
 				userService,
 				postageService,
@@ -56,7 +57,7 @@ namespace Suteki.Shop.Tests.Controllers
 				encryptionService,
 				unitOfWorkManager
 			);
-
+			mocks.ReplayAll();
 			userService.Expect(us => us.CurrentUser).Return(new User { UserId = 4, RoleId = Role.AdministratorId });
 		}
 
@@ -87,30 +88,31 @@ namespace Suteki.Shop.Tests.Controllers
 		}
 
 		[Test]
-		public void PlaceOrder_ShouldCreateANewOrder() {
+		public void IndexWithPost_ShouldCreateANewOrder() {
 			var order = new Order() { OrderId = 4 };
 
-			controller.PlaceOrder(order)
+			controller.Expect(x => x.EmailOrder(order));
+
+			controller.Index(order)
 				.ReturnsRedirectToRouteResult()
 				.ToController("Order")
 				.ToAction("Item")
 				.WithRouteValue("id", "4");
 
+			controller.AssertWasCalled(x => x.EmailOrder(order));
 			orderRepository.AssertWasCalled(x => x.InsertOnSubmit(order));
 			unitOfWorkManager.AssertWasCalled(x => x.Commit());
-			encryptionService.AssertWasCalled(es => es.EncryptCard(Arg<Card>.Is.Anything));
 		}
 
 		[Test]
-		public void PlaceOrder_ShouldRedirectOnError()
+		public void IndexWithPost_ShouldRenderViewOnError()
 		{
 			controller.ModelState.AddModelError("foo", "bar");
 			var order = new Order() { BasketId = 6 };
-			controller.PlaceOrder(order)
-				.ReturnsRedirectToRouteResult()
-				.ToController("Checkout")
-				.ToAction("Index")
-				.WithRouteValue("id", "6");
+			controller.Index(order)
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreEqual(order, x => x.Order);
 		}
 	}
 }
