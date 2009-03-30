@@ -155,6 +155,8 @@
     <Compile Include="Repositories\DataContextProvider.cs" />
     <Compile Include="Repositories\IConnectionStringProvider.cs" />
     <Compile Include="Repositories\IDataContextProvider.cs" />
+    <Compile Include="Repositories\IUnitOfWorkManager.cs" />
+    <Compile Include="Repositories\LinqToSqlUnitOfWorkManager.cs" />
     <Compile Include="Services\DebugWritingService.cs" />
     <Compile Include="Services\DefaultEntityTypeResolver.cs" />
     <Compile Include="Services\IEntityTypeResolver.cs" />

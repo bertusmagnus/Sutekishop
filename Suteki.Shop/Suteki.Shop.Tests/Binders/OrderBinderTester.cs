@@ -16,14 +16,16 @@ namespace Suteki.Shop.Tests.Binders
 	{
 		OrderBinder binder;
 		ControllerContext context;
+		IEncryptionService encryptionService;
 
 		[SetUp]
 		public void Setup()
 		{
+			encryptionService = MockRepository.GenerateStub<IEncryptionService>();
 			binder = new OrderBinder(
 				new ValidatingBinder(new SimplePropertyBinder()), 
 				MockRepository.GenerateStub<IRepository<Country>>(), 
-				MockRepository.GenerateStub<IEncryptionService>()
+				encryptionService
 			);
 
 			context = new ControllerContext()
@@ -71,6 +73,8 @@ namespace Suteki.Shop.Tests.Binders
 			Assert.AreEqual(form["card.startyear"], card.StartYear.ToString());
 			Assert.AreEqual(form["card.issuenumber"], card.IssueNumber);
 			Assert.AreEqual(form["card.securitycode"], card.SecurityCode);
+
+			encryptionService.AssertWasCalled(es => es.EncryptCard(Arg<Card>.Is.Anything));
 		}
 
 

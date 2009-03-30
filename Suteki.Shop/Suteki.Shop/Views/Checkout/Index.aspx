@@ -68,7 +68,7 @@ function updateSelectedCountry(select)
             
             var form = document.getElementById("mainForm");
             
-            var url = <%= "\"" + Url.RouteUrl(new { Controller = "Order", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
+            var url = <%= "\"" + Url.RouteUrl(new { Controller = "Checkout", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
                  + "?countryId=" + select.options[i].value ;
                  
             form.action = url;

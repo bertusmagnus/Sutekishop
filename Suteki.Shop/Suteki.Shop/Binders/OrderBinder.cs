@@ -36,10 +36,10 @@ namespace Suteki.Shop.Binders
 			{
 				var validator = new Validator
 				{
-					() => UpdateOrder(order, form),
+					() => UpdateOrder(order, form, bindingContext.ModelState),
 					() => UpdateCardContact(order, form, bindingContext.ModelState),
 					() => UpdateDeliveryContact(order, form, bindingContext.ModelState),
-					() => UpdateCard(order, form)
+					() => UpdateCard(order, form, bindingContext.ModelState)
 				};
 
 				validator.Validate();
@@ -82,19 +82,19 @@ namespace Suteki.Shop.Binders
 			}
 		}
 
-		void UpdateCard(Order order, NameValueCollection form)
+		void UpdateCard(Order order, NameValueCollection form, ModelStateDictionary modelState)
 		{
 			if (order.PayByTelephone) return;
 
 			var card = new Card();
 			order.Card = card;
-			validatingBinder.UpdateFrom(card, form, "card");
+			validatingBinder.UpdateFrom(card, form, modelState, "card");
 			encryptionService.EncryptCard(card);
 		}
 
-		void UpdateOrder(Order order, NameValueCollection form)
+		void UpdateOrder(Order order, NameValueCollection form, ModelStateDictionary modelState)
 		{
-			validatingBinder.UpdateFrom(order, form, "order");
+			validatingBinder.UpdateFrom(order, form, modelState, "order");
 			var confirmEmail = form["emailconfirm"];
 			if (order.Email != confirmEmail)
 			{

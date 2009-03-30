@@ -1,10 +1,14 @@
 using System;
+using MvcContrib;
 using System.Collections.Specialized;
 using System.Web.Mvc;
+using Suteki.Common.Binders;
 using Suteki.Common.Extensions;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
+using Suteki.Shop.Binders;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
@@ -22,14 +26,16 @@ namespace Suteki.Shop.Controllers
 		readonly IValidatingBinder validatingBinder;
 		readonly IEmailSender emailSender;
 		readonly IEncryptionService encryptionService;
+		readonly IUnitOfWorkManager unitOfWork;
 
 		public CheckoutController(IRepository<Basket> basketRepository, IUserService userService,
 		                          IPostageService postageService, IRepository<Country> countryRepository,
 		                          IRepository<CardType> cardTypeRepository, IRepository<Order> orderRepository,
 		                          IValidatingBinder validatingBinder, IEmailSender emailSender,
-		                          IEncryptionService encryptionService)
+		                          IEncryptionService encryptionService, IUnitOfWorkManager unitOfWork)
 		{
 			this.basketRepository = basketRepository;
+			this.unitOfWork = unitOfWork;
 			this.encryptionService = encryptionService;
 			this.emailSender = emailSender;
 			this.validatingBinder = validatingBinder;
@@ -70,26 +76,42 @@ namespace Suteki.Shop.Controllers
 				.WithOrder(order);
 		}
 
-		[AcceptVerbs(HttpVerbs.Post)]
-		public ActionResult PlaceOrder(FormCollection form)
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult PlaceOrder([BindUsing(typeof(OrderBinder))] Order order)
 		{
-			var order = new Order();
-			try
+
+			if (ModelState.IsValid)
 			{
-				//UpdateOrderFromForm(order, form);
 				orderRepository.InsertOnSubmit(order);
 				userService.CurrentUser.CreateNewBasket();
-				orderRepository.SubmitChanges();
-				EmailOrder(order);
 
-				return RedirectToRoute(new {Controller = "Order", Action = "Item", id = order.OrderId});
+				//we need an explicit Commit in order to obtain the db-generated Order Id
+				unitOfWork.Commit();
+
+				EmailOrder(order);
+				
+				
+				return this.RedirectToAction<OrderController>(c => c.Item(order.OrderId));
 			}
-			catch (ValidationException validationException)
-			{
-				var basket = basketRepository.GetById(order.BasketId);
-				PopulateOrderForView(order, basket);
-				return View("Index", CheckoutViewData(order).WithErrorMessage(validationException.Message));
-			}
+
+			return this.RedirectToAction(x => x.Index(order.BasketId));
+
+			//try
+			//{
+				//UpdateOrderFromForm(order, form);
+//				orderRepository.InsertOnSubmit(order);
+//				userService.CurrentUser.CreateNewBasket();
+//				orderRepository.SubmitChanges();
+//				EmailOrder(order);
+
+//				return RedirectToRoute(new {Controller = "Order", Action = "Item", id = order.OrderId});
+			//}
+//			catch (ValidationException validationException)
+//			{
+//				var basket = basketRepository.GetById(order.BasketId);
+//				PopulateOrderForView(order, basket);
+//				return View("Index", CheckoutViewData(order).WithErrorMessage(validationException.Message));
+//			}
 		}
 
 	/*	void UpdateOrderFromForm(Order order, NameValueCollection form)

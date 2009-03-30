@@ -35,6 +35,7 @@ namespace Suteki.Shop
 				.Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
 
 			container.Register(
+				Component.For<IUnitOfWorkManager>().ImplementedBy<LinqToSqlUnitOfWorkManager>().LifeStyle.Transient,
 				Component.For<IFormsAuthentication>().ImplementedBy<FormsAuthenticationWrapper>(),
 				Component.For<IServiceLocator>().Instance(new WindsorServiceLocator(container)),
 				Component.For<AuthenticateFilter>().LifeStyle.Transient,
@@ -43,6 +44,7 @@ namespace Suteki.Shop
 				Component.For<LoadUsingFilter>().LifeStyle.Transient,
 				Component.For<CurrentBasketBinder>().LifeStyle.Transient,
 				Component.For<ProductBinder>().LifeStyle.Transient,
+				Component.For<OrderBinder>().LifeStyle.Transient,
 				Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient
 			);
 

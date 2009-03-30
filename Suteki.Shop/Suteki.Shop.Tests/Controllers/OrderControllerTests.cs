@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -7,12 +6,9 @@ using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.TestHelpers;
-using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
-using System.Web.Mvc;
 using Suteki.Shop.ViewData;
 using System.Collections.Generic;
-using System.Linq;
 using System.Collections.Specialized;
 using Suteki.Shop.Services;
 
@@ -24,15 +20,11 @@ namespace Suteki.Shop.Tests.Controllers
         private OrderController orderController;
 
         private IRepository<Order> orderRepository;
-        private IRepository<Basket> basketRepository;
         private IRepository<Country> countryRepository;
         private IRepository<CardType> cardTypeRepository;
 
         private IEncryptionService encryptionService;
-        private IEmailSender emailSender;
         private IPostageService postageService;
-        private IValidatingBinder validatingBinder;
-        private IHttpContextService httpContextService;
         private IUserService userService;
 		IOrderSearchService searchService;
 
@@ -45,29 +37,22 @@ namespace Suteki.Shop.Tests.Controllers
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("admin"), new[] { "Administrator" });
 
             orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
-            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
             countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
             cardTypeRepository = MockRepository.GenerateStub<IRepository<CardType>>();
 			
 
-            emailSender = MockRepository.GenerateStub<IEmailSender>();
             encryptionService = MockRepository.GenerateStub<IEncryptionService>();
             postageService = MockRepository.GenerateStub<IPostageService>();
-            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
-            httpContextService = MockRepository.GenerateStub<IHttpContextService>();
             userService = MockRepository.GenerateStub<IUserService>();
 			searchService = MockRepository.GenerateStub<IOrderSearchService>();
 
             var mocks = new MockRepository();
-            orderController = mocks.PartialMock<OrderController>(
+            orderController = new OrderController(
                 orderRepository,
-                basketRepository,
                 countryRepository,
                 cardTypeRepository,
                 encryptionService,
-                emailSender,
                 postageService,
-                validatingBinder,
                 userService,
 				searchService
 				);
