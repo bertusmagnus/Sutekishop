@@ -114,7 +114,7 @@ namespace Suteki.Shop.Controllers
 			return View("Edit", EditViewData.WithProduct(product));
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveUp(int id, int position)
 		{
 			productOrderableService
@@ -126,7 +126,7 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction(x => x.Index(id));
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveDown(int id, int position)
 		{
 			productOrderableService

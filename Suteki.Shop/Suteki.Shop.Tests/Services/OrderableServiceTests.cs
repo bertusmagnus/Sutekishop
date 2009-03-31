@@ -30,7 +30,6 @@ namespace Suteki.Shop.Tests.Services
             orderService.MoveItemAtPosition(2).UpOne();
 
             Assert.AreEqual("two", things.Single(t => t.Position == 1).Name);
-            thingRepository.AssertWasCalled(tr => tr.SubmitChanges());
         }
 
         [Test]
@@ -44,7 +43,6 @@ namespace Suteki.Shop.Tests.Services
             orderService.MoveItemAtPosition(3).DownOne();
 
             Assert.AreEqual("three", things.Single(t => t.Position == 4).Name);
-            thingRepository.AssertWasCalled(tr => tr.SubmitChanges());
         }
 
         [Test]
@@ -57,7 +55,6 @@ namespace Suteki.Shop.Tests.Services
             orderService.MoveItemAtPosition(2).ConstrainedBy(thing => thing.FooId == 1).UpOne();
 
             Assert.AreEqual("two", things.Single(t => t.Position == 2).Name);
-            thingRepository.AssertWasCalled(tr => tr.SubmitChanges());
         }
 
         [Test]
@@ -70,7 +67,6 @@ namespace Suteki.Shop.Tests.Services
             orderService.MoveItemAtPosition(3).ConstrainedBy(thing => thing.FooId == 1).DownOne();
 
             Assert.AreEqual("three", things.Single(t => t.Position == 3).Name);
-            thingRepository.AssertWasCalled(tr => tr.SubmitChanges());
         }
     }
 }

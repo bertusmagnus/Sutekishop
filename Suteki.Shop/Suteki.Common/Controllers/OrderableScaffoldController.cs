@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using MvcContrib.Pagination;
+using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.ViewData;
@@ -25,12 +26,13 @@ namespace Suteki.Common.Controllers
             return View("Edit", (object)BuildEditViewData().With(item));
         }
 
+		[UnitOfWork]
         public virtual ActionResult MoveUp(int id, int? page)
         {
             OrderableService.MoveItemAtPosition(id).UpOne();
 			return RedirectToAction("Index");
         }
-
+		[UnitOfWork]
         public virtual ActionResult MoveDown(int id, int? page)
         {
             OrderableService.MoveItemAtPosition(id).DownOne();

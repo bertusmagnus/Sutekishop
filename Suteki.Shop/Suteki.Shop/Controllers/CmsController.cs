@@ -116,7 +116,7 @@ namespace Suteki.Shop.Controllers
 			return CmsView.Data.WithMenus(menus);
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveUp(int id)
 		{
 			var content = contentRepository.GetById(id);
@@ -129,7 +129,7 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction<MenuController>(c => c.List(content.ParentContentId.Value));
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveDown(int id)
 		{
 			var content = contentRepository.GetById(id);

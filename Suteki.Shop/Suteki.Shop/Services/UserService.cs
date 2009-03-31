@@ -26,8 +26,6 @@ namespace Suteki.Shop.Services
             };
 
             userRepository.InsertOnSubmit(user);
-            userRepository.SubmitChanges();
-
             return user;
         }
 

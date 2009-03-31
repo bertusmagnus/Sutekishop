@@ -84,12 +84,14 @@ namespace Suteki.Shop.Controllers
             }
         }
 
+		[UnitOfWork]
         public ActionResult MoveUp(int id)
         {
             MoveThis(id).UpOne();
 			return this.RedirectToAction(c => c.Index());
         }
 
+		[UnitOfWork]
         public ActionResult MoveDown(int id)
         {
             MoveThis(id).DownOne();

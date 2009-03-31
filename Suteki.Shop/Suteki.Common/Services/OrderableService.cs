@@ -32,13 +32,11 @@ namespace Suteki.Common.Services
         void IOrderServiceWithPosition<T>.UpOne()
         {
             Move<T>.ItemAt(postion).In(repository.GetAll()).UpOne();
-            repository.SubmitChanges();
         }
 
         void IOrderServiceWithPosition<T>.DownOne()
         {
             Move<T>.ItemAt(postion).In(repository.GetAll()).DownOne();
-            repository.SubmitChanges();
         }
 
         public int NextPosition
@@ -61,13 +59,11 @@ namespace Suteki.Common.Services
         void IOrderServiceWithConstrainedPosition<T>.UpOne()
         {
             Move<T>.ItemAt(postion).In(repository.GetAll().Where(predicate)).UpOne();
-            repository.SubmitChanges();
         }
 
         void IOrderServiceWithConstrainedPosition<T>.DownOne()
         {
             Move<T>.ItemAt(postion).In(repository.GetAll().Where(predicate)).DownOne();
-            repository.SubmitChanges();
         }
     }
 

@@ -20,7 +20,7 @@ namespace Suteki.Shop.Controllers
 			this.productImageRepository = productImageRepository;
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveImageUp(int id, int position)
 		{
 			productImageOrderableService
@@ -31,7 +31,7 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction<ProductController>(c => c.Edit(id));
 		}
 
-		[AdministratorsOnly]
+		[AdministratorsOnly, UnitOfWork]
 		public ActionResult MoveImageDown(int id, int position)
 		{
 			productImageOrderableService
