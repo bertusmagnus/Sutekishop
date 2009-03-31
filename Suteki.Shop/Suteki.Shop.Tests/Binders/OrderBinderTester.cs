@@ -24,7 +24,6 @@ namespace Suteki.Shop.Tests.Binders
 			encryptionService = MockRepository.GenerateStub<IEncryptionService>();
 			binder = new OrderBinder(
 				new ValidatingBinder(new SimplePropertyBinder()), 
-				MockRepository.GenerateStub<IRepository<Country>>(), 
 				encryptionService
 			);
 
@@ -36,7 +35,7 @@ namespace Suteki.Shop.Tests.Binders
 		}
 
 		[Test]
-		public void PlaceOrder_ShouldCreateANewOrder() {
+		public void Should_Create_order() {
 			// mock the request form
 			var form = BuildPlaceOrderRequest();
 			context.HttpContext.Request.Expect(x => x.Form).Return(form);

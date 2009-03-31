@@ -49,7 +49,7 @@ namespace Suteki.Shop.Controllers
 		public ActionResult Index(int id)
 		{
 			// create a default order
-			var order = new Order {UseCardHolderContact = true};
+			var order = CurrentOrder ?? new Order {UseCardHolderContact = true};
 
 			var basket = basketRepository.GetById(id);
 			PopulateOrderForView(order, basket);
@@ -116,28 +116,21 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[UnitOfWork]
-		public ActionResult UpdateCountry(int id, int countryId, FormCollection form)
+		public ActionResult UpdateCountry(int id, int countryId, [BindUsing(typeof(OrderBinder))] Order order)
 		{
-/*
+			//Ignore any errors - if there are any errors in modelstate then the UnitOfWork will not commit.
+			ModelState.Clear(); 
+
 			var basket = basketRepository.GetById(id);
 			basket.CountryId = countryId;
-			basketRepository.SubmitChanges();
+			CurrentOrder = order;
+			return this.RedirectToAction(c => c.Index(id));
+		}
 
-			var order = new Order();
-
-			try
-			{
-				UpdateOrderFromForm(order, form);
-			}
-			catch (ValidationException)
-			{
-				// ignore validation exceptions
-			}
-
-			PopulateOrderForView(order, basket);
-			return View("Checkout", CheckoutViewData(order));
-*/
-			throw new NotImplementedException();
+		private Order CurrentOrder
+		{
+			get { return TempData["order"] as Order; }
+			set { TempData["order"] = value; }
 		}
 	}
 }

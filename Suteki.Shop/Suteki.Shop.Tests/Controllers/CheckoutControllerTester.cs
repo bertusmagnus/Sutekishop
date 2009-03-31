@@ -58,7 +58,7 @@ namespace Suteki.Shop.Tests.Controllers
 		}
 
 		[Test]
-		public void Checkout_ShouldDisplayCheckoutForm() {
+		public void Index_ShouldDisplayCheckoutForm() {
 			const int basketId = 6;
 
 			var basket = new Basket { BasketId = basketId };
@@ -81,6 +81,18 @@ namespace Suteki.Shop.Tests.Controllers
 				.AssertAreSame(basket, vd => vd.Order.Basket)
 				.AssertNotNull(vd => vd.Countries)
 				.AssertAreSame(cardTypes, vd => vd.CardTypes);
+		}
+
+		[Test]
+		public void Index_should_load_order_from_tempdata()
+		{
+			var order = new Order();
+			controller.TempData["order"] = order;
+
+			controller.Index(4)
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreSame(order, vd => vd.Order);
 		}
 
 		[Test]
@@ -109,6 +121,33 @@ namespace Suteki.Shop.Tests.Controllers
 				.ReturnsViewResult()
 				.WithModel<ShopViewData>()
 				.AssertAreEqual(order, x => x.Order);
+		}
+
+		[Test]
+		public void UpdateCountry_should_update_country()
+		{
+			var basket = new Basket();
+			var order = new Order();
+			basketRepository.Expect(x => x.GetById(4)).Return(basket);
+
+			controller.UpdateCountry(4, 5, order)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Checkout")
+				.ToAction("Index")
+				.WithRouteValue("id", "4");
+
+			basket.CountryId.ShouldEqual(5);
+			controller.TempData["order"].ShouldBeTheSameAs(order);
+		}
+
+		[Test]
+		public void UpdateCountry_Should_clear_modelstate_errors()
+		{
+			basketRepository.Expect(x => x.GetById(4)).Return(new Basket());
+			controller.ModelState.AddModelError("foo", "bar");
+			controller.UpdateCountry(4, 5, new Order());
+
+			controller.ModelState.Count.ShouldEqual(0);
 		}
 	}
 }

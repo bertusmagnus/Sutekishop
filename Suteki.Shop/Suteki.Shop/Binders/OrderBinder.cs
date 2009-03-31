@@ -10,15 +10,12 @@ namespace Suteki.Shop.Binders
 	public class OrderBinder : IModelBinder
 	{
 		readonly IValidatingBinder validatingBinder;
-		readonly IRepository<Country> countryRepository;
 		readonly IEncryptionService encryptionService;
 
-		public OrderBinder(IValidatingBinder validatingBinder, IRepository<Country> countryRepository,
-		                   IEncryptionService encryptionService)
+		public OrderBinder(IValidatingBinder validatingBinder, IEncryptionService encryptionService)
 		{
 			this.validatingBinder = validatingBinder;
 			this.encryptionService = encryptionService;
-			this.countryRepository = countryRepository;
 		}
 
 		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
@@ -69,17 +66,18 @@ namespace Suteki.Shop.Binders
 
 		void UpdateContact(Contact contact, string prefix, NameValueCollection form, ModelStateDictionary modelState)
 		{
-			try
-			{
+			//TODO: Review this FInally block. This seems bad to me as it forces the order to become attached to the datacontext
+			//try
+		//	{
 				validatingBinder.UpdateFrom(contact, form, modelState, prefix);
-			}
-			finally
-			{
-				if (contact.CountryId != 0 && contact.Country == null)
-				{
-					contact.Country = countryRepository.GetById(contact.CountryId);
-				}
-			}
+		//	}
+		//	finally
+		//	{
+		//		if (contact.CountryId != 0 && contact.Country == null)
+		//		{
+		//			contact.Country = countryRepository.GetById(contact.CountryId);
+		//		}
+		//	}
 		}
 
 		void UpdateCard(Order order, NameValueCollection form, ModelStateDictionary modelState)
