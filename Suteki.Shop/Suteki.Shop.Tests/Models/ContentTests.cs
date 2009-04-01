@@ -70,16 +70,15 @@ namespace Suteki.Shop.Tests.Models
             Assert.That(subSubMenu.SubMenu, Is.SameAs(subMenu));
         }
 
-        [Test, ExpectedException(typeof(NoMenuException))]
-        public void TextContentWithoutMenuShouldThrowException()
+		[Test]
+        public void TextContentWithoutMenuShouldReturnNull()
         {
             var textContent = new TextContent
             {
                 Text = "Hello World"
             };
 
-            // this should throw an application exception
-            var name = textContent.SubMenu.Name;
+            textContent.SubMenu.ShouldBeNull();
         }
     }
 }
