@@ -76,10 +76,10 @@ namespace Suteki.Shop
                 if (thisMenu != null)
                 {
                     if (thisMenu.IsMainMenu) return null;
-                    if (thisMenu.Menu.IsMainMenu) return thisMenu;
+                    if (thisMenu.Menu != null && this.Menu.IsMainMenu) return thisMenu;
                 }
 
-                return this.Menu.SubMenu;
+				return this.Menu == null ? null : Menu.SubMenu;
             }
         }
 
@@ -88,10 +88,10 @@ namespace Suteki.Shop
             get
             {
                 if (ContentId == Suteki.Shop.Menu.MainMenuId) return null;
-                var menu = Content1 as Menu;
+               /* var menu = Content1 as Menu;
                 if (menu == null)
-                    throw new NoMenuException("Parent Content Should Always be a Menu");
-                return menu;
+                    throw new NoMenuException("Parent Content Should Always be a Menu");*/
+				return Content1 as Menu;
             }
         }
 
