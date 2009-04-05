@@ -29,7 +29,7 @@ namespace Suteki.Common.Tests.Validation
             {
                 { "Name", "Ben" },
                 { "Age", "43" },
-                { "Birthday", "7/1/1965" },
+                { "Birthday", "1965-01-07" },
                 { "Child.Id", "10" },
                 { "IsActive", "true,false" }
             };
@@ -62,7 +62,7 @@ namespace Suteki.Common.Tests.Validation
             {
                 { "Name", "Ben" },
                 { "Age", "43" },
-                { "Birthday", "7/1/1965" },
+                { "Birthday", "1965-01-07" },
                 { "Child.Id", "10" },
             };
 
