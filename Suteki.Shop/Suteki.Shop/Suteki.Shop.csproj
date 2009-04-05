@@ -291,7 +291,6 @@
     <Content Include="Content\Images\tick.png" />
     <Content Include="Content\Images\up.png" />
     <Content Include="Content\Images\wallpaper.jpg" />
-    <Content Include="TODO.txt" />
     <Content Include="Views\Category\Edit.aspx" />
     <Content Include="Views\Category\Index.aspx" />
     <Content Include="Views\Country\Edit.aspx" />
