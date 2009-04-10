@@ -87,6 +87,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\NHibernate.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\NVelocity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -159,6 +163,8 @@
     <Compile Include="Repositories\LinqToSqlUnitOfWorkManager.cs" />
     <Compile Include="Services\DebugWritingService.cs" />
     <Compile Include="Services\DefaultEntityTypeResolver.cs" />
+    <Compile Include="Services\EmailBuilder.cs" />
+    <Compile Include="Services\IEmailBuilder.cs" />
     <Compile Include="Services\IEntityTypeResolver.cs" />
     <Compile Include="Services\NHibernateEntityTypeResolver.cs" />
     <Compile Include="UI\CollectionEntityRenderer.cs" />

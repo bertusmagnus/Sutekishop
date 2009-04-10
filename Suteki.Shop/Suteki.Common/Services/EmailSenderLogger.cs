@@ -16,16 +16,28 @@ namespace Suteki.Common.Services
             this.logger = logger;
         }
 
+		[Obsolete("Please use the overload with the isBodyHtml parameter. This method defaults that parameter to false")]
         public void Send(string toAddress, string subject, string body)
         {
-            Send(new[] { toAddress }, subject, body);
+            Send(new[] { toAddress }, subject, body, false);
         }
 
-        public void Send(string[] toAddress, string subject, string body)
+		[Obsolete("Please use the overload with the isBodyHtml parameter. This method defaults that parameter to false")]
+		public void Send(string[] toAddress, string subject, string body)
+		{
+			Send(toAddress, subject, body, false);
+		}
+
+		public void Send(string toAddress, string subject, string body, bool isBodyHtml)
+		{
+			Send(new[] { toAddress }, subject, body, isBodyHtml);
+		}
+
+		public void Send(string[] toAddress, string subject, string body, bool isBodyHtml)
         {
-            try
+			try
             {
-                emailSender.Send(toAddress, subject, body);
+                emailSender.Send(toAddress, subject, body, isBodyHtml);
                 LogEmail(toAddress, subject, body);
             }
             catch (SmtpException e)

@@ -119,6 +119,7 @@
     <Compile Include="Models\EntityGraphVisitorSpike.cs" />
     <Compile Include="Models\MetaEntityTests.cs" />
     <Compile Include="Models\StringValueExtensionsTests.cs" />
+    <Compile Include="Services\EmailBuilderTester.cs" />
     <Compile Include="Services\NHibernateEntityTypeResolverTests.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestHelpers\TestController.cs" />
@@ -153,6 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EmbeddedResource Include="Services\testWithPlaceholders.vm" />
+    <EmbeddedResource Include="Services\test.vm" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
