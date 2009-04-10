@@ -7,6 +7,7 @@ using Microsoft.Practices.ServiceLocation;
 using Suteki.Common.Binders;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
+using Suteki.Common.Services;
 using Suteki.Common.Windsor;
 using Suteki.Shop.Binders;
 using Suteki.Shop.Filters;
@@ -45,7 +46,8 @@ namespace Suteki.Shop
 				Component.For<CurrentBasketBinder>().LifeStyle.Transient,
 				Component.For<ProductBinder>().LifeStyle.Transient,
 				Component.For<OrderBinder>().LifeStyle.Transient,
-				Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient
+				Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient,
+				Component.For<IEmailBuilder>().ImplementedBy<EmailBuilder>().LifeStyle.Singleton
 			);
 
 			return container;
