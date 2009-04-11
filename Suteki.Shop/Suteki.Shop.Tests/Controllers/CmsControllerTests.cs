@@ -177,6 +177,12 @@ namespace Suteki.Shop.Tests.Controllers
     	}
 
     	[Test]
+    	public void EditWithPost_should_work_for_TopContent()
+    	{
+			cmsController.Edit(new TopContent() { ParentContentId = 4});
+    	}
+
+    	[Test]
     	public void EditWithPost_ShouldAllowHtmlText()
     	{
 			var content = new TextContent() { Text = HttpUtility.HtmlEncode("<script>"), ParentContentId = 4 };

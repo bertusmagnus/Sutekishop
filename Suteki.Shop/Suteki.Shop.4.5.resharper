@@ -2,6 +2,7 @@
   <Daemon.SolutionSettings>
     <SkipFilesAndFolders>
       <Item>F63A91D4-3A6C-4729-BE83-D6CB45A53EF3/d:Controllers/f:CategoryController.cs</Item>
+      <Item>F63A91D4-3A6C-4729-BE83-D6CB45A53EF3/f:Shop.designer.cs</Item>
     </SkipFilesAndFolders>
   </Daemon.SolutionSettings>
   <CodeStyleSettings>

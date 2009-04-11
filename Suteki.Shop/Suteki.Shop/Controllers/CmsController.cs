@@ -98,7 +98,7 @@ namespace Suteki.Shop.Controllers
 		[AdministratorsOnly, UnitOfWork, AcceptVerbs(HttpVerbs.Post)]
 		public ActionResult Edit([DataBind] Content content)
 		{
-			var textContent = (TextContent)content; //will always be TextContent
+			var textContent = (ITextContent)content; //will always be TextContent
 			if (ModelState.IsValid)
 			{
 				textContent.Text = HttpUtility.HtmlDecode(textContent.Text);
