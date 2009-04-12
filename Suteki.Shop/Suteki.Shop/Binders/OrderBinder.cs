@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Web.Mvc;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
@@ -96,6 +97,9 @@ namespace Suteki.Shop.Binders
 			var confirmEmail = form["emailconfirm"];
 			if (order.Email != confirmEmail)
 			{
+				//hackery...
+				modelState.AddModelError("order.email", "Email and Confirm Email do not match");
+				modelState.SetModelValue("order.email", new ValueProviderResult(order.Email, order.Email, CultureInfo.CurrentCulture));
 				throw new ValidationException("Email and Confirm Email do not match");
 			}
 		}
