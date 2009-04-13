@@ -45,15 +45,10 @@ namespace Suteki.Shop.Controllers
         	this.postageService = postageService;
         }
 
-        [AcceptVerbs(HttpVerbs.Get), AdministratorsOnly]
-        public ActionResult Index()
+		[AdministratorsOnly]
+        public ActionResult Index(OrderSearchCriteria orderSearchCriteria)
         {
-            return Index(new OrderSearchCriteria());
-        }
-
-		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index([DataBind(Fetch = false)] OrderSearchCriteria orderSearchCriteria)
-        {
+			orderSearchCriteria = orderSearchCriteria ?? new OrderSearchCriteria();
 			var orders = searchService.PerformSearch(orderSearchCriteria);
 
             return View("Index", ShopView.Data

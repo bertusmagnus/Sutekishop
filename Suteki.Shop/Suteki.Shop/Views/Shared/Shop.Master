@@ -10,7 +10,7 @@
             <div>
                 <ul class="mainMenu">
                     <li>
-                        <%= Html.ActionLink<OrderController>(c => c.Index(), "Orders") %>
+                        <%= Html.ActionLink<OrderController>(c => c.Index(null), "Orders") %>
                     </li>
                     <li>
                         <%= Html.ActionLink<StockController>(c => c.Index(), "Stock") %>
