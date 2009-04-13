@@ -2,15 +2,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
 <h1>Order Confirmation</h1>
-<% Html.RenderPartial("OrderDetails"); %>
+<% Html.RenderPartial("~/Views/Order/OrderDetails.ascx"); %>
 
 <h3>Customer Details</h3>
-<% Html.RenderPartial("CustomerDetails"); %>
+<% Html.RenderPartial("~/Views/Order/CustomerDetails.ascx"); %>
 
 <div class="clear"></div>         
 
 <h3>Payment Details</h3>     
-<% Html.RenderPartial("PaymentDetails"); %>
+<% Html.RenderPartial("~/Views/Order/PaymentDetails.ascx"); %>
 
 <% if (User.IsAdministrator()) { %>
 

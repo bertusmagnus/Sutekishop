@@ -395,7 +395,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>49839</DevelopmentServerPort>
+          <DevelopmentServerPort>50398</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/Suteki.Shop</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

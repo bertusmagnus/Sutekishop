@@ -104,6 +104,7 @@ namespace Suteki.Shop.Controllers
 		public virtual void EmailOrder(Order order)
 		{
 			//TODO: This needs cleaning up. 
+			ViewData["Title"] = "Order Confirmation";
 			PopulateOrderForView(order, order.Basket);
 			var result = View("~/Views/Order/Item.aspx", "Print", CheckoutViewData(order));
 
