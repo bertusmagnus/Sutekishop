@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Suteki.Common.Extensions;
 using Suteki.Common.ViewData;
 
@@ -39,7 +40,9 @@ namespace Suteki.Shop.ViewData
 
         public IEnumerable<Content> Contents { get; set; }
 
-        // attempt at a fluent interface
+		public IEnumerable<OrderStatus> OrderStatuses { get; set; }
+
+    	// attempt at a fluent interface
 
         public ShopViewData WithCategory(Category category)
         {
@@ -160,6 +163,12 @@ namespace Suteki.Shop.ViewData
             this.Contents = contents;
             return this;
         }
+
+		public ShopViewData WithOrderStatuses(IEnumerable<OrderStatus> orderStatuses)
+		{
+			this.OrderStatuses = orderStatuses;
+			return this;
+		}
     }
 
     /// <summary>

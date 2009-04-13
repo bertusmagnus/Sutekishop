@@ -1,4 +1,5 @@
-﻿namespace Suteki.Shop
+﻿using System.Collections.Generic;
+namespace Suteki.Shop
 {
     public partial class OrderStatus
     {

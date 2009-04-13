@@ -11,15 +11,7 @@
 
     <div class="contentRightColumn">
 		<%= this.TextBox(x => x.OrderSearchCriteria.Postcode).Label("Postcode") %>
-    
-        <label for="orderstatusid">Status</label>
-        <select id="orderstatusid" name="orderstatusid">
-            <option value="0">Any</option>
-            <option value="1">Created</option>
-            <option value="2">Dispatched</option>
-            <option value="3">Rejected</option>
-        </select>
-        
+		<%= this.Select(x => x.OrderSearchCriteria.OrderStatusId).Label("Status").Options(Model.OrderStatuses, x => x.OrderStatusId, x => x.Name) %>
         <br /><br /><br /><br />
     </div>
 

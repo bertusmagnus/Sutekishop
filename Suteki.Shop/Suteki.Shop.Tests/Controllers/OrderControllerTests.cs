@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Linq;
+using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -29,8 +30,9 @@ namespace Suteki.Shop.Tests.Controllers
 		IOrderSearchService searchService;
 
         private ControllerTestContext testContext;
+    	IRepository<OrderStatus> statusRepository;
 
-        [SetUp]
+    	[SetUp]
         public void SetUp()
         {
             // you have to be an administrator to access the order controller
@@ -47,14 +49,16 @@ namespace Suteki.Shop.Tests.Controllers
 			searchService = MockRepository.GenerateStub<IOrderSearchService>();
 
             var mocks = new MockRepository();
-            orderController = new OrderController(
+    		statusRepository = MockRepository.GenerateStub<IRepository<OrderStatus>>();
+    		orderController = new OrderController(
                 orderRepository,
                 countryRepository,
                 cardTypeRepository,
                 encryptionService,
                 postageService,
                 userService,
-				searchService
+				searchService,
+				statusRepository
 				);
 
             testContext = new ControllerTestContext(orderController);
@@ -67,6 +71,7 @@ namespace Suteki.Shop.Tests.Controllers
             testContext.TestContext.Request.RequestType = "GET";
             testContext.TestContext.Request.Stub(r => r.QueryString).Return(new NameValueCollection());
             testContext.TestContext.Request.Stub(r => r.Form).Return(new NameValueCollection());
+			statusRepository.Expect(x => x.GetAll()).Return(new List<OrderStatus>().AsQueryable());
 
             mocks.ReplayAll();
         }
@@ -79,11 +84,12 @@ namespace Suteki.Shop.Tests.Controllers
             var orders = new PagedList<Order>(new List<Order>(), 1, 1);
 			searchService.Expect(x => x.PerformSearch(null)).IgnoreArguments().Return(orders);
 
-            orderController.Index(null)
-                .ReturnsViewResult()
-                .ForView("Index")
-                .WithModel<ShopViewData>()
-                .AssertAreSame(orders, vd => vd.Orders);
+			orderController.Index(null)
+				.ReturnsViewResult()
+				.ForView("Index")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(orders, vd => vd.Orders)
+				.AssertNotNull(x => x.OrderStatuses);
         }
 
 
