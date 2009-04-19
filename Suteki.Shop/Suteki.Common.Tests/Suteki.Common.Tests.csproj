@@ -120,6 +120,7 @@
     <Compile Include="Models\MetaEntityTests.cs" />
     <Compile Include="Models\StringValueExtensionsTests.cs" />
     <Compile Include="Services\EmailBuilderTester.cs" />
+    <Compile Include="Services\EmailSenderTests.cs" />
     <Compile Include="Services\NHibernateEntityTypeResolverTests.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestHelpers\TestController.cs" />

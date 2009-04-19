@@ -1,13 +1,10 @@
-using System;
 using MvcContrib;
-using System.Collections.Specialized;
 using System.Web.Mvc;
 using Suteki.Common.Binders;
 using Suteki.Common.Extensions;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
-using Suteki.Common.Validation;
 using Suteki.Shop.Binders;
 using Suteki.Shop.Repositories;
 using Suteki.Shop.Services;
@@ -113,7 +110,7 @@ namespace Suteki.Shop.Controllers
 			var toAddresses = new[] { order.Email, BaseControllerService.EmailAddress };
 
 			// send the message
-			emailSender.Send(toAddresses, subject, message);
+			emailSender.Send(toAddresses, subject, message, true);
 		}
 
 		[UnitOfWork]
