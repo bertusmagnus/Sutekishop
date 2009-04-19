@@ -26,7 +26,8 @@ namespace Suteki.Shop
 			container.Kernel.AddHandlerSelector(new UrlBasedComponentSelector(
 				typeof(IBaseControllerService),
 				typeof(IImageFileService),
-				typeof(IConnectionStringProvider)
+				typeof(IConnectionStringProvider),
+                typeof(IEmailSender)
 				));
 
 			// automatically register controllers

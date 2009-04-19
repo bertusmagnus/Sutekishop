@@ -9,6 +9,7 @@ namespace Suteki.Shop.IoC
     public class UrlBasedComponentSelector : IHandlerSelector
     {
         private readonly Type[] selectableTypes;
+        private const string noHostName = "__no_host_name_available__";
 
         public UrlBasedComponentSelector(params Type[] selectableTypes)
         {
@@ -43,6 +44,9 @@ namespace Suteki.Shop.IoC
 
         protected string GetHostname()
         {
+            if (HttpContext.Current == null) return noHostName;
+            if (HttpContext.Current.Request == null) return noHostName;
+
             return HttpContext.Current.Request.ServerVariables["SERVER_NAME"];
         }
     }
