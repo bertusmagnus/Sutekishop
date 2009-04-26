@@ -39,9 +39,9 @@ namespace Suteki.Shop.XmlRpc.Service
 
         #endregion
 
-        private XmlRpcServiceHost CreateXmlRpcServiceHost(Type serviceType, Uri[] baseAddresses)
+        private ServiceHost CreateXmlRpcServiceHost(Type serviceType, Uri[] baseAddresses)
         {
-            return new XmlRpcServiceHost(serviceType, baseAddresses);
+            return new Microsoft.ServiceModel.Samples.XmlRpc.XmlRpcServiceHost(serviceType, baseAddresses);
         }
     }
 }

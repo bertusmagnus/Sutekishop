@@ -37,10 +37,7 @@ namespace Suteki.Shop.XmlRpc
                 throw new ApplicationException("Invalid username or password");
             }
 
-            if (!userService.CurrentUser.IsAdministrator)
-            {
-                throw new ApplicationException("You must be a Suteki Shop administrator to use this service");
-            }
+            // TODO: Check that user is an administrator
         }
 
         private static int GetContentId(string postid)

@@ -267,7 +267,6 @@
     <Compile Include="XmlRpc\MetaWeblog.cs" />
     <Compile Include="XmlRpc\MetaWeblogAPI.cs" />
     <Compile Include="XmlRpc\MetaWeblogWcf.cs" />
-    <Compile Include="XmlRpc\Service\XmlRpcServiceHost.cs" />
     <Compile Include="XmlRpc\Service\XmlRpcServiceHostBuilder.cs" />
     <Compile Include="XmlRpc\Service\XmlRpcServiceModel.cs" />
     <Compile Include="XmlRpc\WcfConfiguration.cs" />

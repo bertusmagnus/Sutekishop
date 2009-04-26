@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.ServiceModel;
 using Castle.Facilities.WcfIntegration;
 using Castle.MicroKernel.Registration;
@@ -69,8 +71,17 @@ namespace Suteki.Shop.Tests.XmlRpc
                         )
                     );
 
-            var factory = new XmlRpcChannelFactory<IMetaWeblog>(new XmlRpcHttpBinding(), new EndpointAddress(url));
+            //var targetUrl = url;
+            var targetUrl = "http://ipv4.fiddler:27198/MetaWeblogTest.svc";
+            var factory = new XmlRpcChannelFactory<IMetaWeblog>(new XmlRpcHttpBinding(), new EndpointAddress(targetUrl));
             client = factory.CreateChannel();
+
+            // diagnostics
+            var traceListener = new XmlWriterTraceListener("app_tracelog.svclog")
+            {
+                TraceOutputOptions = TraceOptions.Timestamp
+            };
+            Trace.Listeners.Add(traceListener);
         }
 
         [TearDown]
