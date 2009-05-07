@@ -141,7 +141,7 @@ namespace Suteki.Common.Windsor
 
         protected virtual void RegisterWithServiceLocator(IWindsorContainer windsorContainer)
         {
-            ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
+            ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(windsorContainer));
         }
     }
 }
