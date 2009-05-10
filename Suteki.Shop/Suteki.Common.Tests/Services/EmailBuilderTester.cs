@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
+using NVelocity.Runtime;
 using Suteki.Common.Services;
 
 namespace Suteki.Common.Tests.Services
@@ -15,13 +17,7 @@ namespace Suteki.Common.Tests.Services
 		[SetUp]
 		public void Setup()
 		{
-			//For testing purposes, assume the views are Embedded Resources.
-			//In reality, they'll be in the Views\Emails folder
-			var properties = new Dictionary<string, object>();
-			properties["resource.loader"] = "assembly";
-			properties["assembly.resource.loader.class"] = "NVelocity.Runtime.Resource.Loader.AssemblyResourceLoader, NVelocity";
-			properties["assembly.resource.loader.assembly"] = new List<string> { "Suteki.Common.Tests" };
-			builder = new EmailBuilder(properties) { TemplatePath = "Suteki.Common.Tests.Services" };
+			builder = new EmailBuilder("Services\\Templates");
 		}
 
 		[Test]
@@ -60,10 +56,10 @@ namespace Suteki.Common.Tests.Services
 		}
 
 		[Test]
-		public void Should_have_default_template_path()
+		public void Parses_partial_views()
 		{
-			var builder = new EmailBuilder();
-			builder.TemplatePath.ShouldEqual("Views\\EmailTemplates");
+			var result = builder.GetEmailContent("PartialTest", new Dictionary<string, object>());
+			result.ShouldEqual("Rendered by Partial");
 		}
 	}
 }

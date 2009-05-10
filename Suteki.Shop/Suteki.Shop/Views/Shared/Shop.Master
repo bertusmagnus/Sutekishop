@@ -1,76 +1,36 @@
 ﻿<%@ Master Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewMasterPage" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+<asp:Content runat="server" ContentPlaceHolderID="MainContentPlaceHolder">
 
-        <div>
-            
-            <!-- Admin menu should only show when the user is an administrator -->
-            <% if (Context.User.IsAdministrator())
-               { %>
-            
-            <div>
-                <ul class="mainMenu">
-                    <li>
-                        <%= Html.ActionLink<OrderController>(c => c.Index(null), "Orders") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<StockController>(c => c.Index(), "Stock") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<UserController>(c => c.Index(), "Users") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<CountryController>(c => c.Index(1), "Countries") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<PostageController>(c => c.Index(1), "Postage Bands") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<PostZoneController>(c => c.Index(1), "Postage Zones") %>
-                    </li>
-                    <li>
-                        <%= Html.ActionLink<ReportController>(c => c.Index(), "Reports") %>
+<% if (Context.User.IsAdministrator()){ %>
+	<ul id="adminMenu">
+		<li><%= Html.ActionLink<OrderController>(c => c.Index(null), "Orders") %></li>
+		<li><%= Html.ActionLink<StockController>(c => c.Index(), "Stock") %></li>
+		<li><%= Html.ActionLink<UserController>(c => c.Index(), "Users") %></li>
+		<li><%= Html.ActionLink<CategoryController>(c => c.Index(), "Categories") %></li>
+		<li><%= Html.ActionLink<CountryController>(c => c.Index(1), "Countries") %></li>
+		<li><%= Html.ActionLink<PostageController>(c => c.Index(1), "Postage Bands") %></li>
+		<li><%= Html.ActionLink<PostZoneController>(c => c.Index(1), "Postage Zones") %></li>
+		<li><%= Html.ActionLink<ReportController>(c => c.Index(), "Reports") %></li>
+		<li><%= Html.ActionLink<ReviewsController>(c => c.Index(), "Reviews") %></li>
+	</ul>
+	<hr />	
+	<% } %>
+
+		<div id="main-nav">
+			<div class="category">
+                <ul>                    
+                    <li class="basket">
+                        <%= Html.ActionLink<BasketController>(c => c.Index(), "Basket") %>
                     </li>
                 </ul>
             </div>
-            
-            <% } %>
-            
-            <div class="clear">
-            </div>
-            
-        </div>
-
-        <div id="mainContent">
-
-            <div class="columnsContainer">
-
-                <div class="leftColumn">
-                    <div class="contentsContainer">
-                        <div class="category">
-                            <ul>                    
-                                <li class="basket">
-                                    <%= Html.ActionLink<BasketController>(c => c.Index(), "Basket") %>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <% Html.RenderAction<MenuController>(c => c.LeftMenu()); %>
-                    </div>
-                </div>
-
-                <div class="rightColumn">
-                    <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
-                    </asp:ContentPlaceHolder>
-                </div><!--/rightColumn-->
-
-                <div class="clear">
-                </div>
-
-            </div><!--/columnsContainer-->
-
-        </div><!--/mainContent-->
-
+			<% Html.RenderAction<MenuController>(c => c.LeftMenu()); %>
+			<asp:ContentPlaceHolder ID="LeftContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
+		</div>
+		<div id="content">
+			<asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
+		</div>
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Scripts">
+	<asp:ContentPlaceHolder ID="Scripts" runat="server"></asp:ContentPlaceHolder>
 </asp:Content>

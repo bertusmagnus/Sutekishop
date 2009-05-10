@@ -79,7 +79,6 @@ namespace Suteki.Shop.Controllers
 		{
 			if(ModelState.IsValid)
 			{
-				content.Text = HttpUtility.HtmlDecode(content.Text);
 				contentRepository.InsertOnSubmit(content);
 				Message = "Changes have been saved.";
 				return this.RedirectToAction<MenuController>(c => c.List(content.ParentContentId.Value));
@@ -98,10 +97,8 @@ namespace Suteki.Shop.Controllers
 		[AdministratorsOnly, UnitOfWork, AcceptVerbs(HttpVerbs.Post)]
 		public ActionResult Edit([DataBind] Content content)
 		{
-			var textContent = (ITextContent)content; //will always be TextContent
 			if (ModelState.IsValid)
 			{
-				textContent.Text = HttpUtility.HtmlDecode(textContent.Text);
 				Message = "Changes have been saved.";
 				return this.RedirectToAction<MenuController>(c => c.List(content.ParentContentId.Value));
 			}

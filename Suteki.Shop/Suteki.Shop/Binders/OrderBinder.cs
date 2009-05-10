@@ -12,10 +12,12 @@ namespace Suteki.Shop.Binders
 	{
 		readonly IValidatingBinder validatingBinder;
 		readonly IEncryptionService encryptionService;
+		readonly IRepository<Basket> basketRepository;
 
-		public OrderBinder(IValidatingBinder validatingBinder, IEncryptionService encryptionService)
+		public OrderBinder(IValidatingBinder validatingBinder, IEncryptionService encryptionService, IRepository<Basket> basketRepository)
 		{
 			this.validatingBinder = validatingBinder;
+			this.basketRepository = basketRepository;
 			this.encryptionService = encryptionService;
 		}
 
@@ -25,7 +27,7 @@ namespace Suteki.Shop.Binders
 
 			var order = new Order
 			{
-				OrderStatusId = OrderStatus.CreatedId,
+				//OrderStatusId = OrderStatus.CreatedId,
 				CreatedDate = DateTime.Now,
 				DispatchedDate = DateTime.Now
 			};
@@ -46,7 +48,26 @@ namespace Suteki.Shop.Binders
 			{
 				//Ignore validation exceptions - they will be stored in ModelState.
 			}
+
+		
+			EnsureBasketCountryId(order);
+
 			return order;
+		}
+
+		void EnsureBasketCountryId(Order order)
+		{
+			var basket = basketRepository.GetById(order.BasketId);
+
+			if (order.Contact1 != null && basket.CountryId != order.Contact1.CountryId) //delivery contact
+			{
+				basket.CountryId = order.Contact1.CountryId;
+			}
+			//No Delivery contact specified - resort to CardContact. 
+			else if(order.Contact != null && basket.CountryId != order.Contact.CountryId)
+			{
+				basket.CountryId = order.Contact.CountryId;
+			}
 		}
 
 		void UpdateCardContact(Order order, NameValueCollection form, ModelStateDictionary modelState)

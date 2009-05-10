@@ -28,6 +28,7 @@ namespace Suteki.Shop.Tests.Controllers
 		IEmailSender emailSender;
 		IValidatingBinder validatingBinder;
 		IUnitOfWorkManager unitOfWorkManager;
+		IEmailService emailService;
 
 		[SetUp]
 		public void Setup()
@@ -42,16 +43,18 @@ namespace Suteki.Shop.Tests.Controllers
 			orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
 			emailSender = MockRepository.GenerateStub<IEmailSender>();
 			validatingBinder = MockRepository.GenerateStub<IValidatingBinder>();
+			emailService = MockRepository.GenerateStub<IEmailService>();
+
 			var mocks = new MockRepository(); //TODO: No need to partial mock once email sending is fixed
-			controller = mocks.PartialMock<CheckoutController>(//new CheckoutController(
+			controller = new CheckoutController(
 				basketRepository,
 				userService,
 				postageService,
 				countryRepository,
 				cardTypeRepository,
 				orderRepository,
-				emailSender,
-				unitOfWorkManager
+				unitOfWorkManager,
+				emailService
 			);
 			mocks.ReplayAll();
 			userService.Expect(us => us.CurrentUser).Return(new User { UserId = 4, RoleId = Role.AdministratorId });
@@ -99,17 +102,17 @@ namespace Suteki.Shop.Tests.Controllers
 		public void IndexWithPost_ShouldCreateANewOrder() {
 			var order = new Order() { OrderId = 4 };
 
-			controller.Expect(x => x.EmailOrder(order));
+			//controller.Expect(x => x.EmailOrder(order));
 
 			controller.Index(order)
 				.ReturnsRedirectToRouteResult()
-				.ToController("Order")
-				.ToAction("Item")
+				.ToController("Checkout")
+				.ToAction("Confirm")
 				.WithRouteValue("id", "4");
 
-			controller.AssertWasCalled(x => x.EmailOrder(order));
+//			emailService.AssertWasCalled(x => x.SendOrderConfirmation(order));
 			orderRepository.AssertWasCalled(x => x.InsertOnSubmit(order));
-			unitOfWorkManager.AssertWasCalled(x => x.Commit());
+//			unitOfWorkManager.AssertWasCalled(x => x.Commit());
 		}
 
 		[Test]
@@ -124,30 +127,28 @@ namespace Suteki.Shop.Tests.Controllers
 		}
 
 		[Test]
-		public void UpdateCountry_should_update_country()
+		public void Confirm_DisplaysConfirm()
 		{
-			var basket = new Basket();
 			var order = new Order();
-			basketRepository.Expect(x => x.GetById(4)).Return(basket);
-
-			controller.UpdateCountry(4, 5, order)
-				.ReturnsRedirectToRouteResult()
-				.ToController("Checkout")
-				.ToAction("Index")
-				.WithRouteValue("id", "4");
-
-			basket.CountryId.ShouldEqual(5);
-			controller.TempData["order"].ShouldBeTheSameAs(order);
+			orderRepository.Expect(x => x.GetById(5)).Return(order);
+			controller.Confirm(5)
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreSame(order, x => x.Order);
 		}
 
 		[Test]
-		public void UpdateCountry_Should_clear_modelstate_errors()
+		public void ConfirmWithPost_UpdatesOrderStatus()
 		{
-			basketRepository.Expect(x => x.GetById(4)).Return(new Basket());
-			controller.ModelState.AddModelError("foo", "bar");
-			controller.UpdateCountry(4, 5, new Order());
+			var order = new Order() { OrderId = 5 };
 
-			controller.ModelState.Count.ShouldEqual(0);
+			controller.Confirm(order)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Order")
+				.ToAction("Item")
+				.WithRouteValue("id", "5");
+
+			emailService.AssertWasCalled(x => x.SendOrderConfirmation(order));
 		}
 	}
 }

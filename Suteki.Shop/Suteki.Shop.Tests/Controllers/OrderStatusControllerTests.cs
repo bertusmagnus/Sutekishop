@@ -13,13 +13,14 @@ namespace Suteki.Shop.Tests.Controllers
 		OrderStatusController controller;
 		IUserService userService;
 		IRepository<Order> repository;
-
+		IEmailService emailService;
 		[SetUp]
 		public void Setup()
 		{
 			userService = MockRepository.GenerateStub<IUserService>();
 			repository = MockRepository.GenerateStub<IRepository<Order>>();
-			controller = new OrderStatusController(repository, userService);
+			emailService = MockRepository.GenerateStub<IEmailService>();
+			controller = new OrderStatusController(repository, userService, emailService);
 
 			userService.Expect(x => x.CurrentUser).Return(new User() { UserId = 4 });
 		}
@@ -43,6 +44,18 @@ namespace Suteki.Shop.Tests.Controllers
 			order.IsDispatched.ShouldBeTrue();
 			order.DispatchedDateAsString.ShouldEqual(DateTime.Now.ToShortDateString());
 			order.UserId.ShouldEqual(4);
+		}
+
+		[Test]
+		public void Dispatch_SendsDispatchEmail()
+		{
+			const int orderId = 44;
+			var order = new Order() { OrderStatusId = OrderStatus.CreatedId};
+
+			repository.Expect(x => x.GetById(orderId)).Return(order);
+			controller.Dispatch(orderId);
+
+			emailService.AssertWasCalled(x => x.SendDispatchNotification(order));
 		}
 
 		[Test]

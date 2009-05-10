@@ -124,7 +124,6 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\OrderableScaffoldController.cs" />
     <Compile Include="Controllers\ScaffoldController.cs" />
-    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\NameValue.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
@@ -136,6 +135,7 @@
     <Compile Include="Extensions\UrlExtensionsHelper.cs" />
     <Compile Include="Filters\FilterUsingAttribute.cs" />
     <Compile Include="Filters\UnitOfWorkAttribute.cs" />
+    <Compile Include="FirstRequestInitialization.cs" />
     <Compile Include="HtmlHelpers\ColumnInfo.cs" />
     <Compile Include="HtmlHelpers\ColumnSortingExtensions.cs" />
     <Compile Include="HtmlHelpers\EntityRendererHtmlHelper.cs" />
@@ -164,6 +164,7 @@
     <Compile Include="Services\DebugWritingService.cs" />
     <Compile Include="Services\DefaultEntityTypeResolver.cs" />
     <Compile Include="Services\EmailBuilder.cs" />
+    <Compile Include="Services\IAppSettings.cs" />
     <Compile Include="Services\IEmailBuilder.cs" />
     <Compile Include="Services\IEntityTypeResolver.cs" />
     <Compile Include="Services\NHibernateEntityTypeResolver.cs" />

@@ -6,7 +6,8 @@ using System.Web.Mvc;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Models.Exceptions;
 using Suteki.Shop.Models.ModelHelpers;
-
+using Suteki.Common.HtmlHelpers;
+using Suteki.Shop.HtmlHelpers;
 namespace Suteki.Shop
 {
     public partial class Content : IOrderable, IActivatable, IUrlNamed
@@ -100,6 +101,11 @@ namespace Suteki.Shop
             if (ContentId == 0) return string.Empty;
             return htmlHelper.ActionLink<CmsController>(c => c.Index(UrlName), Name);
         }
+
+		public virtual string Url(UrlHelper urlHelper)
+		{
+			return urlHelper.Action<CmsController>(c => c.Index(UrlName));
+		}
 
         public virtual string EditLink(HtmlHelper htmlHelper)
         {

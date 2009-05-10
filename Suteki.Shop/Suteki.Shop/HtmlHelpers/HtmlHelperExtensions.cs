@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Principal;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Web.Mvc;
@@ -85,6 +86,22 @@ namespace Suteki.Shop.HtmlHelpers
 		public static bool IsAdministrator(this IPrincipal principal)
 		{
 			return principal.IsInRole("Administrator");
+		}
+
+		public static void InitialiseRichTextEditor(this HtmlHelper helper)
+		{
+			helper.RenderPartial("TinyMce");
+		}
+
+		public static string Stars(this HtmlHelper helper, int numberOfStars)
+		{
+			var sb = new StringBuilder();
+			string url = new UrlHelper(helper.ViewContext.RequestContext).Content("~/content/images/star.gif");
+			for (int i = 0; i < numberOfStars; i++) {
+				sb.AppendFormat("<img src='{0}' alt='Star' />", url);
+			}
+
+			return sb.ToString();
 		}
     }
 }

@@ -28,6 +28,7 @@ namespace Suteki.Shop.Tests.Binders
 		ModelBindingContext bindingContext;
 		List<Image> images;
 		ISizeService sizeService;
+		static FakeValueProvider valueProvider;
 
 		[SetUp]
 		public void Setup()
@@ -52,18 +53,20 @@ namespace Suteki.Shop.Tests.Binders
 			controllerContext.HttpContext.Stub(x => x.Request).Return(MockRepository.GenerateStub<HttpRequestBase>());
 			sizeService.Expect(x => x.WithValues(controllerContext.HttpContext.Request.Form)).Return(sizeService);
 
+			valueProvider = new FakeValueProvider();
 			bindingContext = new ModelBindingContext() 
 			{
 				ModelState = new ModelStateDictionary(),
 				ModelType = typeof(Product),
-				ModelName = "product"
+				ModelName = "product",
+				ValueProvider = valueProvider
 			};
 
 			binder = new ProductBinder(validator, resolver, repository, fileService, imageOrderableService, sizeService);
 		}
 
 		[Test]
-		public void Should_add_error_to_modelstate_when_name_not_unique()
+		public void ShouldAddErrorToModelstateWhenNameNotUnique()
 		{
 			products.Add(new Product() { ProductId = 5, Name = "foo" });
 			binder.Accept(new DataBindAttribute() { Fetch = false });
@@ -75,7 +78,7 @@ namespace Suteki.Shop.Tests.Binders
 		}
 
 		[Test]
-		public void Should_update_images()
+		public void ShouldUpdateImages()
 		{
 			images.Add(new Image());
 			images.Add(new Image());
@@ -90,13 +93,35 @@ namespace Suteki.Shop.Tests.Binders
 		}
 
 		[Test]
-		public void Should_update_sizes()
+		public void ShouldUpdateSizes()
 		{
 			binder.Accept(new DataBindAttribute() { Fetch = false });
 			var product = (Product)binder.BindModel(controllerContext, bindingContext);
 			sizeService.AssertWasCalled(x => x.Update(Arg<Product>.Is.Anything));
 		}
-		
+
+		[Test]
+		public void ShouldUpdateCategories()
+		{
+			valueProvider.AddValue("categories", new[] { 1, 2 }, "1,2");
+			binder.Accept(new DataBindAttribute{Fetch = false});
+			var product = (Product)binder.BindModel(controllerContext, bindingContext);
+
+			product.ProductCategories.Count().ShouldEqual(2);
+			product.ProductCategories.First().CategoryId.ShouldEqual(1);
+			product.ProductCategories.Last().CategoryId.ShouldEqual(2);
+		}
+
+
+		[Test]
+		public void AddsModelStateErrorWhenNoCategories()
+		{
+			binder.Accept(new DataBindAttribute { Fetch = false });
+			var product = (Product)binder.BindModel(controllerContext, bindingContext);
+
+			bindingContext.ModelState["categories"].Errors.Count.ShouldEqual(1);
+		}
+
 		private void SetupBoundProduct(Action<Product> action)
 		{
 			validator.Expect(x => x.UpdateFrom(null, null, null, null)).IgnoreArguments().Do(new Action<object, NameValueCollection, ModelStateDictionary, string>((obj, form, modelstate, prefix) => 

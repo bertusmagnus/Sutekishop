@@ -9,5 +9,10 @@ namespace Suteki.Shop
         {
             return htmlHelper.ActionLink(Name, Action, Controller);
         }
+
+		public override string Url(System.Web.Mvc.UrlHelper urlHelper) 
+		{
+			return urlHelper.Action(Action, Controller);
+		}
     }
 }

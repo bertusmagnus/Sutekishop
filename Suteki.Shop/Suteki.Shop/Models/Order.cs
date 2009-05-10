@@ -9,6 +9,12 @@ namespace Suteki.Shop
             value.Label("Email").IsRequired().IsEmail().WithMaxLength(250);
         }
 
+		partial void OnNoteChanging(string value) 
+		{
+			value.Label("Note").IsRequired().WithMaxLength(1000);
+		}
+
+
         public Contact PostalContact
         {
             get

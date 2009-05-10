@@ -11,7 +11,7 @@
 
 <% } else { %>
 
-    <table>
+    <table id="basket">
         <tr>
             <th class="wide">Product</th>
             <th class="thin">Size</th>
@@ -53,7 +53,7 @@
         </tr>
 
         <tr>
-            <td>(for <%= Model.Basket.Country.Name %>)</td>
+            <td>(for <%= Model.Basket.Country.Name %> - <%= Html.ActionLink<BasketController>(c=>c.ChangeCountry(), "change") %>)</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -72,10 +72,10 @@
         
     </table>
 
-    <p>The default postage & package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
-
-    <%= Html.ActionLink<CheckoutController>(c => c.Index(Model.Basket.BasketId), "Checkout", new { _class = "linkButton" }).ToSslLink() %>
-
+    <p>The default postage &amp; package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
+	<p id="checkout">
+		<%= Html.ActionLink<CheckoutController>(c => c.Index(Model.Basket.BasketId), "Checkout", new { @class = "linkButton" }).ToSslLink() %>
+	</p>
 <% } %>
 
 </asp:Content>

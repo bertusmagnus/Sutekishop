@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
@@ -43,9 +44,35 @@ namespace Suteki.Shop.Binders
 				UpdateImages(product, controllerContext.HttpContext.Request);
 				CheckForDuplicateNames(product, bindingContext);
 				UpdateSizes(controllerContext.HttpContext.Request.Form, product);
+				UpdateCategories(product, bindingContext);
 			}
 	
 			return product;
+		}
+
+		void UpdateCategories(Product product, ModelBindingContext context)
+		{
+			product.ProductCategories.Clear();
+
+			var valueProviderResult = context.ValueProvider["categories"];
+			
+			if(valueProviderResult != null)
+			{
+				var categoryIds = valueProviderResult.ConvertTo(typeof(int[])) as int[];
+
+				if(categoryIds != null)
+				{
+					foreach (var id in categoryIds) 
+					{
+						product.ProductCategories.Add(new ProductCategory { CategoryId = id });
+					}
+				}
+			}
+
+			if(product.ProductCategories.Count == 0)
+			{
+				context.ModelState.AddModelError("categories", "Please select at least 1 category for the product.");
+			}
 		}
 
 		void UpdateSizes(NameValueCollection form, Product product)

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Suteki.Common;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
@@ -17,7 +18,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return Products.Count > 0;
+				return ProductCategories.Count > 0;
             }
         }
 
@@ -37,6 +38,11 @@ namespace Suteki.Shop
                 return null;
             }
         }
+
+    	public IEnumerable<Product> Products
+    	{
+			get { return ProductCategories.Select(x => x.Product); }
+    	}
 
     	public static Category DefaultCategory(int parentId, int position)
     	{

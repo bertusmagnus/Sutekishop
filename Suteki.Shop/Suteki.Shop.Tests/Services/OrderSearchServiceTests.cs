@@ -29,13 +29,24 @@ namespace Suteki.Shop.Tests.Services
 		}
 
 		[Test]
-		public void Index_ShouldBuildCriteriaAndExecuteSearch() {
-			orders.Add(new Order { OrderId = 2 });
-			orders.Add(new Order { OrderId = 3 });
+		public void ShouldBuildCriteriaAndExecuteSearch() {
+			orders.Add(new Order { OrderId = 2, OrderStatusId = 1});
+			orders.Add(new Order { OrderId = 3, OrderStatusId = 2 });
 
 			var results = service.PerformSearch(new OrderSearchCriteria() { OrderId = 3 });
 			
 			results.Single().ShouldBeTheSameAs(orders[1]);
+		}
+
+		[Test]
+		public void ShouldExcludePending()
+		{
+			orders.Add(new Order() { OrderStatusId = 0 });
+			orders.Add(new Order() { OrderStatusId = 1 });
+			orders.Add(new Order() { OrderStatusId = 1 });
+
+			var results = service.PerformSearch(new OrderSearchCriteria());
+			results.Count.ShouldEqual(2);
 		}
 
 		//TODO: Test coverage here is lacking.

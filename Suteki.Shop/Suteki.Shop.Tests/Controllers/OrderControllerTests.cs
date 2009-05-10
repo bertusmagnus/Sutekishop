@@ -144,5 +144,16 @@ namespace Suteki.Shop.Tests.Controllers
 
             encryptionService.AssertWasCalled(es => es.DecryptCard(Arg<Card>.Is.Anything));
         }
+
+    	[Test]
+    	public void UpdateNote_should_redirect_back_to_item()
+    	{
+			orderController.UpdateNote(new Order() { OrderId = 5 })
+				.ReturnsRedirectToRouteResult()
+				.ToAction("Item")
+				.WithRouteValue("id", "5");
+
+			orderController.Message.ShouldNotBeNull();
+    	}
     }
 }

@@ -132,14 +132,18 @@
     <Compile Include="Controllers\PostageControllerTests.cs" />
     <Compile Include="Controllers\ProductControllerTests.cs" />
     <Compile Include="Controllers\ReportControllerTests.cs" />
+    <Compile Include="Controllers\ReviewsControllerTests.cs" />
+    <Compile Include="Controllers\RichEditorControllerTester.cs" />
     <Compile Include="Controllers\SiteMapControllerTests.cs" />
     <Compile Include="Controllers\StockControllerTests.cs" />
     <Compile Include="Controllers\UserControllerTests.cs" />
+    <Compile Include="LinqToSqlMappingTests.cs" />
     <Compile Include="Extensions\CategoryWriterTests.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
     <Compile Include="Filters\AuthenticateFilterTester.cs" />
     <Compile Include="Filters\CopyMessageFromTempDataToViewDataTester.cs" />
+    <Compile Include="Filters\EnsureSslFilterTester.cs" />
     <Compile Include="Filters\LoadOptionsTester.cs" />
     <Compile Include="IoCTests.cs" />
     <Compile Include="Models\BasketTests.cs" />
@@ -159,6 +163,7 @@
     <Compile Include="Repositories\UserRepositoryExtensionsTests.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Services\CheckoutServiceTester.cs" />
+    <Compile Include="Services\EmailServiceTester.cs" />
     <Compile Include="Services\EncryptionServiceTests.cs" />
     <Compile Include="Services\ImageFileServiceTests.cs" />
     <Compile Include="Services\ImageServiceTests.cs" />
@@ -171,6 +176,7 @@
     <Compile Include="Spikes\UriSpike.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestHelpers\ControllerTestContext.cs" />
+    <Compile Include="TestHelpers\FakeValueProvider.cs" />
     <Compile Include="TestHelpers\HttpContextTestContext.cs" />
     <Compile Include="TestHelpers\MockViewEngine.cs" />
     <Compile Include="TestHelpers\TestController.cs" />

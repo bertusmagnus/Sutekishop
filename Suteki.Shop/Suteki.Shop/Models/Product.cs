@@ -70,13 +70,13 @@ namespace Suteki.Shop
 
 		public static Product DefaultProduct(int parentCategory, int position)
 		{
-			return new Product 
+			var product = new Product 
 			{
 				ProductId = 0,
-				CategoryId = parentCategory,
 				Position = position
 			};
-
+			product.ProductCategories.Add(new ProductCategory() { CategoryId = parentCategory });
+			return product;
 		}
     }
 }

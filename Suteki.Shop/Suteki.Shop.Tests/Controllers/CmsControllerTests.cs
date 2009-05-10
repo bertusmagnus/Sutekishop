@@ -181,22 +181,6 @@ namespace Suteki.Shop.Tests.Controllers
     	{
 			cmsController.Edit(new TopContent() { ParentContentId = 4});
     	}
-
-    	[Test]
-    	public void EditWithPost_ShouldAllowHtmlText()
-    	{
-			var content = new TextContent() { Text = HttpUtility.HtmlEncode("<script>"), ParentContentId = 4 };
-			cmsController.Edit(content);
-			content.Text.ShouldEqual("<script>");
-    	}
-
-		[Test]
-		public void AddWithPost_ShouldAllowHtmlText() 
-		{
-			var content = new TextContent() { Text = HttpUtility.HtmlEncode("<script>"), ParentContentId = 4 };
-			cmsController.Add(content);
-			content.Text.ShouldEqual("<script>");
-		}
     }
 
     public static class CreateFormExtensions

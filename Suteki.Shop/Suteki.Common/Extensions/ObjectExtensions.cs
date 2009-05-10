@@ -67,5 +67,10 @@ namespace Suteki.Common.Extensions
 
             Console.WriteLine("{0}", item);
         }
+
+		public static string ToYesNo(this bool source)
+		{
+			return source.ToString().Replace(bool.TrueString, "Yes").Replace(bool.FalseString, "No");
+		}
     }
 }

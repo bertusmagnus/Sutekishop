@@ -3,9 +3,9 @@
   <service>
     <engineName>SutekiShop</engineName>
     <engineLink>http://sutekishop.co.uk/</engineLink>
-    <homePageLink><%= ViewData.Model.SiteUrl %></homePageLink>
+    <homePageLink><%= Model.SiteUrl %></homePageLink>
     <apis>
-      <api name="MetaWeblog" preferred="true" apiLink="<%= ViewData.Model.SiteUrl %>metablogapi.aspx" blogID="1" />
+      <api name="MetaWeblog" preferred="true" apiLink="<%= Model.SiteUrl %>metablogapi.aspx" blogID="1" />
     </apis>
   </service>
 </rsd>

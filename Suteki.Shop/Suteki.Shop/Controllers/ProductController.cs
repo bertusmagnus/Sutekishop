@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using MvcContrib;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
@@ -18,10 +19,12 @@ namespace Suteki.Shop.Controllers
 		readonly ISizeService sizeService;
 		readonly IOrderableService<Product> productOrderableService;
 		readonly IUserService userService;
+		readonly IUnitOfWorkManager uow;
 
-		public ProductController(IRepository<Product> productRepository, IRepository<Category> categoryRepository, ISizeService sizeService, IOrderableService<Product> productOrderableService, IUserService userService)
+		public ProductController(IRepository<Product> productRepository, IRepository<Category> categoryRepository, ISizeService sizeService, IOrderableService<Product> productOrderableService, IUserService userService, IUnitOfWorkManager uow)
 		{
 			this.productRepository = productRepository;
+			this.uow = uow;
 			this.userService = userService;
 			this.categoryRepository = categoryRepository;
 			this.sizeService = sizeService;
@@ -74,14 +77,15 @@ namespace Suteki.Shop.Controllers
 			return View("Edit", EditViewData.WithProduct(defaultProduct));
 		}
 
-		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post), ValidateInput(false)]
 		public ActionResult New([BindProduct(Fetch = false)] Product product)
 		{
 			if (ModelState.IsValid)
 			{
 				productRepository.InsertOnSubmit(product);
+				uow.Commit(); //Need explicit commit in order to get the product id.
 				Message = "Product successfully added.";
-				return this.RedirectToAction(x => x.Index(product.CategoryId));
+				return this.RedirectToAction(x => x.Edit(product.ProductId));
 			}
 			else
 			{
@@ -95,12 +99,13 @@ namespace Suteki.Shop.Controllers
 			return RenderEditView(id);
 		}
 
-		[AcceptVerbs(HttpVerbs.Post), UnitOfWork, AdministratorsOnly]
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork, AdministratorsOnly, ValidateInput(false)]
 		public ActionResult Edit([BindProduct] Product product)
 		{
 			if (ModelState.IsValid)
 			{
-				return this.RedirectToAction(c => c.Index(product.CategoryId));
+				Message = "Product successfully saved.";
+				return this.RedirectToAction(x => x.Edit(product.ProductId));
 			}
 			else
 			{
@@ -119,7 +124,7 @@ namespace Suteki.Shop.Controllers
 		{
 			productOrderableService
 				.MoveItemAtPosition(position)
-				.ConstrainedBy(product => product.CategoryId == id)
+				.ConstrainedBy(product => product.ProductCategories.Any(pc => pc.CategoryId == id))
 				.UpOne();
 
 
@@ -131,7 +136,7 @@ namespace Suteki.Shop.Controllers
 		{
 			productOrderableService
 				.MoveItemAtPosition(position)
-				.ConstrainedBy(product => product.CategoryId == id)
+				.ConstrainedBy(product => product.ProductCategories.Any(pc => pc.CategoryId == id))
 				.DownOne();
 
 			return this.RedirectToAction(x => x.Index(id));

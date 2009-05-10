@@ -25,17 +25,14 @@ namespace Suteki.Shop.Tests
 		[TestFixtureSetUp]
 		public void TestFixtureSetup()
 		{
-			container = ContainerBuilder.Build("Windsor.config");
-			
-			//This is necessary until we remove the use of PrincipalPermission attributes from controllers
-			Thread.CurrentPrincipal = new FakePrincipal();
-
 			//Hackery in order to get the PerWebRequest lifecycle working in a test environment
 			//Surely there must be a better way to do this?
 			HttpContext.Current = new HttpContext(new HttpRequest("foo", "http://localhost", ""), new HttpResponse(new StringWriter()));
 			HttpContext.Current.ApplicationInstance = new HttpApplication();
-			var module = new  PerWebRequestLifestyleModule();
+			var module = new PerWebRequestLifestyleModule();
 			module.Init(HttpContext.Current.ApplicationInstance);
+
+			container = ContainerBuilder.Build("Windsor.config");
 		}
 
 		[TestFixtureTearDown]

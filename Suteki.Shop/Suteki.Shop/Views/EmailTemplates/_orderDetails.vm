@@ -1,0 +1,129 @@
+﻿<h3>Order Details</h3>
+<dl>
+	<dt>Order Number</dt><dd>$order.OrderId.ToString() &nbsp;</dd>
+	<dt>Date</dt><dd>$order.CreatedDate.ToShortDateString()</dd>
+</dl>
+<table>
+	<tr>
+		<th class="wide">Product</th>
+		<th class="thin">Size</th>
+		<th class="thin number">Quantity</th>
+		<th class="thin number">Unit Price</th>
+		<th class="thin number">Total Price</th>
+	</tr>
+    #foreach($basketItem in $order.Basket.BasketItems)
+	<tr>
+		<td>$basketItem.Size.Product.Name</td>
+		<td>$basketItem.Size.Name</td>
+		<td class="number">$basketItem.Quantity</td>
+		<td class="number">$basketItem.Size.Product.Price.ToString("£0.00")</td>
+		<td class="number">$basketItem.Total.ToString("£0.00")</td>
+	</tr>
+    #end
+	<tr class="total">
+		<td>Total</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="number">$order.Basket.Total.ToString("£0.00")</td>
+	</tr>
+
+	<tr>
+		<td>Postage</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="number">$order.Basket.PostageTotal</td>
+		<td>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td>(for $order.Basket.Country.Name)</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+
+	<tr class="total">
+		<td>Total With Postage</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="number">$order.Basket.TotalWithPostage</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<hr />		
+<!-- Customer Details -->
+
+<h3>Customer Details</h3>
+<div class="columnContainer">
+	<div class="contentLeftColumn">
+		<h3>Card Holder</h3>
+        
+		<dl>
+			<dt>First Name</dt><dd>$order.Contact.Firstname &nbsp;</dd>
+			<dt>Last Name</dt><dd>$order.Contact.Lastname &nbsp;</dd>
+			<dt>Address 1</dt><dd>$order.Contact.Address1 &nbsp;</dd>
+			<dt>Address 2</dt><dd>$order.Contact.Address2 &nbsp;</dd>
+			<dt>Address 3</dt><dd>$order.Contact.Address3 &nbsp;</dd>
+			<dt>Town</dt><dd>$order.Contact.Town &nbsp;</dd>
+			<dt>County</dt><dd>$order.Contact.County &nbsp;</dd>
+			<dt>Postcode</dt><dd>$order.Contact.Postcode &nbsp;</dd>
+			<dt>Country</dt><dd>$order.Contact.Country.Name &nbsp;</dd>
+			<dt>Telephone</dt><dd>$order.Contact.Telephone &nbsp;</dd>
+			<dt>Email</dt><dd>$order.Email &nbsp;</dd>
+		</dl>
+        
+	</div>
+	<div class="contentRightColumn">
+		<!-- deliver contact -->
+        
+		<h3>Delivery Address</h3>
+        
+		#if($order.UseCardHolderContact)
+			<p>Use Card Holder Contact</p>
+        #else
+		<dl>
+			<dt>First Name</dt><dd>$order.Contact1.Firstname &nbsp;</dd>
+			<dt>Last Name</dt><dd>$order.Contact1.Lastname &nbsp;</dd>
+			<dt>Address 1</dt><dd>$order.Contact1.Address1 &nbsp;</dd>
+			<dt>Address 2</dt><dd>$order.Contact1.Address2 &nbsp;</dd>
+			<dt>Address 3</dt><dd>$order.Contact1.Address3 &nbsp;</dd>
+			<dt>Town</dt><dd>$order.Contact1.Town &nbsp;</dd>
+			<dt>County</dt><dd>$order.Contact1.County &nbsp;</dd>
+			<dt>Postcode</dt><dd>$order.Contact1.Postcode &nbsp;</dd>
+			<dt>Country</dt><dd>$order.Contact1.Country.Name &nbsp;</dd>
+			<dt>Telephone</dt><dd>$order.Contact1.Telephone &nbsp;</dd>
+		</dl>
+		#end
+		<dl>
+			<dt>Additional Information</dt><dd>$order.AdditionalInformation &nbsp;</dd>
+		</dl>
+	</div>      
+</div>
+
+<div class="clear"></div>         
+<hr />
+
+<!-- Payment Details -->
+
+<h3>Payment Details</h3>
+<div class="columnContainer">
+	<div class="contentLeftColumn">
+		#if($order.PayByTelephone)
+			<p>Pay By Telephone</p>
+		#else		        
+		<dl>
+			<dt>Card Type</dt><dd>$order.Card.CardType.Name &nbsp;</dd>
+			<dt>Card Holder</dt><dd>$order.Card.Holder &nbsp;</dd>
+		</dl>
+        #end
+	</div>
+	<div class="contentRightColumn">
+
+	</div>
+</div>

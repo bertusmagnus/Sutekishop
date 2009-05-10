@@ -47,7 +47,7 @@ namespace Suteki.Shop.Tests.Controllers
 
         	userService = MockRepository.GenerateStub<IUserService>();
 
-			productController = new ProductController(productRepository, categoryRepository, sizeService, productOrderableService, userService);
+			productController = new ProductController(productRepository, categoryRepository, sizeService, productOrderableService, userService, MockRepository.GenerateStub<IUnitOfWorkManager>());
 
         	userService.Expect(c => c.CurrentUser).Return(new User { RoleId = Role.AdministratorId });
         }
@@ -60,11 +60,11 @@ namespace Suteki.Shop.Tests.Controllers
             var category = new Category
                                     {
                                         CategoryId = categoryId,
-                                        Products =
-                                            {
-                                                new Product(),
-                                                new Product()
-                                            }
+										ProductCategories =
+											{
+												new ProductCategory() { Product = new Product() },
+												new ProductCategory() { Product = new Product()}
+											}
                                     };
 
             categoryRepository.Stub(r => r.GetById(categoryId)).Return(category);
@@ -132,10 +132,10 @@ namespace Suteki.Shop.Tests.Controllers
     	[Test]
     	public void EditWithPost_ShouldRedirectOnSucessfulBinding()
     	{
-			var product = new Product() { CategoryId = 5 };
+			var product = new Product() { ProductId = 5};
 			productController.Edit(product)
 				.ReturnsRedirectToRouteResult()
-				.ToAction("Index")
+				.ToAction("Edit")
 				.WithRouteValue("id", "5");
     	}
 
@@ -143,7 +143,7 @@ namespace Suteki.Shop.Tests.Controllers
     	public void EditWithPost_ShouldRenderViewWhenBindingFails()
     	{
 			productController.ModelState.AddModelError("foo", "bar");
-			var product = new Product();
+			var product = new Product() { ProductId = 5 };
 
 			productController.Edit(product)
 				.ReturnsViewResult()
@@ -155,10 +155,10 @@ namespace Suteki.Shop.Tests.Controllers
     	[Test]
     	public void NewWithPost_ShouldInsertNewProduct()
     	{
-			var product = new Product() { CategoryId = 5 };
+			var product = new Product() { ProductId = 5};
 			productController.New(product)
 				.ReturnsRedirectToRouteResult()
-				.ToAction("Index")
+				.ToAction("Edit")
 				.WithRouteValue("id", "5");
 
 			productController.Message.ShouldNotBeNull();

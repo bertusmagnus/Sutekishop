@@ -2,15 +2,17 @@
 <div class="productDescription">
 	<div class="mainImage">
 	<% if(Model.HasMainImage) { %>
-		<%= Html.Image("~/ProductPhotos/" + Model.MainImage.MainFileName, new { id = "mainImage" })%>
-	<% } %>
+		<%= Html.Image("~/ProductPhotos/" + Model.MainImage.MainFileName, Model.Name, new { id = "mainImage" })%>
+	<% } else {%>
+		<%= Html.Image("~/content/images/nopic-large.jpg",Model.Name)%>
+	<%} %>
 	</div>
 
 	<div class="imageList">
 	<% foreach(var productImage in Model.ProductImages.InOrder()) { %>
-		<%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName, new { onclick = "onThumbnailClick(this)" })%>
+		<a href="#"><%= Html.Image("~/ProductPhotos/" + productImage.Image.ThumbFileName, Model.Name)%></a>
 	<% } %>
 	</div>
 
-	<p><%= Model.Description %></p>
+	<%= Model.Description %>
 </div>

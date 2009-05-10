@@ -1,0 +1,836 @@
+* {
+margin:0;
+padding:0;
+}
+html,body{
+	height:100%;
+}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+margin:0;
+padding:0;
+}
+table {
+border-collapse:collapse;
+border-spacing:0;
+}
+fieldset, img {
+border:0 none;
+}
+address, caption, cite, code, dfn, em, strong, th, var {
+font-style:normal;
+font-weight:normal;
+}
+ol, ul {
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+}
+caption, th {
+text-align:left;
+}
+h1, h2, h3, h4, h5, h6 {
+font-size:100%;
+font-weight:normal;
+}
+q:before, q:after {
+content:'';
+}
+abbr, acronym {
+border:0 none;
+}
+body 
+{
+background:#FFFFFF;
+color:#444444;
+font-family:Verdana,Geneva,Tahoma,sans-serif;
+font-size:11px;
+line-height:18px;
+min-width:1000px;
+text-align:center;
+}
+h1, h2, h3 {
+font-family:Georgia,Times,Times New Roman,serif;
+font-weight:normal;
+}
+h1 {
+font-size:24px;
+line-height:30px;
+}
+h2 {
+font-size:18px;
+line-height:24px;
+}
+h3 {
+font-size:14px;
+line-height:21px;
+}
+h1, h2, h3 {
+margin:1em 0;
+}
+h4, h5, h6 {
+font-family:Trebuchet,Tahoma,Arial,sans-serif;
+font-size:11px;
+font-weight:bold;
+}
+strong {
+font-weight:bold;
+}
+abbr, acronym {
+border-bottom:1px dotted #000000;
+cursor:help;
+}
+em {
+font-style:italic;
+}
+blockquote {
+margin:1em 1em 1em 2em;
+}
+ul, ol, dl {
+margin:1em;
+}
+ol, ul, dl {
+margin-left:2em;
+}
+ol li {
+list-style-image:none;
+list-style-position:outside;
+list-style-type:decimal;
+}
+ul li {
+list-style-image:none;
+list-style-position:outside;
+list-style-type:disc;
+}
+dl dd {
+margin-left:1em;
+}
+th, td {
+border:1px solid #000000;
+padding:0.5em;
+}
+th {
+font-weight:bold;
+text-align:center;
+}
+caption {
+margin-bottom:0.5em;
+text-align:center;
+}
+p, fieldset, table {
+margin-bottom:1em;
+}
+form div, fieldset div {
+clear:left;
+}
+label {
+display:block;
+float:left;
+margin-right:1em;
+width:200px;
+}
+input, select {
+margin-bottom:4px;
+}
+a {
+color:#8B423A;
+text-decoration:none;
+}
+a:visited {
+}
+a:active, a:hover {
+color:red;
+text-decoration:underline;
+}
+a img {
+border:medium none;
+}
+h1 a, h2 a, h3 a {
+text-decoration:none;
+}
+address {
+font-family:Georgia,Times,Times New Roman,serif;
+font-weight:normal;
+}
+div#header{
+	height:80px;
+	position:relative;
+}
+div#header a{
+	color:#8B423A;
+}
+div#header #contact {
+	float: right;
+	line-height: normal;
+}
+div#header div#logo{
+	height:80px;
+	width: 100%;
+	background-image: url(Images/scaffold/logo.png);
+	background-repeat: no-repeat;
+}
+div#header div#logo h2{
+	text-indent:-999em;
+	margin:0;
+}
+/*div#header div#logo a{
+	display:block;
+	margin:44px 0 10px 0;
+}*/
+div#header div#login{
+	float:right;
+	color:#444444;
+	font-size:0.8em;
+	margin:0 0 10px 0;
+}
+div#header div#search{
+	position:absolute;
+	top:45px;
+	right:20px;
+}
+div#header div#search p{
+	margin:0;
+	float:right;
+	clear:both;
+	font-size:0.8em;
+}
+div#header div#search input{
+	width:auto;
+	display:inline;
+	margin:0;
+}
+ul.mainMenu{
+	float:left;
+	margin:85px 0 0 33px;
+}
+ul.mainMenu li{
+	float:left;
+	width:auto;
+	margin:0 30px 0 0;
+	list-style-type:none;
+	font-family:Georgia,Times,Times New Roman,serif;
+}
+* html div#main {
+	height: 100%;
+}
+div#main
+{
+	min-height: 100%;
+	margin: 0 auto -4em;
+	font-size:1.2em;
+	width:960px;
+	background-color:white;
+	text-align:left;
+}
+div#main div#main-nav{
+	float:left;
+	width:190px;
+}
+div#main div#content{
+	float:right;
+	width:740px;
+	margin:25px 0 0 0px;
+}
+div#main div#main-nav ul{
+	width:160px;
+	margin:105px 0 0 0;
+}
+div#main div#main-nav ul li{
+	margin:0 0 10px 0;
+	font-size:1em;
+	font-family:Georgia,Times,Times New Roman,serif;
+	font-weight:bold;
+	list-style-type:none;
+}
+div#push{
+	height: 4em;
+}
+div#footer{
+	height: 4em;
+	width:960px;
+	margin:0pt auto;
+	text-align:center;
+	clear:both;
+	background:#FFFFFF;
+} 
+div#footer ul{
+	text-align:center;
+	margin:0pt auto;
+}
+div#footer ul li{
+	display:inline;
+	margin:0 20px 0 0;
+	list-style-type:none;
+}
+ul.validation-summary-errors{
+	border:solid 2px #FF0000;
+	margin:0 20px 0 0;
+	padding:5px;
+}
+ul.validation-summary-errors li{
+	color:#FF0000;
+	list-style-type:none;
+}
+/*Admin stuff that can't be in the admin.css*/
+#admin-submenu{
+	float:right;
+	margin:10px 20px 0 0;
+}
+#admin-submenu li{
+	float:left;
+	/*width:120px;*/
+	margin:0 0 10px 10px;
+	list-style-type:none;
+}
+#admin-submenu li a{
+	font-weight:bold;
+	color:#660000
+}
+/**/
+/*Product Page*/
+.mainImage{
+	float: left;
+	margin: 0px 20px 10px 0px;
+	border:solid 1px #F4F4F4;
+}
+ul#productGrid{
+	width:760px;
+	margin:20px 0 0 0;
+	clear:both;
+}
+ul#productGrid li{
+	float:left;
+	width:200px;
+	margin:10px 10px 10px 0;
+	list-style-type:none;
+}
+ul#productGrid li img{
+	border:solid 1px #F4F4F4;
+}
+ul#productGrid span.productName{
+	display:block;
+	width:175px;
+	height:3em;
+}
+ul#productGrid span.productName a{
+	font-family:Trebuchet,Tahoma,Arial,sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	text-decoration:none;
+}
+div.productDescription p{
+	line-height:1.5em;
+	margin:0 20px 0 0;
+	float:right;
+	width:198px;
+}
+div.productOptions{
+	padding:0 0 30px 0;
+	margin:0 20px 0 0;
+	float:right;
+	clear:right;
+	width:198px;
+}
+div.productOptions p{
+	margin-bottom:0;
+}
+div.productOptions label{
+	float:left;
+	width:100px;
+}
+div.productOptions select{
+	width:60px;
+}
+p.price{
+	float:right;
+	clear:right;
+	width:198px;
+	margin:10px 20px 10px 0;
+	font-weight:bold;
+}
+p#out-of-stock-helper{
+	padding:20px 20px 0 0;
+	clear:both;
+}
+.imageList img{
+	margin:0 0 10px 0;
+}
+div.reorder-links{
+	float:right;
+}
+/*End product Page*/
+/*Basket*/
+/*End Basket*/
+/*Checkout*/
+div#checkout h3{
+	font-weight:bold;
+}
+div#checkout label{
+	width:150px;
+	display:block;
+	float:left;
+}
+div#checkout p{
+	clear:both;
+	margin:5px 0;
+}
+div#checkout div{
+	margin:0 0 20px 0;
+}
+div#customer-details p,
+div#customer-details h1,
+div#customer-details h2,
+div#customer-details h3,
+div#customer-details h4,
+div#customer-details h5,
+div#customer-details h6{
+	float:left;
+	clear:left;
+}
+input#confirmation{
+	float:left;
+	clear:both;
+}
+p#dontPayOnline{
+	margin:20px 0 0 0;
+}
+div#checkout p#dontPayOnline label{
+	width:auto;
+	margin:0 5px 0 0;
+}
+div#checkout div#terms{
+	margin:20px 0 0 0;
+}
+p#checkout{
+	margin:20px 0;
+	font-size:1.2em;
+}
+p#validation-explanation{
+	font-size:0.8em;
+}
+div#checkout div#deliveryAddress{
+	margin:20px 0 0 0;
+}
+input#submitButton{
+	margin:20px 0 0 0;
+}
+/*End Checkout*/
+/*CMS Pages*/
+div#cmsContent{
+	width:100%;
+}
+h2#cms-header{
+	width:auto;
+	float:left;
+}
+div#cms-content{
+	clear:both;
+}
+div#cms-content p{
+	margin:0 20px 1.5em 0;
+}
+/*End CMS Pages*/
+/*Order details*/
+div#payment-details{
+	clear:both;
+}
+div#customer-details p span, div#order-details p span, div#payment-details p span{
+	display:block;
+	float:left;
+	width:150px;
+	font-weight:bold;
+}
+/*End Order details*/
+/*FAQ*/
+ul.faq,ul#answers{
+	margin-left:0;
+}
+ul.faq li,ul#answers li{
+	list-style-type:none;
+}
+p.top{
+	font-size:0.8em;
+}
+/*End FAQ*/
+
+/*----------------------------------- cross and tick -------------------------------------*/
+
+.cross {
+	display: inline;
+	background-image: url(Images/cross.png);
+	background-repeat: no-repeat;
+	width: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+.tick {
+	display: inline;
+	background-image: url(Images/tick.png);
+	background-repeat: no-repeat;
+	width: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+/*-------------------------------- Admin ---------------------------------------------- */
+
+h3{
+	font-size:1.4em;
+	font-weight:bold;
+}
+.error{
+	color: Red;
+	font-weight: bold;	
+}
+.message{
+	color: Green;
+	font-weight: bold;
+}
+.clear{
+	clear: both;	
+}
+.clearRight{
+	clear: right;
+}
+
+/* --------------------------- admin menu ------------------------ */
+hr{
+	clear:both;
+	margin:0 20px 0 0;
+}
+#adminMenu{
+	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0 0 5px 0;
+	width: 100%;
+}
+
+#adminMenu li
+{
+	float: left;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+li.editMenuLink a
+{
+	color: Red;	
+}
+
+#adminMenu a
+{
+	display: block;
+	float: left;
+	margin: 0 10px 0 0;
+	padding: 4px;
+	text-decoration: none;
+	color: #444444;
+}
+
+#adminMenu a:hover 
+{
+	background: #EEEEEE;
+}
+
+#admin-submenu{
+	margin:10px 20px 0 0;
+}
+#admin-submenu li{
+	margin:0 0 5px 0;
+}
+
+/* ------------------------- order ------------------------------ */
+
+.orderAction
+{
+	margin: 10px 0;
+}
+
+tr.Created
+{
+	color: #CBC9CE;	
+}
+tr.Dispatched
+{
+	color: #00FF00;
+}
+tr.Rejected
+{
+	color: #FF0000;
+}
+
+/* ------------------------- form ------------------------------ */
+div.admin-form{
+	margin:20px 20px 0 0;
+}
+div.admin-form h2{
+	font-weight:bold;
+	margin:0 0 20px 0;
+}
+div.admin-form td{
+	color:#444444;
+}
+form h2, form h3, form h4, form h5, form h6, form p, form button{
+	float:left;
+	clear:left;
+}
+form p{
+	line-height:1.5em;
+}
+label{
+	display: block;
+	font-weight: bold;
+	margin: 1px 0;
+	float:left;
+	width:150px;
+}
+input{
+	width: 300px;
+}
+input.inline
+{
+	display:inline;
+	width: 50px;	
+}
+
+input[type=submit]
+{
+	display: block;
+	width: 150px;
+	margin: 10px 10px 10px 0px;
+	color: #514E5C;
+	background: #CBC9CE;
+}
+
+input[type=checkbox]
+{
+	display: inline;
+	width: auto;
+}
+
+input[type=radio]
+{
+	display: inline;
+	width: auto;
+}
+
+input[type=button]
+{
+	display: inline;
+	width: 75px;
+}
+
+.linkButton
+{
+	text-decoration: none;
+	display: inline;
+	padding: 2px 5px 2px 5px;
+	width: auto;
+	color: #514E5C;
+	background: #CBC9CE;
+	border: outset 2px #A5A0B0;
+}
+.lineButton:hover
+{
+	color: #514E5C;
+}
+
+select
+{
+	margin: 10px 0px 0px 0px;
+}
+
+.small
+{
+	width: 70px;
+}
+
+textarea
+{
+	margin: 10px 10px 0px 0px;
+	width: 450px;
+	overflow: visible;
+	font-family: arial;
+	font-size: 10pt;
+}
+
+.sizeInput
+{
+	
+}
+/*----------------------------------- arrows -------------------------------------*/
+div.arrows{
+	display:block;
+	float:left;
+	margin:0 10px 0 0;
+}
+/*----------------------------------- end arrows -------------------------------------*/
+/*----------------------------------- cross and tick -------------------------------------*/
+
+.cross
+{
+	display: inline;
+	background-image: url(Images/cross.png);
+	background-repeat: no-repeat;
+	width: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+.tick
+{
+	display: inline;
+	background-image: url(Images/tick.png);
+	background-repeat: no-repeat;
+	width: 10pt;
+	margin: 5px 0px 0px 10px;
+}
+
+/*-------------------------------------- paging ------------------------------------------*/
+div.pagination{
+	margin:20px 0;
+}
+/*-------------------------------------- end paging ------------------------------------------*/
+/*-------------------------------------- table -------------------------------------------*/
+
+table
+{
+	width:100%;
+}
+
+tr.total
+{
+	font-weight: bold;
+}
+
+th
+{
+	font-weight: bold;
+	margin: 0 20px 0 0;
+	padding:0 0 10px 0;
+}
+
+th.wide
+{
+	width: 200px;
+}
+
+th.thin
+{
+	width: 80px;
+}
+
+th.number
+{
+	text-align: right;
+}
+
+td
+{
+	margin: 0px 20px 0px 0px;
+	vertical-align: top;
+}
+
+td.number
+{
+	text-align: right;
+}
+
+th.arrow{
+	width:10px;
+}
+
+/*-------------------------------------- pager -------------------------------------------*/
+
+.pager
+{
+	width: 100%;
+	margin: 10px 0;
+	clear:both;
+}
+
+/*-------------------------------------- category -------------------------------------------*/
+ul.categoryList{
+	width:400px;
+	margin:0 0 40px 0;
+}
+ul.categoryList li{
+	padding:5px 0;
+}
+/*-------------------------------------- end category -------------------------------------------*/
+/*-------------------------------------- country -------------------------------------------*/
+p#addCountry{
+	margin:40px 0 0 0;
+}
+/*-------------------------------------- end country -------------------------------------------*/
+/*-------------------------------------- stock -------------------------------------------*/
+
+span.sizeName{
+	display:block;
+	float:left;
+	width:20px;
+	text-align:right;
+	padding:0 5px 0 0;
+}
+
+.stockItem
+{
+	display: block;
+	clear: left;
+}
+
+.stockItem input[type=checkbox]
+{
+	display: inline;
+	margin: 0;
+}
+
+.stockCheckbox
+{
+	display: block;
+	float: left;
+	width: 50px; /* width here controls the spacing of the checkboxes */
+}
+
+.stockProduct
+{
+	display: block;
+	float: left;
+	width: 300px;
+}
+
+/*----------------------------------- ModelState -------------------------------------*/
+
+/* flash */
+ul.validation-summary-errors
+{
+	border: 2px solid #ff0000;
+	margin: 5px 0 7px 0;
+	padding: 5px;
+	background-color: #f9d5d6;
+	font-weight: bold;
+	color: Black;
+}
+.input-validation-error 
+{
+	border: 2px solid #ff0000;
+	background-color: #f9d5d6;
+}
+.field-validation-error 
+{
+	color: red;
+	font-weight: bold;
+}
+ul.validation-summary-errors 
+{
+	list-style-type: none;
+}
+ul.validation-summary-errors li 
+{
+	padding: 0;
+	margin: 0;
+}
+
+
+
+/* ------------------------------- End Admin -------------------------------------- */
+

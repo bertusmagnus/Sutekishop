@@ -13,10 +13,12 @@ namespace Suteki.Shop.Controllers
 	{
 		readonly IRepository<Order> orderRepository;
 		readonly IUserService userService;
+		readonly IEmailService emailService;
 
-		public OrderStatusController(IRepository<Order> orderRepository, IUserService userService)
+		public OrderStatusController(IRepository<Order> orderRepository, IUserService userService, IEmailService emailService)
 		{
 			this.orderRepository = orderRepository;
+			this.emailService = emailService;
 			this.userService = userService;
 		}
 
@@ -30,6 +32,8 @@ namespace Suteki.Shop.Controllers
 				order.OrderStatusId = OrderStatus.DispatchedId;
 				order.DispatchedDate = DateTime.Now;
 				order.UserId = userService.CurrentUser.UserId;
+
+				emailService.SendDispatchNotification(order);
 			}
 
 			return this.RedirectToAction<OrderController>(c => c.Item(order.OrderId));

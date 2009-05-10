@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
@@ -8,6 +9,20 @@ namespace Suteki.Shop.Tests.Repositories
 {
     public static class MockRepositoryBuilder
     {
+		public static IRepository<Content> CreateContentRepository()
+		{
+			var repository = MockRepository.GenerateStub<IRepository<Content>>();
+
+			var content = new[]
+			{
+				new Content() { Name = "Page 1"},
+				new Content() { Name = "Page 2"}
+			};
+
+			repository.Expect(x => x.GetAll()).Return(content.AsQueryable());
+			return repository;
+		}
+
         public static IRepository<User> CreateUserRepository()
         {
             var userRepositoryMock = MockRepository.GenerateStub<IRepository<User>>();
@@ -107,17 +122,33 @@ namespace Suteki.Shop.Tests.Repositories
 
             var products = new List<Product>
             {
-                new Product { ProductId = 1, CategoryId = 2, Name = "Product 1", Description = "Description 1" },
-                new Product { ProductId = 2, CategoryId = 2, Name = "Product 2", Description = "Description 2" },
-                new Product { ProductId = 3, CategoryId = 4, Name = "Product 3", Description = "Description 3" },
-                new Product { ProductId = 4, CategoryId = 4, Name = "Product 4", Description = "Description 4" },
-                new Product { ProductId = 5, CategoryId = 6, Name = "Product 5", Description = "Description 5" },
-                new Product { ProductId = 6, CategoryId = 6, Name = "Product 6", Description = "Description 6" },
+                new Product { ProductId = 1, Name = "Product 1", Description = "Description 1", ProductCategories = { new ProductCategory() { CategoryId = 2 } }},
+                new Product { ProductId = 2, Name = "Product 2", Description = "Description 2", ProductCategories = { new ProductCategory() { CategoryId = 2 } } },
+                new Product { ProductId = 3, Name = "Product 3", Description = "Description 3", ProductCategories = { new ProductCategory() { CategoryId = 4 } }},
+                new Product { ProductId = 4, Name = "Product 4", Description = "Description 4", ProductCategories = { new ProductCategory() { CategoryId = 4 } }},
+                new Product { ProductId = 5, Name = "Product 5", Description = "Description 5", ProductCategories = { new ProductCategory() { CategoryId = 6 } } },
+                new Product { ProductId = 6,  Name = "Product 6", Description = "Description 6", ProductCategories = { new ProductCategory() { CategoryId = 6 } } },
             };
 
             productRepositoryMock.Expect(pr => pr.GetAll()).Return(products.AsQueryable());
 
             return productRepositoryMock;
         }
+
+    	public static IRepository<Review> CreateReviewRepository()
+    	{
+			var reviews = new List<Review> 
+			{
+				new Review() { Id = 1, ProductId = 1, Approved = true, Rating = 5, Text = "foo"},
+				new Review() { Id = 2, ProductId = 1, Approved = true, Rating = 4, Text = "bar"},
+				new Review() { Id = 2, ProductId = 1, Approved = false, Rating = 3, Text = "bar"},
+				new Review() { Id = 3, ProductId = 2, Approved = true, Rating = 4, Text = "baz"},
+				new Review() { Id = 4, ProductId = 3, Approved = false, Rating = 2, Text = "blah"},
+			};
+
+			var repository = MockRepository.GenerateStub<IRepository<Review>>();
+			repository.Expect(x => x.GetAll()).Return(reviews.AsQueryable());
+			return repository;
+    	}
     }
 }

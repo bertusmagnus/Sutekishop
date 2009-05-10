@@ -12,6 +12,9 @@ namespace Suteki.Shop.Repositories
 
         public static IQueryable<Order> ThatMatch(this IQueryable<Order> orders, OrderSearchCriteria criteria)
         {
+
+			orders = orders.Where(x => x.OrderStatusId > 0); //Exclude 'Pending'
+
             if (criteria.OrderId != 0)
             {
                 orders = orders.Where(o => o.OrderId == criteria.OrderId);

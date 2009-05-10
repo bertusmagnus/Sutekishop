@@ -1,30 +1,4 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
- <h3>Order Details</h3>
-
-    <p><%= Html.ActionLink<OrderController>(c => c.Print(ViewData.Model.Order.OrderId), "Printable version of this page") %></p>
-<dl>
-    <dt>Order Number</dt><dd><%= ViewData.Model.Order.OrderId.ToString()%>&nbsp;</dd>
-    <dt>Date</dt><dd><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></dd>
-
-<% if(ViewContext.HttpContext.User.IsAdministrator()) { %>
-    <dt>Status</dt><dd><%= ViewData.Model.Order.OrderStatus.Name %> <%= ViewData.Model.Order.DispatchedDateAsString %></dd>
-    <dt>Updated by</dt><dd><%= ViewData.Model.Order.UserAsString %></dd>
-<% } %>
-    
-</dl>
-
-<div class="orderAction">
-<% if(ViewContext.HttpContext.User.IsAdministrator()) { %>
-    <% if(ViewData.Model.Order.IsCreated) { %>
-        <%= Html.ActionLink<OrderStatusController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch", new { _class = "linkButton" })%>
-        <%= Html.ActionLink<OrderStatusController>(c => c.Reject(ViewData.Model.Order.OrderId), "Reject", new { _class = "linkButton" })%>
-    <% } else { %>
-        <%= Html.ActionLink<OrderStatusController>(c => c.UndoStatus(ViewData.Model.Order.OrderId), "Reset Status", new { _class = "linkButton" })%>
-    <% } %>
-    <%= Html.ActionLink<InvoiceController>(c => c.Show(ViewData.Model.Order.OrderId), "Print Invoice", new { _class = "linkButton" }) %>
-<% } %>
-</div>    
-
   
 <table>
     <tr>
@@ -62,12 +36,10 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
-        <td>&nbsp;</td>
     </tr>
 
     <tr>
         <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
-        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -80,7 +52,6 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Model.Order.Basket.TotalWithPostage%></td>
-        <td>&nbsp;</td>
     </tr>
     
 </table>

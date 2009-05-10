@@ -38,7 +38,11 @@ namespace Suteki.Shop.Routes
                 "home",
                 new { controller = "Cms", action = "Index", urlName = "" });
 
-            routes.MapRoute("Rsd",
+			routes.MapRoute("Admin",
+				"admin",
+				new { controller = "Admin", action = "Index"});
+
+			routes.MapRoute("Rsd",
                 "rsd.xml",
                 new { controller = "Rsd", action = "Index" });
         }

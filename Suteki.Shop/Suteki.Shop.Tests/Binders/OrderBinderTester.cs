@@ -17,14 +17,17 @@ namespace Suteki.Shop.Tests.Binders
 		OrderBinder binder;
 		ControllerContext context;
 		IEncryptionService encryptionService;
+		IRepository<Basket> basketRepository;
 
 		[SetUp]
 		public void Setup()
 		{
 			encryptionService = MockRepository.GenerateStub<IEncryptionService>();
+			basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
 			binder = new OrderBinder(
 				new ValidatingBinder(new SimplePropertyBinder()), 
-				encryptionService
+				encryptionService,
+				basketRepository
 			);
 
 			context = new ControllerContext()
@@ -37,7 +40,9 @@ namespace Suteki.Shop.Tests.Binders
 		[Test]
 		public void Should_Create_order() {
 			// mock the request form
-			var form = BuildPlaceOrderRequest();
+			basketRepository.Expect(x => x.GetById(22)).Return(new Basket());
+
+			var form = BuildPlaceOrderRequest(true);
 			context.HttpContext.Request.Expect(x => x.Form).Return(form);
 
 			var order = (Order)binder.BindModel(context, new ModelBindingContext());
@@ -49,7 +54,6 @@ namespace Suteki.Shop.Tests.Binders
 			Assert.IsFalse(order.UseCardHolderContact, "UseCardHolderContact is incorrect");
 			Assert.IsFalse(order.PayByTelephone, "PayByTelephone is incorrect");
 
-			Assert.AreEqual(1, order.OrderStatusId, "OrderStatusId is incorrect");
 			Assert.AreEqual(DateTime.Now.ToShortDateString(), order.CreatedDate.ToShortDateString(), "CreatedDate is incorrect");
 
 			// Card Contact
@@ -76,6 +80,34 @@ namespace Suteki.Shop.Tests.Binders
 			encryptionService.AssertWasCalled(es => es.EncryptCard(Arg<Card>.Is.Anything));
 		}
 
+		[Test]
+		public void Updates_country()
+		{
+			var basket = new Basket();
+			basketRepository.Expect(x => x.GetById(22)).Return(basket);
+
+			var form = BuildPlaceOrderRequest(true);
+			context.HttpContext.Request.Expect(x => x.Form).Return(form);
+
+			var order = (Order)binder.BindModel(context, new ModelBindingContext());
+
+			basket.CountryId.ShouldEqual(1);
+		}
+
+
+		[Test]
+		public void Updates_country_when_there_is_no_delivery_contact()
+		{
+			var basket = new Basket();
+			basketRepository.Expect(x => x.GetById(22)).Return(basket);
+
+			var form = BuildPlaceOrderRequest(false);
+			context.HttpContext.Request.Expect(x => x.Form).Return(form);
+
+			var order = (Order)binder.BindModel(context, new ModelBindingContext());
+
+			basket.CountryId.ShouldEqual(1);
+		}
 
 		private static void AssertContactIsCorrect(NameValueCollection form, Contact contact, string prefix) {
 			Assert.IsNotNull(contact, prefix + " is null");
@@ -91,7 +123,7 @@ namespace Suteki.Shop.Tests.Binders
 			Assert.AreEqual(form[prefix + ".telephone"], contact.Telephone, prefix + " Telephone is incorrect");
 		}
 
-		private static FormCollection BuildPlaceOrderRequest() {
+		private static FormCollection BuildPlaceOrderRequest(bool includeDeliveryContact) {
 			var form = new FormCollection
             {
                 {"order.orderid", "10"},
@@ -108,17 +140,7 @@ namespace Suteki.Shop.Tests.Binders
                 {"cardcontact.telephone", "01273 234234"},
                 {"order.email", "mike@mike.com"},
                 {"emailconfirm", "mike@mike.com"},
-                {"order.usecardholdercontact", "False"},
-                {"deliverycontact.firstname", "Mike"},
-                {"deliverycontact.lastname", "Hadlow"},
-                {"deliverycontact.address1", "23 The Street"},
-                {"deliverycontact.address2", "The Manor"},
-                {"deliverycontact.address3", ""},
-                {"deliverycontact.town", "Hove"},
-                {"deliverycontact.county", "East Sussex"},
-                {"deliverycontact.postcode", "BN6 2EE"},
-                {"deliverycontact.countryid", "1"},
-                {"deliverycontact.telephone", "01273 234234"},
+                {"order.usecardholdercontact", (!includeDeliveryContact).ToString()},
                 {"order.additionalinformation", "some more info"},
                 {"card.cardtypeid", "1"},
                 {"card.holder", "MR M HADLOW"},
@@ -131,6 +153,20 @@ namespace Suteki.Shop.Tests.Binders
                 {"card.securitycode", "235"},
                 {"order.paybytelephone", "False"}
             };
+
+			if(includeDeliveryContact)
+			{
+				form.Add("deliverycontact.firstname", "Mike");
+                form.Add("deliverycontact.lastname", "Hadlow");
+                form.Add("deliverycontact.address1", "23 The Street");
+                form.Add("deliverycontact.address2", "The Manor");
+                form.Add("deliverycontact.address3", "");
+                form.Add("deliverycontact.town", "Hove");
+                form.Add("deliverycontact.county", "East Sussex");
+                form.Add("deliverycontact.postcode", "BN6 2EE");
+                form.Add("deliverycontact.countryid", "1");
+				form.Add("deliverycontact.telephone", "01273 234234");
+			}
 
 			return form;
 		}

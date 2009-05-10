@@ -3,11 +3,11 @@
 <%@ Import Namespace="Suteki.Common.Repositories"%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 
-<h1><%= ViewData.Model.Menu.Name%></h1>
+<h1><%= Model.Menu.Name%></h1>
 <div class="message"><%= TempData["message"] %></div>
 <p>
-    <%= Html.ActionLink<CmsController>(c => c.Add(ViewData.Model.Menu.ContentId), "New Page")%>&nbsp;
-    <%= Html.ActionLink<MenuController>(c => c.New(ViewData.Model.Menu.ContentId), "New Menu")%>
+    <%= Html.ActionLink<CmsController>(c => c.Add(Model.Menu.ContentId), "New Page")%>&nbsp;
+    <%= Html.ActionLink<MenuController>(c => c.New(Model.Menu.ContentId), "New Menu")%>
 </p>
 
 <%= Html.Grid(Model.Menu.Contents.InOrder()).Columns(column => {

@@ -52,6 +52,12 @@ namespace Suteki.Shop.Services
 
                 Uri url = CurrentHttpContext.Request.Url;
                 string relativePath = CurrentHttpContext.Request.ApplicationPath;
+
+				if(! relativePath.EndsWith("/"))
+				{
+					relativePath += "/";
+				}
+
                 string port = (url.Port == 80) ? "" : ":{0}".With(url.Port.ToString());
 
                 return "{0}://{1}{2}{3}".With(url.Scheme, url.Host, port, relativePath);

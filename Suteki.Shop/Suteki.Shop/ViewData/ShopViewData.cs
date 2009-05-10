@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Suteki.Common.Extensions;
 using Suteki.Common.ViewData;
 
@@ -41,6 +42,11 @@ namespace Suteki.Shop.ViewData
         public IEnumerable<Content> Contents { get; set; }
 
 		public IEnumerable<OrderStatus> OrderStatuses { get; set; }
+
+		public bool HasProducts
+		{
+			get { return Products != null && Products.Count() != 0; }
+		}
 
     	// attempt at a fluent interface
 

@@ -21,10 +21,12 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
+/*
             string html = this.CaptureActionHtml(orderController, "Print", c => (ViewResult)c.Item(8));
 
             logger.Info(html);
 
+*/
             // do a redirect
             return RedirectToRoute(new {Controller = "Order", Action = "Item", Id = 8});
         }

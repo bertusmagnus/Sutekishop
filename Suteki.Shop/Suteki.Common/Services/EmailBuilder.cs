@@ -10,23 +10,29 @@ namespace Suteki.Common.Services
 {
 	public class EmailBuilder : IEmailBuilder
 	{
-		static readonly IDictionary<string, object> defaultProperties;
 		readonly VelocityEngine velocityEngine;
-		string templatePath = "Views\\EmailTemplates";
+		//Default path for email templates
+		const string defaultTemplatePath = "Views\\EmailTemplates";
 
-		static EmailBuilder()
-		{
-			defaultProperties = new Dictionary<string, object>();
-
-			string basePath = AppDomain.CurrentDomain.BaseDirectory;
-			defaultProperties.Add(RuntimeConstants.RESOURCE_LOADER, "file");
-			defaultProperties.Add(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, basePath);
-		}
-
-		public EmailBuilder() : this(defaultProperties)
+		/// <summary>
+		/// Creates an instance of the EmailBuilder using the specified template path (relative to the application root)
+		/// </summary>
+		/// <param name="templatePath">The path to the templates, relative to the application root</param>
+		public EmailBuilder(string templatePath) : this(CreateDefaultProperties(templatePath))
 		{
 		}
 
+		/// <summary>
+		/// Creates an instance of the EmailBuilder using the default template path (Views\EmailTemplates)
+		/// </summary>
+		public EmailBuilder() : this(CreateDefaultProperties(defaultTemplatePath))
+		{
+		}
+
+		/// <summary>
+		/// Creates an instance of the EmailBuilder using the specified properties.
+		/// </summary>
+		/// <param name="nvelocityProperties"></param>
 		public EmailBuilder(IDictionary<string, object> nvelocityProperties)
 		{
 			var properties = new ExtendedProperties();
@@ -40,10 +46,13 @@ namespace Suteki.Common.Services
 			velocityEngine.Init(properties);
 		}
 
-		public string TemplatePath
+		private static IDictionary<string, object> CreateDefaultProperties(string templatePath) 
 		{
-			get { return templatePath; }
-			set { templatePath = value; }
+			var defaultProperties = new Dictionary<string, object>();
+			string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, templatePath);
+			defaultProperties.Add(RuntimeConstants.RESOURCE_LOADER, "file");
+			defaultProperties.Add(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, basePath);
+			return defaultProperties;
 		}
 
 		public string GetEmailContent(string templateName, IDictionary<string, object> viewdata)
@@ -82,8 +91,6 @@ namespace Suteki.Common.Services
 
 		Template ResolveTemplate(string name)
 		{
-			name = Path.Combine(templatePath, name);
-
 			if (!Path.HasExtension(name))
 			{
 				name += ".vm";

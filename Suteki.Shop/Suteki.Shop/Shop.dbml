@@ -9,9 +9,9 @@
       <Column Name="RoleId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="User_Order" Member="Orders" OtherKey="UserId" Type="Order" />
-      <Association Name="User_Basket" Member="Baskets" OtherKey="UserId" Type="Basket" />
-      <Association Name="Role_User" Member="Role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
+      <Association Name="User_Order" Member="Orders" ThisKey="UserId" OtherKey="UserId" Type="Order" />
+      <Association Name="User_Basket" Member="Baskets" ThisKey="UserId" OtherKey="UserId" Type="Basket" />
+      <Association Name="Role_User" Member="Role" ThisKey="RoleId" OtherKey="RoleId" Type="Role" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Image" Member="Images">
@@ -19,7 +19,7 @@
       <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="FileName" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
-      <Association Name="Image_ProductImage" Member="ProductImages" OtherKey="ImageId" Type="ProductImage" />
+      <Association Name="Image_ProductImage" Member="ProductImages" ThisKey="ImageId" OtherKey="ImageId" Type="ProductImage" />
     </Type>
   </Table>
   <Table Name="dbo.BasketItem" Member="BasketItems">
@@ -28,8 +28,8 @@
       <Column Name="BasketId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="SizeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Size_BasketItem" Member="Size" ThisKey="SizeId" Type="Size" IsForeignKey="true" />
-      <Association Name="Basket_BasketItem" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
+      <Association Name="Size_BasketItem" Member="Size" ThisKey="SizeId" OtherKey="SizeId" Type="Size" IsForeignKey="true" />
+      <Association Name="Basket_BasketItem" Member="Basket" ThisKey="BasketId" OtherKey="BasketId" Type="Basket" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.CardType" Member="CardTypes">
@@ -37,7 +37,7 @@
       <Column Name="CardTypeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="RequiredIssueNumber" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="CardType_Card" Member="Cards" OtherKey="CardTypeId" Type="Card" />
+      <Association Name="CardType_Card" Member="Cards" ThisKey="CardTypeId" OtherKey="CardTypeId" Type="Card" />
     </Type>
   </Table>
   <Table Name="dbo.Contact" Member="Contacts">
@@ -53,9 +53,9 @@
       <Column Name="Postcode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="CountryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Telephone" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Contact_Order" Member="Orders" OtherKey="CardContactId" Type="Order" />
-      <Association Name="Contact_Order1" Member="Orders1" OtherKey="DeliveryContactId" Type="Order" />
-      <Association Name="Country_Contact" Member="Country" ThisKey="CountryId" Type="Country" IsForeignKey="true" />
+      <Association Name="Contact_Order" Member="Orders" ThisKey="ContactId" OtherKey="CardContactId" Type="Order" />
+      <Association Name="Contact_Order1" Member="Orders1" ThisKey="ContactId" OtherKey="DeliveryContactId" Type="Order" />
+      <Association Name="Country_Contact" Member="Country" ThisKey="CountryId" OtherKey="CountryId" Type="Country" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Card" Member="Cards">
@@ -70,8 +70,8 @@
       <Column Name="StartYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IssueNumber" Type="System.String" DbType="NVarChar(5) NOT NULL" CanBeNull="false" />
       <Column Name="SecurityCode" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
-      <Association Name="Card_Order" Member="Orders" OtherKey="CardId" Type="Order" />
-      <Association Name="CardType_Card" Member="CardType" ThisKey="CardTypeId" Type="CardType" IsForeignKey="true" />
+      <Association Name="Card_Order" Member="Orders" ThisKey="CardId" OtherKey="CardId" Type="Order" />
+      <Association Name="CardType_Card" Member="CardType" ThisKey="CardTypeId" OtherKey="CardTypeId" Type="CardType" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Postage" Member="Postages">
@@ -89,7 +89,7 @@
       <Column Name="RoleId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="Role_User" Member="Users" OtherKey="RoleId" Type="User" />
+      <Association Name="Role_User" Member="Users" ThisKey="RoleId" OtherKey="RoleId" Type="User" />
     </Type>
   </Table>
   <Table Name="dbo.Country" Member="Countries">
@@ -99,16 +99,16 @@
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="PostZoneId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Country_Contact" Member="Contacts" OtherKey="CountryId" Type="Contact" />
-      <Association Name="Country_Basket" Member="Baskets" OtherKey="CountryId" Type="Basket" />
-      <Association Name="PostZone_Country" Member="PostZone" ThisKey="PostZoneId" Type="PostZone" IsForeignKey="true" />
+      <Association Name="Country_Contact" Member="Contacts" ThisKey="CountryId" OtherKey="CountryId" Type="Contact" />
+      <Association Name="Country_Basket" Member="Baskets" ThisKey="CountryId" OtherKey="CountryId" Type="Basket" />
+      <Association Name="PostZone_Country" Member="PostZone" ThisKey="PostZoneId" OtherKey="PostZoneId" Type="PostZone" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.OrderStatus" Member="OrderStatus">
     <Type Name="OrderStatus">
       <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="OrderStatus_Order" Member="Orders" OtherKey="OrderStatusId" Type="Order" />
+      <Association Name="OrderStatus_Order" Member="Orders" ThisKey="OrderStatusId" OtherKey="OrderStatusId" Type="Order" />
     </Type>
   </Table>
   <Table Name="dbo.[Order]" Member="Orders">
@@ -126,12 +126,14 @@
       <Column Name="DispatchedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="OrderStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Card_Order" Member="Card" ThisKey="CardId" Type="Card" IsForeignKey="true" />
-      <Association Name="Contact_Order" Member="Contact" ThisKey="CardContactId" Type="Contact" IsForeignKey="true" />
-      <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" Type="Contact" IsForeignKey="true" />
-      <Association Name="OrderStatus_Order" Member="OrderStatus" ThisKey="OrderStatusId" Type="OrderStatus" IsForeignKey="true" />
-      <Association Name="User_Order" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
-      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" Type="Basket" IsForeignKey="true" />
+      <Column Name="Note" Storage="_Comment" Type="System.String" CanBeNull="true" />
+      <Column Name="ContactMe" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="Card_Order" Member="Card" ThisKey="CardId" OtherKey="CardId" Type="Card" IsForeignKey="true" />
+      <Association Name="Contact_Order" Member="Contact" ThisKey="CardContactId" OtherKey="ContactId" Type="Contact" IsForeignKey="true" />
+      <Association Name="Contact_Order1" Member="Contact1" ThisKey="DeliveryContactId" OtherKey="ContactId" Type="Contact" IsForeignKey="true" />
+      <Association Name="OrderStatus_Order" Member="OrderStatus" ThisKey="OrderStatusId" OtherKey="OrderStatusId" Type="OrderStatus" IsForeignKey="true" />
+      <Association Name="User_Order" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="Basket_Order" Member="Basket" ThisKey="BasketId" OtherKey="BasketId" Type="Basket" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ProductImage" Member="ProductImages">
@@ -140,8 +142,8 @@
       <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ImageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" Type="Image" IsForeignKey="true" />
-      <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
+      <Association Name="Image_ProductImage" Member="Image" ThisKey="ImageId" OtherKey="ImageId" Type="Image" IsForeignKey="true" />
+      <Association Name="Product_ProductImage" Member="Product" ThisKey="ProductId" OtherKey="ProductId" Type="Product" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.PostZone" Member="PostZones">
@@ -153,7 +155,7 @@
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="FlatRate" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
-      <Association Name="PostZone_Country" Member="Countries" OtherKey="PostZoneId" Type="Country" />
+      <Association Name="PostZone_Country" Member="Countries" ThisKey="PostZoneId" OtherKey="PostZoneId" Type="Country" />
     </Type>
   </Table>
   <Table Name="dbo.Size" Member="Sizes">
@@ -163,8 +165,8 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="IsInStock" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Size_BasketItem" Member="BasketItems" OtherKey="SizeId" Type="BasketItem" />
-      <Association Name="Product_Size" Member="Product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
+      <Association Name="Size_BasketItem" Member="BasketItems" ThisKey="SizeId" OtherKey="SizeId" Type="BasketItem" />
+      <Association Name="Product_Size" Member="Product" ThisKey="ProductId" OtherKey="ProductId" Type="Product" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Category" Member="Categories">
@@ -174,16 +176,18 @@
       <Column Name="ParentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Category_Category" Member="Categories" OtherKey="ParentId" Type="Category" />
-      <Association Name="Category_Product" Member="Products" OtherKey="CategoryId" Type="Product" />
-      <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" Type="Category" IsForeignKey="true" />
+      <Column Name="ImageId" Type="System.Int32" CanBeNull="true" />
+      <Association Name="Category_Category" Member="Categories" ThisKey="CategoryId" OtherKey="ParentId" Type="Category" />
+      <Association Name="Category_ProductCategory" Member="ProductCategories" ThisKey="CategoryId" OtherKey="CategoryId" Type="ProductCategory" />
+      <Association Name="Category_Category" Member="Category1" ThisKey="ParentId" OtherKey="CategoryId" Type="Category" IsForeignKey="true" />
+      <Association Name="Image_Category" Member="Image" ThisKey="ImageId" OtherKey="ImageId" Type="Image" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ContentType" Member="ContentTypes">
     <Type Name="ContentType">
       <Column Name="ContentTypeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="ContentType_Content" Member="Contents" OtherKey="ContentTypeId" Type="Content" />
+      <Association Name="ContentType_Content" Member="Contents" ThisKey="ContentTypeId" OtherKey="ContentTypeId" Type="Content" />
     </Type>
   </Table>
   <Table Name="dbo.Content" Member="Contents">
@@ -195,9 +199,9 @@
       <Column Name="UrlName" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Content_Content" Member="Contents" OtherKey="ParentContentId" Type="Content" />
-      <Association Name="Content_Content" Member="Content1" ThisKey="ParentContentId" Type="Content" IsForeignKey="true" />
-      <Association Name="ContentType_Content" Member="ContentType" ThisKey="ContentTypeId" Type="ContentType" IsForeignKey="true" />
+      <Association Name="Content_Content" Member="Contents" ThisKey="ContentId" OtherKey="ParentContentId" Type="Content" />
+      <Association Name="Content_Content" Member="Content1" ThisKey="ParentContentId" OtherKey="ContentId" Type="Content" IsForeignKey="true" />
+      <Association Name="ContentType_Content" Member="ContentType" ThisKey="ContentTypeId" OtherKey="ContentTypeId" Type="ContentType" IsForeignKey="true" />
       <Type Name="Menu" InheritanceCode="1" IsInheritanceDefault="true" />
       <Type Name="TextContent" InheritanceCode="2">
         <Column Name="Text" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
@@ -214,7 +218,6 @@
   <Table Name="dbo.Product" Member="Products">
     <Type Name="Product">
       <Column Name="ProductId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CategoryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Price" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
@@ -222,9 +225,10 @@
       <Column Name="Weight" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="UrlName" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
-      <Association Name="Product_ProductImage" Member="ProductImages" OtherKey="ProductId" Type="ProductImage" />
-      <Association Name="Product_Size" Member="Sizes" OtherKey="ProductId" Type="Size" />
-      <Association Name="Category_Product" Member="Category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
+      <Association Name="Product_ProductImage" Member="ProductImages" ThisKey="ProductId" OtherKey="ProductId" Type="ProductImage" />
+      <Association Name="Product_Size" Member="Sizes" ThisKey="ProductId" OtherKey="ProductId" Type="Size" />
+      <Association Name="Product_ProductCategory" Member="ProductCategories" ThisKey="ProductId" OtherKey="ProductId" Type="ProductCategory" />
+      <Association Name="Product_Review" Member="Reviews" ThisKey="ProductId" OtherKey="ProductId" Type="Review" />
     </Type>
   </Table>
   <Table Name="dbo.Basket" Member="Baskets">
@@ -233,10 +237,30 @@
       <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="CountryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Basket_BasketItem" Member="BasketItems" OtherKey="BasketId" Type="BasketItem" />
-      <Association Name="Basket_Order" Member="Orders" OtherKey="BasketId" Type="Order" />
-      <Association Name="Country_Basket" Member="Country" ThisKey="CountryId" Type="Country" IsForeignKey="true" />
-      <Association Name="User_Basket" Member="User" ThisKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="Basket_BasketItem" Member="BasketItems" ThisKey="BasketId" OtherKey="BasketId" Type="BasketItem" />
+      <Association Name="Basket_Order" Member="Orders" ThisKey="BasketId" OtherKey="BasketId" Type="Order" />
+      <Association Name="Country_Basket" Member="Country" ThisKey="CountryId" OtherKey="CountryId" Type="Country" IsForeignKey="true" />
+      <Association Name="User_Basket" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ProductCategory" Member="ProductCategories">
+    <Type Name="ProductCategory">
+      <Column Name="Id" AutoSync="Never" Type="System.Int32" DbType="int NOT NULL Identity" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProductId" Type="System.Int32" CanBeNull="false" />
+      <Column Name="CategoryId" Type="System.Int32" CanBeNull="false" />
+      <Association Name="Category_ProductCategory" Member="Category" ThisKey="CategoryId" OtherKey="CategoryId" Type="Category" IsForeignKey="true" />
+      <Association Name="Product_ProductCategory" Member="Product" ThisKey="ProductId" OtherKey="ProductId" Type="Product" IsForeignKey="true" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Reviews">
+    <Type Name="Review">
+      <Column Name="Id" AutoSync="Never" Type="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProductId" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Approved" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="Text" Type="System.String" CanBeNull="false" />
+      <Column Name="Rating" Type="int" CanBeNull="false" />
+      <Column Name="Reviewer" Type="System.String" DbType="nvarchar(250)" CanBeNull="false" />
+      <Association Name="Product_Review" Member="Product" ThisKey="ProductId" OtherKey="ProductId" Type="Product" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

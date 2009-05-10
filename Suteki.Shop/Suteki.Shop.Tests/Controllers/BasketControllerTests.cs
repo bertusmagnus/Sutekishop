@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
@@ -7,6 +8,7 @@ using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
+using System.Collections.Generic;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -18,16 +20,12 @@ namespace Suteki.Shop.Tests.Controllers
         [SetUp]
         public void SetUp()
         {
-            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
-            basketRepository = MockRepository.GenerateStub<IRepository<Basket>>();
             basketItemRepository = MockRepository.GenerateStub<IRepository<BasketItem>>();
             sizeRepository = MockRepository.GenerateStub<IRepository<Size>>();
 
             userService = MockRepository.GenerateStub<IUserService>();
             postageService = MockRepository.GenerateStub<IPostageService>();
             countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
-
-            validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
 
             basketController = new BasketController(basketItemRepository,
                 sizeRepository,
@@ -48,14 +46,12 @@ namespace Suteki.Shop.Tests.Controllers
         private BasketController basketController;
         private ControllerTestContext testContext;
 
-        private IRepository<Basket> basketRepository;
         private IRepository<BasketItem> basketItemRepository;
         private IRepository<Size> sizeRepository;
 
         private IUserService userService;
         private IPostageService postageService;
         private IRepository<Country> countryRepository;
-        private IValidatingBinder validatingBinder;
 
         private static BasketItem CreateBasketItem()
         {
@@ -146,5 +142,26 @@ namespace Suteki.Shop.Tests.Controllers
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
         }
+
+    	[Test]
+    	public void ChangeCountry_should_render_view_with_countries()
+    	{
+			countryRepository.Expect(x => x.GetAll()).Return(new List<Country>().AsQueryable());
+
+			basketController.ChangeCountry()
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreSame(user.CurrentBasket, x => x.Basket)
+				.AssertNotNull(x => x.Countries);
+    	}
+
+    	[Test]
+    	public void ChangeCountry_with_post_should_redirect_back_to_basket()
+    	{
+			basketController.ChangeCountry(new Basket())
+				.ReturnsRedirectToRouteResult()
+				.ToController("Basket")
+				.ToAction("Index");
+    	}
     }
 }
