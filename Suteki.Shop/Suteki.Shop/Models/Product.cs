@@ -54,8 +54,16 @@ namespace Suteki.Shop
         {
             get
             {
-                if (this.Sizes.Count() == 0) throw new ApplicationException("Product has no default size");
+                if (DefaultSizeMissing) throw new ApplicationException("Product has no default size");
                 return this.Sizes[0];
+            }
+        }
+
+        public bool DefaultSizeMissing
+        {
+            get
+            {
+                return Sizes.Count == 0;
             }
         }
 

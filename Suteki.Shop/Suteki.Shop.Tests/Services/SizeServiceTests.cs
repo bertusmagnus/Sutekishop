@@ -121,5 +121,21 @@ namespace Suteki.Shop.Tests.Services
 
             Assert.AreEqual(0, product.Sizes.Where(size => size.IsActive).Count());
         }
+
+        [Test]
+        public void Update_Should_add_a_default_size_to_a_product_with_no_sizes()
+        {
+            var form = new NameValueCollection();
+            var product = new Product();
+
+            sizeService.WithValues(form).Update(product);
+
+            Assert.That(product.Sizes.Count, Is.EqualTo(1));
+            var defaultSize = product.Sizes[0];
+
+            Assert.That(defaultSize.IsActive, Is.False);
+            Assert.That(defaultSize.Name, Is.EqualTo("-"));
+            Assert.That(defaultSize.IsInStock, Is.True);
+        }
     }
 }
