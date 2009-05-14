@@ -201,6 +201,7 @@ div#header div#search input{
 ul.mainMenu{
 	float:left;
 	margin:85px 0 0 33px;
+	width:100%;
 }
 ul.mainMenu li{
 	float:left;
