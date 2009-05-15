@@ -101,27 +101,5 @@ namespace Suteki.Shop.Views.Shared
             }
         }
 
-		protected string ShopName
-		{
-			get
-			{
-				return "{0}".With(GetController().BaseControllerService.ShopName);
-			}
-		}
-
-		protected string GetMetaDescription()
-		{
-			if (ViewData["MetaDescription"] != null && !String.IsNullOrEmpty(ViewData["MetaDescription"].ToString()))
-			{
-				var meta = ViewData["MetaDescription"].ToString();
-				if(meta.StartsWith("\"") && meta.EndsWith("\""))
-				{
-					return meta; 
-				}
-				return "\"{0}\"".With(meta);
-			}
-			return "\"\"";
-		}
-
     }
 }

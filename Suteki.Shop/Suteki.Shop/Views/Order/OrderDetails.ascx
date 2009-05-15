@@ -1,3 +1,4 @@
+
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
   
 <table>
@@ -36,10 +37,12 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
+        <td>&nbsp;</td>
     </tr>
 
     <tr>
         <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -52,6 +55,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="number"><%= ViewData.Model.Order.Basket.TotalWithPostage%></td>
+        <td>&nbsp;</td>
     </tr>
     
 </table>

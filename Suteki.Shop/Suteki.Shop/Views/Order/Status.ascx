@@ -1,15 +1,15 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
     <p><%= Html.ActionLink<OrderController>(c => c.Print(ViewData.Model.Order.OrderId), "Printable version of this page") %></p>
-
-<div id="order-details">
-    <p><span>Order Number</span><%= ViewData.Model.Order.OrderId.ToString()%></p>
-    <p><span>Date</span><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></p>
+<dl>
+    <dt>Order Number</dt><dd><%= ViewData.Model.Order.OrderId.ToString()%>&nbsp;</dd>
+    <dt>Date</dt><dd><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></dd>
 
 <% if(ViewContext.HttpContext.User.IsAdministrator()) { %>
-    <p><span>Status</span><%= ViewData.Model.Order.OrderStatus.Name %> <%= ViewData.Model.Order.DispatchedDateAsString %></p>
-    <p><span>Updated by</span><%= ViewData.Model.Order.UserAsString %></p>
+    <dt>Status</dt><dd><%= ViewData.Model.Order.OrderStatus.Name %> <%= ViewData.Model.Order.DispatchedDateAsString %></dd>
+    <dt>Updated by</dt><dd><%= ViewData.Model.Order.UserAsString %></dd>
 <% } %>
-</div>
+    
+</dl>
 
 <div class="orderAction">
 <% if(ViewContext.HttpContext.User.IsAdministrator()) { %>

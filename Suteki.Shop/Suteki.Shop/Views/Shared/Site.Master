@@ -2,55 +2,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="Page-Exit" content="blendTrans(Duration=0.01)" />
     <title><%= Html.Encode(ViewData["Title"]) %></title>
     <link href=<%= SiteCss %> rel="stylesheet" type="text/css" />
-    <!--[if lt IE 7]>
-    <link type="text/css" rel="stylesheet" href="/content/ie6.css"/>
-    <![endif]-->
-    <asp:ContentPlaceHolder ID="HeaderContent" runat="server"></asp:ContentPlaceHolder>
     <link rel="EditURI" type="application/rsd+xml" title="RSD" href=<%= RsdUrl %> />
     <link rel="wlwmanifest" type="application/wlwmanifest+xml" href=<%= WlwManifestUrl %> />
-    <meta name="description" content=<%= GetMetaDescription() %> />
+    <meta name="description" content="<%= ViewData["MetaDescription"] %>" />
     <meta name="verify-v1" content="yT3b2nHIk4a8/T+tW3p8zQ30vgio2ELuZc/9qk//JBw=" />
-    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
     <script type="text/javascript" src=<%= JQueryUrl %>></script>
 </head>
+
 <body>
-    <div id="main">
-		<div id="header">
-			<div id="logo">
-				<div id="contact">
-					 <%= Html.Mailto(Email, Email) %><br /><%= PhoneNumber %>
-				</div>
-				<h2><%= ShopName %></h2>
-				<%--<a href="/"><img src="/content/images/scaffold/logo.png" alt="<%= ShopName %> Logo" /></a>--%>
-			</div>
-			<% Html.RenderAction<MenuController>(c => c.MainMenu()); %>
-			<%--
-			<div id="search">
-				<div id="login">
-					<%= Html.ActionLink<BasketController>(c => c.Index(),"Basket") %> |
-					<%= Html.LoginStatus() %> |
-					<% if (Context.User.IsAdministrator()){ %>
-					 <a href="/admin/">Admin</a> |
-					<%} %>
-					<%= Html.LoginLink() %>
-				</div>--%>
-				<%--<%using(Html.BeginForm<ProductController>(c=>c.Search(null))){ %>
-				<p>
-					<input type="text" id="query" name="query" value="search products" />
-					<input type="submit" value="search" />
-				</p>
-				<%} %>
-			</div>
-			--%>
-		</div>
-		<asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
-		<div id="push"></div>
-		<br class="clear" />
-		<div id="footer">
-			<div id="login">
+    <div class="page">
+
+        <div class="header">
+        
+            <div class="logo">
+
+                <div class="rightText">
+                    <p>
+                        <%= Html.Mailto(Email, Email) %><br /><%= PhoneNumber %>
+                    </p>                
+                </div>
+                
+                <h1>
+                    <%= Title %>
+                </h1>
+                
+            </div>
+            
+            <div>
+				<% Html.RenderAction<MenuController>(c => c.MainMenu()); %>
+            </div>
+            
+        </div>
+
+        <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server">
+        </asp:ContentPlaceHolder>
+
+        <div class="footer">
+            <div class="rightText login">
                 <p>
                     <%= Html.LoginLink() %> |
                     <%= Html.LoginStatus() %>
@@ -61,18 +54,21 @@
                 <%= Copyright %> |
                 <%= Html.ActionLink<SiteMapController>(c => c.Index(), "Site Map") %>
             </p>
-		</div>
-	</div>
-	<asp:ContentPlaceHolder ID="Scripts" runat="server"></asp:ContentPlaceHolder>
-	<!-- Google analytics tracking -->    
+        </div><!--/footer-->
+
+    </div><!--/page-->
+
+    <!-- Google analytics tracking -->    
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
     </script>
+
     <script type="text/javascript">
         var pageTracker = _gat._getTracker(<%= GoogleTrackingCode %>);
         pageTracker._initData();
         pageTracker._trackPageview();
     </script>
+
 </body>
 </html>

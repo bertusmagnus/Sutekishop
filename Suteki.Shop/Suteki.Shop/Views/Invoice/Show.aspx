@@ -17,9 +17,9 @@
             info@jumpthegun.co.uk<br />
         </td>
         <td>  
-            <span class="invoiceNumber">Invoice No. <%= Model.Order.OrderId.ToString() %></span> <br /><br />
+            <span class="invoiceNumber">Invoice No. <%= ViewData.Model.Order.OrderId.ToString() %></span> <br /><br />
             <%= DateTime.Now.ToLongDateString() %><br /><br />
-            <% foreach(var line in Model.Order.Contact.GetAddressLines()) { %>
+            <% foreach(var line in ViewData.Model.Order.Contact.GetAddressLines()) { %>
                 <%= line %><br />
             <% } %>
         </td>
@@ -38,7 +38,7 @@
     
     <tr></tr>
     
-    <% foreach (var basketItem in Model.Order.Basket.BasketItems)
+    <% foreach (var basketItem in ViewData.Model.Order.Basket.BasketItems)
        { %>
     
     <tr>
@@ -56,7 +56,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= Model.Order.Basket.Total.ToString("£0.00")%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.Total.ToString("£0.00")%></td>
     </tr>
 
     <tr>
@@ -64,11 +64,13 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= Model.Order.Basket.PostageTotal%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.PostageTotal%></td>
+        <td>&nbsp;</td>
     </tr>
 
     <tr>
-        <td>(for <%= Model.Order.Basket.Country.Name %>)</td>
+        <td>(for <%= ViewData.Model.Order.Basket.Country.Name %>)</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -80,7 +82,8 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="number"><%= Model.Order.Basket.TotalWithPostage%></td>
+        <td class="number"><%= ViewData.Model.Order.Basket.TotalWithPostage%></td>
+        <td>&nbsp;</td>
     </tr>
     
 </table>
@@ -95,7 +98,7 @@
 
     <ul>
         <td>            
-            <% foreach(var line in Model.Order.PostalContact.GetAddressLines()) { %>
+            <% foreach(var line in ViewData.Model.Order.PostalContact.GetAddressLines()) { %>
                 <li><%= line %>&nbsp;</li>
             <% } %>
         </td>

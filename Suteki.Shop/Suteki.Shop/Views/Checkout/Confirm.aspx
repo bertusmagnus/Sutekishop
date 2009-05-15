@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
 	<h1>Final Confirmation</h1>
@@ -12,9 +12,7 @@
 	<div class="clear"></div>
 		
 	<% using (Html.BeginForm()) { %>
-		<p>
-			<%= this.Hidden(x => x.Order.OrderId) %>
-			<input type="submit" id="confirmation" value="Place Order" />
-		</p>
+		<%= this.Hidden(x => x.Order.OrderId) %>
+		<input type="submit" value="Place Order" />
 	<% } %>
 </asp:Content>

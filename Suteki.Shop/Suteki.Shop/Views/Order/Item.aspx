@@ -17,6 +17,9 @@
 
 <% Html.RenderPartial("~/Views/Order/CustomerDetails.ascx"); %>
 
+<div class="clear"></div>         
+<hr />
+
 <% Html.RenderPartial("~/Views/Order/PaymentDetails.ascx"); %>
 
 <% if (User.IsAdministrator()) { %>
