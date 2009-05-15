@@ -13,7 +13,6 @@
 		<li><%= Html.ActionLink<ReportController>(c => c.Index(), "Reports") %></li>
 		<li><%= Html.ActionLink<ReviewsController>(c => c.Index(), "Reviews") %></li>
 	</ul>
-	<hr />	
 	<% } %>
 
 		<div id="main-nav">
