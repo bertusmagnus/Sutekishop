@@ -39,10 +39,11 @@ namespace Suteki.Shop.Tests.Services
 
             sizeService.WithValues(form).Update(product);
 
-            Assert.AreEqual(3, product.Sizes.Count, "incorrect number of sizes on product");
-            Assert.AreEqual("S", product.Sizes[0].Name);
-            Assert.AreEqual("M", product.Sizes[1].Name);
-            Assert.AreEqual("L", product.Sizes[2].Name);
+            Assert.AreEqual(4, product.Sizes.Count, "incorrect number of sizes on product");
+            Assert.That(product.Sizes[0].IsActive, Is.False); // default size
+            Assert.AreEqual("S", product.Sizes[1].Name);
+            Assert.AreEqual("M", product.Sizes[2].Name);
+            Assert.AreEqual("L", product.Sizes[3].Name);
         }
 
         [Test]
@@ -54,15 +55,7 @@ namespace Suteki.Shop.Tests.Services
                 {"size_2", "New 2"}
             };
 
-            var product = new Product
-            {
-                Sizes =
-                {
-                    new Size { Name = "Old 1", IsActive = true },
-                    new Size { Name = "Old 2", IsActive = true },
-                    new Size { Name = "Old 3", IsActive = true }
-                }
-            };
+            var product = CreateProductWithSizes();
 
             sizeService.WithValues(form).Update(product);
 
