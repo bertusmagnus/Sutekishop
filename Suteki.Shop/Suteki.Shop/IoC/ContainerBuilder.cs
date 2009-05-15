@@ -41,7 +41,7 @@ namespace Suteki.Shop.IoC
                                    .Configure(c => c.LifeStyle.Transient.Named(c.Implementation.Name.ToLower())));
 
             container.Register(
-                Component.For<IDataContextProvider>().ImplementedBy<DataContextProvider>().LifeStyle.Transient,
+                Component.For<IDataContextProvider>().ImplementedBy<DataContextProvider>().LifeStyle.PerWebRequest,
                 Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifeStyle.Transient,
                 Component.For(typeof(IRepository<Menu>)).ImplementedBy<MenuRepository>().LifeStyle.Transient,
                 Component.For<IImageService>().ImplementedBy<ImageService>().Named("image.service").LifeStyle.Transient,

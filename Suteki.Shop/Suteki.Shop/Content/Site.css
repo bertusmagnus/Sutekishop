@@ -320,7 +320,6 @@ ul.validation-summary-errors li{
 .mainImage{
 	float: left;
 	margin: 0px 20px 10px 0px;
-	border:solid 1px #F4F4F4;
 }
 ul#productGrid{
 	/*width:760px;*/
@@ -335,7 +334,6 @@ ul#productGrid li{
 	list-style-type:none;
 }
 ul#productGrid li img{
-	border:solid 1px #F4F4F4;
 }
 ul#productGrid span.productName{
 	display:block;
