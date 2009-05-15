@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Suteki.Common.Repositories;
 using Suteki.Common.Windsor;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.IoC;
 using Suteki.Shop.Models;
 using ControllerBase=Suteki.Shop.Controllers.ControllerBase;
 

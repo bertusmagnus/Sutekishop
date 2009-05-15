@@ -129,7 +129,7 @@
     <Compile Include="Binders\CurrentBasketBinder.cs" />
     <Compile Include="Binders\OrderBinder.cs" />
     <Compile Include="Binders\ProductBinder.cs" />
-    <Compile Include="ContainerBuilder.cs" />
+    <Compile Include="IoC\ContainerBuilder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CmsController.cs" />

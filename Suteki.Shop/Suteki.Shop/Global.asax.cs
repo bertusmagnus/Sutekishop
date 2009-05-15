@@ -6,6 +6,7 @@ using Microsoft.Practices.ServiceLocation;
 using MvcContrib.Castle;
 using Suteki.Common;
 using Suteki.Common.Repositories;
+using Suteki.Shop.IoC;
 using Suteki.Shop.Routes;
 using Suteki.Shop.Repositories;
 using System.Web.Security;
