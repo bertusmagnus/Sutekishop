@@ -28,21 +28,23 @@ namespace Suteki.Shop.Tests.Controllers
 		[Test]
 		public void Show_should_get_reviews_for_product()
 		{
-			var vd = controller.Show(1)
+			controller.Show(1)
 				.ReturnsViewResult()
-				.WithModel<ReviewViewData>();
-
-			vd.ProductId.ShouldEqual(1);
-			vd.Reviews.Count().ShouldEqual(2);
+				.WithModel<ReviewViewData>()
+				.AssertAreSame(productRepository.GetById(1), x => x.Product)
+				.AssertAreEqual(2, x => x.Reviews.Count());
 		}
 
 		[Test]
 		public void New_renders_view()
 		{
+			var product = new Product();
+			productRepository.Expect(x => x.GetById(5)).Return(product);
+
 			controller.New(5)
 				.ReturnsViewResult()
 				.WithModel<ReviewViewData>()
-				.AssertAreEqual(5, x => x.ProductId);
+				.AssertAreSame(product, x => x.Product);
 		}
 
 		[Test]
@@ -64,11 +66,15 @@ namespace Suteki.Shop.Tests.Controllers
 		{
 			controller.ModelState.AddModelError("foo", "bar");
 			var review = new Review();
+			var product = new Product();
+
+			productRepository.Expect(x => x.GetById(5)).Return(product);
+
 			controller.New(5, review)
 				.ReturnsViewResult()
 				.WithModel<ReviewViewData>()
 				.AssertAreSame(review, x => x.Review)
-				.AssertAreEqual(5, x => x.ProductId);
+				.AssertAreSame(product, x => x.Product);
 		}
 
 		[Test]

@@ -34,19 +34,22 @@ namespace Suteki.Shop.Controllers
 		public ActionResult Show(int id)
 		{
 			var reviews = reviewRepository.GetAll().ForProduct(id).Approved().ToList();
+			var product = productRepository.GetById(id);
 
 			return View(new ReviewViewData 
 			{
-				ProductId = id,
+				Product = product,
                 Reviews = reviews
 			});
 		}
 
 		public ActionResult New(int id)
 		{
+			var product = productRepository.GetById(id);
+
 			return View(new ReviewViewData
 			{
-				ProductId = id
+				Product = product
 			});
 		}
 
@@ -60,9 +63,11 @@ namespace Suteki.Shop.Controllers
 				return this.RedirectToAction(x => x.Submitted(id));
 			}
 
+			var product = productRepository.GetById(id);
+
 			return View(new ReviewViewData 
 			{
-				ProductId = id,
+				Product = product,
 				Review = review
 			});
 		}

@@ -5,7 +5,7 @@
     <% foreach(var review in Model.Reviews) { %>
     <div>
 		<p>
-			<strong>Product:</strong> <%= Html.Encode(review.Product.Name) %>
+			<strong>Product:</strong> <%= Html.ActionLink<ProductController>(c => c.Item(review.Product.UrlName), review.Product.Name) %>
 		</p>
 		<p>
 			<strong>Reviewer:</strong> <%= Html.Encode(review.Reviewer) %>

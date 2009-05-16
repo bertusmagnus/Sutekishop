@@ -8,7 +8,7 @@ namespace Suteki.Shop.ViewData
 	{
 		public IEnumerable<Review> Reviews { get; set; }
 
-		public int ProductId { get; set; }
+		//public int ProductId { get; set; }
 
 		public Review Review { get; set; }
 
