@@ -32,6 +32,58 @@ function toggleVisibilityWithCheckbox(checkbox, div)
     }
 }
 
+function updatePostageOnUseCardholderDetailsChange(checkbox)
+{
+    if(first)
+    {
+        first = false;
+        return;
+    }
+
+    var select;
+    if(checkbox.checked)
+    {
+        select = document.getElementById("cardcontact_countryid");
+    }
+    else
+    {
+        select = document.getElementById("deliverycontact_countryid");
+    }
+    updateSelectedCountry(select);
+}
+
+function updateSelectedCountry(select)
+{
+    var useCardholderContactCheck = document.getElementsByName("order.usecardholdercontact")[0];
+    
+    if((!useCardholderContactCheck.checked && select.id) == "cardcontact_countryid") return;
+    
+    for(var i = 0; i < select.options.length; i++)
+    {
+        if(select.options[i].selected)
+        {
+            alert("Postage will be updated for " + select.options[i].text);
+            
+            var form = document.getElementById("mainForm");
+            
+            var url = <%= "\"" + Url.RouteUrl(new { Controller = "Checkout", Action = "UpdateCountry", Id = ViewData.Model.Order.Basket.BasketId }) + "\"" %>
+                 + "?countryId=" + select.options[i].value ;
+                 
+            form.action = url;
+            form.submit();
+        }
+    }
+}
+
+function addHandlers()
+{
+    var cardcontactCountryid = document.getElementById("cardcontact_countryid");
+    cardcontactCountryid.onchange = function() { updateSelectedCountry(this); }
+    
+    var deliverycontactCountryid = document.getElementById("deliverycontact_countryid");
+    deliverycontactCountryid.onchange = function() { updateSelectedCountry(this); }
+}
+
 </script>
 
     <h1>Checkout</h1>
@@ -65,6 +117,7 @@ function toggleVisibilityWithCheckbox(checkbox, div)
 
 toggleCardHolderDetails();
 toggleCard();
+addHandlers();
 
 </script>
 
