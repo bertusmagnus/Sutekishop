@@ -160,6 +160,7 @@
     <Compile Include="Repositories\OrderableExtensionsTests.cs" />
     <Compile Include="Repositories\ProductRepositoryExtensionsTests.cs" />
     <Compile Include="Repositories\QueriableExtensionsTests.cs" />
+    <Compile Include="Repositories\UrlNamedExtensionsTests.cs" />
     <Compile Include="Repositories\UserRepositoryExtensionsTests.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Services\CheckoutServiceTester.cs" />
