@@ -39,9 +39,18 @@ namespace Suteki.Shop.Controllers
 		//TODO: Possibly look at slimming down this action.
 		public ActionResult Index(string urlName)
 		{
-			var content = string.IsNullOrEmpty(urlName)
-			              	? contentRepository.GetAll().DefaultText(null)
-			              	: contentRepository.GetAll().WithUrlName(urlName);
+		    Content content = null;
+
+		    try
+		    {
+		        content = string.IsNullOrEmpty(urlName)
+		                      ? contentRepository.GetAll().DefaultText(null)
+		                      : contentRepository.GetAll().WithUrlName(urlName);
+		    }
+		    catch (UrlNameNotFoundException)
+		    {
+		        return View("NotFound");
+		    }
 
 			if (content is Menu)
 			{

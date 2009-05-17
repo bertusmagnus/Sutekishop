@@ -181,6 +181,16 @@ namespace Suteki.Shop.Tests.Controllers
     	{
 			cmsController.Edit(new TopContent() { ParentContentId = 4});
     	}
+
+        [Test]
+        public void Should_show_NotFound_view_when_content_name_is_not_found()
+        {
+            contentRepository.Stub(cr => cr.GetAll()).Return(new List<Content>().AsQueryable());
+
+            cmsController.Index("xxx")
+                .ReturnsViewResult()
+                .ForView("NotFound");
+        }
     }
 
     public static class CreateFormExtensions
