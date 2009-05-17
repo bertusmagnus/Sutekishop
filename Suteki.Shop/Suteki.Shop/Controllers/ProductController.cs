@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using MvcContrib;
 using Suteki.Common.Filters;
@@ -64,10 +65,17 @@ namespace Suteki.Shop.Controllers
 
 		ActionResult RenderItemView(string urlName)
 		{
-			var product = productRepository.GetAll().WithUrlName(urlName);
-			AppendTitle(product.Name);
-			AppendMetaDescription(product.Description);
-			return View("Item", ShopView.Data.WithProduct(product));
+		    try
+		    {
+		        var product = productRepository.GetAll().WithUrlName(urlName);
+                AppendTitle(product.Name);
+                AppendMetaDescription(product.Description);
+                return View("Item", ShopView.Data.WithProduct(product));
+            }
+		    catch (UrlNameNotFoundException)
+		    {
+		        return View("NotFound");		        
+		    }
 		}
 
 		[AdministratorsOnly]

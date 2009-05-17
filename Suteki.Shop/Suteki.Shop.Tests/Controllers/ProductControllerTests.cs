@@ -176,5 +176,13 @@ namespace Suteki.Shop.Tests.Controllers
 				.WithModel<ShopViewData>()
 				.AssertAreSame(product, x => x.Product);
     	}
+
+        [Test]
+        public void Should_show_product_not_found_view_when_urlName_does_not_match()
+        {
+            productController.Item("xxx")
+                .ReturnsViewResult()
+                .ForView("NotFound");
+        }
     }
 }

@@ -600,6 +600,7 @@
     <Content Include="Views\Invoice\Show.aspx" />
     <Content Include="Views\Order\CustomerDetails.ascx" />
     <Content Include="Views\Order\Status.ascx" />
+    <Content Include="Views\Product\NotFound.aspx" />
     <Content Include="Views\Reviews\Index.aspx" />
     <Content Include="Views\Reviews\New.aspx" />
     <Content Include="Views\Reviews\Show.ascx" />
