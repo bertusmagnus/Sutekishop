@@ -24,7 +24,9 @@ namespace Suteki.Shop.IoC
             var container = new WindsorContainer(new XmlInterpreter(configPath));
 
             // add facilities
-            container.AddFacility<LoggingFacility>();
+            container.AddFacility(
+                "logging.facility", 
+                new LoggingFacility(LoggerImplementation.Log4net, "log4net.config"));
 
             // register handler selectors
             container.Kernel.AddHandlerSelector(new UrlBasedComponentSelector(
