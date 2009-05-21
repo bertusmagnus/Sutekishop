@@ -68,7 +68,11 @@ namespace Suteki.Shop.Controllers
             {
                 basket.Country = countryRepository.GetById(basket.CountryId);
             }
+
+			var countries = countryRepository.GetAll().Active().InOrder();
+
             return ShopView.Data.WithBasket(basket)
+				.WithCountries(countries)
                 .WithTotalPostage(postageService.CalculatePostageFor(basket));
         }
 
@@ -86,18 +90,26 @@ namespace Suteki.Shop.Controllers
 			return this.RedirectToAction(c => c.Index());
         }
 
-		public ActionResult ChangeCountry()
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult UpdateCountry(int? country)
 		{
-			var countries = countryRepository.GetAll().Active().InOrder();
-			var basket = userService.CurrentUser.CurrentBasket;
-			return View(ShopView.Data.WithBasket(basket)
-				.WithCountries(countries));
+			if (country.HasValue) 
+			{
+				userService.CurrentUser.CurrentBasket.CountryId = country.Value;
+			}
+
+			return this.RedirectToAction(c => c.Index());
 		}
 
-    	[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult ChangeCountry([DataBind] Basket basket)
+		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult GoToCheckout(int? country)
 		{
-			return this.RedirectToAction(c => c.Index());
+			if(country.HasValue)
+			{
+				userService.CurrentUser.CurrentBasket.CountryId = country.Value;
+			}
+
+			return this.RedirectToAction<CheckoutController>(c => c.Index(userService.CurrentUser.CurrentBasket.BasketId));
 		}
     }
 }

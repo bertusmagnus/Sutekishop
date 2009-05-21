@@ -35,7 +35,7 @@ namespace Suteki.Shop.Tests.Controllers
 
             testContext = new ControllerTestContext(basketController);
 
-			user = new User { Baskets = { new Basket() } };
+			user = new User { Baskets = { new Basket() { BasketId = 4 } } };
 			userService.Expect(x => x.CurrentUser).Return(user);
         }
 
@@ -62,15 +62,48 @@ namespace Suteki.Shop.Tests.Controllers
         public void Index_ShouldShowIndexViewWithCurrentBasket()
         {
             testContext.TestContext.Context.User = user;
+			countryRepository.Expect(x => x.GetAll()).Return(new List<Country>().AsQueryable());
 
-            basketController.Index()
-                .ReturnsViewResult()
-                .ForView("Index")
-                .WithModel<ShopViewData>()
-                .AssertAreSame(user.Baskets[0], vd => vd.Basket);
+
+			basketController.Index()
+				.ReturnsViewResult()
+				.ForView("Index")
+				.WithModel<ShopViewData>()
+				.AssertAreSame(user.Baskets[0], vd => vd.Basket)
+				.AssertNotNull(x => x.Countries);
         }
 
-        [Test]
+    	[Test]
+    	public void GoToCheckout_UpdatesCountry()
+    	{
+			basketController.GoToCheckout(5);
+			userService.CurrentUser.CurrentBasket.CountryId.ShouldEqual(5);
+    	}
+
+    	[Test]
+    	public void GoToCheckout_RedirectsToCheckout()
+    	{
+			basketController.GoToCheckout(5)
+				.ReturnsRedirectToRouteResult()
+				.ToController("Checkout")
+				.ToAction("Index")
+				.WithRouteValue("id", user.CurrentBasket.BasketId.ToString());
+    	}
+
+    	[Test]
+    	public void UpdateCountry_UpdatesCountry()
+    	{
+			basketController.UpdateCountry(5);
+			userService.CurrentUser.CurrentBasket.CountryId.ShouldEqual(5);
+    	}
+
+    	[Test]
+    	public void UpdateCountry_RedirectsToIndex()
+    	{
+			basketController.UpdateCountry(5).ReturnsRedirectToRouteResult().ToAction("Index");
+    	}
+
+    	[Test]
         public void Remove_ShouldRemoveItemFromBasket()
         {
             const int basketItemIdToRemove = 3;
@@ -142,26 +175,5 @@ namespace Suteki.Shop.Tests.Controllers
 
             Assert.AreEqual(0, user.Baskets[0].BasketItems.Count, "should not be any basket items");
         }
-
-    	[Test]
-    	public void ChangeCountry_should_render_view_with_countries()
-    	{
-			countryRepository.Expect(x => x.GetAll()).Return(new List<Country>().AsQueryable());
-
-			basketController.ChangeCountry()
-				.ReturnsViewResult()
-				.WithModel<ShopViewData>()
-				.AssertAreSame(user.CurrentBasket, x => x.Basket)
-				.AssertNotNull(x => x.Countries);
-    	}
-
-    	[Test]
-    	public void ChangeCountry_with_post_should_redirect_back_to_basket()
-    	{
-			basketController.ChangeCountry(new Basket())
-				.ReturnsRedirectToRouteResult()
-				.ToController("Basket")
-				.ToAction("Index");
-    	}
     }
 }

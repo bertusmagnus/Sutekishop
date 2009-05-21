@@ -588,7 +588,6 @@
     <None Include="Views\EmailTemplates\OrderDispatch.vm" />
     <None Include="Views\EmailTemplates\_orderDetails.vm" />
     <Content Include="MetaWebLogAPI.svc" />
-    <Content Include="Views\Basket\ChangeCountry.aspx" />
     <Content Include="Views\Checkout\Confirm.aspx" />
     <Content Include="Views\Checkout\CustomerDetails.ascx" />
     <Content Include="Views\Checkout\OrderDetails.ascx" />

@@ -10,7 +10,7 @@
     <p>Your basket is empty</p>
 
 <% } else { %>
-
+<form method="post" action="<%= Url.Action<BasketController>(c => c.GoToCheckout(null)).ToSslUrl() %>" id="basketForm">
     <table>
         <tr>
             <th class="wide">Product</th>
@@ -53,7 +53,7 @@
         </tr>
 
         <tr>
-            <td>(for <%= Model.Basket.Country.Name %> - <%= Html.ActionLink<BasketController>(c=>c.ChangeCountry(), "change") %>)</td>
+            <td>(for <%= this.Select(x=>x.Basket.CountryId).Options(Model.Countries, x => x.CountryId, x =>x.Name).Name("country") %>)</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -74,8 +74,16 @@
 
     <p>The default postage & package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
 
-    <%= Html.ActionLink<CheckoutController>(c => c.Index(Model.Basket.BasketId), "Checkout", new { @class = "linkButton" }).ToSslLink() %>
-
+	<input type="submit" value="Checkout" />
+</form>
 <% } %>
+
+<script type="text/javascript">
+	$(function() {
+		$('#country').change(function() {
+			$('#basketForm').attr('action', '<%= Url.Action<BasketController>(c => c.UpdateCountry(null)) %>').submit();
+		});
+	});
+</script>
 
 </asp:Content>
