@@ -126,6 +126,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\RedirectToReferrerResult.cs" />
     <Compile Include="Binders\CurrentBasketBinder.cs" />
     <Compile Include="Binders\OrderBinder.cs" />
     <Compile Include="Binders\ProductBinder.cs" />

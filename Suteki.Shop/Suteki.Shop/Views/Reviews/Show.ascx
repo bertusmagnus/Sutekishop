@@ -6,11 +6,17 @@
 
 <a id="show-reviews" href="javascript:void(0)">Show Reviews</a>
 
-<div id="reviews" style="display: none">
+<div id="reviews" style="display: none;">
+	<p>&nbsp;</p>
 	<% foreach (var review in Model.Reviews) { %>
-		<p>
+		<div>
 			<%= Html.Stars(review.Rating) %> <%= Html.Encode(review.Reviewer) %>
-		</p>
+			<% if(Context.User.IsAdministrator()) { %>
+				<% using(Html.BeginForm<ReviewsController>(c => c.Delete(review.Id), FormMethod.Post, new{ style="display:inline;" })) { %>
+					<img src="<%= Url.Content("~/Content/Images/cross.png") %>" alt="delete" class="delete-review pointer" />
+				<% } %>
+			<% } %>
+		</div>
 		<p>
 			<%= Html.Encode(review.Text) %>
 		</p>
@@ -21,6 +27,11 @@
 	$(function() {
 		$('#show-reviews').click(function() {
 			$('#reviews').toggle('slide');
+		});
+		$('.delete-review').click(function() {
+			if (confirm('Are you sure you want to delete this review?')) {
+				$(this).parent().submit();
+			}
 		});
 	});
 </script>

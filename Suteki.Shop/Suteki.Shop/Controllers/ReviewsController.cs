@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Suteki.Common.Binders;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
+using Suteki.Shop.ActionResults;
 using Suteki.Shop.Filters;
 using Suteki.Shop.Models;
 using Suteki.Shop.Repositories;
@@ -95,7 +96,7 @@ namespace Suteki.Shop.Controllers
 			var review = reviewRepository.GetById(id);
 			reviewRepository.DeleteOnSubmit(review);
 
-			return this.RedirectToAction(c => c.Index());
+			return new RedirectToReferrerResult();
 		}
 	}
 }

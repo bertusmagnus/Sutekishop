@@ -115,6 +115,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\RedirectToReferrerTests.cs" />
     <Compile Include="Binders\CurrentBasketBinderTester.cs" />
     <Compile Include="Binders\OrderBinderTester.cs" />
     <Compile Include="Binders\ProductBinderTester.cs" />

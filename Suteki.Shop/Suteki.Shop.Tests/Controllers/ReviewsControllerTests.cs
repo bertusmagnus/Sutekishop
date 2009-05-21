@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
 using Suteki.Common.TestHelpers;
+using Suteki.Shop.ActionResults;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Tests.Repositories;
 using Suteki.Shop.ViewData;
@@ -119,8 +120,7 @@ namespace Suteki.Shop.Tests.Controllers
 			repository.Expect(x => x.GetById(5)).Return(review);
 
 			controller.Delete(5)
-				.ReturnsRedirectToRouteResult()
-				.ToAction("Index");
+				.ReturnsResult<RedirectToReferrerResult>();
 
 			repository.AssertWasCalled(x => x.DeleteOnSubmit(review));
 		}

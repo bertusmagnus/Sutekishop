@@ -771,3 +771,7 @@ ul.validation-summary-errors li
 	padding: 0;
 	margin: 0;
 }
+
+.pointer:hover {
+	cursor: pointer;
+}

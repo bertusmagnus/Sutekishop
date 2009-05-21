@@ -58,6 +58,16 @@ namespace Suteki.Common.TestHelpers
             return contentResult;
         }
 
+		public static TResult ReturnsResult<TResult>(this ActionResult result) where TResult : ActionResult
+		{
+			var actualResult = result as TResult;
+			if (actualResult == null)
+			{
+				throw new TestHelperException("Result is not a {0}".With(typeof(TResult).Name));
+			}
+			return actualResult;
+		}
+
         public static RedirectToRouteResult ToAction(this RedirectToRouteResult result, string actionName)
         {
             return result.WithRouteValue("action", actionName);
