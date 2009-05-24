@@ -140,6 +140,7 @@
     <Compile Include="Controllers\IProvidesBaseService.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\BasketController.cs" />
+    <Compile Include="Controllers\MailingListController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\OrderStatusController.cs" />
@@ -594,6 +595,7 @@
     <Content Include="Views\Checkout\OrderDetails.ascx" />
     <Content Include="Views\Checkout\PaymentDetails.ascx" />
     <Content Include="Views\Cms\NotFound.aspx" />
+    <Content Include="Views\MailingList\Index.aspx" />
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />

@@ -254,13 +254,21 @@
   </Table>
   <Table Name="" Member="Reviews">
     <Type Name="Review">
-      <Column Name="Id" AutoSync="Never" Type="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Id" Type="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="ProductId" Type="System.Int32" CanBeNull="false" />
       <Column Name="Approved" Type="System.Boolean" CanBeNull="false" />
       <Column Name="Text" Type="System.String" CanBeNull="false" />
       <Column Name="Rating" Type="int" CanBeNull="false" />
       <Column Name="Reviewer" Type="System.String" DbType="nvarchar(250)" CanBeNull="false" />
       <Association Name="Product_Review" Member="Product" ThisKey="ProductId" OtherKey="ProductId" Type="Product" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MailingListSubscriptions">
+    <Type Name="MailingListSubscription">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="nvarchar(250)" CanBeNull="true" />
+      <Column Name="ContactId" Type="System.Int32" CanBeNull="false" />
+      <Association Name="Contact_MailingListSubscription" Member="Contact" ThisKey="ContactId" OtherKey="ContactId" Type="Contact" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

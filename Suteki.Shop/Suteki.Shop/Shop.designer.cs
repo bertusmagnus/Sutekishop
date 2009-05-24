@@ -93,6 +93,9 @@ namespace Suteki.Shop
     partial void InsertReview(Review instance);
     partial void UpdateReview(Review instance);
     partial void DeleteReview(Review instance);
+    partial void InsertMailingListSubscription(MailingListSubscription instance);
+    partial void UpdateMailingListSubscription(MailingListSubscription instance);
+    partial void DeleteMailingListSubscription(MailingListSubscription instance);
     #endregion
 		
 		public ShopDataContext() : 
@@ -290,6 +293,14 @@ namespace Suteki.Shop
 			get
 			{
 				return this.GetTable<Review>();
+			}
+		}
+		
+		public System.Data.Linq.Table<MailingListSubscription> MailingListSubscriptions
+		{
+			get
+			{
+				return this.GetTable<MailingListSubscription>();
 			}
 		}
 	}
@@ -5566,7 +5577,7 @@ namespace Suteki.Shop
 			OnCreated();
 		}
 		
-		[Column(Storage="_Id", IsPrimaryKey=true, IsDbGenerated=true)]
+		[Column(Storage="_Id", AutoSync=AutoSync.OnInsert, IsPrimaryKey=true, IsDbGenerated=true)]
 		public int Id
 		{
 			get
@@ -5720,6 +5731,141 @@ namespace Suteki.Shop
 						this._ProductId = default(int);
 					}
 					this.SendPropertyChanged("Product");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="")]
+	public partial class MailingListSubscription : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Email;
+		
+		private int _ContactId;
+		
+		private EntityRef<Contact> _Contact;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnContactIdChanging(int value);
+    partial void OnContactIdChanged();
+    #endregion
+		
+		public MailingListSubscription()
+		{
+			this._Contact = default(EntityRef<Contact>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Email", DbType="nvarchar(250)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ContactId")]
+		public int ContactId
+		{
+			get
+			{
+				return this._ContactId;
+			}
+			set
+			{
+				if ((this._ContactId != value))
+				{
+					if (this._Contact.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnContactIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContactId = value;
+					this.SendPropertyChanged("ContactId");
+					this.OnContactIdChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Contact_MailingListSubscription", Storage="_Contact", ThisKey="ContactId", OtherKey="ContactId", IsForeignKey=true)]
+		public Contact Contact
+		{
+			get
+			{
+				return this._Contact.Entity;
+			}
+			set
+			{
+				if ((this._Contact.Entity != value))
+				{
+					this.SendPropertyChanging();
+					this._Contact.Entity = value;
+					this.SendPropertyChanged("Contact");
 				}
 			}
 		}

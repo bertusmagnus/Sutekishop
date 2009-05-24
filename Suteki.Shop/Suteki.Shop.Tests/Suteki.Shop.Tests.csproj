@@ -127,6 +127,7 @@
     <Compile Include="Controllers\InvoiceControllerTests.cs" />
     <Compile Include="Controllers\LoginControllerTests.cs" />
     <Compile Include="Controllers\BasketControllerTests.cs" />
+    <Compile Include="Controllers\MailingListControllerTests.cs" />
     <Compile Include="Controllers\MenuControllerTester.cs" />
     <Compile Include="Controllers\OrderControllerTests.cs" />
     <Compile Include="Controllers\OrderStatusControllerTests.cs" />

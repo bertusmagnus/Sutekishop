@@ -43,6 +43,10 @@ namespace Suteki.Shop.ViewData
 
 		public IEnumerable<OrderStatus> OrderStatuses { get; set; }
 
+    	public MailingListSubscription MailingListSubscription { get; set; }
+
+		public IEnumerable<MailingListSubscription> MailingListSubscriptions { get; set; }
+
 		public bool HasProducts
 		{
 			get { return Products != null && Products.Count() != 0; }
@@ -175,6 +179,18 @@ namespace Suteki.Shop.ViewData
 			this.OrderStatuses = orderStatuses;
 			return this;
 		}
+
+		public ShopViewData WithSubscription(MailingListSubscription subscription)
+		{
+			this.MailingListSubscription = subscription;
+			return this;
+		}
+
+    	public ShopViewData WithSubscriptions(IEnumerable<MailingListSubscription> subscriptions)
+    	{
+			this.MailingListSubscriptions = subscriptions;
+			return this;
+    	}
     }
 
     /// <summary>
