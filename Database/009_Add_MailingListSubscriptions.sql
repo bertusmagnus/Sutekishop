@@ -1,3 +1,5 @@
+use SutekiShop
+GO
 CREATE TABLE dbo.MailingListSubscription
 (
 	Id int NOT NULL IDENTITY (1, 1),
@@ -16,7 +18,7 @@ GO
 ALTER TABLE dbo.MailingListSubscription ADD CONSTRAINT
 FK_MailingListSubscription_Contact FOREIGN KEY
 (
-	Id
+	ContactId
 ) REFERENCES dbo.Contact
 (
 	ContactId

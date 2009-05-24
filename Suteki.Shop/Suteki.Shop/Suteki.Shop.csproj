@@ -128,6 +128,7 @@
   <ItemGroup>
     <Compile Include="ActionResults\RedirectToReferrerResult.cs" />
     <Compile Include="Binders\CurrentBasketBinder.cs" />
+    <Compile Include="Binders\MailingListSubscriptionBinder.cs" />
     <Compile Include="Binders\OrderBinder.cs" />
     <Compile Include="Binders\ProductBinder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Models\ITextContent.cs" />
     <Compile Include="Models\IUrlNamed.cs" />
     <Compile Include="Models\LoadOptions.cs" />
+    <Compile Include="Models\MailingListSubscription.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuRepository.cs" />
     <Compile Include="Models\ModelHelpers\UrlNameHelperExtensions.cs" />
@@ -595,6 +597,7 @@
     <Content Include="Views\Checkout\OrderDetails.ascx" />
     <Content Include="Views\Checkout\PaymentDetails.ascx" />
     <Content Include="Views\Cms\NotFound.aspx" />
+    <Content Include="Views\MailingList\Confirm.aspx" />
     <Content Include="Views\MailingList\Index.aspx" />
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />

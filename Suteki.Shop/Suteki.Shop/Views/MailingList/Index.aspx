@@ -1,7 +1,10 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <h2>Join our Mailing List</h2>
+    
+    <%= Html.ValidationSummary() %>
+    
 	<p>
 		Please fill out the form below if you would like to sign up to our mailing list. 
 		Your information will not be shared with any third parties.

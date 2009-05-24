@@ -42,10 +42,17 @@ namespace Suteki.Common.Binders
 			}
 			else 
 			{
-				entity = Activator.CreateInstance(bindingContext.ModelType);
+				entity = CreateInstance(controllerContext, bindingContext);
 			}
 			
 
+			ValidateEntity(bindingContext, controllerContext, entity);
+
+			return entity;
+		}
+
+		protected virtual void ValidateEntity(ModelBindingContext bindingContext, ControllerContext controllerContext, object entity)
+		{
 			try
 			{
 				validatingBinder.UpdateFrom(entity, controllerContext.HttpContext.Request.Form, bindingContext.ModelState, bindingContext.ModelName);
@@ -55,8 +62,12 @@ namespace Suteki.Common.Binders
 				//Ignore validation exceptions - they are stored in ModelState. 
 				//The controller can access the errors by inspecting the ModelState dictionary.
 			}
+		}
 
-			return entity;
+
+		protected virtual object CreateInstance(ControllerContext controllerContext, ModelBindingContext bindingContext)
+		{
+			return Activator.CreateInstance(bindingContext.ModelType);
 		}
 
 		private object FetchEntity(ModelBindingContext bindingContext, ControllerContext controllerContext)

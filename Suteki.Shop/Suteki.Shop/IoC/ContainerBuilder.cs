@@ -66,6 +66,7 @@ namespace Suteki.Shop.IoC
                 Component.For<ProductBinder>().LifeStyle.Transient,
                 Component.For<EnsureSsl>().LifeStyle.Transient,
                 Component.For<OrderBinder>().LifeStyle.Transient,
+				Component.For<MailingListSubscriptionBinder>().LifeStyle.Transient,
                 Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient,
                 Component.For<IEmailBuilder>().ImplementedBy<EmailBuilder>().LifeStyle.Singleton,
                 Component.For<IAppSettings>().ImplementedBy<AppSettings>().LifeStyle.Singleton,
