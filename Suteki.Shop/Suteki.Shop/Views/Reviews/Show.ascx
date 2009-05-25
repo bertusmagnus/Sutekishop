@@ -1,16 +1,17 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ReviewViewData>" %>
 
-<%= Html.ActionLink<ReviewsController>(c => c.New(Model.Product.ProductId), "Leave a Review") %>
+<%= Html.ActionLink<ReviewsController>(c => c.New(Model.Product.ProductId), "Leave a Review") %>&nbsp;&nbsp;
 
 <% if (Model.Reviews.Count() > 0) { %>
 
-<a id="show-reviews" href="javascript:void(0)">Show Reviews</a>
+<a id="show-reviews" href="javascript:void(0)">Show Reviews (<%= Model.Reviews.Count() %>)</a>
 
 <div id="reviews" style="display: none;">
 	<p>&nbsp;</p>
 	<% foreach (var review in Model.Reviews) { %>
 		<div>
-			<%= Html.Stars(review.Rating) %> <%= Html.Encode(review.Reviewer) %>
+			<!--<%= Html.Stars(review.Rating) %> -->
+			<strong><%= Html.Encode(review.Reviewer) %></strong>
 			<% if(Context.User.IsAdministrator()) { %>
 				<% using(Html.BeginForm<ReviewsController>(c => c.Delete(review.Id), FormMethod.Post, new{ style="display:inline;" })) { %>
 					<img src="<%= Url.Content("~/Content/Images/cross.png") %>" alt="delete" class="delete-review pointer" />

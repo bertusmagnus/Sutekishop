@@ -10,9 +10,11 @@
 		<p>
 			<strong>Reviewer:</strong> <%= Html.Encode(review.Reviewer) %>
 		</p>
+		<!--
 		<p>
 			<strong>Rating:</strong> <%= Html.Stars(review.Rating) %>
 		</p>
+		-->
 		<p>
 			<%= Html.Encode(review.Text) %>
 		</p>

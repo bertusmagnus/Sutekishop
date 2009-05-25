@@ -53,7 +53,7 @@
         </tr>
 
         <tr>
-            <td>(for <%= this.Select(x=>x.Basket.CountryId).Options(Model.Countries, x => x.CountryId, x =>x.Name).Name("country") %>)</td>
+            <td>For <%= this.Select(x=>x.Basket.CountryId).Options(Model.Countries, x => x.CountryId, x =>x.Name).Name("country") %></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
