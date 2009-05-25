@@ -41,7 +41,7 @@ namespace Suteki.Shop.Tests.Controllers
 		public void IndexWithPost_RedirectsOnSuccessfulBindingAndInsertsSubscription()
 		{
 			var subscription = new MailingListSubscription() { Email = "foo" };
-			controller.Index(subscription)
+			controller.Index(subscription, null)
 				.ReturnsRedirectToRouteResult()
 				.ToAction("Confirm");
 
@@ -55,11 +55,19 @@ namespace Suteki.Shop.Tests.Controllers
 			controller.ModelState.AddModelError("foo", "bar");
 			var subscription = new MailingListSubscription() { Email = "foo"};
 
-			controller.Index(subscription)
+			controller.Index(subscription, null)
 				.ReturnsViewResult()
 				.WithModel<ShopViewData>()
 				.AssertAreEqual(subscription, x => x.MailingListSubscription);
 
+		}
+
+		[Test]
+		public void IndexWithPost_RedirectsToIndexOnSuccessfulBindingWithAddAnother()
+		{
+			controller.Index(new MailingListSubscription(), true)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("Index");
 		}
 	}
 }

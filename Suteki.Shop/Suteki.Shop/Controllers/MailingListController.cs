@@ -27,12 +27,19 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post), UnitOfWork]
-		public ActionResult Index([BindMailingList] MailingListSubscription mailingListSubscription)
+		public ActionResult Index([BindMailingList] MailingListSubscription mailingListSubscription, bool? addAnother)
 		{
 			if(ModelState.IsValid)
 			{
 				subscriptionRepository.InsertOnSubmit(mailingListSubscription);
-				return this.RedirectToAction(c => c.Confirm());
+				if(addAnother.GetValueOrDefault())
+				{
+					return this.RedirectToAction(c => c.Index());
+				}
+				else
+				{
+					return this.RedirectToAction(c => c.Confirm());					
+				}
 			}
 
 			return View(

@@ -63,10 +63,23 @@
         </table>
         
         <input type="submit" value="Sign Up" />
-	<% } %>	
+        <% if (User.IsAdministrator()) { %>
+			<input type="hidden" id="addAnother" name="addAnother" value="False" />
+		<% } %>
+	<% } %>
+	
+	<% if(User.IsAdministrator()) { %>
+		<button id="addAnotherButton">Add Another</button>
+	<% } %>
+		
 	<script type="text/javascript">
 		$(function() {
 			$('#<%= this.IdFor(x => x.MailingListSubscription.Contact.Firstname) %>').focus();
+			<% if(User.IsAdministrator()) { %>
+				$('#addAnotherButton').click(function() {
+					$('#addAnother').val('True').parent('form').submit();
+				});
+			<% } %>
 		});
 	</script>
 </asp:Content>

@@ -574,7 +574,7 @@ input.inline
 	width: 50px;	
 }
 
-input[type=submit]
+input[type=submit], button
 {
 	display: block;
 	width: 150px;
