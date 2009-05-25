@@ -10,7 +10,7 @@
     <div class="print">
 		<h1>Order Dispatched</h1>		
 		<p>
-			Your $shopName order has been shipped.
+			Many thanks  for your order which has now been despatched. Best regards, $shopName.
 		</p>
 		#parse("_orderDetails.vm")
     </div>

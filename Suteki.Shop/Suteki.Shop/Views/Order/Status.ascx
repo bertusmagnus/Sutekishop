@@ -1,5 +1,5 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
-    <p><%= Html.ActionLink<OrderController>(c => c.Print(ViewData.Model.Order.OrderId), "Printable version of this page") %></p>
+    <p class="hideForPrint"><%= Html.ActionLink<OrderController>(c => c.Print(ViewData.Model.Order.OrderId), "Printable version of this page") %></p>
 <dl>
     <dt>Order Number</dt><dd><%= ViewData.Model.Order.OrderId.ToString()%>&nbsp;</dd>
     <dt>Date</dt><dd><%= ViewData.Model.Order.CreatedDate.ToShortDateString()%></dd>
@@ -11,7 +11,7 @@
     
 </dl>
 
-<div class="orderAction">
+<div class="orderAction hideForPrint">
 <% if(ViewContext.HttpContext.User.IsAdministrator()) { %>
     <% if(ViewData.Model.Order.IsCreated) { %>
         <%= Html.ActionLink<OrderStatusController>(c => c.Dispatch(ViewData.Model.Order.OrderId), "Dispatch (and send dispatch notification)", new { @class = "linkButton" })%>

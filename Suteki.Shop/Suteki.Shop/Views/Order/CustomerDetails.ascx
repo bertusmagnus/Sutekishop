@@ -47,9 +47,10 @@
         
         <% } %>
         
-        <dl>
-            <dt>Additional Information</dt><dd><%= ViewData.Model.Order.AdditionalInformation %>&nbsp;</dd>
-        </dl>
         
     </div>      
+</div>
+<div class="clear">
+    <h3>Additional Information</h3>
+    <p><%= ViewData.Model.Order.AdditionalInformation %></p>
 </div>

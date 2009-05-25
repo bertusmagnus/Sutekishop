@@ -47,6 +47,8 @@ namespace Suteki.Shop.ViewData
 
 		public IEnumerable<MailingListSubscription> MailingListSubscriptions { get; set; }
 
+        public bool IsPrint { get; set; }
+
 		public bool HasProducts
 		{
 			get { return Products != null && Products.Count() != 0; }

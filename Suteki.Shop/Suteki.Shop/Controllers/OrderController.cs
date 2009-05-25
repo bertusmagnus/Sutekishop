@@ -107,6 +107,7 @@ namespace Suteki.Shop.Controllers
         {
             var viewResult = ItemView(id);
             viewResult.MasterName = "Print";
+            ((ShopViewData) viewResult.ViewData.Model).IsPrint = true;
             return viewResult;
         }
 

@@ -2,6 +2,7 @@
 {
 	background-image: none;
 	text-align: left;
+	font-size: 12pt;
 }
 
 a
@@ -13,8 +14,14 @@ a:hover
 	color: Black;
 }
 
-th
+th.wide
 {
+    width: 400px;
+}
+
+th.thin
+{
+    width: 200px;
 }
 
 td
@@ -31,15 +38,66 @@ h3
 
 .contentLeftColumn
 {
+    width: 500px;
 }
 
 .contentRightColumn
 {
+    margin: 0 0 0 520px;
 }
 
 li
 {
 	list-style-type: none;
+}
+
+dl
+{
+    width: 41.1em;
+    margin: 2em 0;
+    padding: 0;
+}
+
+dt
+{
+    width: 15em;
+    float: left;
+    margin: 0 0 0 0;
+    padding: 0;
+    font-weight: bold;
+    display: inline;
+}
+
+/* commented backslash hack for mac-ie5 \*/
+dt { clear: both; }
+/* end hack */
+
+dd
+{
+    float: left;
+    width: 24em;
+    margin: 0 0 0 0;
+    padding: 0;
+    display: inline;
+}
+
+textarea
+{
+    border: none;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+table
+{
+    clear: both;
+}
+
+.hideForPrint
+{
+    display:none;
+    visibility:hidden;
 }
 
 /*-------------------------------------- invoice -------------------------------------------*/
