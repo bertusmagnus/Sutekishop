@@ -5768,6 +5768,8 @@ namespace Suteki.Shop
 		
 		private int _ContactId;
 		
+		private System.DateTime _DateSubscribed;
+		
 		private EntityRef<Contact> _Contact;
 		
     #region Extensibility Method Definitions
@@ -5780,6 +5782,8 @@ namespace Suteki.Shop
     partial void OnEmailChanged();
     partial void OnContactIdChanging(int value);
     partial void OnContactIdChanged();
+    partial void OnDateSubscribedChanging(System.DateTime value);
+    partial void OnDateSubscribedChanged();
     #endregion
 		
 		public MailingListSubscription()
@@ -5848,6 +5852,26 @@ namespace Suteki.Shop
 					this._ContactId = value;
 					this.SendPropertyChanged("ContactId");
 					this.OnContactIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_DateSubscribed", AutoSync=AutoSync.OnInsert, DbType="DATETIME", IsDbGenerated=true)]
+		public System.DateTime DateSubscribed
+		{
+			get
+			{
+				return this._DateSubscribed;
+			}
+			set
+			{
+				if ((this._DateSubscribed != value))
+				{
+					this.OnDateSubscribedChanging(value);
+					this.SendPropertyChanging();
+					this._DateSubscribed = value;
+					this.SendPropertyChanged("DateSubscribed");
+					this.OnDateSubscribedChanged();
 				}
 			}
 		}

@@ -4,6 +4,7 @@ using Suteki.Common.Extensions;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Filters;
 using Suteki.Shop.Models;
+using Suteki.Shop.Repositories;
 
 namespace Suteki.Shop.Controllers
 {
@@ -41,7 +42,7 @@ namespace Suteki.Shop.Controllers
 		[LoadUsing(typeof(MailingListSubscriptionsWithCountries))]
 		public ActionResult MailingListSubscriptions()
 		{
-			string mailingListCsv = mailingListRepository.GetAll().Select(x => new 
+			string mailingListCsv = mailingListRepository.GetAll().EnsureNoDuplicates().Select(x => new 
 			{
 				x.Contact.Firstname,
 				x.Contact.Lastname,

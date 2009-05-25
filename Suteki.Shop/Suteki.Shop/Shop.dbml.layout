@@ -206,7 +206,7 @@
         <elementListCompartment Id="b0e1ef18-b153-49ce-bb91-2fbd0183a42c" absoluteBounds="6.7650000000000006, 12.71, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(7.45923076923077 : 14.4054996744792); (7.45923076923077 : 14.6554996744792); (8.05461538461539 : 14.6554996744792); (8.05461538461539 : 14.4054996744792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(7.45923076923077 : 14.4054996744792); (7.45923076923077 : 14.6554996744792); (7.66666666666667 : 14.6554996744792 : JumpStart); (7.83333333333333 : 14.6554996744792 : JumpEnd); (8.05461538461539 : 14.6554996744792); (8.05461538461539 : 14.4054996744792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/ShopDataContext/Content/Content_Content" />
       <nodes>
         <classShapeMoniker Id="b482d129-6145-471f-afc1-e4ec2a3e5690" />
@@ -344,10 +344,10 @@
         <classShapeMoniker Id="4216272e-ce30-4005-80a3-668096fcc623" />
       </nodes>
     </associationConnector>
-    <classShape Id="5cf2a3fc-7ec8-4373-a318-817c579e6b48" absoluteBounds="13.75, 8.25, 2, 1.3862939453125005">
+    <classShape Id="5cf2a3fc-7ec8-4373-a318-817c579e6b48" absoluteBounds="13.75, 8.25, 2, 1.5785953776041666">
       <DataClassMoniker Name="/ShopDataContext/MailingListSubscription" />
       <nestedChildShapes>
-        <elementListCompartment Id="b4b8e71b-ea3a-4862-9f10-fe44dbf54fe6" absoluteBounds="13.765, 8.71, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="b4b8e71b-ea3a-4862-9f10-fe44dbf54fe6" absoluteBounds="13.765, 8.71, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(14.625 : 7.04970540364583); (14.625 : 8.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">

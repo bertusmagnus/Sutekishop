@@ -4,7 +4,8 @@ CREATE TABLE dbo.MailingListSubscription
 (
 	Id int NOT NULL IDENTITY (1, 1),
 	ContactId int NOT NULL,
-	Email nvarchar(250) NOT NULL
+	Email nvarchar(250) NOT NULL,
+	DateSubscribed datetime NOT NULL CONSTRAINT DF_MailingListSubscription_DateSubscribed DEFAULT getdate()
 )  ON [PRIMARY]
 GO
 ALTER TABLE dbo.MailingListSubscription ADD CONSTRAINT
@@ -29,6 +30,8 @@ GO
 
 ALTER TABLE dbo.MailingListSubscription SET (LOCK_ESCALATION = TABLE)
 GO
-INSERT INTO Content (ParentContentId, ContentTypeId, Name, UrlName, Controller, Action, IsActive, Position) 
-VALUES (1, 3, 'Mailing List', 'Mailing_List', 'MailingList', 'Index', 1, 20)
+
+IF NOT EXISTS(select * from Content where Name = 'Mailing List')
+	INSERT INTO Content (ParentContentId, ContentTypeId, Name, UrlName, Controller, Action, IsActive, Position) 
+	VALUES (1, 3, 'Mailing List', 'Mailing_List', 'MailingList', 'Index', 1, 20)
 GO

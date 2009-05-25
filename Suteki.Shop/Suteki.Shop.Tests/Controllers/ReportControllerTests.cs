@@ -132,6 +132,33 @@ namespace Suteki.Shop.Tests.Controllers
     	}
 
     	[Test]
+    	public void MailingListSubscriptions_IgnoresOldAddressForSameEmail()
+    	{
+			var subscriptions = new[]
+    		{
+    			new MailingListSubscription
+    			{
+    				Email = "foo@bar.com", DateSubscribed = new DateTime(2009, 1, 1), Contact = new Contact() { Country = new Country(), }
+    			},
+				new MailingListSubscription
+				{
+					Email = "foo@bar.com", DateSubscribed = new DateTime(2009, 1, 2), Contact = new Contact() { Country = new Country()}
+				},
+				new MailingListSubscription
+				{
+					Email = "baz@blah.com", DateSubscribed = new DateTime(2009, 1, 1), Contact = new Contact() { Country = new Country()}
+				}
+    		};
+
+			mailingListRepository.Expect(x => x.GetAll()).Return(subscriptions.AsQueryable());
+
+			var result = reportController.MailingListSubscriptions().ReturnsContentResult()
+				.Content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+			result.Count().ShouldEqual(2);
+    	}
+
+    	[Test]
     	public void MailingListEmails_ShouldReturnEmailAddressesSemiColonSeparated()
     	{
 			var subscriptions = new[]

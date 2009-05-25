@@ -215,6 +215,7 @@
     <Compile Include="Repositories\ContentRepositoryExtensions.cs" />
     <Compile Include="Repositories\BasketRepositoryExtensions.cs" />
     <Compile Include="Repositories\CountryRepositoryExtensions.cs" />
+    <Compile Include="Repositories\MailingListRepositoryExtensions.cs" />
     <Compile Include="Repositories\OrderRepositoryExtensions.cs" />
     <Compile Include="Repositories\PostZoneRepositoryExtensions.cs" />
     <Compile Include="Repositories\ReviewRepositoryExtensions.cs" />
