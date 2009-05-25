@@ -25,10 +25,9 @@ namespace Suteki.Shop.Tests.Controllers
 		IRepository<Country> countryRepository;
 		IRepository<CardType> cardTypeRepository;
 		IRepository<Order> orderRepository;
-		IEmailSender emailSender;
-		IValidatingBinder validatingBinder;
 		IUnitOfWorkManager unitOfWorkManager;
 		IEmailService emailService;
+		IRepository<MailingListSubscription> subscriptionRepository;
 
 		[SetUp]
 		public void Setup()
@@ -41,8 +40,7 @@ namespace Suteki.Shop.Tests.Controllers
 			countryRepository = MockRepository.GenerateStub<IRepository<Country>>();
 			cardTypeRepository = MockRepository.GenerateStub<IRepository<CardType>>();
 			orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
-			emailSender = MockRepository.GenerateStub<IEmailSender>();
-			validatingBinder = MockRepository.GenerateStub<IValidatingBinder>();
+			subscriptionRepository = MockRepository.GenerateStub<IRepository<MailingListSubscription>>();
 			emailService = MockRepository.GenerateStub<IEmailService>();
 
 			var mocks = new MockRepository(); //TODO: No need to partial mock once email sending is fixed
@@ -54,7 +52,8 @@ namespace Suteki.Shop.Tests.Controllers
 				cardTypeRepository,
 				orderRepository,
 				unitOfWorkManager,
-				emailService
+				emailService,
+				subscriptionRepository
 			);
 			mocks.ReplayAll();
 			userService.Expect(us => us.CurrentUser).Return(new User { UserId = 4, RoleId = Role.AdministratorId });
@@ -149,6 +148,38 @@ namespace Suteki.Shop.Tests.Controllers
 				.WithRouteValue("id", "5");
 
 			emailService.AssertWasCalled(x => x.SendOrderConfirmation(order));
+		}
+
+		[Test]
+		public void ConfirmWithPost_CreatesMailingListSubscriptionForDeliveryContact()
+		{
+			var order = new Order() { Contact1 = new Contact(), ContactMe = true, Email = "foo@bar.com"};
+			MailingListSubscription subscription = null;
+
+			subscriptionRepository.Expect(x => x.InsertOnSubmit(Arg<MailingListSubscription>.Is.Anything))
+				.Do(new Action<MailingListSubscription>(x => subscription = x));
+
+			controller.Confirm(order);
+
+			subscription.ShouldNotBeNull();
+			subscription.Contact.ShouldBeTheSameAs(order.Contact1);
+			subscription.Email.ShouldEqual("foo@bar.com");
+		}
+
+		[Test]
+		public void ConfirmWithPost_CreatesMailingListSubscriptionForCardContact()
+		{
+			var order = new Order() { Contact = new Contact(), ContactMe = true, Email = "foo@bar.com" };
+			MailingListSubscription subscription = null;
+
+			subscriptionRepository.Expect(x => x.InsertOnSubmit(Arg<MailingListSubscription>.Is.Anything))
+				.Do(new Action<MailingListSubscription>(x => subscription = x));
+
+			controller.Confirm(order);
+
+			subscription.ShouldNotBeNull();
+			subscription.Contact.ShouldBeTheSameAs(order.Contact);
+			subscription.Email.ShouldEqual("foo@bar.com");
 		}
 	}
 }

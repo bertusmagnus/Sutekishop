@@ -22,18 +22,13 @@ namespace Suteki.Shop.Controllers
 		readonly IRepository<Order> orderRepository;
 		readonly IUnitOfWorkManager unitOfWork;
 		readonly IEmailService emailService;
+		readonly IRepository<MailingListSubscription> mailingListRepository;
 
-		public CheckoutController(
-			IRepository<Basket> basketRepository, 
-			IUserService userService, 
-			IPostageService postageService, 
-			IRepository<Country> countryRepository, 
-			IRepository<CardType> cardTypeRepository, 
-			IRepository<Order> orderRepository, 
-			IUnitOfWorkManager unitOfWork, IEmailService emailService)
+		public CheckoutController(IRepository<Basket> basketRepository, IUserService userService, IPostageService postageService, IRepository<Country> countryRepository, IRepository<CardType> cardTypeRepository, IRepository<Order> orderRepository, IUnitOfWorkManager unitOfWork, IEmailService emailService, IRepository<MailingListSubscription> mailingListRepository)
 		{
 			this.basketRepository = basketRepository;
 			this.emailService = emailService;
+			this.mailingListRepository = mailingListRepository;
 			this.unitOfWork = unitOfWork;
 			this.orderRepository = orderRepository;
 			this.cardTypeRepository = cardTypeRepository;
@@ -109,6 +104,18 @@ namespace Suteki.Shop.Controllers
 		public ActionResult Confirm([DataBind] Order order)
 		{
 			order.OrderStatusId = OrderStatus.CreatedId;
+
+			if(order.ContactMe)
+			{
+				var mailingListSubscription = new MailingListSubscription
+				{
+					Contact = order.Contact1 ?? order.Contact,
+					Email = order.Email
+				};
+
+				mailingListRepository.InsertOnSubmit(mailingListSubscription);
+			}
+
 			EmailOrder(order);
 			userService.CurrentUser.CreateNewBasket();
 			return this.RedirectToAction<OrderController>(c => c.Item(order.OrderId));
