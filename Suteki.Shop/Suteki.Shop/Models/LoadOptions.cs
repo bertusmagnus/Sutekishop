@@ -15,4 +15,13 @@ namespace Suteki.Shop.Models
 			options.LoadWith<Review>(x => x.Product);
 		}
 	}
+
+	public class MailingListSubscriptionsWithCountries : ILoadOptions
+	{
+		public void Build(DataLoadOptions options)
+		{
+			options.LoadWith<MailingListSubscription>(x => x.Contact);
+			options.LoadWith<Contact>(x => x.County);
+		}
+	}
 }

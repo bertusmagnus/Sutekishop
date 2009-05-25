@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
-using System.Threading;
 using System.Web.Mvc;
 using NUnit.Framework;
 using Suteki.Common.Repositories;
@@ -15,14 +14,16 @@ namespace Suteki.Shop.Tests.Controllers
     [TestFixture]
     public class ReportControllerTests
     {
-        private ReportController reportController;
-        private IRepository<Order> orderRepository;
-        
-        [SetUp]
+        ReportController reportController;
+        IRepository<Order> orderRepository;
+    	IRepository<MailingListSubscription> mailingListRepository;
+
+    	[SetUp]
         public void SetUp()
         {
             orderRepository = MockRepository.GenerateStub<IRepository<Order>>();
-            reportController = new ReportController(orderRepository);
+			mailingListRepository = MockRepository.GenerateStub<IRepository<MailingListSubscription>>();
+            reportController = new ReportController(orderRepository, mailingListRepository);
         }
 
         [Test]
@@ -72,10 +73,88 @@ namespace Suteki.Shop.Tests.Controllers
             Assert.That(result.ContentType, Is.EqualTo("text/csv"));
         }
 
-        private const string expectedOrdersCsv = 
+    	[Test]
+    	public void MailingListSubscriptions_ShouldReturnASscFileOfSubscriptions()
+    	{
+			var subscriptions = new[]
+    		{
+    			new MailingListSubscription
+    			{
+    				Contact = new Contact()
+    				{
+    					Firstname = "Firstname",
+						Lastname = "Lastname",
+						Address1 = "Address1",
+						Address2 = "Address2",
+						Address3 = "Address3",
+						Town = "Town",
+						County = "County",
+						Postcode = "Postcode",
+                        Telephone = "01234567891",
+						Country = new Country() { Name = "UK" },
+    				},
+					Email = "foo@bar.com"
+    			},
+				new MailingListSubscription
+				{
+					Contact = new Contact
+					{
+						Firstname = "Firstname2",
+						Lastname = "Lastname2",
+						Address1 = "Address12",
+						Address2 = "Address22",
+						Address3 = "Address32",
+						Town = "Town2",
+						County = "County2",
+						Postcode = "Postcode2",
+                        Telephone = "01234567892",
+						Country = new Country() { Name = "UK" },
+
+					},
+					Email = "bar@foo.com"
+				}
+    		}.AsQueryable();
+
+			mailingListRepository.Expect(x => x.GetAll()).Return(subscriptions);
+
+			var result = reportController
+				.MailingListSubscriptions()
+				.ReturnsContentResult()
+				.Content.Split(new[] { ',', '\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
+
+			var expected = expectedSubscriptionsCsv.Split(new[] { ',', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+			for(int i = 0; i < 22; i++ )
+			{
+				result[i].ShouldEqual(expected[i]);
+			}
+
+    	}
+
+    	[Test]
+    	public void MailingListEmails_ShouldReturnEmailAddressesSemiColonSeparated()
+    	{
+			var subscriptions = new[]
+    		{
+    			new MailingListSubscription() { Email = "foo@bar.com"},
+				new MailingListSubscription { Email = "bar@foo.com"}
+    		};
+
+			mailingListRepository.Expect(x => x.GetAll()).Return(subscriptions.AsQueryable());
+
+			var result = reportController.MailingListEmails().ReturnsContentResult().Content;
+			string expected = "foo@bar.com;bar@foo.com";
+			result.ShouldEqual(expected);
+    	}
+
+		const string expectedSubscriptionsCsv = @"
+""Firstname"",""Lastname"",""Address1"",""Address2"",""Address3"",""Town"",""County"",""Postcode"",""UK"",""01234567891"",""foo@bar.com""
+""Firstname2"",""Lastname2"",""Address12"",""Address22"",""Address32"",""Town2"",""County2"",""Postcode2"",""UK"",""01234567892"",""bar@foo.com""
+";
+
+        const string expectedOrdersCsv = 
 @"0,""mike@mike.com"",""Dispatched"",""18/10/2008x 00:00:00"",0
 0,""mike@mike.com"",""Dispatched"",""18/10/2008x 00:00:00"",0
 ";
-
     }
 }

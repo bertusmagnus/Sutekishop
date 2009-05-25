@@ -3,6 +3,11 @@
 
 <h1>Reports</h1>
 
-<%= Html.ActionLink<ReportController>(c => c.Orders(), "Orders") %>
+<ul>
+	<li><%= Html.ActionLink<ReportController>(c => c.Orders(), "Orders") %></li>
+	<li><%= Html.ActionLink<ReportController>(c => c.MailingListSubscriptions(), "Mailing List Subscriptions") %></li>
+	<li><%= Html.ActionLink<ReportController>(c => c.MailingListEmails(), "Mailing List Subscriptions (Emails Only)") %></li>
+</ul>
+
 
 </asp:Content>
