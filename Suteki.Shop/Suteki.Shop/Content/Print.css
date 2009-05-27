@@ -43,7 +43,8 @@ h3
 
 .contentRightColumn
 {
-    margin: 0 0 0 520px;
+    float: left;
+    margin: 0;
 }
 
 li
