@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Suteki.Common.Extensions;
 using Suteki.Common.Validation;
 
@@ -100,6 +101,15 @@ namespace Suteki.Shop
             get
             {
                 return "{0:00} / {1:0000}".With(ExpiryMonth, ExpiryYear);
+            }
+        }
+
+        public string CardNumberAsString
+        {
+            get
+            {
+                var trimmedValue = Regex.Replace(Number, "[^0-9]", "");
+                return Regex.Replace(trimmedValue, @"^(\d{4})(\d{4})(\d{4})(\d{1,4})(\d{0,4})$", @"$1 $2 $3 $4 $5");
             }
         }
     }

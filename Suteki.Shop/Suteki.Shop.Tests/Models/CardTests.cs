@@ -95,5 +95,31 @@ namespace Suteki.Shop.Tests.Models
             var card = new Card();
             card.IssueNumber = "33";
         }
+
+        [Test]
+        public void CardNumberAsString_Should_format_card_number_as_groups_of_four_digits()
+        {
+            var expectedCardNumber = "1111 1111 1111 1117 ";
+
+            var card1 = new Card {Number = "1111111111111117"};
+            Assert.That(card1.CardNumberAsString, Is.EqualTo(expectedCardNumber));
+
+            var card2 = new Card { Number = "1111 1111 1111 1117" };
+            Assert.That(card2.CardNumberAsString, Is.EqualTo(expectedCardNumber));
+
+            var card3 = new Card { Number = "1111-1111-1111-1117" };
+            Assert.That(card3.CardNumberAsString, Is.EqualTo(expectedCardNumber));
+
+            var card4 = new Card { Number = "my card number: 1111-1111-1111-1117" };
+            Assert.That(card4.CardNumberAsString, Is.EqualTo(expectedCardNumber));
+        }
+
+        [Test]
+        public void CardNumberAsString_Should_format_19_digit_card_number()
+        {
+            var expectedCardNumber = "1111 1111 1111 1111 113";
+            var card = new Card {Number = "1111111111111111113"};
+            Assert.That(card.CardNumberAsString, Is.EqualTo(expectedCardNumber));
+        }
     }
 }

@@ -36,7 +36,7 @@
                 <% } else { %>
                 
                     <dl>
-                        <dt>Card Number</dt><dd><%= ViewData.Model.Card.Number %></dd>
+                        <dt>Card Number</dt><dd><%= ViewData.Model.Card.CardNumberAsString %></dd>
                         <dt>Issue Number</dt><dd><%= ViewData.Model.Card.IssueNumber %></dd>
                         <dt>Security Code</dt><dd><%= ViewData.Model.Card.SecurityCode %></dd>
                         <dt>Start Date</dt><dd><%= ViewData.Model.Card.StartDateAsString %></dd>
