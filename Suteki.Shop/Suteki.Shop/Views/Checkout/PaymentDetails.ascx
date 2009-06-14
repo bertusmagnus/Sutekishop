@@ -1,3 +1,4 @@
+
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ShopViewData>" %>
 <%@ Import Namespace="Suteki.Common.Models"%>
         
@@ -56,5 +57,5 @@
 </div> 
 <div class="clear" />       
 
-<label style="display:inline" for="order_contactme">Would you like to be emailed with our newsletter and product information? We will not share your contact information with 3rd parties.</label>
+<label style="display:inline" for="order_contactme">Would you like to be added to our mailing list? We will not share your contact information with 3rd parties.</label>
 <%= Html.CheckBox("order.contactme", ViewData.Model.Order.ContactMe)%>
