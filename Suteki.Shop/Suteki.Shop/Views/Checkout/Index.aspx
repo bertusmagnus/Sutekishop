@@ -89,7 +89,10 @@ function addHandlers()
     <h1>Checkout</h1>
 	<%= Html.ValidationSummary() %>
     
+    <div>
+    <%= Html.Image("~/Content/Images/SSL_Secured.png", "SSL Secured", new{ _class = "inline_image" })%>
     <p>Welcome to our secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
+    </div>
     
     <%= Html.ErrorBox(ViewData.Model)%>
     <%= Html.MessageBox(ViewData.Model)%>
