@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Web.Mvc;
 using NUnit.Framework;
 using Suteki.Common.Validation;
@@ -13,6 +15,8 @@ namespace Suteki.Common.Tests.Validation
         [SetUp]
         public void SetUp()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
+
             validatingBinder = new ValidatingBinder(
                 new SimplePropertyBinder(),
                 new BooleanPropertyBinder());
