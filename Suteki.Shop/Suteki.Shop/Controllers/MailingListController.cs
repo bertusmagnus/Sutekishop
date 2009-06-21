@@ -91,5 +91,15 @@ namespace Suteki.Shop.Controllers
 				ShopView.Data.WithSubscription(mailingListSubscription).WithCountries(countries)
 			);
 		}
+
+		[AdministratorsOnly, AcceptVerbs(HttpVerbs.Post), UnitOfWork]
+		public ActionResult Delete(int id)
+		{
+			var subscription = subscriptionRepository.GetById(id);
+			subscriptionRepository.DeleteOnSubmit(subscription);
+			Message = "Subscription deleted.";
+
+			return this.RedirectToAction(c => c.List());
+		}
 	}
 }

@@ -24,5 +24,15 @@
 		<input type="submit" value="Save Changes" />
 	<% } %>
 	
+	<% using (Html.BeginForm<MailingListController>(c => c.Delete(Model.MailingListSubscription.Id))) { %>	
+		<input type="submit" value="Delete" id="delete" />
+	<% } %>
 	
+	<script type="text/javascript">
+		$(function() {
+			$('#delete').click(function() {
+				return confirm('Are you sure you want to delete this mailing list subscription?');
+			});
+		});
+	</script>
 </asp:Content>

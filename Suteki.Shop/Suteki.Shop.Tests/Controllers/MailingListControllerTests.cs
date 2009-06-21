@@ -139,5 +139,16 @@ namespace Suteki.Shop.Tests.Controllers
 				.AssertAreSame(countries, x => x.Countries)
 				.AssertAreSame(subscription, x => x.MailingListSubscription);
 		}
+
+		[Test]
+		public void Delete_DeletesSubscription()
+		{
+			var subscription = new MailingListSubscription();
+			mailingListRepository.Expect(x => x.GetById(5)).Return(subscription);
+			controller.Delete(5)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("List");
+			mailingListRepository.AssertWasCalled(x => x.DeleteOnSubmit(subscription));
+		}
 	}
 }
