@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -68,6 +69,75 @@ namespace Suteki.Shop.Tests.Controllers
 			controller.Index(new MailingListSubscription(), true)
 				.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
+		}
+
+		[Test]
+		public void List_DisplaysAllSubscriptions()
+		{
+			var subscriptions = new[]
+    		{
+    			new MailingListSubscription
+    			{
+    				Email = "foo@bar.com", DateSubscribed = new DateTime(2008, 1, 1), Contact = new Contact() { Country = new Country(), }
+    			},
+				new MailingListSubscription
+				{
+					Email = "foo@bar.com", DateSubscribed = new DateTime(2009, 1, 2), Contact = new Contact() { Country = new Country()}
+				},
+				new MailingListSubscription
+				{
+					Email = "baz@blah.com", DateSubscribed = new DateTime(2007, 1, 1), Contact = new Contact() { Country = new Country()}
+				}
+    		};
+			mailingListRepository.Expect(x => x.GetAll()).Return(subscriptions.AsQueryable());
+
+			var model = controller.List()
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>();
+
+			model.MailingListSubscriptions.Count().ShouldEqual(3);
+		}
+
+		[Test]
+		public void Edit_DisplaysSubscription()
+		{
+			var countries = new List<Country>().AsQueryable();
+			countryRepository.Expect(x => x.GetAll()).Return(countries);
+
+			var subscription = new MailingListSubscription();
+			mailingListRepository.Expect(x => x.GetById(5)).Return(subscription);
+
+			controller.Edit(5)
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreSame(countries, x => x.Countries)
+				.AssertAreSame(subscription, x => x.MailingListSubscription);
+		}
+
+		[Test]
+		public void EditWithPost_RedirectsOnSuccessfulBinding()
+		{
+			var subscription = new MailingListSubscription();
+			controller.Edit(subscription)
+				.ReturnsRedirectToRouteResult()
+				.ToAction("List");
+		}
+
+		[Test]
+		public void EditWithPost_RendersViewOnFailedBinding()
+		{
+			var subscription = new MailingListSubscription();
+			controller.ModelState.AddModelError("foo", "bar");
+
+				var countries = new List<Country>().AsQueryable();
+			countryRepository.Expect(x => x.GetAll()).Return(countries);
+
+
+			controller.Edit(subscription)
+				.ReturnsViewResult()
+				.WithModel<ShopViewData>()
+				.AssertAreSame(countries, x => x.Countries)
+				.AssertAreSame(subscription, x => x.MailingListSubscription);
 		}
 	}
 }

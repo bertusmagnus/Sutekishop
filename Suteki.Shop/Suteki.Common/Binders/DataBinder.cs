@@ -89,7 +89,7 @@ namespace Suteki.Common.Binders
 			return entity;
 		}
 
-		public void Accept(Attribute attribute)
+		public virtual void Accept(Attribute attribute)
 		{
 			declaringAttribute = (DataBindAttribute) attribute;			
 		}

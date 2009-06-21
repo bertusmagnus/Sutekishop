@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Web.Mvc;
 using Suteki.Common.Binders;
@@ -11,11 +12,16 @@ namespace Suteki.Shop.Binders
 		public BindMailingListAttribute() : base(typeof(MailingListSubscriptionBinder))
 		{
 			Fetch = false;
+			ValidateConfirmEmail = true;
 		}
+
+		public bool ValidateConfirmEmail { get; set; }
 	}
 
 	public class MailingListSubscriptionBinder : DataBinder
 	{
+		private BindMailingListAttribute declaringAttribute;
+
 		public MailingListSubscriptionBinder(IValidatingBinder validatingBinder, IRepositoryResolver resolver) : base(validatingBinder, resolver)
 		{
 		}
@@ -42,7 +48,7 @@ namespace Suteki.Shop.Binders
 
 			var confirmEmail = controllerContext.HttpContext.Request.Form["emailconfirm"];
 
-			if(subscription.Email != confirmEmail)
+			if(declaringAttribute.ValidateConfirmEmail && subscription.Email != confirmEmail)
 			{
 				bindingContext.ModelState.AddModelError("emailconfirm", "Email and Confirm Email do not match");
 				bindingContext.ModelState.SetModelValue("emailconfirm", new ValueProviderResult(confirmEmail??"", confirmEmail??"", CultureInfo.CurrentCulture));
@@ -62,6 +68,12 @@ namespace Suteki.Shop.Binders
 			{
 				//Error details are stored in modelstate - the exception does not need to be propagated. 
 			}
+		}
+
+		public override void Accept(Attribute attribute)
+		{
+			this.declaringAttribute = (BindMailingListAttribute)attribute;
+			base.Accept(attribute);
 		}
 	}
 }

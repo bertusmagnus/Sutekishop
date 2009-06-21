@@ -599,7 +599,9 @@
     <Content Include="Views\Checkout\PaymentDetails.ascx" />
     <Content Include="Views\Cms\NotFound.aspx" />
     <Content Include="Views\MailingList\Confirm.aspx" />
+    <Content Include="Views\MailingList\Edit.aspx" />
     <Content Include="Views\MailingList\Index.aspx" />
+    <Content Include="Views\MailingList\List.aspx" />
     <Content Include="Views\Menu\Edit.aspx" />
     <Content Include="Views\Menu\LeftMenu.ascx" />
     <Content Include="Views\Menu\MainMenu.ascx" />

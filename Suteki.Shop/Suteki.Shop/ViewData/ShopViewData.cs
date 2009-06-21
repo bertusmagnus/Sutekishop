@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MvcContrib.Pagination;
 using Suteki.Common.Extensions;
 using Suteki.Common.ViewData;
 
@@ -45,7 +46,7 @@ namespace Suteki.Shop.ViewData
 
     	public MailingListSubscription MailingListSubscription { get; set; }
 
-		public IEnumerable<MailingListSubscription> MailingListSubscriptions { get; set; }
+		public IPagination<MailingListSubscription> MailingListSubscriptions { get; set; }
 
         public bool IsPrint { get; set; }
 
@@ -188,7 +189,7 @@ namespace Suteki.Shop.ViewData
 			return this;
 		}
 
-    	public ShopViewData WithSubscriptions(IEnumerable<MailingListSubscription> subscriptions)
+    	public ShopViewData WithSubscriptions(IPagination<MailingListSubscription> subscriptions)
     	{
 			this.MailingListSubscriptions = subscriptions;
 			return this;
