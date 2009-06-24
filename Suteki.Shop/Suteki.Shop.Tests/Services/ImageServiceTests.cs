@@ -31,8 +31,8 @@ namespace Suteki.Shop.Tests.Services
 
 			var imageDefs = new[]
 			{
-				new ImageDefinition(ImageDefinition.ProductImage, 500, 500),
-				new ImageDefinition(ImageDefinition.ProductThumbnail, 100, 100)
+				new ImageDefinition(ImageDefinition.ProductImage, 500, 500, ImageNameExtension.Main),
+				new ImageDefinition(ImageDefinition.ProductThumbnail, 100, 100, ImageNameExtension.Thumb)
 			};
 
             imageService = new ImageService(imageFileService, imageDefs);

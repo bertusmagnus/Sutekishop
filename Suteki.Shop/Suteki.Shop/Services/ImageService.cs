@@ -10,19 +10,12 @@ namespace Suteki.Shop.Services
     {
 
 		ImageDefinition[] imageDefinitions;
-
-
-//        ImageSize mainSize;
-//        ImageSize thumbnailSize;
         IImageFileService imageFileService;
 
-        public ImageService(IImageFileService imageFileService, 
-            /*int mainHeight, int mainWidth, int thumbHeight, int thumbWidth, */ImageDefinition[] imageDefinitions)
+        public ImageService(IImageFileService imageFileService, ImageDefinition[] imageDefinitions)
         {
             this.imageFileService = imageFileService;
         	this.imageDefinitions = imageDefinitions;
-//        	this.mainSize = new ImageSize(mainWidth, mainHeight);
-//            this.thumbnailSize = new ImageSize(thumbWidth, thumbHeight);
         }
 
         /// <summary>
@@ -128,11 +121,11 @@ namespace Suteki.Shop.Services
 		public const string ProductThumbnail = "product.thumbnail.image";
 		public const string CategoryImage = "category.image";
 
-		public ImageDefinition(string key, int width, int height/*, ImageNameExtension imageNameExtension*/)
+		public ImageDefinition(string key, int width, int height, ImageNameExtension imageNameExtension)
 		{
 			Key = key;
 			Size = new ImageSize(width, height);
-//			Extension = imageNameExtension;
+			Extension = imageNameExtension;
 		}
 
 		public string Key { get; private set; }
