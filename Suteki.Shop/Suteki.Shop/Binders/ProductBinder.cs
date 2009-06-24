@@ -82,7 +82,7 @@ namespace Suteki.Shop.Binders
 
 		void UpdateImages(Product product, HttpRequestBase request)
 		{
-			var images = httpFileService.GetUploadedImages(request);
+			var images = httpFileService.GetUploadedImages(request, ImageDefinition.ProductImage, ImageDefinition.ProductThumbnail);
 			var position = orderableService.NextPosition;
 			foreach (var image in images)
 			{

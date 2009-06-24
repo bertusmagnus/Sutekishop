@@ -40,7 +40,7 @@ namespace Suteki.Shop.Tests.Services
             var jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);
             var jpgThumbPath = Path.Combine(imageFolderPath, image.ThumbFileName);
 
-            imageService.CreateSizedImages(image);
+            imageService.CreateSizedImages(image, ImageDefinition.ProductImage, ImageDefinition.ProductThumbnail);
 
             Assert.IsTrue(File.Exists(jpgMainPath));
             Assert.IsTrue(File.Exists(jpgThumbPath));

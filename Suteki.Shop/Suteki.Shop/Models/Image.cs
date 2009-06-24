@@ -45,6 +45,7 @@ namespace Suteki.Shop
     public enum ImageNameExtension
     {
         Thumb,
-        Main
+        Main,
+		Category
     }
 }

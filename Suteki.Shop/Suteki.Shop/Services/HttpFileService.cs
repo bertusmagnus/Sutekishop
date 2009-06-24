@@ -17,7 +17,7 @@ namespace Suteki.Shop.Services
             this.imageService = imageService;
         }
 
-        public IEnumerable<Image> GetUploadedImages(HttpRequestBase request)
+        public IEnumerable<Image> GetUploadedImages(HttpRequestBase request, params string[] imageDefinitionKeys)
         {
             List<Image> images = new List<Image>();
 
@@ -41,7 +41,7 @@ namespace Suteki.Shop.Services
                     file.SaveAs(imageFileService.GetFullPath(image.FileNameAsString));
 
                     // convert the image to main and thumb sizes
-                    imageService.CreateSizedImages(image);
+                    imageService.CreateSizedImages(image, imageDefinitionKeys);
 
                     File.Delete(imageFileService.GetFullPath(image.FileNameAsString));
 

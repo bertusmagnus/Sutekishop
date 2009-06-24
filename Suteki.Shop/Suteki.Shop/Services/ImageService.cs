@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Services
 {
@@ -22,19 +23,23 @@ namespace Suteki.Shop.Services
         /// Creates a main and thumnail image from the given image of the taget size
         /// </summary>
         /// <param name="imagePath"></param>
-        public void CreateSizedImages(Image image)
+        public void CreateSizedImages(Image image, params string[] imageDefinitionKeys)
         {
-			var mainDefinition = imageDefinitions.SingleOrDefault(x => x.Key == ImageDefinition.ProductImage);
-			var thumDefinition = imageDefinitions.SingleOrDefault(x => x.Key == ImageDefinition.ProductThumbnail);
-
-			var mainSize = mainDefinition.Size;
-			var thumbnailSize = thumDefinition.Size;
-
             string imagePath = imageFileService.GetFullPath(image.FileNameAsString);
+
             using (System.Drawing.Image gdiImage = System.Drawing.Image.FromFile(imagePath))
             {
-                CreateSizedImage(gdiImage, mainSize, Image.GetExtendedName(imagePath, ImageNameExtension.Main));
-                CreateSizedImage(gdiImage, thumbnailSize, Image.GetExtendedName(imagePath, ImageNameExtension.Thumb));
+				foreach(var imageDefinitionKey in imageDefinitionKeys)
+				{
+					string key = imageDefinitionKey;
+					var imageDef = imageDefinitions.SingleOrDefault(x => x.Key == key);
+					if(imageDef == null)
+					{
+						throw new InvalidOperationException("Could not find image definition with the key '{0}'".With(imageDefinitionKey));
+					}
+
+					CreateSizedImage(gdiImage, imageDef.Size, Image.GetExtendedName(imagePath, imageDef.Extension));
+				}
             }
         }
 
