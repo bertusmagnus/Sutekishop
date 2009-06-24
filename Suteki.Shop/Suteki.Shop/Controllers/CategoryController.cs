@@ -19,10 +19,12 @@ namespace Suteki.Shop.Controllers
         private readonly IRepository<Category> categoryRepository;
         private readonly IOrderableService<Category> orderableService;
 		private readonly IHttpFileService httpFileService;
+		private readonly IRepository<Image> imageRepository;
 
-        public CategoryController(IRepository<Category> categoryRepository, IOrderableService<Category> orderableService, IHttpFileService httpFileService)
+        public CategoryController(IRepository<Category> categoryRepository, IOrderableService<Category> orderableService, IHttpFileService httpFileService, IRepository<Image> imageRepository)
         {
             this.categoryRepository = categoryRepository;
+        	this.imageRepository = imageRepository;
         	this.httpFileService = httpFileService;
         	this.orderableService = orderableService;
         }
@@ -73,6 +75,12 @@ namespace Suteki.Shop.Controllers
 
 			if(ModelState.IsValid)
 			{
+				var image = httpFileService.GetUploadedImages(Request, ImageDefinition.CategoryImage).SingleOrDefault();
+
+				if (image != null) {
+					category.Image = image;
+				}
+
 				Message = "The category has been saved.";
 				return this.RedirectToAction(c => c.Index());
 			}
@@ -103,6 +111,19 @@ namespace Suteki.Shop.Controllers
             MoveThis(id).DownOne();
 			return this.RedirectToAction(c => c.Index());
         }
+
+		[UnitOfWork]
+		public ActionResult DeleteImage(int id, int imageId)
+		{
+			var category = categoryRepository.GetById(id);
+			var productImage = imageRepository.GetById(imageId);
+			category.ImageId = null;
+			imageRepository.DeleteOnSubmit(productImage);
+
+			Message = "Image deleted.";
+
+			return this.RedirectToAction(c => c.Edit(id));
+		}
 
         private IOrderServiceWithConstrainedPosition<Category> MoveThis(int id)
         {

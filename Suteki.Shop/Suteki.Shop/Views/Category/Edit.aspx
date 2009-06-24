@@ -15,6 +15,12 @@
         <%= this.CheckBox(x => x.Category.IsActive).Label("Active") %>
         
 		<label for="image">Optional Image</label>
+		
+		<% if(Model.Category.ImageId  != null) { %>
+            <%= Html.Image("~/ProductPhotos/" + Model.Category.Image.CategoryFileName) %><br />			
+            <%= Html.ActionLink<CategoryController>(c => c.DeleteImage(Model.Category.CategoryId, Model.Category.ImageId.Value), "Delete Image") %>
+		<% } %>
+		
 		<input type="file" name="image"  id="image" />
 		
         <%= Html.SubmitButton() %>

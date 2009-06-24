@@ -65,7 +65,7 @@ namespace Suteki.Shop.Tests.Repositories
         {
             var categoryRepositoryMock = MockRepository.GenerateStub<IRepository<Category>>();
 
-            var root = new Category { Name = "root" };
+            var root = new Category { Name = "root", ImageId = 5 };
 
             var one = new Category { Name = "one" };
             var two = new Category { Name = "two" };
