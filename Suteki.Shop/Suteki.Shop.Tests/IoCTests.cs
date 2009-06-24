@@ -14,6 +14,7 @@ using Suteki.Common.Windsor;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.IoC;
 using Suteki.Shop.Models;
+using Suteki.Shop.Services;
 using ControllerBase=Suteki.Shop.Controllers.ControllerBase;
 
 namespace Suteki.Shop.Tests
@@ -91,6 +92,12 @@ namespace Suteki.Shop.Tests
 		public void Should_resolve_special_repositories()
 		{
 			container.Resolve<IRepository<Menu>>().ShouldBe<MenuRepository>();
+		}
+
+		[Test]
+		public void Resolves_ImageService()
+		{
+			container.Resolve<IImageService>().ShouldBe<ImageService>();
 		}
 
 		private class FakePrincipal : IPrincipal, IIdentity

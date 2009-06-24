@@ -2,21 +2,27 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 
 namespace Suteki.Shop.Services
 {
     public class ImageService : Suteki.Shop.Services.IImageService
     {
-        ImageSize mainSize;
-        ImageSize thumbnailSize;
+
+		ImageDefinition[] imageDefinitions;
+
+
+//        ImageSize mainSize;
+//        ImageSize thumbnailSize;
         IImageFileService imageFileService;
 
         public ImageService(IImageFileService imageFileService, 
-            int mainHeight, int mainWidth, int thumbHeight, int thumbWidth)
+            /*int mainHeight, int mainWidth, int thumbHeight, int thumbWidth, */ImageDefinition[] imageDefinitions)
         {
             this.imageFileService = imageFileService;
-            this.mainSize = new ImageSize(mainWidth, mainHeight);
-            this.thumbnailSize = new ImageSize(thumbWidth, thumbHeight);
+        	this.imageDefinitions = imageDefinitions;
+//        	this.mainSize = new ImageSize(mainWidth, mainHeight);
+//            this.thumbnailSize = new ImageSize(thumbWidth, thumbHeight);
         }
 
         /// <summary>
@@ -25,6 +31,12 @@ namespace Suteki.Shop.Services
         /// <param name="imagePath"></param>
         public void CreateSizedImages(Image image)
         {
+			var mainDefinition = imageDefinitions.SingleOrDefault(x => x.Key == ImageDefinition.ProductImage);
+			var thumDefinition = imageDefinitions.SingleOrDefault(x => x.Key == ImageDefinition.ProductThumbnail);
+
+			var mainSize = mainDefinition.Size;
+			var thumbnailSize = thumDefinition.Size;
+
             string imagePath = imageFileService.GetFullPath(image.FileNameAsString);
             using (System.Drawing.Image gdiImage = System.Drawing.Image.FromFile(imagePath))
             {
@@ -108,4 +120,23 @@ namespace Suteki.Shop.Services
             }
         }
     }
+
+	public class ImageDefinition
+	{
+
+		public const string ProductImage = "product.image";
+		public const string ProductThumbnail = "product.thumbnail.image";
+		public const string CategoryImage = "category.image";
+
+		public ImageDefinition(string key, int width, int height/*, ImageNameExtension imageNameExtension*/)
+		{
+			Key = key;
+			Size = new ImageSize(width, height);
+//			Extension = imageNameExtension;
+		}
+
+		public string Key { get; private set; }
+		public ImageSize Size { get; private set; }
+		public ImageNameExtension Extension { get; private set; }
+	}
 }

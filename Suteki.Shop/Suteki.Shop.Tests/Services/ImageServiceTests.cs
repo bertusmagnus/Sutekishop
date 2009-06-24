@@ -29,7 +29,13 @@ namespace Suteki.Shop.Tests.Services
             var imageFileService = MockRepository.GenerateStub<ImageFileService>();
             imageFileService.Expect(ifs => ifs.GetImageFolderPath()).Return(imageFolderPath);
 
-            imageService = new ImageService(imageFileService, 500, 500, 100, 100);
+			var imageDefs = new[]
+			{
+				new ImageDefinition(ImageDefinition.ProductImage, 500, 500),
+				new ImageDefinition(ImageDefinition.ProductThumbnail, 100, 100)
+			};
+
+            imageService = new ImageService(imageFileService, imageDefs);
 
             var jpgMainPath = Path.Combine(imageFolderPath, image.MainFileName);
             var jpgThumbPath = Path.Combine(imageFolderPath, image.ThumbFileName);
@@ -44,6 +50,7 @@ namespace Suteki.Shop.Tests.Services
             //File.Delete(jpgMainPath);
             //File.Delete(jpgThumbPath);
         }
+
 
         public void GuidGenerator()
         {
