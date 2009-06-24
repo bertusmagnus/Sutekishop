@@ -40,6 +40,14 @@ namespace Suteki.Shop
                 return GetExtendedName(this.FileNameAsString, ImageNameExtension.Main);
             }
         }
+
+    	public string CategoryFileName
+    	{
+    		get
+    		{
+				return GetExtendedName(this.FileNameAsString, ImageNameExtension.Category);
+    		}
+    	}
     }
 
     public enum ImageNameExtension

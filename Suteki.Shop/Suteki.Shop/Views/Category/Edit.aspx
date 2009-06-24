@@ -6,7 +6,7 @@
     <%= Html.ValidationSummary() %>
     <%= Html.MessageBox(ViewData.Model)%>
 
-	<% using(Html.BeginForm()) { %>
+	<% using(Html.MultipartForm()) { %>
 		<%= this.Hidden(x => x.Category.CategoryId) %>
 		<%= this.Hidden(x => x.Category.Position) %>
 
@@ -14,6 +14,9 @@
 		<%= this.Select(x => x.Category.ParentId).Options(Model.Categories, x => x.CategoryId, x => x.Name).Label("Parent Category") %>
         <%= this.CheckBox(x => x.Category.IsActive).Label("Active") %>
         
+		<label for="image">Optional Image</label>
+		<input type="file" name="image"  id="image" />
+		
         <%= Html.SubmitButton() %>
     <% } %>
 </asp:Content>

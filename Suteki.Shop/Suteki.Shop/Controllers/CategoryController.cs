@@ -1,10 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using Suteki.Common.Binders;
 using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Common.Validation;
 using Suteki.Shop.Filters;
+using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Repositories;
 using MvcContrib;
@@ -16,16 +18,13 @@ namespace Suteki.Shop.Controllers
     {
         private readonly IRepository<Category> categoryRepository;
         private readonly IOrderableService<Category> orderableService;
-        private readonly IValidatingBinder validatingBinder;
+		private readonly IHttpFileService httpFileService;
 
-        public CategoryController(
-            IRepository<Category> categoryRepository,
-            IOrderableService<Category> orderableService,
-            IValidatingBinder validatingBinder)
+        public CategoryController(IRepository<Category> categoryRepository, IOrderableService<Category> orderableService, IHttpFileService httpFileService)
         {
             this.categoryRepository = categoryRepository;
-            this.orderableService = orderableService;
-            this.validatingBinder = validatingBinder;
+        	this.httpFileService = httpFileService;
+        	this.orderableService = orderableService;
         }
 
         public ActionResult Index()
@@ -46,6 +45,13 @@ namespace Suteki.Shop.Controllers
 			if(! ModelState.IsValid)
 			{
 				return View("Edit", EditViewData.WithCategory(category));
+			}
+
+			var image = httpFileService.GetUploadedImages(Request, ImageDefinition.CategoryImage).SingleOrDefault();
+
+			if(image != null)
+			{
+				category.Image = image;
 			}
 
 			categoryRepository.InsertOnSubmit(category);

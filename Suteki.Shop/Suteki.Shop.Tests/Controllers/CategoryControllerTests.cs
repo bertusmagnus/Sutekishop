@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Web;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Suteki.Common.Repositories;
@@ -6,12 +7,14 @@ using Suteki.Common.Services;
 using Suteki.Common.TestHelpers;
 using Suteki.Common.Validation;
 using Suteki.Shop.Controllers;
+using Suteki.Shop.Services;
 using Suteki.Shop.ViewData;
 using Suteki.Shop.Tests.Repositories;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Security.Principal;
 using System.Web.Mvc;
+using System.Collections.Generic;
 
 namespace Suteki.Shop.Tests.Controllers
 {
@@ -19,25 +22,23 @@ namespace Suteki.Shop.Tests.Controllers
     public class CategoryControllerTests
     {
         private CategoryController categoryController;
-        private ControllerTestContext testContext;
 
-        private IRepository<Category> categoryRepository;
+    	private IRepository<Category> categoryRepository;
         private IOrderableService<Category> orderableService;
-        private IValidatingBinder validatingBinder;
+    	private IHttpFileService fileService;
 
-        [SetUp]
+    	[SetUp]
         public void SetUp()
         {
             categoryRepository = MockRepositoryBuilder.CreateCategoryRepository();
             orderableService = MockRepository.GenerateStub<IOrderableService<Category>>();
-			validatingBinder = new ValidatingBinder(new SimplePropertyBinder());
+			fileService = MockRepository.GenerateStub<IHttpFileService>();
 
             categoryController = new CategoryController(
                 categoryRepository, 
                 orderableService, 
-                validatingBinder);
-
-            testContext = new ControllerTestContext(categoryController);
+				fileService
+                );
         }
 
         [Test]
@@ -125,6 +126,8 @@ namespace Suteki.Shop.Tests.Controllers
 				ParentId = parentid
 			};
 
+			fileService.Expect(x => x.GetUploadedImages(null, null)).IgnoreArguments().Return(new List<Image>());
+
 			categoryController.New(category)
 				.ReturnsRedirectToRouteResult()
 				.ToAction("Index");
@@ -132,6 +135,18 @@ namespace Suteki.Shop.Tests.Controllers
 			categoryRepository.AssertWasCalled(x => x.InsertOnSubmit(category));
 			categoryController.Message.ShouldNotBeNull();
 		}
+
+    	[Test]
+    	public void NewWithPost_loads_image()
+    	{
+			var image = new Image();
+			fileService.Expect(x => x.GetUploadedImages(Arg<HttpRequestBase>.Is.Anything, Arg<string[]>.List.ContainsAll(new[] { ImageDefinition.CategoryImage }))).Return(new[] { image });
+			var category = new Category();
+
+			categoryController.New(category);
+
+			category.Image.ShouldBeTheSameAs(image);
+    	}
 
     	[Test]
     	public void NewWithPost_should_render_view_on_error()
