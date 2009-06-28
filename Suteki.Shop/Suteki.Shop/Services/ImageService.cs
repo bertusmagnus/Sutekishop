@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using Suteki.Common.Extensions;
 
 namespace Suteki.Shop.Services
 {
-    public class ImageService : Suteki.Shop.Services.IImageService
+    public class ImageService : IImageService
     {
-
-		ImageDefinition[] imageDefinitions;
-        IImageFileService imageFileService;
+        readonly ImageDefinition[] imageDefinitions;
+        readonly IImageFileService imageFileService;
 
         public ImageService(IImageFileService imageFileService, ImageDefinition[] imageDefinitions)
         {
@@ -22,16 +20,17 @@ namespace Suteki.Shop.Services
         /// <summary>
         /// Creates a main and thumnail image from the given image of the taget size
         /// </summary>
-        /// <param name="imagePath"></param>
+        /// <param name="image"></param>
+        /// <param name="imageDefinitionKeys"></param>
         public void CreateSizedImages(Image image, params string[] imageDefinitionKeys)
         {
-            string imagePath = imageFileService.GetFullPath(image.FileNameAsString);
+            var imagePath = imageFileService.GetFullPath(image.FileNameAsString);
 
-            using (System.Drawing.Image gdiImage = System.Drawing.Image.FromFile(imagePath))
+            using (var gdiImage = System.Drawing.Image.FromFile(imagePath))
             {
 				foreach(var imageDefinitionKey in imageDefinitionKeys)
 				{
-					string key = imageDefinitionKey;
+					var key = imageDefinitionKey;
 					var imageDef = imageDefinitions.SingleOrDefault(x => x.Key == key);
 					if(imageDef == null)
 					{
@@ -45,23 +44,15 @@ namespace Suteki.Shop.Services
 
         private void CreateSizedImage(System.Drawing.Image image, ImageSize targetSize, string targetPath)
         {
-            ImageComparer imageComparer = new ImageComparer(image, targetSize);
+            var imageComparer = new ImageComparer(image, targetSize);
             ImageSize newImageSize = null;
 
-            if (imageComparer.IsLandscape)
-            {
-                newImageSize = imageComparer.LandscapeSize;
-            }
-            else
-            {
-                newImageSize = imageComparer.PortraitSize;
-            }
+            newImageSize = imageComparer.IsLandscape ? imageComparer.LandscapeSize : imageComparer.PortraitSize;
 
-            using (Bitmap bitmap = new Bitmap(newImageSize.Width, newImageSize.Height,
-                System.Drawing.Imaging.PixelFormat.Format24bppRgb))
+            using (var bitmap = new Bitmap(newImageSize.Width, newImageSize.Height, PixelFormat.Format24bppRgb))
             {
                 bitmap.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-                using (Graphics graphics = Graphics.FromImage(bitmap))
+                using (var graphics = Graphics.FromImage(bitmap))
                 {
                     graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     graphics.DrawImage(image,
@@ -82,8 +73,8 @@ namespace Suteki.Shop.Services
 
         public ImageSize(int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
         }
     }
 

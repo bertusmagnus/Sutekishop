@@ -14,7 +14,7 @@
 		<%= this.Select(x => x.Category.ParentId).Options(Model.Categories, x => x.CategoryId, x => x.Name).Label("Parent Category") %>
         <%= this.CheckBox(x => x.Category.IsActive).Label("Active") %>
         
-		<label for="image">Optional Image</label>
+		<label for="image">Optional Image (For best results create an image 555 x 150 pixels)</label>
 		
 		<% if(Model.Category.ImageId  != null) { %>
             <%= Html.Image("~/ProductPhotos/" + Model.Category.Image.CategoryFileName) %><br />			

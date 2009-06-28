@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Shop.Master" Inherits="Suteki.Shop.ViewPage<ShopViewData>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-	<h1>Final Confirmation</h1>
+	<h1>Review your Details then Place Order</h1>
 	<p>When you are happy that your Order Details are correct, please press the 'Place Order' button.</p>
 	
 	

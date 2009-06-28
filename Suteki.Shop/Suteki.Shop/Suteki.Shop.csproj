@@ -334,6 +334,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\creditcards.gif" />
+    <Content Include="Content\Images\SSL_Secured.png" />
     <Content Include="Content\Images\star.gif" />
     <Content Include="Content\tiny_mce\langs\en.js" />
     <Content Include="Content\tiny_mce\license.txt" />
