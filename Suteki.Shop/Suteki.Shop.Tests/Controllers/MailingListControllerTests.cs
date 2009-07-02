@@ -91,7 +91,7 @@ namespace Suteki.Shop.Tests.Controllers
     		};
 			mailingListRepository.Expect(x => x.GetAll()).Return(subscriptions.AsQueryable());
 
-			var model = controller.List()
+			var model = controller.List(null)
 				.ReturnsViewResult()
 				.WithModel<ShopViewData>();
 

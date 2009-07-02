@@ -37,7 +37,7 @@
 						<%= Html.ActionLink<ReviewsController>(c => c.Index(), "Reviews") %>
                     </li>
                     <li>
-						<%= Html.ActionLink<MailingListController>(c => c.List(), "Mailing List") %>
+						<%= Html.ActionLink<MailingListController>(c => c.List(null), "Mailing List") %>
                     </li>
                 </ul>
             </div>

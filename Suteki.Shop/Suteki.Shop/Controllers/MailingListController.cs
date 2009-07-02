@@ -59,12 +59,12 @@ namespace Suteki.Shop.Controllers
 		}
 
 		[AdministratorsOnly, LoadUsing(typeof(MailingListSubscriptionsWithCountries))]
-		public ActionResult List()
+		public ActionResult List(int? page)
 		{
 			var subscriptions = subscriptionRepository
 				.GetAll()
-				.OrderBy(x => x.DateSubscribed)
-				.AsPagination(1);
+				.OrderBy(x => x.Contact.Lastname)
+				.AsPagination(page.GetValueOrDefault(1));
 			return View(ShopView.Data.WithSubscriptions(subscriptions));
 		}
 
@@ -82,7 +82,7 @@ namespace Suteki.Shop.Controllers
 			if(ModelState.IsValid)
 			{
 				Message = "Changed have been saved.";
-				return this.RedirectToAction(c => c.List());
+				return this.RedirectToAction(c => c.List(null));
 			}
 
 			var countries = countryRepository.GetAll();
@@ -99,7 +99,7 @@ namespace Suteki.Shop.Controllers
 			subscriptionRepository.DeleteOnSubmit(subscription);
 			Message = "Subscription deleted.";
 
-			return this.RedirectToAction(c => c.List());
+			return this.RedirectToAction(c => c.List(null));
 		}
 	}
 }
