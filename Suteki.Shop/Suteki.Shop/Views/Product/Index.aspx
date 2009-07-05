@@ -8,7 +8,9 @@
     <p><%= Html.ActionLink<ProductController>(c => c.New(ViewData.Model.Category.CategoryId), "New Product") %></p>
 <% } %>
 <% if(Model.Category.ImageId != null) { %>
+    <div class="categoryImage">
 	 <%= Html.Image("~/ProductPhotos/" + Model.Category.Image.CategoryFileName, "Category Image") %>
+	 </div>
 <% } %>
 
 <% foreach (var category in ViewData.Model.Category.Categories.ActiveFor((User)User)) { %>

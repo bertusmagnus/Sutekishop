@@ -89,9 +89,13 @@ function addHandlers()
     <h1>Checkout</h1>
 	<%= Html.ValidationSummary() %>
     
+    <div class="inline_image">
+    <%= Html.Image("~/Content/Images/SSL_Secured.png", "SSL Secured")%>
+    </div>
     <div>
-    <%= Html.Image("~/Content/Images/SSL_Secured.png", "SSL Secured", new{ _class = "inline_image" })%>
     <p>Welcome to our secure payment page. Please check your order and fill in the information below to place your order. For security puposes your information will be encrypted and once your order has been processed any credit card information will be destroyed.</p>
+    <p>The default postage & package charge displayed is for UK postal deliveries. If you select a delivery address outside the UK please check this price again.</p>
+    <p>&nbsp;</p>
     </div>
     
     <%= Html.ErrorBox(ViewData.Model)%>

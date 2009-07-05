@@ -177,6 +177,11 @@ h2 a
 	margin: 0 30px 30px 30px;
 }
 
+.inline_image
+{
+    float: left;
+}
+
 /* --------------------------- columns ------------------------ */
 
 .columnContainer
@@ -424,6 +429,11 @@ li.basket
 {
 	float:left;
 	margin: 0 20px 20px 0;	
+}
+
+.categoryImage
+{
+    margin: 0 0 20px 0;
 }
 
 /* -------------------------- product ---------------------------*/
