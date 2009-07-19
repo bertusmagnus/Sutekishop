@@ -21,28 +21,10 @@ namespace Suteki.Shop.Tests.Services
             dbConnectionChecker = new DbConnectionChecker(connectionStringProvider1, connectionStringProvider2);
         }
 
-        [Test]
+        [Test, ExpectedException(typeof(DbConnectionException))]
         public void Should_throw_a_nice_exception_when_repository_throws_a_SQL_exception()
         {
-
-            try
-            {
-                dbConnectionChecker.CheckConnection();
-            }
-            catch (DbConnectionException exception)
-            {
-                Assert.That(exception.Message.Replace("\r\n", "\n"), Is.EqualTo(expectedMessage.Replace("\r\n", "\n")));
-            }
+            dbConnectionChecker.CheckConnection();
         }
-
-        private const string expectedMessage =
-@"Could not open database using connection string: 'Data Source=.\SQLEXPRESS;Initial Catalog=SutekiShopX;Integrated Security=True'
-Error was:
-Cannot open database ""SutekiShopX"" requested by the login. The login failed.
-Login failed for user 'TINTIN\Mike'.
-Could not open database using connection string: 'Data Source=.\SQLEXPRESS;Initial Catalog=SomeOtherNonExistantDatabase;Integrated Security=True'
-Error was:
-Cannot open database ""SomeOtherNonExistantDatabase"" requested by the login. The login failed.
-Login failed for user 'TINTIN\Mike'.";
     }
 }
