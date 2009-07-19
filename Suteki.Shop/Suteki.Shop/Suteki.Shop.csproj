@@ -224,10 +224,12 @@
     <Compile Include="Routes\RouteManager.cs" />
     <Compile Include="Services\BaseControllerService.cs" />
     <Compile Include="Services\CheckoutService.cs" />
+    <Compile Include="Services\DbConnectionChecker.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EncryptionService.cs" />
     <Compile Include="Services\HttpFileService.cs" />
     <Compile Include="Services\IBaseControllerService.cs" />
+    <Compile Include="Services\IDbConnectionChecker.cs" />
     <Compile Include="Services\IEncryptionService.cs" />
     <Compile Include="Services\IFormsAuthentication.cs" />
     <Compile Include="Services\IHttpFileService.cs" />

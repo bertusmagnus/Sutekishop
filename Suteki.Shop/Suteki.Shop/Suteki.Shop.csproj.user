@@ -10,10 +10,9 @@
           </StartPageUrl>
           <StartAction>SpecificPage</StartAction>
           <AspNetDebugging>True</AspNetDebugging>
-          <SilverlightDebugging>False</SilverlightDebugging>
           <NativeDebugging>False</NativeDebugging>
           <SQLDebugging>False</SQLDebugging>
-          <PublishCopyOption>RunFiles</PublishCopyOption>
+          <PublishCopyOption>ProjectFiles</PublishCopyOption>
           <PublishTargetLocation>E:\Sites\SutekiShop\</PublishTargetLocation>
           <PublishDeleteAllFiles>True</PublishDeleteAllFiles>
           <PublishCopyAppData>False</PublishCopyAppData>

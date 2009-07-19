@@ -167,6 +167,7 @@
     <Compile Include="Repositories\UserRepositoryExtensionsTests.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Services\CheckoutServiceTester.cs" />
+    <Compile Include="Services\DbConnectionCheckerTests.cs" />
     <Compile Include="Services\EmailServiceTester.cs" />
     <Compile Include="Services\EncryptionServiceTests.cs" />
     <Compile Include="Services\ImageFileServiceTests.cs" />

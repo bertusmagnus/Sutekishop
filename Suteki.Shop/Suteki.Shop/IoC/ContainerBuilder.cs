@@ -23,6 +23,9 @@ namespace Suteki.Shop.IoC
         {
             var container = new WindsorContainer(new XmlInterpreter(configPath));
 
+            // add array resolver
+            container.Kernel.Resolver.AddSubResolver(new ArrayResolver(container.Kernel));
+
             // add facilities
             container.AddFacility(
                 "logging.facility", 
@@ -70,7 +73,8 @@ namespace Suteki.Shop.IoC
                 Component.For<IOrderSearchService>().ImplementedBy<OrderSearchService>().LifeStyle.Transient,
                 Component.For<IEmailBuilder>().ImplementedBy<EmailBuilder>().LifeStyle.Singleton,
                 Component.For<IAppSettings>().ImplementedBy<AppSettings>().LifeStyle.Singleton,
-                Component.For<IEmailService>().ImplementedBy<EmailService>().LifeStyle.Transient
+                Component.For<IEmailService>().ImplementedBy<EmailService>().LifeStyle.Transient,
+                Component.For<IDbConnectionChecker>().ImplementedBy<DbConnectionChecker>().LifeStyle.Transient
                 );
 
             return container;
