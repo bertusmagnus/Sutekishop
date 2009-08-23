@@ -28,9 +28,6 @@ ON DELETE  NO ACTION
 	
 GO
 
-ALTER TABLE dbo.MailingListSubscription SET (LOCK_ESCALATION = TABLE)
-GO
-
 IF NOT EXISTS(select * from Content where Name = 'Mailing List')
 	INSERT INTO Content (ParentContentId, ContentTypeId, Name, UrlName, Controller, Action, IsActive, Position) 
 	VALUES (1, 3, 'Mailing List', 'Mailing_List', 'MailingList', 'Index', 1, 20)
