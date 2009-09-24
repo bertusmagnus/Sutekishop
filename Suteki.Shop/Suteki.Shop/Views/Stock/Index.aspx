@@ -15,4 +15,16 @@
 
 </div>
 
+<script type="text/javascript">
+	$(function() {
+		$('input[type=checkbox]').click(updateTickboxesWithSameName);
+	});
+
+	function updateTickboxesWithSameName() {
+		var name = $(this).attr('name');
+		var checked = this.checked;
+		$('input[name=' + name + ']').attr('checked', checked);
+	}
+</script>
+
 </asp:Content>
