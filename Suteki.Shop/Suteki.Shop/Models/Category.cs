@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Suteki.Common;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop
 {
-    public partial class Category : IOrderable, IActivatable
+    public partial class Category : ICategory
     {
         partial void OnNameChanging(string value)
         {
@@ -34,8 +34,7 @@ namespace Suteki.Shop
         {
             get
             {
-                if (HasMainImage) return Products.InOrder().Active().First().MainImage;
-                return null;
+                return HasMainImage ? Products.InOrder().Active().First().MainImage : null;
             }
         }
 
@@ -52,5 +51,10 @@ namespace Suteki.Shop
 				Position = position
 			};
     	}
+
+        public IList<ICategory> ChildCategories
+        {
+            get { return Categories.Cast<ICategory>().ToList(); }
+        }
     }
 }

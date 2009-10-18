@@ -250,6 +250,7 @@
       <DependentUpon>Shop.dbml</DependentUpon>
     </Compile>
     <Compile Include="ViewData\CategoryViewData.cs" />
+    <Compile Include="ViewData\CategoryViewDataExtensions.cs" />
     <Compile Include="ViewData\CmsViewData.cs" />
     <Compile Include="ViewData\ReviewViewData.cs" />
     <Compile Include="ViewData\RsdViewData.cs" />

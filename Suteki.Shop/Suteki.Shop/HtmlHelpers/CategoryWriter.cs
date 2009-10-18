@@ -20,11 +20,11 @@ namespace Suteki.Shop.HtmlHelpers
 
     public class CategoryWriter
     {
-        readonly CategoryViewData rootCategory;
+        readonly ICategory rootCategory;
         readonly HtmlHelper htmlHelper;
         readonly CategoryDisplay display;
 
-        public CategoryWriter(CategoryViewData rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
+        public CategoryWriter(ICategory rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
         {
             this.rootCategory = rootCategory;
             this.htmlHelper = htmlHelper;
@@ -42,14 +42,14 @@ namespace Suteki.Shop.HtmlHelpers
 
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
-            WriteCategories(writer, rootCategory.Categories.InOrder());
+            WriteCategories(writer, rootCategory.ChildCategories.InOrder());
 
             writer.RenderEndTag();
 
             return writer.InnerWriter.ToString();
         }
 
-        private void WriteCategories(HtmlTextWriter writer, IEnumerable<CategoryViewData> categories)
+        private void WriteCategories(HtmlTextWriter writer, IEnumerable<ICategory> categories)
         {
             
             
@@ -64,14 +64,14 @@ namespace Suteki.Shop.HtmlHelpers
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Li);
                 writer.Write(WriteCategory(category));
-                WriteCategories(writer, category.Categories.InOrder());
+                WriteCategories(writer, category.ChildCategories.InOrder());
                 writer.RenderEndTag();
             }
 
             if (!first) writer.RenderEndTag();
         }
 
-        private string WriteCategory(CategoryViewData category)
+        private string WriteCategory(ICategory category)
         {
             if (display == CategoryDisplay.Edit)
             {
@@ -87,7 +87,7 @@ namespace Suteki.Shop.HtmlHelpers
             return WriteCategoryLink(category);
         }
 
-        private string WriteCategoryLink(CategoryViewData category)
+        private string WriteCategoryLink(ICategory category)
         {
             return htmlHelper.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name);
         }

@@ -1,9 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using Suteki.Common;
 
 namespace Suteki.Shop.ViewData
 {
-    public class CategoryViewData : IActivatable, IOrderable
+    public interface ICategory : IActivatable, IOrderable
+    {
+        int CategoryId { get; set; }
+        string Name { get; set; }
+        int? ParentId { get; set; }
+        int? ImageId { get; set; }
+        IList<ICategory> ChildCategories { get; }
+    }
+
+    public class CategoryViewData : ICategory
     {
         public int CategoryId { get; set; }
         public string Name { get; set; }
@@ -12,11 +22,16 @@ namespace Suteki.Shop.ViewData
         public bool IsActive { get; set; }
         public int? ImageId { get; set; }
 
-        private readonly IList<CategoryViewData> categories = new List<CategoryViewData>();
+        private readonly IList<CategoryViewData> childCategories = new List<CategoryViewData>();
 
-        public IList<CategoryViewData> Categories
+        public IList<ICategory> ChildCategories
         {
-            get { return categories; }
+            get { return childCategories.Cast<ICategory>().ToList(); }
+        }
+
+        public void AddChild(CategoryViewData category)
+        {
+            childCategories.Add(category);
         }
     }
 }
