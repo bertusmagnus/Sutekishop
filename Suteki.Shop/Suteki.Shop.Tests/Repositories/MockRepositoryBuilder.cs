@@ -65,24 +65,25 @@ namespace Suteki.Shop.Tests.Repositories
         {
             var categoryRepositoryMock = MockRepository.GenerateStub<IRepository<Category>>();
 
-            var root = new Category { Name = "root", ImageId = 5 };
+            var root = new Category { CategoryId = 1, ParentId = null, Name = "root", ImageId = 5 };
 
-            var one = new Category { Name = "one" };
-            var two = new Category { Name = "two" };
+            var one = new Category { CategoryId = 2, ParentId = 1, Name = "one" };
+            var two = new Category { CategoryId = 3, ParentId = 1, Name = "two" };
             root.Categories.AddRange(new[] { one, two });
 
-            var oneOne = new Category { Name = "oneOne" };
-            var oneTwo = new Category { Name = "oneTwo" };
+            var oneOne = new Category { CategoryId = 4, ParentId = 2, Name = "oneOne" };
+            var oneTwo = new Category { CategoryId = 5, ParentId = 2, Name = "oneTwo" };
             one.Categories.AddRange(new[] { oneOne, oneTwo });
 
-            var oneTwoOne = new Category { Name = "oneTwoOne" };
-            var oneTwoTwo = new Category { Name = "oneTwoTwo" };
+            var oneTwoOne = new Category { CategoryId = 6, ParentId = 5, Name = "oneTwoOne" };
+            var oneTwoTwo = new Category { CategoryId = 7, ParentId = 5, Name = "oneTwoTwo" };
             oneTwo.Categories.AddRange(new[] { oneTwoOne, oneTwoTwo });
 
             Category[] categories = 
             {
                 root,
                 one,
+                two,
                 oneOne,
                 oneTwo,
                 oneTwoOne,

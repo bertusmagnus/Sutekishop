@@ -8,6 +8,7 @@ using Suteki.Common.HtmlHelpers;
 using Suteki.Common.Repositories;
 using Suteki.Shop.Controllers;
 using Suteki.Shop.Repositories;
+using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.HtmlHelpers
 {
@@ -19,11 +20,11 @@ namespace Suteki.Shop.HtmlHelpers
 
     public class CategoryWriter
     {
-        readonly Category rootCategory;
+        readonly CategoryViewData rootCategory;
         readonly HtmlHelper htmlHelper;
         readonly CategoryDisplay display;
 
-        public CategoryWriter(Category rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
+        public CategoryWriter(CategoryViewData rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
         {
             this.rootCategory = rootCategory;
             this.htmlHelper = htmlHelper;
@@ -48,12 +49,12 @@ namespace Suteki.Shop.HtmlHelpers
             return writer.InnerWriter.ToString();
         }
 
-        private void WriteCategories(HtmlTextWriter writer, IEnumerable<Category> categories)
+        private void WriteCategories(HtmlTextWriter writer, IEnumerable<CategoryViewData> categories)
         {
             
             
             bool first = true;
-            foreach (Category category in categories.ActiveFor(htmlHelper.CurrentUser()))
+            foreach (var category in categories.ActiveFor(htmlHelper.CurrentUser()))
             {
                 if (first)
                 {
@@ -70,7 +71,7 @@ namespace Suteki.Shop.HtmlHelpers
             if (!first) writer.RenderEndTag();
         }
 
-        private string WriteCategory(Category category)
+        private string WriteCategory(CategoryViewData category)
         {
             if (display == CategoryDisplay.Edit)
             {
@@ -86,7 +87,7 @@ namespace Suteki.Shop.HtmlHelpers
             return WriteCategoryLink(category);
         }
 
-        private string WriteCategoryLink(Category category)
+        private string WriteCategoryLink(CategoryViewData category)
         {
             return htmlHelper.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name);
         }

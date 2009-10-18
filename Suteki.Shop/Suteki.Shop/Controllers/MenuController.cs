@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web.Mvc;
 using MvcContrib;
 using Suteki.Common.Binders;
@@ -33,7 +34,27 @@ namespace Suteki.Shop.Controllers
 
 		public ActionResult LeftMenu()
 		{
-			return View(categoryRepository.GetRootCategory());
+            // get all categories at once to defeat lazy loading and map to CategoryViewData
+		    var categories = categoryRepository
+                .GetAll()
+                .Select(category => new CategoryViewData
+                {
+                    CategoryId = category.CategoryId,
+                    Name = category.Name,
+                    ParentId = category.ParentId,
+                    Position = category.Position,
+                    IsActive = category.IsActive,
+                    ImageId = category.ImageId
+                }).ToList();
+
+            // tie parents to children
+            categories
+                .Where(cat => cat.ParentId.HasValue)
+                .ForEach(category => categories
+                    .Single(cat => cat.CategoryId == category.ParentId).Categories.Add(category));
+
+		    var rootCategory = categories.Single(cat => cat.CategoryId == 1);
+			return View(rootCategory);
 		}
 
 		[AdministratorsOnly]

@@ -9,6 +9,8 @@ using MvcContrib.FluentHtml.Elements;
 using Suteki.Common.Extensions;
 using Suteki.Shop.Controllers;
 using System.Web.Mvc.Html;
+using Suteki.Shop.ViewData;
+
 namespace Suteki.Shop.HtmlHelpers
 {
     public static class HtmlHelperExtensions
@@ -34,7 +36,7 @@ namespace Suteki.Shop.HtmlHelpers
             return user;
         }
 
-        public static string WriteCategories(this HtmlHelper htmlHelper, Category rootCategory, CategoryDisplay display)
+        public static string WriteCategories(this HtmlHelper htmlHelper, CategoryViewData rootCategory, CategoryDisplay display)
         {
             var categoryWriter = new CategoryWriter(rootCategory, htmlHelper, display);
             return categoryWriter.Write();
