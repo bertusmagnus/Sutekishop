@@ -124,7 +124,7 @@ namespace Suteki.Shop.Tests.Controllers
                 .WithModel<ShopViewData>()
                 .AssertNotNull(vd => vd.Category)
                 .AssertNotNull(vd => vd.Categories)
-                .AssertAreEqual(6, vd => vd.Categories.Count());
+                .AssertAreEqual(7, vd => vd.Categories.Count());
         }
 
 

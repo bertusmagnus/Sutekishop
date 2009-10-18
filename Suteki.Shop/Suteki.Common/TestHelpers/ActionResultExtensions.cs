@@ -159,7 +159,8 @@ namespace Suteki.Common.TestHelpers
         {
             if(expected != property(viewData))
             {
-                throw new TestHelperException("Not same");
+                throw new TestHelperException(
+                    "Not same, expected {0}, actual {1}".With(expected, property(viewData)));
             }
             return viewData;
         }
@@ -171,7 +172,8 @@ namespace Suteki.Common.TestHelpers
         {
             if (!expected.Equals(property(viewData)))
             {
-                throw new TestHelperException("Not equal");
+                throw new TestHelperException(
+                    "Not equal, expected {0}, actual {1}".With(expected, property(viewData)));
             }
             return viewData;
         }
