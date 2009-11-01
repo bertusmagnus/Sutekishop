@@ -185,6 +185,7 @@
     <Compile Include="TestHelpers\HttpContextTestContext.cs" />
     <Compile Include="TestHelpers\MockViewEngine.cs" />
     <Compile Include="TestHelpers\TestController.cs" />
+    <Compile Include="ViewData\CategoryViewDataExtensionsTests.cs" />
     <Compile Include="XmlRpc\MetaWeblogTests.cs" />
     <Compile Include="XmlRpc\MetaWeblogWcfIntegrationTests.cs" />
     <Compile Include="XmlRpc\MetaWeblogWcfSpike.cs" />
