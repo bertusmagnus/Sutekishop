@@ -36,7 +36,7 @@ namespace Suteki.Shop.HtmlHelpers
             return user;
         }
 
-        public static string WriteCategories(this HtmlHelper htmlHelper, ICategory rootCategory, CategoryDisplay display)
+        public static string WriteCategories(this HtmlHelper htmlHelper, CategoryViewData rootCategory, CategoryDisplay display)
         {
             var categoryWriter = new CategoryWriter(rootCategory, htmlHelper, display);
             return categoryWriter.Write();

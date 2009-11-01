@@ -11,6 +11,7 @@ namespace Suteki.Shop.ViewData
     {
         public Category Category { get; set; }
         public IEnumerable<Category> Categories { get; set; }
+        public CategoryViewData CategoryViewData { get; set; }
 
         public Product Product { get; set; }
         public IEnumerable<Product> Products { get; set; }
@@ -66,6 +67,12 @@ namespace Suteki.Shop.ViewData
         public ShopViewData WithCategories(IEnumerable<Category> categories)
         {
             this.Categories = categories;
+            return this;
+        }
+
+        public ShopViewData WithCategoryViewData(CategoryViewData category)
+        {
+            this.CategoryViewData = category;
             return this;
         }
 

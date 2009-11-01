@@ -47,12 +47,11 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Index_ShouldDisplayAListOfCategories()
         {
-            var viewData = categoryController.Index()
+            categoryController.Index()
                 .ReturnsViewResult()
                 .ForView("Index")
-                .WithModel<ShopViewData>();
-
-            MockRepositoryBuilder.AssertCategoryGraphIsCorrect(viewData.Category);
+                .WithModel<ShopViewData>()
+                .AssertAreEqual("root", vd => vd.CategoryViewData.Name);
         }
 
         [Test]

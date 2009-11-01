@@ -20,11 +20,11 @@ namespace Suteki.Shop.HtmlHelpers
 
     public class CategoryWriter
     {
-        readonly ICategory rootCategory;
+        readonly CategoryViewData rootCategory;
         readonly HtmlHelper htmlHelper;
         readonly CategoryDisplay display;
 
-        public CategoryWriter(ICategory rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
+        public CategoryWriter(CategoryViewData rootCategory, HtmlHelper htmlHelper, CategoryDisplay display)
         {
             this.rootCategory = rootCategory;
             this.htmlHelper = htmlHelper;
@@ -49,7 +49,7 @@ namespace Suteki.Shop.HtmlHelpers
             return writer.InnerWriter.ToString();
         }
 
-        private void WriteCategories(HtmlTextWriter writer, IEnumerable<ICategory> categories)
+        private void WriteCategories(HtmlTextWriter writer, IEnumerable<CategoryViewData> categories)
         {
             
             
@@ -71,7 +71,7 @@ namespace Suteki.Shop.HtmlHelpers
             if (!first) writer.RenderEndTag();
         }
 
-        private string WriteCategory(ICategory category)
+        private string WriteCategory(CategoryViewData category)
         {
             if (display == CategoryDisplay.Edit)
             {
@@ -87,7 +87,7 @@ namespace Suteki.Shop.HtmlHelpers
             return WriteCategoryLink(category);
         }
 
-        private string WriteCategoryLink(ICategory category)
+        private string WriteCategoryLink(CategoryViewData category)
         {
             return htmlHelper.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name);
         }

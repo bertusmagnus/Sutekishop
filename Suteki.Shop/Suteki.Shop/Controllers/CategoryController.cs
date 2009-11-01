@@ -31,8 +31,8 @@ namespace Suteki.Shop.Controllers
 
         public ActionResult Index()
         {
-			var root = categoryRepository.GetRootCategory();
-			return View("Index", ShopView.Data.WithCategory(root));
+            var root = categoryRepository.GetAll().MapToViewData().GetRoot();
+			return View("Index", ShopView.Data.WithCategoryViewData(root));
         }
 
         public ActionResult New(int id)

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Web.Mvc;
 using MvcContrib;
 using Suteki.Common.Binders;
@@ -8,7 +7,6 @@ using Suteki.Common.Filters;
 using Suteki.Common.Repositories;
 using Suteki.Common.Services;
 using Suteki.Shop.Filters;
-using Suteki.Shop.Repositories;
 using Suteki.Shop.ViewData;
 
 namespace Suteki.Shop.Controllers
