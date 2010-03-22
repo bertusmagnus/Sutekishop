@@ -18,7 +18,15 @@ namespace Suteki.Shop
         {
             get
             {
-				return ProductCategories.Count > 0;
+				return ProductCategories.Any();
+            }
+        }
+
+        public bool HasActiveProducts
+        {
+            get
+            {
+                return ProductCategories.Any(pc => pc.Product.IsActive);
             }
         }
 
@@ -26,7 +34,7 @@ namespace Suteki.Shop
         {
             get
             {
-                return HasProducts && Products.InOrder().Active().First().HasMainImage;
+                return HasActiveProducts && Products.InOrder().Active().First().HasMainImage;
             }
         }
 

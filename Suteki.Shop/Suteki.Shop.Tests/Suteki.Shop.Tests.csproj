@@ -154,6 +154,7 @@
     <Compile Include="IoCTests.cs" />
     <Compile Include="Models\BasketTests.cs" />
     <Compile Include="Models\CardTests.cs" />
+    <Compile Include="Models\CategoryTests.cs" />
     <Compile Include="Models\ContactTests.cs" />
     <Compile Include="Models\ContentTests.cs" />
     <Compile Include="Models\ImageTests.cs" />
