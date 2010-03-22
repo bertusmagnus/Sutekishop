@@ -96,20 +96,20 @@ namespace Suteki.Shop
             }
         }
 
-        public virtual string Link(HtmlHelper htmlHelper)
+        public virtual MvcHtmlString Link(HtmlHelper htmlHelper)
         {
-            if (ContentId == 0) return string.Empty;
+            if (ContentId == 0) return MvcHtmlString.Empty;
             return htmlHelper.ActionLink<CmsController>(c => c.Index(UrlName), Name);
         }
 
-		public virtual string Url(UrlHelper urlHelper)
+        public virtual string Url(UrlHelper urlHelper)
 		{
 			return urlHelper.Action<CmsController>(c => c.Index(UrlName));
 		}
 
-        public virtual string EditLink(HtmlHelper htmlHelper)
+        public virtual MvcHtmlString EditLink(HtmlHelper htmlHelper)
         {
-            return "&nbsp;";
+            return MvcHtmlString.Create("&nbsp;");
         }
 
         public bool CanEdit(User user)

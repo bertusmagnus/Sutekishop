@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace Suteki.Shop.Tests
 {
-	public class FakeValueProvider : IDictionary<string, ValueProviderResult> 
+	public class FakeValueProvider : IValueProvider, IDictionary<string, ValueProviderResult> 
 	{
-		private Dictionary<string, ValueProviderResult> innerDictionary = new Dictionary<string, ValueProviderResult>();
+		private readonly Dictionary<string, ValueProviderResult> innerDictionary = new Dictionary<string, ValueProviderResult>();
 
 		public void AddValue(string key, object rawValue, string attemptedValue)
 		{
@@ -106,5 +106,16 @@ namespace Suteki.Shop.Tests
 		{
 			get { return innerDictionary.Values; }
 		}
+
+	    public bool ContainsPrefix(string prefix)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public ValueProviderResult GetValue(string key)
+	    {
+
+	        return this[key];
+	    }
 	}
 }

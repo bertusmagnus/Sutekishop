@@ -109,10 +109,10 @@ namespace Suteki.Common.Validation
 		{
 			if(string.IsNullOrEmpty(prefix))
 			{
-				return property.HtmlName();
+				return property.Name;
 			}
 
-			return prefix + "." + property.HtmlName();
+			return prefix + "." + property.Name;
 		}
 
         private static bool IsBasicType(Type type)

@@ -40,8 +40,8 @@ namespace Suteki.Common.Validation
 			this.errors = errors.ToArray();
     	}
 
-    	private ValidationException[] errors = new ValidationException[0];
-    	private string propertyKey;
+    	private readonly ValidationException[] errors = new ValidationException[0];
+    	private readonly string propertyKey;
 
     	public ValidationException[] Errors
     	{

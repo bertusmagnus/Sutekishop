@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Suteki.Shop
+﻿namespace Suteki.Shop
 {
     public interface ITextContent
     {

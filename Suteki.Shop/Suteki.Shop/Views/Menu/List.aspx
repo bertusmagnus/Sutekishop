@@ -16,8 +16,8 @@
 		column.For(x => x.EditLink(Html)).DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
 		column.For(x => Html.Tick(x.IsActive)).DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
 		column.For("&nbsp;").Partial("UpDown").HeaderAttributes(@class => "thin"); //Re-ordering arrows
-		column.For(x => x.IsMenu ? Html.ActionLink<CmsController>(c => c.Add(x.ContentId), "New Page") : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
-		column.For(x => x.IsMenu ? Html.ActionLink<MenuController>(c => c.New(x.ContentId), "New Menu") : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+		column.For(x => x.IsMenu ? Html.ActionLink<CmsController>(c => c.Add(x.ContentId), "New Page").ToString() : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
+        column.For(x => x.IsMenu ? Html.ActionLink<MenuController>(c => c.New(x.ContentId), "New Menu").ToString() : "&nbsp;").DoNotEncode().Named("&nbsp;").HeaderAttributes(@class => "thin");
 			
 	}) %>
 

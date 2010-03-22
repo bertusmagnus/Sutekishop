@@ -11,7 +11,7 @@ namespace Suteki.Shop
 			//value.Label("Text").IsRequired();
 		}
 
-		public override string EditLink(HtmlHelper htmlHelper)
+        public override MvcHtmlString EditLink(HtmlHelper htmlHelper)
 		{
 			return htmlHelper.ActionLink<CmsController>(c => c.Edit(ContentId), "Edit");
 		}

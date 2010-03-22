@@ -57,7 +57,7 @@ namespace Suteki.Common.Binders
 			{
 				validatingBinder.UpdateFrom(entity, controllerContext.HttpContext.Request.Form, bindingContext.ModelState, bindingContext.ModelName);
 			}
-			catch(ValidationException ex) 
+			catch(ValidationException) 
 			{
 				//Ignore validation exceptions - they are stored in ModelState. 
 				//The controller can access the errors by inspecting the ModelState dictionary.

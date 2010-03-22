@@ -20,7 +20,7 @@ namespace Suteki.Shop.HtmlHelpers
             return htmlHelper.CurrentUser().PublicIdentity;
         }
 
-        public static string LoginLink(this HtmlHelper htmlHelper)
+        public static MvcHtmlString LoginLink(this HtmlHelper htmlHelper)
         {
             if (htmlHelper.CurrentUser().CanLogin)
             {

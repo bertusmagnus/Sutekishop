@@ -1,4 +1,5 @@
 using System;
+using System.Web.Mvc;
 using NUnit.Framework;
 using Suteki.Common.Extensions;
 using Rhino.Mocks;
@@ -25,12 +26,12 @@ namespace Suteki.Common.Tests.Extensions
             const string currentUrl = "http://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66?countryId=1";
             urlExtensionsHelper.Stub(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
-            var existingUrl = "/shop/Order/PlaceOrder";
-            var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+            var existingUrl = MvcHtmlString.Create("/shop/Order/PlaceOrder");
+            const string expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
 
             mocks.ReplayAll();
 
-            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
+            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl).ToString(), Is.EqualTo(expectedUrl));
         }
 
         [Test]
@@ -39,12 +40,12 @@ namespace Suteki.Common.Tests.Extensions
             const string currentUrl = "http://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66";
             urlExtensionsHelper.Expect(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
-            var existingUrl = "/shop/Order/PlaceOrder";
-            var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+            var existingUrl = MvcHtmlString.Create("/shop/Order/PlaceOrder");
+            const string expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
 
             mocks.ReplayAll();
 
-            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
+            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl).ToString(), Is.EqualTo(expectedUrl));
         }
 
         [Test]
@@ -53,12 +54,12 @@ namespace Suteki.Common.Tests.Extensions
             const string currentUrl = "https://jtg.sutekishop.co.uk/shop/Order/UpdateCountry/66";
             urlExtensionsHelper.Expect(eh => eh.GetRequestUri()).Return(new Uri(currentUrl));
 
-            var existingUrl = "/shop/Order/PlaceOrder";
-            var expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
+            var existingUrl = MvcHtmlString.Create("/shop/Order/PlaceOrder");
+            const string expectedUrl = "https://jtg.sutekishop.co.uk/shop/Order/PlaceOrder";
 
             mocks.ReplayAll();
 
-            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl), Is.EqualTo(expectedUrl));
+            Assert.That(urlExtensionsHelper.ToSslUrl(existingUrl).ToString(), Is.EqualTo(expectedUrl));
         }
     }
 }

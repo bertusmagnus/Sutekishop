@@ -54,7 +54,7 @@ namespace Suteki.Shop.Binders
 		{
 			product.ProductCategories.Clear();
 
-			var valueProviderResult = context.ValueProvider["categories"];
+			var valueProviderResult = context.ValueProvider.GetValue("categories");
 			
 			if(valueProviderResult != null)
 			{

@@ -31,7 +31,7 @@ namespace Suteki.Shop.Tests.Binders
 			valueProvider = new FakeValueProvider();
 			context = new ModelBindingContext()
 			{
-				ModelType = typeof(MailingListSubscription),
+                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(MailingListSubscription)),
 				ModelState =  new ModelStateDictionary(),
 				ValueProvider = valueProvider,
 				ModelName = "subscription",

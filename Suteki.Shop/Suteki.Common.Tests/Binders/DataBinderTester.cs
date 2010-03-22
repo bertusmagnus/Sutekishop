@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Linq.Mapping;
-using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 using NUnit.Framework;
@@ -32,16 +30,16 @@ namespace Suteki.Common.Tests.Binders
 			binder = new DataBinder(validatingBinder, repositoryResolver);
 
 			context = new ModelBindingContext()
-			          {
-			          	ModelName = "foo", 
-			          	ModelType = typeof(TestEntity),
-			          	ModelState = new ModelStateDictionary()
-			          };
+            {
+                ModelName = "foo", 
+                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(TestEntity)),
+                ModelState = new ModelStateDictionary()
+            };
 
 			controllerContext= new ControllerContext()
-			                   {
-			                   	HttpContext = MockRepository.GenerateStub<HttpContextBase>() 
-			                   };
+            {
+                HttpContext = MockRepository.GenerateStub<HttpContextBase>() 
+            };
 
 			controllerContext.HttpContext.Expect(x => x.Request).Return(MockRepository.GenerateStub<HttpRequestBase>());
 			controllerContext.HttpContext.Request.Expect(x => x.Form).Return(new NameValueCollection() { { "foo.Id", "3"}, { "foo.Name", "Jeremy" } }).Repeat.Any();

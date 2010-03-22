@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Mvc;
 using Suteki.Common.Services;
 
 namespace Suteki.Common.Extensions
@@ -73,6 +74,13 @@ namespace Suteki.Common.Extensions
         /// </summary>
         /// <param name="text">The url to make fully-qualified. Ex: Home/About</param>
         /// <returns>The absolute url plus server, & port using the Https protocol. Ex: https://localhost:1234/Home/About</returns>
+        public virtual MvcHtmlString ToSslUrl(MvcHtmlString text)
+        {
+            // TODO: This won't work with .NET 4
+            if (!UseSsl()) return text;
+            return MvcHtmlString.Create(ToFullyQualifiedUrl(text.ToString()).Replace("http:", "https:"));
+        }
+
         public virtual string ToSslUrl(string text)
         {
             if (!UseSsl()) return text;
@@ -84,10 +92,11 @@ namespace Suteki.Common.Extensions
         /// </summary>
         /// <param name="text">The url to make fully-qualified. Ex: <a href="Home/About">Blah</a></param>
         /// <returns>The absolute url plus server, & port using the Https protocol. Ex: <a href="https://localhost:1234/Home/About">Blah</a></returns>
-        public virtual string ToSslLink(string text)
+        public virtual MvcHtmlString ToSslLink(MvcHtmlString text)
         {
+            // TODO: This won't work with .NET 4
             if (!UseSsl()) return text;
-            return ToFullyQualifiedLink(text).Replace("http:", "https:");
+            return MvcHtmlString.Create(ToFullyQualifiedLink(text.ToString()).Replace("http:", "https:"));
         }
 
         public virtual bool UseSsl()

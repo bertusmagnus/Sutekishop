@@ -53,18 +53,6 @@ namespace Suteki.Common.Extensions
                 return;
             }
 
-            var entity = item as IEntity;
-            if (entity != null)
-            {
-                Console.WriteLine("{0}", entity.GetType().Name);
-                foreach (var property in entity.GetProperties())
-                {
-                    Console.Write("{0}{1} : ", new string('\t', level), property.Name);
-                    property.Value.WriteProperty(level);
-                }
-                return;
-            }
-
             Console.WriteLine("{0}", item);
         }
 

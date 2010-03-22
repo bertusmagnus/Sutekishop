@@ -71,23 +71,23 @@ namespace Suteki.Shop.HtmlHelpers
             if (!first) writer.RenderEndTag();
         }
 
-        private string WriteCategory(CategoryViewData category)
+        private MvcHtmlString WriteCategory(CategoryViewData category)
         {
             if (display == CategoryDisplay.Edit)
             {
-                return "{0} {1} {2} {3} {4}".With(
+                return MvcHtmlString.Create("{0} {1} {2} {3} {4}".With(
                     WriteCategoryLink(category),
                     htmlHelper.ActionLink<CategoryController>(c => c.Edit(category.CategoryId), "Edit"),
                     htmlHelper.Tick(category.IsActive),
                     htmlHelper.UpArrowLink<CategoryController>(c => c.MoveUp(category.CategoryId)),
                     htmlHelper.DownArrowLink<CategoryController>(c => c.MoveDown(category.CategoryId))
-                    );
+                    ));
             }
 
             return WriteCategoryLink(category);
         }
 
-        private string WriteCategoryLink(CategoryViewData category)
+        private MvcHtmlString WriteCategoryLink(CategoryViewData category)
         {
             return htmlHelper.ActionLink<ProductController>(c => c.Index(category.CategoryId), category.Name);
         }

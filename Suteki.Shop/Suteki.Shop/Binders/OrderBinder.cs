@@ -44,7 +44,7 @@ namespace Suteki.Shop.Binders
 
 				validator.Validate();
 			}
-			catch (ValidationException exception)
+			catch (ValidationException)
 			{
 				//Ignore validation exceptions - they will be stored in ModelState.
 			}

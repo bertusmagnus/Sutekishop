@@ -55,10 +55,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\Iesi.Collections.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -70,10 +66,6 @@
     <Reference Include="MvcContrib, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MvcContrib.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=2.0.0.1002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <SpecificVersion>False</SpecificVersion>
@@ -101,7 +93,7 @@
       <HintPath>..\Dependencies\System.Web.Abstractions.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -110,46 +102,28 @@
       <HintPath>..\Dependencies\System.Web.Routing.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\BindUsingAttributeTester.cs" />
     <Compile Include="Binders\DataBinderTester.cs" />
-    <Compile Include="Extensions\TypeExtensionsTests.cs" />
     <Compile Include="Extensions\UrlExtensionsHelperTests.cs" />
     <Compile Include="Filters\FilterUsingAttributeTester.cs" />
     <Compile Include="Filters\UnitOfWorkFilterTester.cs" />
-    <Compile Include="HtmlHelpers\ColumnOrdererTests.cs" />
-    <Compile Include="HtmlHelpers\TreeRendererTests.cs" />
-    <Compile Include="Models\EntityGraphVisitorSpike.cs" />
-    <Compile Include="Models\MetaEntityTests.cs" />
     <Compile Include="Models\StringValueExtensionsTests.cs" />
     <Compile Include="Services\EmailBuilderTester.cs" />
     <Compile Include="Services\EmailSenderTests.cs" />
-    <Compile Include="Services\NHibernateEntityTypeResolverTests.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestHelpers\TestController.cs" />
-    <Compile Include="TestModel\Customer.cs" />
-    <Compile Include="TestModel\CustomerBuilder.cs" />
-    <Compile Include="Models\EntityTests.cs" />
-    <Compile Include="Models\MetaEntityFactoryTests.cs" />
-    <Compile Include="TestModel\Order.cs" />
-    <Compile Include="TestModel\OrderLine.cs" />
-    <Compile Include="TestModel\Product.cs" />
-    <Compile Include="TestModel\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\FormBuilderTests.cs" />
-    <Compile Include="Spikes\MvcContribGridSpike.cs" />
     <Compile Include="Spikes\NamesSpike.cs" />
     <Compile Include="Spikes\ReflectionSpikes.cs" />
     <Compile Include="TestHelpers\MvcTestHelpers.cs" />
-    <Compile Include="UI\EntityRendererTests.cs" />
-    <Compile Include="UI\FormWriterExtensionsTests.cs" />
-    <Compile Include="UI\SelectListBuilderTests.cs" />
-    <Compile Include="Validation\EntityBinderTests.cs" />
     <Compile Include="Validation\ValidatingBinderTests.cs" />
     <Compile Include="Validation\ValidationExtensionsTests.cs" />
     <Compile Include="Windsor\ArrayResolverTests.cs" />
-    <Compile Include="Windsor\WindsorApplicationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Suteki.Common\Suteki.Common.csproj">
@@ -171,6 +145,9 @@
     <Content Include="Services\Templates\test.vm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HtmlHelpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

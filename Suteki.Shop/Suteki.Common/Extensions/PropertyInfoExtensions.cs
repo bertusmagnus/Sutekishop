@@ -39,30 +39,15 @@ namespace Suteki.Common.Extensions
         public static bool IsForeignKey(this PropertyInfo propertyInfo)
         {
             var association = propertyInfo.GetAttributeOf<AssociationAttribute>();
-            if(association == null) return false;
+            if (association == null) return false;
             return association.IsForeignKey;
         }
 
         public static string ForeignKeyIdField(this PropertyInfo propertyInfo)
         {
             var association = propertyInfo.GetAttributeOf<AssociationAttribute>();
-            if(association == null) return null;
+            if (association == null) return null;
             return association.ThisKey;
-        }
-
-        public static bool IsEntity(this PropertyInfo propertyInfo)
-        {
-            return typeof (IEntity).IsAssignableFrom(propertyInfo.PropertyType);
-        }
-
-		public static string HtmlName(this PropertyInfo propertyInfo)
-		{
-			return propertyInfo.IsEntity() ? propertyInfo.Name + ".Id" : propertyInfo.Name;
-		}
-
-        public static string HtmlId(this PropertyInfo propertyInfo)
-        {
-            return propertyInfo.IsEntity() ? propertyInfo.Name + System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement  + "Id" : propertyInfo.Name;
         }
 
         public static bool AllowNull(this PropertyInfo propertyInfo)

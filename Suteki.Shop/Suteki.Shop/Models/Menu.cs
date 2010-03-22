@@ -8,7 +8,7 @@ namespace Suteki.Shop
     {
         public const int MainMenuId = 1;
 
-        public override string EditLink(HtmlHelper htmlHelper)
+        public override MvcHtmlString EditLink(HtmlHelper htmlHelper)
         {
             return htmlHelper.ActionLink<MenuController>(c => c.Edit(ContentId), "Edit");
         }

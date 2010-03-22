@@ -57,7 +57,7 @@ namespace Suteki.Shop.Tests.Binders
 			bindingContext = new ModelBindingContext() 
 			{
 				ModelState = new ModelStateDictionary(),
-				ModelType = typeof(Product),
+                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(Product)),
 				ModelName = "product",
 				ValueProvider = valueProvider
 			};

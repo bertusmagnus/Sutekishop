@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
 using System.Web;
@@ -21,6 +22,7 @@ namespace Suteki.Common.Tests.TestHelpers
 
             mocks.Record();
 
+            var contextItems = new Hashtable();
             var form = new NameValueCollection();
             var httpContext = mocks.StrictMock<HttpContextBase>();
             var httpRequestBase = mocks.StrictMock<HttpRequestBase>();
@@ -29,6 +31,7 @@ namespace Suteki.Common.Tests.TestHelpers
 
             httpContext.Expect(context => context.Request).Return(httpRequestBase).Repeat.Any();
             httpContext.Expect(context => context.Response).Return(httpResponseBase).Repeat.Any();
+            httpContext.Expect(context => context.Items).Return(contextItems).Repeat.Any();
 
             httpRequestBase.Expect(request => request.Form).Return(form).Repeat.Any();
             httpRequestBase.Expect(request => request.QueryString).Return(form).Repeat.Any();
@@ -46,7 +49,7 @@ namespace Suteki.Common.Tests.TestHelpers
 
             var viewDataDictionary = new ViewDataDictionary();
 
-            var viewContext = new ViewContext(new ControllerContext(httpContext, routeData, controller), view, viewDataDictionary, new TempDataDictionary());
+            var viewContext = new ViewContext(new ControllerContext(httpContext, routeData, controller), view, viewDataDictionary, new TempDataDictionary(), writer);
 
             var viewDataContainer = mocks.StrictMock<IViewDataContainer>();
             viewDataContainer.Expect(vdc => vdc.ViewData).Return(viewDataDictionary).Repeat.Any();
