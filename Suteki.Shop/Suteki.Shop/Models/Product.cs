@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Suteki.Common;
 using Suteki.Common.Repositories;
 using Suteki.Common.Validation;
@@ -76,7 +77,18 @@ namespace Suteki.Shop
             }
         }
 
-		public static Product DefaultProduct(int parentCategory, int position)
+        public string PlainTextDescription
+        {
+            get
+            {
+                // thanks to Phil Haack :)
+                const string matchHtml = @"</?\w+((\s+\w+(\s*=\s*(?:"".*?""|'.*?'|[^'"">\s]+))?)+\s*|\s*)/?>";
+                const string matchUnwantedChars = @"[""\n\r]";
+                return Regex.Replace(Regex.Replace(Description, matchHtml, ""), matchUnwantedChars, "");
+            }
+        }
+
+        public static Product DefaultProduct(int parentCategory, int position)
 		{
 			var product = new Product 
 			{

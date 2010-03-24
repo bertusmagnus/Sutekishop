@@ -69,7 +69,7 @@ namespace Suteki.Shop.Controllers
 		    {
 		        var product = productRepository.GetAll().WithUrlName(urlName);
                 AppendTitle(product.Name);
-                AppendMetaDescription(product.Description);
+                AppendMetaDescription(product.PlainTextDescription);
                 return View("Item", ShopView.Data.WithProduct(product));
             }
 		    catch (UrlNameNotFoundException)
