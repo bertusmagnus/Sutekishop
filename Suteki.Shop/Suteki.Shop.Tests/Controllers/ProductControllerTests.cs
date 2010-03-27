@@ -26,6 +26,7 @@ namespace Suteki.Shop.Tests.Controllers
     	private ISizeService sizeService;
         private IOrderableService<Product> productOrderableService;
     	private IUserService userService;
+        private const string urlName = "Product_4";
 
         [SetUp]
         public void SetUp()
@@ -84,8 +85,6 @@ namespace Suteki.Shop.Tests.Controllers
         [Test]
         public void Item_ShouldShowItemView()
         {
-            const string urlName = "Product_4";
-
             // product repository GetAll expectation is already set by
             // MockRepositoryBuilder.CreateProductRepository() in GetFullPath_ShouldReturnFullPage()
 
@@ -95,6 +94,16 @@ namespace Suteki.Shop.Tests.Controllers
                 .WithModel<ShopViewData>()
                 .AssertNotNull(vd => vd.Product)
                 .AssertAreEqual(urlName, vd => vd.Product.UrlName);
+        }
+
+        [Test]
+        public void Item_should_show_plain_text_description_in_meta_description()
+        {
+            var viewResult = productController.Item(urlName)
+                .ReturnsViewResult()
+                .ForView("Item");
+
+            viewResult.ViewData["MetaDescription"].ShouldEqual("Description 4");
         }
 
         [Test]
